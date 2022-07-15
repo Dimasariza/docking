@@ -3,25 +3,26 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()">ngx-<span>admin</span></a>
+    <a class="logo" href="#" (click)="navigateHome()"><img src="../../../../assets/images/Logo BKD.png" alt="Logo" width="180"></a>
   </div>
-  <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
+  <!-- <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
-  </nb-select>
+  </nb-select> -->
 </div>
 
 <div class="header-container">
   <nb-actions size="small">
 
     <nb-action class="control-item">
-      <nb-search type="rotate-layout"></nb-search>
+      <!-- <nb-search type="rotate-layout"></nb-search> -->
+      HOME
     </nb-action>
-    <nb-action class="control-item" icon="email-outline"></nb-action>
-    <nb-action class="control-item" icon="bell-outline"></nb-action>
+    <nb-action class="control-item" >PESAN</nb-action>
+    <nb-action class="control-item" >FORUM</nb-action>
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
       <nb-user [nbContextMenu]="userMenu"
                [onlyPicture]="userPictureOnly"
-               [name]="user?.name"
+               name="ACHMAD FEBRIAN BAGUS PANGESTU"
                [picture]="user?.picture">
       </nb-user>
     </nb-action>
