@@ -22,6 +22,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ]
   },
   {
+    title: 'Izin Belajar',
+    icon: 'edit-2-outline',
+    link: '/pages/izin-belajar'
+  },
+  {
     title: 'E-commerce',
     icon: 'shopping-cart-outline',
     link: '/pages/dashboard'

@@ -6,6 +6,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
+import { IzinBelajarComponent } from './izin-belajar/izin-belajar.component';
 
 const routes: Routes = [{
   path: '',
@@ -21,6 +22,10 @@ const routes: Routes = [{
     },
     { path: 'diklat',
       loadChildren: () => import('./diklat/diklat.module').then(m => m.DiklatModule)
+    },
+    {
+      path: 'izin-belajar',
+      component: IzinBelajarComponent
     },
     {
       path: 'iot-dashboard',

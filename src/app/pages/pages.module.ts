@@ -8,6 +8,7 @@ import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { HomeModule } from './home/home.module';
+import { IzinBelajarModule } from './izin-belajar/izin-belajar.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { HomeModule } from './home/home.module';
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
-    HomeModule
+    HomeModule,
+    IzinBelajarModule
   ],
   declarations: [
     PagesComponent
