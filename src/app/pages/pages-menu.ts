@@ -27,6 +27,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/izin-belajar'
   },
   {
+    title: 'Berkas',
+    icon: 'file-text-outline',
+    children: [
+      {
+        title: 'Berkas Saya',
+        link: '/pages/berkas/berkas-saya'
+      }
+    ]
+  },
+  {
     title: 'E-commerce',
     icon: 'shopping-cart-outline',
     link: '/pages/dashboard'

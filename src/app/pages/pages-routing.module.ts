@@ -7,6 +7,7 @@ import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 import { HomeComponent } from './home/home.component';
 import { IzinBelajarComponent } from './izin-belajar/izin-belajar.component';
+import { BerkasComponent } from './berkas/berkas.component';
 
 const routes: Routes = [{
   path: '',
@@ -26,6 +27,10 @@ const routes: Routes = [{
     {
       path: 'izin-belajar',
       component: IzinBelajarComponent
+    },
+    {
+      path: 'berkas',
+      loadChildren: () => import('./berkas/berkas.module').then(m => m.BerkasModule)
     },
     {
       path: 'iot-dashboard',

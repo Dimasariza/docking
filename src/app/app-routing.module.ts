@@ -8,6 +8,7 @@ import {
   NbRequestPasswordComponent,
   NbResetPasswordComponent,
 } from '@nebular/auth';
+import { BerkasComponent } from './pages/berkas/berkas.component';
 
 export const routes: Routes = [
   {

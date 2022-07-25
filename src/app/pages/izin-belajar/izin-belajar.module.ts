@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { IzinBelajarComponent } from './izin-belajar.component';
 import { NbCardModule } from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 
@@ -13,7 +14,8 @@ import { ThemeModule } from '../../@theme/theme.module';
   imports: [
     NbCardModule,
     ThemeModule,
-    CommonModule
+    CommonModule,
+    NgxDatatableModule
   ]
 })
 export class IzinBelajarModule { }
