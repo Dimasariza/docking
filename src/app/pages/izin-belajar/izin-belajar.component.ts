@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { NbDialogRef, NbDialogService } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-izin-belajar',
@@ -65,7 +66,7 @@ import { Component, OnInit } from '@angular/core';
               <ngx-datatable-column [name]="'KETERANGAN'" prop="pesan"></ngx-datatable-column>
               <ngx-datatable-column name="AKSI">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                  <button class="btn btn-primary btn-sm btn-action">AJUKAN IZIN</button>
+                <button nbButton status="primary" (click)="open()">AJUKAN IZIN</button>
                 </ng-template>
               </ngx-datatable-column>
           </ngx-datatable>
@@ -86,13 +87,13 @@ export class IzinBelajarComponent implements OnInit {
   ]
 
   data = [
-    {
-      "name": "ITS",
-      "time": "FTK / Teknik Kelautan",
-      "place": "Surabaya",
-      "status": "4 Tahun",
-      "pendidikan": "S1"
-    },
+    // {
+    //   "name": "ITS",
+    //   "time": "FTK / Teknik Kelautan",
+    //   "place": "Surabaya",
+    //   "status": "4 Tahun",
+    //   "pendidikan": "S1"
+    // },
     // {
     //   "name": "Claudine Neal",
     //   "time": "13200921921",
@@ -137,9 +138,93 @@ export class IzinBelajarComponent implements OnInit {
     // }
   ]
 
-  constructor() { }
+  constructor(private dialogService: NbDialogService) { }
+  names: string[] = []
+  open() {
+    // this.scroll(true)
+    this.dialogService.open(DialogFormComponent)
+      .onClose.subscribe(name => name && this.names.push(name));
+  }
 
+  // protected scroll(hasScroll: boolean) {
+  //   this.dialogService.open(DialogFormComponent, {hasScroll})
+  // }
   ngOnInit(): void {
   }
 
+}
+
+@Component ({
+  selector: 'ngx-dialog-form',
+  template: `
+    <nb-card>
+      <nb-card-header>Upload Berkas</nb-card-header>
+      <nb-card-body class="d-inline-block">
+        <div *ngFor="let file of files">
+          <label [for]=file.id class="btn">{{ file.nama }}
+          <nb-icon icon="cloud-upload-outline"></nb-icon>
+          <input class="w-100" [id]=file.id type="file" #name nbInput fullWidth fieldSize="small">
+          </label>
+        </div>
+      </nb-card-body>
+      <nb-card-footer>
+        <button class="cancel" nbButton status="danger" (click)="cancel()">Cancel</button>
+        <button nbButton status="success" (click)="submit(name.nativeElement.files[0].name)">Submit</button>
+      </nb-card-footer>
+    </nb-card>
+  `,
+  styleUrls: ['./izin-belajar.component.scss']
+})
+
+export class DialogFormComponent {
+  @ViewChild('name') name: ElementRef
+  constructor(protected ref: NbDialogRef<DialogFormComponent>) {}
+
+  cancel() {
+    this.ref.close();
+  }
+
+  submit(name) {
+    this.ref.close(name);
+    console.log(name)
+  }
+
+  files = [
+    {
+      nama: 'SK CPNS',
+      id: 'sk-cpns'
+    },
+    {
+      nama: 'SK PNS',
+      id: 'sk-pns'
+    },
+    {
+      nama: 'SK Pangkat',
+      id: 'sk-pangkat'
+    },
+    {
+      nama: 'SKP 2 Tahun Terakhir',
+      id: 'skp'
+    },
+    {
+      nama: 'FC Ijazah Terakhir',
+      id: 'fc-ijazah'
+    },
+    {
+      nama: 'Surat Pernyataan Bermaterai',
+      id: 'sura-pernyataan'
+    },
+    {
+      nama: 'Surat Keterangan Calon Mahasiswa',
+      id: 'sk-mhs'
+    },
+    {
+      nama: 'Rencana Jadwal Kuliah',
+      id: 'jadwal'
+    },
+    {
+      nama: 'Surat Keterangan Program Studi Sudah Berakreditasi Minimal B',
+      id: 'sk-prodi'
+    }
+  ]
 }
