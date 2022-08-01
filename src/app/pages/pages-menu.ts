@@ -2,23 +2,61 @@ import { NbMenuItem } from '@nebular/theme';
 
 export const MENU_ITEMS: NbMenuItem[] = [
   {
-    title: 'E-commerce',
-    icon: 'shopping-cart-outline',
-    link: '/pages/dashboard',
+    title: 'Home',
+    icon: 'home-outline',
+    link: '/pages/home-batera',
     home: true,
   },
   {
-    title: 'IoT Dashboard',
-    icon: 'home-outline',
-    link: '/pages/iot-dashboard',
+    title: 'Project',
+    icon: 'briefcase-outline',
+    link: '/pages/project-batera',
+    home: true,
   },
+  {
+    title: 'Technical',
+    icon: 'settings-2-outline',
+    link: '/pages/technical-batera',
+    home: true,
+  },
+  {
+    title: 'Procurement',
+    icon: 'cube-outline',
+    link: '/pages/procurement-batera',
+    home: true,
+  },
+  {
+    title: 'Tracking',
+    icon: 'search-outline',
+    link: '/pages/tracking-batera',
+    home: true,
+  },
+  {
+    title: 'Report',
+    icon: 'book-outline',
+    link: '/pages/report-batera',
+    home: true,
+  },
+  {
+    title: 'Profile',
+    icon: 'person-outline',
+    link: '/pages/profile-batera',
+    home: true,
+  },
+  // {
+  //   title: 'Project',
+  //   icon: 'briefcase-outline',
+  //   link: '/pages/iot-dashboard',
+  // },
+
+  // /*
   {
     title: 'FEATURES',
     group: true,
   },
   {
-    title: 'Layout',
-    icon: 'layout-outline',
+    title: 'Project',
+    icon: 'briefcase-outline',
     children: [
       {
         title: 'Stepper',
@@ -248,4 +286,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
+
+  // */
+
+
 ];

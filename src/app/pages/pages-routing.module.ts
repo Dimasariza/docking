@@ -5,11 +5,47 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
+import { HomeBateraComponent } from './home-batera/home-batera.component';
+import { ProjectBateraComponent } from './project-batera/project-batera.component';
+import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
+import { ProcurementBateraComponent } from './procurement-batera/procurement-batera.component';
+import { ReportBateraComponent } from './report-batera/report-batera.component';
+import { TrackingBateraComponent } from './tracking-batera/tracking-batera.component';
+import { ProfilBateraComponent } from './profile-batera/profil-batera.component';
 
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
+    {
+      path: 'home-batera',
+      loadChildren: () => import('./home-batera/home-batera.module')
+        .then(m => m.HomeBateraModule),
+    },
+    {
+      path: 'project-batera',
+      component: ProjectBateraComponent,
+    },
+    {
+      path: 'technical-batera',
+      component: TechnicalBateraComponent,
+    },
+    {
+      path: 'procurement-batera',
+      component: ProcurementBateraComponent,
+    },
+    {
+      path: 'tracking-batera',
+      component: TrackingBateraComponent,
+    },
+    {
+      path: 'report-batera',
+      component: ReportBateraComponent,
+    },
+    {
+      path: 'profile-batera',
+      component: ProfilBateraComponent,
+    },
     {
       path: 'dashboard',
       component: ECommerceComponent,
