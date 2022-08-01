@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { NbCardModule } from '@nebular/theme';
+import { NbCardModule, NbIconModule } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { HomeBateraRoutingModule, routedComponents } from './home-batera-routing.module';
-import { CardComponent } from './card/card.component';
+import { CardTestComponent } from './card-test/card.component';
+import { HomeBateraComponent } from './home-batera.component';
 
 @NgModule({
   imports: [
@@ -12,11 +13,14 @@ import { CardComponent } from './card/card.component';
     HomeBateraRoutingModule,
     NgxEchartsModule,
     NbCardModule,
+    NbIconModule,
   ],
   exports: [],
   declarations: [
     ...routedComponents,
-    CardComponent
+    CardTestComponent,
+    HomeBateraComponent
+
   ],
 })
 export class HomeBateraModule { }
