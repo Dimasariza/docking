@@ -9,6 +9,14 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { StatusComponent } from './status/status.component';
 
+import { FullCalendarModule } from '@fullcalendar/angular'; // must go before plugins
+import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
+import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
+
+FullCalendarModule.registerPlugins([ // register FullCalendar plugins
+  dayGridPlugin,
+  interactionPlugin
+]);
 
 @NgModule({
   declarations: [
@@ -21,7 +29,8 @@ import { StatusComponent } from './status/status.component';
     NbCardModule,
     ThemeModule,
     CommonModule,
-    DiklatRoutingModule
+    DiklatRoutingModule,
+    FullCalendarModule, // register FullCalendar with you app
   ]
 })
 export class DiklatModule { }
