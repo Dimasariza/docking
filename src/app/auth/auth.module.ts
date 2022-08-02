@@ -10,6 +10,7 @@ import {
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
+  NbFormFieldModule,
   NbIconModule,
   NbInputModule,
   NbLayoutModule,
@@ -19,10 +20,11 @@ import {
   NbTreeGridModule
 } from '@nebular/theme';
 import { ThemeModule } from '../@theme/theme.module';
-import { NgxLoginComponent } from './login/login.component';
+import { DialogAlertComponent, NgxLoginComponent } from './login/login.component';
 import { TablesModule } from '../pages/tables/tables.module';
 import { AuthComponent } from './auth.component';
 import { TreeGridComponent } from '../pages/tables/tree-grid/tree-grid.component';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 
 @NgModule({
@@ -42,11 +44,14 @@ import { TreeGridComponent } from '../pages/tables/tree-grid/tree-grid.component
     NbSidebarModule,
     NbCardModule,
     NbTreeGridModule,
-    NbIconModule
+    NbIconModule,
+    NgxDatatableModule,
+    NbFormFieldModule
   ],
   declarations: [
     NgxLoginComponent,
-    AuthComponent
+    AuthComponent,
+    DialogAlertComponent
   ],
 })
 export class NgxAuthModule {

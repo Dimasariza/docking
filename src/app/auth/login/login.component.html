@@ -1,10 +1,12 @@
 <nb-layout windowMode>
-  <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
-    <nb-sidebar-header class="mb-5 pt-0">
-      <img src="/assets/images/Logo BKD.png" alt="Logo" width="200">
-      <h6 class="text-center">APLIKASI KEDIKLATAN</h6>
-    </nb-sidebar-header>
+  <nb-layout-column class="menu-sidebar w-50" tag="menu-sidebar" responsive>
+    <img class="mb-5" src="/assets/images/BKD.png" alt="Logo" width="200">
+      <div>
+        <h6>Login</h6>
+        <p style="font-size: .8rem;">Masukkan NIP dan Kata Sandi untuk mendapatkan akses</p>
+      </div>
       <form action="">
+      <label class="label" for="input-email">NIP</label>
       <div class="form-control-group">
           <input class="mb-2" nbInput
               fullWidth
@@ -14,7 +16,7 @@
               id="input-email"
               pattern=".+@.+\..+"
               placeholder="NIP"
-              fieldSize="large"
+              fieldSize="medium"
               autofocus
               [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
               [required]="getConfigValue('forms.validation.email.required')"
@@ -30,23 +32,29 @@
       </div>
 
       <div class="form-control-group">
-          <span class="label-with-link">
+          <!-- <span class="label-with-link">
           <a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>
-          </span>
-          <input class="mb-2" nbInput
-              fullWidth
-              [(ngModel)]="user.password"
-              #password="ngModel"
-              name="password"
-              type="password"
-              id="input-password"
-              placeholder="Password"
-              fieldSize="large"
-              [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-              [required]="getConfigValue('forms.validation.password.required')"
-              [minlength]="getConfigValue('forms.validation.password.minLength')"
-              [maxlength]="getConfigValue('forms.validation.password.maxLength')"
-              [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+          </span> -->
+          <label class="label" for="input-password">Password</label>
+          <nb-form-field>
+            <input class="mb-2" nbInput
+                fullWidth
+                [(ngModel)]="user.password"
+                #password="ngModel"
+                name="password"
+                [type]="getInputType()"
+                id="input-password"
+                placeholder="Password"
+                fieldSize="medium"
+                [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="getConfigValue('forms.validation.password.required')"
+                [minlength]="getConfigValue('forms.validation.password.minLength')"
+                [maxlength]="getConfigValue('forms.validation.password.maxLength')"
+                [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+            <button nbSuffix nbButton ghost (click)="toggleShowPass()">
+              <nb-icon class="mb-2" [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"></nb-icon>
+            </button>
+          </nb-form-field>
           <ng-container *ngIf="password.invalid && password.touched ">
           <p class="caption status-danger" *ngIf="password.errors?.required">
               Password is required!
@@ -73,46 +81,69 @@
           Log In
       </button>
       </form>
-  </nb-sidebar>
+  </nb-layout-column>
 
-  <nb-layout-column class="pt-3">
-      <h3>JADWAL KEDIKLATAN</h3>
-      <nb-card>
-        <nb-card-body>
+  <nb-layout-column style="background-color: white;">
+    
+    <h5>JADWAL DIKLAT 2022</h5>
+    <!-- <div class="search d-flex align-items-center justify-content-end">
+      <label class="search-label" for="search">Search:</label>
+      <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
+    </div> -->
 
-          <div class="search d-flex align-items-center justify-content-end">
-            <label class="search-label" for="search">Search:</label>
-            <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
-          </div>
+    <nb-card>
+      <nb-card-body>
+        <ngx-datatable 
+            [class]="'bootstrap'" 
+            [rows]="dataTable" 
+            [count]="dataTable.length"
+            [scrollbarH]="true"
+            columnMode="force"
+            default>
+            <ngx-datatable-column [name]="'No'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{rowIndex+1}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'NAMA DIKLAT'" prop="name"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'WAKTU PELAKSANAAN'" prop="time"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'TEMPAT PELAKSANAAN'" prop="place"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'REGISTRASI'">
+            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                      <div class="d-flex">
+                          <button nbButton outline status="primary" size="small" class="btn btn-action" (click)="open()">DAFTAR</button>
+                      </div>
+                  </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+      </nb-card-body>
+    </nb-card>
 
-          <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-      
-            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-      
-            <ng-container [nbTreeGridColumnDef]="customColumn">
-              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-                {{customColumn}}
-              </th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                {{row.data[customColumn]}}
-              </td>
-            </ng-container>
-      
-            <ng-container *ngFor="let column of defaultColumns; let index = index"
-                          [nbTreeGridColumnDef]="column"
-                          [showOn]="getShowOn(index)">
-              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-                {{column}}
-              </th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-            </ng-container>
-      
-          </table>
-      
-        </nb-card-body>
-      </nb-card>
-  <ng-content select="router-outlet"></ng-content>
+    <!-- <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+
+      <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+      <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+      <ng-container [nbTreeGridColumnDef]="customColumn">
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+          {{customColumn}}
+        </th>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">
+          <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+          {{row.data[customColumn]}}
+        </td>
+      </ng-container>
+
+      <ng-container *ngFor="let column of defaultColumns; let index = index"
+                    [nbTreeGridColumnDef]="column"
+                    [showOn]="getShowOn(index)">
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+          {{column}}
+        </th>
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+      </ng-container>
+
+    </table> -->   
+    <ng-content select="router-outlet"></ng-content>
   </nb-layout-column>
 </nb-layout>

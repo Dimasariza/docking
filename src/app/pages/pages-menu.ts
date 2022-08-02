@@ -8,6 +8,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true
   },
   {
+    title: 'PELATIHAN',
+    group: true
+  },
+  {
     title: 'Diklat',
     icon: 'text-outline',
     children: [
@@ -27,14 +31,28 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/izin-belajar'
   },
   {
-    title: 'Berkas',
-    icon: 'file-text-outline',
-    children: [
-      {
-        title: 'Berkas Saya',
-        link: '/pages/berkas/berkas-saya'
-      }
-    ]
+    title: 'PENGATURAN',
+    group: true
+  },
+  {
+    title: 'Manajemen File',
+    icon: 'archive-outline',
+    link: '/pages/manajemen-file'
+  },
+  // {
+  //   title: 'Berkas',
+  //   icon: 'file-text-outline',
+  //   children: [
+  //     {
+  //       title: 'Berkas Saya',
+  //       link: '/pages/berkas/berkas-saya'
+  //     }
+  //   ]
+  // },
+  
+  {
+    title: 'FEATURES',
+    group: true,
   },
   {
     title: 'E-commerce',
@@ -45,10 +63,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'IoT Dashboard',
     icon: 'home-outline',
     link: '/pages/iot-dashboard',
-  },
-  {
-    title: 'FEATURES',
-    group: true,
   },
   {
     title: 'Layout',

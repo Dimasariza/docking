@@ -141,14 +141,16 @@ export class IzinBelajarComponent implements OnInit {
   constructor(private dialogService: NbDialogService) { }
   names: string[] = []
   open() {
-    // this.scroll(true)
-    this.dialogService.open(DialogFormComponent)
-      .onClose.subscribe(name => name && this.names.push(name));
+    this.scroll(false, true)
+    // this.dialogService.open(DialogFormComponent)
+    //   .onClose.subscribe(name => name && this.names.push(name));
   }
 
-  // protected scroll(hasScroll: boolean) {
-  //   this.dialogService.open(DialogFormComponent, {hasScroll})
-  // }
+  protected scroll(closeOnBackdropClick: boolean, hasScroll: boolean) {
+    // this.dialogService.open(DialogFormComponent, {hasScroll})
+    this.dialogService.open(DialogFormComponent, {closeOnBackdropClick, hasScroll})
+      .onClose.subscribe(name => name && this.names.push(name));
+  }
   ngOnInit(): void {
   }
 
@@ -167,7 +169,7 @@ export class IzinBelajarComponent implements OnInit {
           </label>
         </div>
       </nb-card-body>
-      <nb-card-footer>
+      <nb-card-footer class="d-flex justify-content-end">
         <button class="cancel" nbButton status="danger" (click)="cancel()">Cancel</button>
         <button nbButton status="success" (click)="submit(name.nativeElement.files[0].name)">Submit</button>
       </nb-card-footer>
@@ -206,25 +208,25 @@ export class DialogFormComponent {
       nama: 'SKP 2 Tahun Terakhir',
       id: 'skp'
     },
-    {
-      nama: 'FC Ijazah Terakhir',
-      id: 'fc-ijazah'
-    },
-    {
-      nama: 'Surat Pernyataan Bermaterai',
-      id: 'sura-pernyataan'
-    },
-    {
-      nama: 'Surat Keterangan Calon Mahasiswa',
-      id: 'sk-mhs'
-    },
-    {
-      nama: 'Rencana Jadwal Kuliah',
-      id: 'jadwal'
-    },
-    {
-      nama: 'Surat Keterangan Program Studi Sudah Berakreditasi Minimal B',
-      id: 'sk-prodi'
-    }
+    // {
+    //   nama: 'FC Ijazah Terakhir',
+    //   id: 'fc-ijazah'
+    // },
+    // {
+    //   nama: 'Surat Pernyataan Bermaterai',
+    //   id: 'sura-pernyataan'
+    // },
+    // {
+    //   nama: 'Surat Keterangan Calon Mahasiswa',
+    //   id: 'sk-mhs'
+    // },
+    // {
+    //   nama: 'Rencana Jadwal Kuliah',
+    //   id: 'jadwal'
+    // },
+    // {
+    //   nama: 'Surat Keterangan Program Studi Sudah Berakreditasi Minimal B',
+    //   id: 'sk-prodi'
+    // }
   ]
 }

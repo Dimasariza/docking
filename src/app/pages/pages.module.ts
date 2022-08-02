@@ -9,6 +9,7 @@ import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { HomeModule } from './home/home.module';
 import { IzinBelajarModule } from './izin-belajar/izin-belajar.module';
+import { ManajemenFileModule } from './manajemen-file/manajemen-file.module';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { IzinBelajarModule } from './izin-belajar/izin-belajar.module';
     ECommerceModule,
     MiscellaneousModule,
     HomeModule,
-    IzinBelajarModule
+    IzinBelajarModule,
+    ManajemenFileModule
   ],
   declarations: [
     PagesComponent

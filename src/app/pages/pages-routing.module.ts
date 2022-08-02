@@ -8,6 +8,7 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { HomeComponent } from './home/home.component';
 import { IzinBelajarComponent } from './izin-belajar/izin-belajar.component';
 import { BerkasComponent } from './berkas/berkas.component';
+import { ManajemenFileComponent } from './manajemen-file/manajemen-file.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,6 +28,10 @@ const routes: Routes = [{
     {
       path: 'izin-belajar',
       component: IzinBelajarComponent
+    },
+    {
+      path: 'manajemen-file',
+      component: ManajemenFileComponent
     },
     {
       path: 'berkas',
@@ -88,7 +93,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'dashboard',
+      redirectTo: 'home',
       pathMatch: 'full',
     },
     {

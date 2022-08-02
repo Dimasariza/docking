@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbAuthService, NbLoginComponent,} from '@nebular/auth';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbDialogRef, NbDialogService, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 interface TreeNode<T> {
     data: T;
@@ -16,14 +16,73 @@ interface FSEntry {
     items?: number;
 }
 
+interface dataTable {
+  name: string
+  time: string
+  place: string
+}
+
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class NgxLoginComponent extends NbLoginComponent {
-  customColumn = 'NOMOR';
-  defaultColumns = [ 'NAMA DIKLAT', 'WAKTU PELAKSANAAN', 'TEMPAT PELAKSANAAN', 'AKSI' ];
+
+  showPassword = true;
+
+  getInputType() {
+    if (this.showPassword) {
+      return 'text';
+    }
+    return 'password';
+  }
+
+  toggleShowPass() {
+    this.showPassword = !this.showPassword
+  }
+  
+
+  dataTable = [
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "10 Juni 2022 - 22 Juni 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "10 Juni 2022 - 22 Juni 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    }
+  ]
+
+  customColumn = 'no';
+  defaultColumns = [ 'size', 'items', 'kind', 'AKSI' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
@@ -31,9 +90,13 @@ export class NgxLoginComponent extends NbLoginComponent {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(public dataSourceBuilder : NbTreeGridDataSourceBuilder<FSEntry>, public service: NbAuthService, public cd: ChangeDetectorRef, public router: Router) {
+  constructor(public dataSourceBuilder : NbTreeGridDataSourceBuilder<FSEntry>, public service: NbAuthService, public cd: ChangeDetectorRef, public router: Router, private dialogService: NbDialogService) {
     super(service, {}, cd, router)
     this.dataSource = this.dataSourceBuilder.create(this.data)
+  }
+
+  open() {
+    this.dialogService.open(DialogAlertComponent)
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -98,4 +161,36 @@ export class NgxLoginComponent extends NbLoginComponent {
     isDir(): boolean {
       return this.kind === 'dir';
     }
+  }
+
+  @Component ({
+    selector: 'ngx-dialog-alert',
+    template: `
+      <nb-card>
+        <nb-card-header>
+          <div class="text-center">
+            <nb-icon icon="alert-triangle"></nb-icon> &nbsp;
+            <strong>PERHATIAN!</strong>
+          </div>
+        </nb-card-header>
+        <nb-card-body class="d-inline-block">
+          <div>
+            <p>Anda harus login terlebih dahulu sebelum melakukan pendaftaran</p>
+          </div>
+        </nb-card-body>
+        <nb-card-footer class="d-flex justify-content-end">
+          <button class="cancel" nbButton status="danger" (click)="cancel()">Tutup</button>
+        </nb-card-footer>
+      </nb-card>
+    `,
+    // styleUrls: ['./izin-belajar.component.scss']
+  })
+  
+  export class DialogAlertComponent {
+    constructor(protected ref: NbDialogRef<DialogAlertComponent>) {}
+  
+    cancel() {
+      this.ref.close();
+    }
+  
   }

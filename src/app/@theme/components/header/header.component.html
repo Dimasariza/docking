@@ -14,11 +14,10 @@
   <nb-actions size="small">
 
     <nb-action class="control-item">
-      <!-- <nb-search type="rotate-layout"></nb-search> -->
-      HOME
+      <nb-search type="rotate-layout"></nb-search>
     </nb-action>
-    <nb-action class="control-item" >PESAN</nb-action>
-    <nb-action class="control-item" >FORUM</nb-action>
+    <nb-action class="control-item" > <nb-icon icon="email-outline"></nb-icon> </nb-action>
+    <nb-action class="control-item" > <nb-icon icon="bell-outline"></nb-icon> </nb-action>
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
       <nb-user [nbContextMenu]="userMenu"
                [onlyPicture]="userPictureOnly"
