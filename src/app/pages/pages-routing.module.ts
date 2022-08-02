@@ -24,7 +24,8 @@ const routes: Routes = [{
     },
     {
       path: 'project-batera',
-      component: ProjectBateraComponent,
+      loadChildren: () => import('./project-batera/project-batera.modules')
+      .then(m => m.ProjectBateraModule),
     },
     {
       path: 'technical-batera',
@@ -68,6 +69,11 @@ const routes: Routes = [{
       path: 'ui-features',
       loadChildren: () => import('./ui-features/ui-features.module')
         .then(m => m.UiFeaturesModule),
+    },
+    {
+      path: 'e-commerce',
+      loadChildren: () => import('./e-commerce/e-commerce.module')
+        .then(m => m.ECommerceModule),
     },
     {
       path: 'modal-overlays',

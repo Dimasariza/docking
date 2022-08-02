@@ -1,21 +1,5 @@
-<p>home-batera work!</p>
 <div class="row">
-  <div class="col-md-4 col-sm-12">
-      <card-test></card-test>
-  </div>
-  <div class="col-md-4 col-sm-12">
-      <card-test></card-test>
-  </div>
-  <div class="col-md-4 col-sm-12">
-      <card-test></card-test>
-  </div>
-  <div class="col-md-4 col-sm-12">
-    <card-test></card-test>
-  </div>
-  <div class="col-md-4 col-sm-12">
-      <card-test></card-test>
-  </div>
-  <div class="col-md-4 col-sm-12">
-      <card-test></card-test>
+  <div class="col-md-4 col-sm-12" *ngFor="let item of data; let indexOfelement=index;">
+      <card-test [image] = "item" ></card-test>      
   </div>
 </div>

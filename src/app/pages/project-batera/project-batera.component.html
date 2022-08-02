@@ -1,1 +1,50 @@
-<p>project-batera works!</p>
+<nb-card>
+    <nb-card-body>
+        <h5>Tasks | Mine</h5>
+      <ngx-datatable 
+          [class]="'bootstrap'" 
+          [rows]="data" 
+          [count]="data.length"
+          [scrollbarH]="true"
+          columnMode="force"
+          default>
+          <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  #{{row.name}}
+              </ng-template>
+          </ngx-datatable-column> -->
+          <ngx-datatable-column [name]="'Vessel'" prop="vessel"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Shortcut'" prop="company"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'RPE'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Start'" prop="start"></ngx-datatable-column>
+      </ngx-datatable>
+    </nb-card-body>
+  </nb-card>
+
+<nb-card>
+    <nb-card-body>
+        <h5>Project</h5>
+        <nb-card-header>
+            Current Project
+        </nb-card-header>
+      <ngx-datatable 
+          [class]="'bootstrap'" 
+          [rows]="data" 
+          [count]="data.length"
+          [scrollbarH]="true"
+          columnMode="force"
+          default>
+          <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  #{{row.name}}
+              </ng-template>
+          </ngx-datatable-column> -->
+          <ngx-datatable-column [name]="'Vessel'" prop="vessel"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Shortcut'" prop="company"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'RPE'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Start'" prop="start"></ngx-datatable-column>
+      </ngx-datatable>
+    </nb-card-body>
+  </nb-card>

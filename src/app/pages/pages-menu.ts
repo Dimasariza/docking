@@ -126,6 +126,29 @@ export const MENU_ITEMS: NbMenuItem[] = [
       },
     ],
   },
+  // {
+  //   title: 'UI Features',
+  //   icon: 'keypad-outline',
+  //   link: '/pages/e-commerce',
+  //   children: [
+  //     {
+  //       title: 'Chart Panel',
+  //       link: '/pages/e-commerce/charts',
+  //     },
+  //     {
+  //       title: 'Icons',
+  //       link: '/pages/e-commerce/icons',
+  //     },
+  //     {
+  //       title: 'Typography',
+  //       link: '/pages/e-commerce/typography',
+  //     },
+  //     {
+  //       title: 'Animated Searches',
+  //       link: '/pages/e-commerce/search-fields',
+  //     },
+  //   ],
+  // },
   {
     title: 'Modal & Overlays',
     icon: 'browser-outline',
