@@ -9,8 +9,17 @@ import { CalendarOptions } from '@fullcalendar/angular';
 export class KalenderComponent implements OnInit {
 
   calendarOptions: CalendarOptions = {
-    initialView: 'dayGridMonth'
+    initialView: 'dayGridMonth',
+    dateClick: this.handleDateClick.bind(this), // bind is important!
+    events: [
+      { title: 'event 1', date: '2022-08-12' },
+      { title: 'event 2', date: '2022-08-13' }
+    ]
   };
+
+  handleDateClick(arg) {
+    alert('date click! ' + arg.dateStr)
+  }
 
   data = [
     {
