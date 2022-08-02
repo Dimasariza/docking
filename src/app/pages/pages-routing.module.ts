@@ -9,6 +9,8 @@ import { HomeComponent } from './home/home.component';
 import { IzinBelajarComponent } from './izin-belajar/izin-belajar.component';
 import { BerkasComponent } from './berkas/berkas.component';
 import { ManajemenFileComponent } from './manajemen-file/manajemen-file.component';
+import { HakAksesComponent } from './hak-akses/hak-akses.component';
+import { ManajemenUserComponent } from './manajemen-user/manajemen-user.component';
 
 const routes: Routes = [{
   path: '',
@@ -32,6 +34,14 @@ const routes: Routes = [{
     {
       path: 'manajemen-file',
       component: ManajemenFileComponent
+    },
+    {
+      path: 'manajemen-user',
+      component: ManajemenUserComponent
+    },
+    {
+      path: 'hak-akses',
+      component: HakAksesComponent
     },
     {
       path: 'berkas',

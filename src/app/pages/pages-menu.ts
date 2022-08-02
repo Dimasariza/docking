@@ -39,6 +39,16 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'archive-outline',
     link: '/pages/manajemen-file'
   },
+  {
+    title: 'Manajemen User',
+    icon: 'person-outline',
+    link: '/pages/manajemen-user'
+  },
+  {
+    title: 'Hak Akses',
+    icon: 'lock-outline',
+    link: '/pages/hak-akses'
+  },
   // {
   //   title: 'Berkas',
   //   icon: 'file-text-outline',

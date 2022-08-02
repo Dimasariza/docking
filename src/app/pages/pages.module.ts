@@ -10,6 +10,8 @@ import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { HomeModule } from './home/home.module';
 import { IzinBelajarModule } from './izin-belajar/izin-belajar.module';
 import { ManajemenFileModule } from './manajemen-file/manajemen-file.module';
+import { HakAksesModule } from './hak-akses/hak-akses.module';
+import { ManajemenUserModule } from './manajemen-user/manajemen-user.module';
 
 @NgModule({
   imports: [
@@ -21,7 +23,9 @@ import { ManajemenFileModule } from './manajemen-file/manajemen-file.module';
     MiscellaneousModule,
     HomeModule,
     IzinBelajarModule,
-    ManajemenFileModule
+    ManajemenFileModule,
+    HakAksesModule,
+    ManajemenUserModule
   ],
   declarations: [
     PagesComponent

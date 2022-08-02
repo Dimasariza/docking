@@ -1,0 +1,34 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <div class="header-title">
+            <h5>Manage Hak Akses</h5>
+            <p>Tabel berikut memuat daftar data master pengguna dan aksesnya</p>
+        </div>
+        <div>
+            <button nbButton status="primary"> <nb-icon icon="plus-circle-outline"></nb-icon> Tambah Role</button>
+        </div>
+        
+    </nb-card-header>
+    <nb-card-body>
+      <ngx-datatable 
+          [class]="'bootstrap'" 
+          [rows]="dataTable" 
+          [count]="dataTable.length"
+          [scrollbarH]="true"
+          columnMode="force"
+          default>
+          <ngx-datatable-column [name]="'Nama Role'" prop="name"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Deskripsi'" prop="deskripsi"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Action'">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                    <nb-action> <a href="" style="text-decoration: none;">Permission</a> </nb-action>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                    <nb-action> <a href="" class="text-danger" style="text-decoration: none;">Delete</a> </nb-action>
+                </ng-template>
+            </ngx-datatable-column>
+      </ngx-datatable>
+    </nb-card-body>
+  </nb-card>
