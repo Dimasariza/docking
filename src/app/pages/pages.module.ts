@@ -13,7 +13,6 @@ import { ProcurementBateraComponent } from './procurement-batera/procurement-bat
 import { TrackingBateraComponent } from './tracking-batera/tracking-batera.component';
 import { ReportBateraComponent } from './report-batera/report-batera.component';
 import { ProfilBateraComponent } from './profile-batera/profil-batera.component';
-import { CardComponent } from './home-batera/card/card.component';
 
 @NgModule({
   imports: [
@@ -32,7 +31,6 @@ import { CardComponent } from './home-batera/card/card.component';
     TrackingBateraComponent,
     ReportBateraComponent,
     ProfilBateraComponent,
-    CardComponent,
   ],
 })
 export class PagesModule {
