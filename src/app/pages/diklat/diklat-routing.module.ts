@@ -13,7 +13,7 @@ const routes: Routes = [
         component: KalenderComponent
       },
       {
-        path: 'status',
+        path: 'diklat-individu',
         component: StatusComponent
       }
     ] 

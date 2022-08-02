@@ -12,8 +12,8 @@ export class KalenderComponent implements OnInit {
     initialView: 'dayGridMonth',
     dateClick: this.handleDateClick.bind(this), // bind is important!
     events: [
-      { title: 'event 1', date: '2022-08-12' },
-      { title: 'event 2', date: '2022-08-13' }
+      { title: 'Diklat Prajabatan Golongan 1', date: '2022-08-12' },
+      { title: 'event 2', date: '2022-08-12' }
     ]
   };
 

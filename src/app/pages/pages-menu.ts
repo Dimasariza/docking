@@ -13,15 +13,15 @@ export const MENU_ITEMS: NbMenuItem[] = [
   },
   {
     title: 'Diklat',
-    icon: 'text-outline',
+    icon: 'book-open-outline',
     children: [
       {
         title: 'Kalender',
         link: '/pages/diklat/kalender'
       },
       {
-        title: 'Status',
-        link: '/pages/diklat/status'
+        title: 'Diklat Individu',
+        link: '/pages/diklat/diklat-individu'
       }
     ]
   },
