@@ -47,7 +47,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Hak Akses',
     icon: 'lock-outline',
-    link: '/pages/hak-akses'
+    link: '/pages/hak-akses/index'
   },
   // {
   //   title: 'Berkas',

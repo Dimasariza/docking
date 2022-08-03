@@ -37,11 +37,11 @@ const routes: Routes = [{
     },
     {
       path: 'manajemen-user',
-      component: ManajemenUserComponent
+      loadChildren: () => import('./manajemen-user/manajemen-user.module').then(m => m.ManajemenUserModule)
     },
     {
       path: 'hak-akses',
-      component: HakAksesComponent
+      loadChildren: () => import('./hak-akses/hak-akses.module').then(m => m.HakAksesModule)
     },
     {
       path: 'berkas',

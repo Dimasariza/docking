@@ -1,0 +1,41 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <div class="header-title">
+            <h5>Manajemen User</h5>
+            <p>Tabel berikut memuat daftar data master pengguna dan aksesnya</p>
+        </div>
+        <div>
+            <button routerLink="/pages/manajemen-user/add-data" nbButton status="primary"> <nb-icon icon="plus-circle-outline"></nb-icon> Tambah Data</button>
+        </div>
+        
+    </nb-card-header>
+    <nb-card-body>
+      <ngx-datatable 
+          [class]="'bootstrap'" 
+          [rows]="dataTable" 
+          [count]="dataTable.length"
+          [scrollbarH]="true"
+          columnMode="force"
+          default>
+          <ngx-datatable-column [name]="'NIP'" prop="nip"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Username'">
+            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                {{ row.user }} <br>
+                {{ row.email }}
+            </ng-template>
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'Role'" prop="role"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Status'" prop="status"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Action'">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                    <nb-action> <a href="" style="text-decoration: none;">Edit</a> </nb-action>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column>
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                    <nb-action> <a href="" class="text-danger" style="text-decoration: none;">Delete</a> </nb-action>
+                </ng-template>
+            </ngx-datatable-column>
+      </ngx-datatable>
+    </nb-card-body>
+  </nb-card>
