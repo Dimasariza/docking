@@ -26,6 +26,8 @@ import { EchartsMultipleXaxisComponent } from './echarts/echarts-multiple-xaxis.
 import { EchartsAreaStackComponent } from './echarts/echarts-area-stack.component';
 import { EchartsBarAnimationComponent } from './echarts/echarts-bar-animation.component';
 import { EchartsRadarComponent } from './echarts/echarts-radar.component';
+import { NgApexchartsModule } from 'ng-apexcharts';
+import { TimelineApexchartComponent } from './apexchart/timeline-chart.component';
 
 const components = [
   ChartjsBarComponent,
@@ -47,6 +49,7 @@ const components = [
   EchartsAreaStackComponent,
   EchartsBarAnimationComponent,
   EchartsRadarComponent,
+  TimelineApexchartComponent
 ];
 
 @NgModule({
@@ -57,6 +60,7 @@ const components = [
     NgxChartsModule,
     ChartModule,
     NbCardModule,
+    NgApexchartsModule,
   ],
   declarations: [...routedComponents, ...components],
 })

@@ -171,6 +171,10 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'pie-chart-outline',
     children: [
       {
+        title: 'Apexchart',
+        link: '/pages/charts/apexchart',
+      },
+      {
         title: 'Echarts',
         link: '/pages/charts/echarts',
       },
