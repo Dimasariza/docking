@@ -5,11 +5,16 @@ import { ChartsComponent } from './charts.component';
 import { EchartsComponent } from './echarts/echarts.component';
 import { D3Component } from './d3/d3.component';
 import { ChartjsComponent } from './chartjs/chartjs.component';
+import { ApexchartComponent } from './apexchart/apexchart.component';
+import { TimelineApexchartComponent } from './apexchart/timeline-chart.component';
 
 const routes: Routes = [{
   path: '',
   component: ChartsComponent,
   children: [{
+    path: 'apexchart',
+    component: TimelineApexchartComponent,
+  },{
     path: 'echarts',
     component: EchartsComponent,
   }, {
@@ -32,4 +37,5 @@ export const routedComponents = [
   EchartsComponent,
   D3Component,
   ChartjsComponent,
+  ApexchartComponent
 ];

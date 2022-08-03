@@ -17,7 +17,6 @@
       "dom"
     ],
     "plugins": [
-      { "name": "tslint-language-service"}
     ]
   }
 }
