@@ -1,0 +1,9 @@
+::ng-deep .datatable-body-row, .datatable-body-cell {
+    height: 70px !important;
+}
+
+::ng-deep .datatable-body-cell-label {
+    height: 100%;
+    display: flex !important;
+    align-items: center !important;
+}

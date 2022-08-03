@@ -10,7 +10,6 @@ import { ProjectBateraComponent } from './project-batera/project-batera.componen
 import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
 import { ProcurementBateraComponent } from './procurement-batera/procurement-batera.component';
 import { ReportBateraComponent } from './report-batera/report-batera.component';
-import { TrackingBateraComponent } from './tracking-batera/tracking-batera.component';
 import { ProfilBateraComponent } from './profile-batera/profil-batera.component';
 
 const routes: Routes = [{
@@ -37,7 +36,34 @@ const routes: Routes = [{
     },
     {
       path: 'tracking-batera',
-      component: TrackingBateraComponent,
+      loadChildren: () => import('./tracking-batera/tracking-batera.module')
+      .then(m => m.TrackingBateraModule),
+    },
+    {
+      path: 'report-batera',
+      component: ReportBateraComponent,
+    },
+    {
+      path: 'profile-batera',
+      component: ProfilBateraComponent,
+    },
+    {
+      path: 'home-batera',
+      loadChildren: () => import('./home-batera/home-batera.module')
+        .then(m => m.HomeBateraModule),
+    },
+    {
+      path: 'project-batera',
+      loadChildren: () => import('./project-batera/project-batera.modules')
+      .then(m => m.ProjectBateraModule),
+    },
+    {
+      path: 'technical-batera',
+      component: TechnicalBateraComponent,
+    },
+    {
+      path: 'procurement-batera',
+      component: ProcurementBateraComponent,
     },
     {
       path: 'report-batera',
