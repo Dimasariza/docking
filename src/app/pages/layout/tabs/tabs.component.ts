@@ -27,6 +27,7 @@ export class Tab2Component { }
   styleUrls: ['./tabs.component.scss'],
   templateUrl: './tabs.component.html',
 })
+
 export class TabsComponent {
 
   tabs: any[] = [

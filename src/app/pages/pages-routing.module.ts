@@ -8,9 +8,6 @@ import { NotFoundComponent } from './miscellaneous/not-found/not-found.component
 import { HomeBateraComponent } from './home-batera/home-batera.component';
 import { ProjectBateraComponent } from './project-batera/project-batera.component';
 import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
-import { ProcurementBateraComponent } from './procurement-batera/procurement-batera.component';
-import { ReportBateraComponent } from './report-batera/report-batera.component';
-import { ProfilBateraComponent } from './profile-batera/profil-batera.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,12 +24,13 @@ const routes: Routes = [{
       .then(m => m.ProjectBateraModule),
     },
     {
-      path: 'technical-batera',
-      component: TechnicalBateraComponent,
+      path: 'tender-batera',
+      loadChildren: () => import('./tender-batera/tender-batera.module')
+      .then(m => m.TenderBateraModule),
     },
     {
-      path: 'procurement-batera',
-      component: ProcurementBateraComponent,
+      path: 'technical-batera',
+      component: TechnicalBateraComponent,
     },
     {
       path: 'tracking-batera',
@@ -41,11 +39,13 @@ const routes: Routes = [{
     },
     {
       path: 'report-batera',
-      component: ReportBateraComponent,
+      loadChildren: () => import('./report-batera/report-batera.module')
+      .then(m => m.ReportBateraModule),
     },
     {
       path: 'profile-batera',
-      component: ProfilBateraComponent,
+      loadChildren: () => import('./profile-batera/profil-batera.modules')
+      .then(m => m.ProfilBateraModule),
     },
     {
       path: 'home-batera',
@@ -60,18 +60,6 @@ const routes: Routes = [{
     {
       path: 'technical-batera',
       component: TechnicalBateraComponent,
-    },
-    {
-      path: 'procurement-batera',
-      component: ProcurementBateraComponent,
-    },
-    {
-      path: 'report-batera',
-      component: ReportBateraComponent,
-    },
-    {
-      path: 'profile-batera',
-      component: ProfilBateraComponent,
     },
     {
       path: 'dashboard',

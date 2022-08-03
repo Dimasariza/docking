@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbCardModule, NbIconModule, NbInputModule, NbTreeGridModule } from '@nebular/theme';
+import { NbCardModule, NbIconModule, NbInputModule, NbOptionComponent, NbOptionModule, NbSelectModule, NbTreeGridModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 import { ThemeModule } from '../../@theme/theme.module';
@@ -12,7 +12,9 @@ import { ProjectBateraRoutingModule, routedComponents } from './project-batera-r
     NbInputModule,
     ThemeModule,
     NgxDatatableModule,
-    ProjectBateraRoutingModule
+    ProjectBateraRoutingModule,
+    NbOptionModule,
+    NbSelectModule
   ],
   declarations: [
     ...routedComponents,

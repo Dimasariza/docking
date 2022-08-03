@@ -1,18 +1,18 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectBateraComponent } from './project-batera.component';
+import { TenderBateraComponent } from './tender-batera.component';
 
 const routes: Routes = [{
     path: '',
-    component: ProjectBateraComponent,
+    component: TenderBateraComponent,
 }];
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
 })
-export class ProjectBateraRoutingModule { }
+export class TenderBateraRoutingModule { }
 
 export const routedComponents = [
-  ProjectBateraComponent,
+  TenderBateraComponent
 ];

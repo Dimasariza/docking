@@ -1,6 +1,14 @@
 <nb-card>
     <nb-card-body>
         <h5>Tasks | Mine</h5>
+              <nb-select selected="1">
+                <nb-option value="1">Option 1</nb-option>
+                <nb-option value="2">Option 2</nb-option>
+              </nb-select>
+              <nb-select selected="1">
+                <nb-option value="1">Option 1</nb-option>
+                <nb-option value="2">Option 2</nb-option>
+              </nb-select>
       <ngx-datatable 
           [class]="'bootstrap'" 
           [rows]="data" 
@@ -13,18 +21,19 @@
                   #{{row.name}}
               </ng-template>
           </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'Vessel'" prop="vessel"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Shortcut'" prop="company"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'RPE'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Start'" prop="start"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Tasks'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Project / Asset'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Customer'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Status'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Responsible'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Due'" prop=""></ngx-datatable-column>
       </ngx-datatable>
     </nb-card-body>
   </nb-card>
 
 <nb-card>
     <nb-card-body>
-        <h5>Project</h5>
+        <h5>Project List</h5>
         <nb-card-header>
             Current Project
         </nb-card-header>

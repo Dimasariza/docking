@@ -14,15 +14,9 @@ export const MENU_ITEMS: NbMenuItem[] = [
     home: true,
   },
   {
-    title: 'Technical',
-    icon: 'settings-2-outline',
-    link: '/pages/technical-batera',
-    home: true,
-  },
-  {
-    title: 'Procurement',
+    title: 'Tender',
     icon: 'cube-outline',
-    link: '/pages/procurement-batera',
+    link: '/pages/tender-batera',
     home: true,
   },
   {

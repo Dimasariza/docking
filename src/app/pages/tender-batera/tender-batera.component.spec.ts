@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ProcurementBateraComponent } from './procurement-batera.component';
+import { TenderBateraComponent } from './tender-batera.component';
 
-describe('ProcurementBateraComponent', () => {
-  let component: ProcurementBateraComponent;
-  let fixture: ComponentFixture<ProcurementBateraComponent>;
+describe('TenderBateraComponent', () => {
+  let component: TenderBateraComponent;
+  let fixture: ComponentFixture<TenderBateraComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ProcurementBateraComponent ]
+      declarations: [ TenderBateraComponent ]
     })
     .compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ProcurementBateraComponent);
+    fixture = TestBed.createComponent(TenderBateraComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

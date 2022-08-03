@@ -8,9 +8,6 @@ import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
 import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
-import { ProcurementBateraComponent } from './procurement-batera/procurement-batera.component';
-import { ReportBateraComponent } from './report-batera/report-batera.component';
-import { ProfilBateraComponent } from './profile-batera/profil-batera.component';
 
 @NgModule({
   imports: [
@@ -23,10 +20,7 @@ import { ProfilBateraComponent } from './profile-batera/profil-batera.component'
   ],
   declarations: [
     PagesComponent,
-    TechnicalBateraComponent,
-    ProcurementBateraComponent,
-    ReportBateraComponent,
-    ProfilBateraComponent,
+    TechnicalBateraComponent
   ],
 })
 export class PagesModule {

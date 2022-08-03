@@ -1,0 +1,175 @@
+<div class="row">
+    <div class="col-md-12">
+      <nb-card> 
+        <nb-card-body>
+          <h5 class="grid-h">Selected Yard : 
+            <Span>Pax Ocean Batam</Span>
+          </h5>
+          <div class="row show-grid">
+            <div class="col-md-6">
+              <div>Internal Comment</div>
+            </div>
+            <div class="col-md-6">
+              <div>.col-md-6</div>
+            </div>
+          </div>
+
+
+
+          <div class="row show-grid">
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+            <div class="col-md-1">
+              <div>.col-md-1</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-md-8">
+              <div>.col-md-8</div>
+            </div>
+            <div class="col-md-4">
+              <div>.col-md-4</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-md-4">
+              <div>.col-md-4</div>
+            </div>
+            <div class="col-md-4">
+              <div>.col-md-4</div>
+            </div>
+            <div class="col-md-4">
+              <div>.col-md-4</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-md-6">
+              <div>.col-md-6</div>
+            </div>
+            <div class="col-md-6">
+              <div>.col-md-6</div>
+            </div>
+          </div>
+  
+          <h5 class="grid-h">Mobile and desktop</h5>
+          <div class="row show-grid">
+            <div class="col-12 col-md-8">
+              <div>.col-12 .col-md-8</div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div>.col-6 .col-md-4</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-6 col-md-4">
+              <div>.col-6 .col-md-4</div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div>col-6 .col-md-4</div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div>.col-6 .col-md-4</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-6">
+              <div>.col-6</div>
+            </div>
+            <div class="col-6">
+              <div>.col-6</div>
+            </div>
+          </div>
+  
+          <h5 class="grid-h">Mobile, tablet, desktop</h5>
+          <div class="row show-grid">
+            <div class="col-12 col-sm-6 col-md-8">
+              <div>.col-12 .col-sm-6 .col-md-8</div>
+            </div>
+            <div class="col-6 col-md-4">
+              <div>.col-6 .col-md-4</div>
+            </div>
+          </div>
+          <div class="row show-grid">
+            <div class="col-6 col-sm-4">
+              <div>.col-6 .col-sm-4</div>
+            </div>
+            <div class="col-6 col-sm-4">
+              <div>.col-6 .col-sm-4</div>
+            </div>
+            <div class="col-6 col-sm-4">
+              <div>.col-6 .col-sm-4</div>
+            </div>
+          </div>
+  
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>
+
+<!--
+  <nb-card>
+    <nb-card-body>
+  
+      <label class="search-label" for="search">Search:</label>
+      <input nbInput [nbFilterInput]="dataSource" id="search" class="search-input">
+  
+      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+  
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+  
+            <ng-container [nbTreeGridColumnDef]="customColumn">
+          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+            {{customColumn}}
+          </th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+            {{row.data[customColumn]}}
+          </td>
+        </ng-container>
+  
+        <ng-container *ngFor="let column of defaultColumns; let index = index"
+                      [nbTreeGridColumnDef]="column"
+                      [showOn]="getShowOn(index)">
+          <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+            {{column}}
+          </th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        </ng-container> 
+  
+      </table>
+  
+    </nb-card-body>
+  </nb-card>
+  -->
