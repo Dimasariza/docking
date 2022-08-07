@@ -29,7 +29,7 @@ const routes: Routes = [{
     },
     {
       path: 'izin-belajar',
-      component: IzinBelajarComponent
+      loadChildren: () => import('./izin-belajar/izin-belajar.module').then(m => m.IzinBelajarModule)
     },
     {
       path: 'manajemen-file',
