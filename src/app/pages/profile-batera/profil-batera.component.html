@@ -38,27 +38,22 @@
 
     <nb-card-body>
         <h6>Akun Pengguna</h6>
-        <div class="row">
-            <div class="col-6">
-                <span class="p-2 d-block">Nama Perusahaan</span>
-                <input type="text" nbInput fullWidth placeholder="Nama Perusahaan">
-                <span class="p-2 d-block">Alamat Perusahaan</span>
-                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Alamat Perusahaan 01"></textarea>
-                <span class="p-2 d-block">Telepon</span>
-                <input type="text" nbInput fullWidth placeholder="Nomor Telepon">
-                <span class="p-2 d-block">NPWP</span>
-                <input type="text" nbInput fullWidth placeholder="NPWP Perusahaan">
-            </div>
-            <div class="col-6">
-                <span class="p-2 d-block">Merk Perusahaan</span>
-                <input type="text" nbInput fullWidth placeholder="Merk Perusahaan">
-                <span class="p-2 d-block">Alamat Perusahaan</span>
-                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Alamat Perusahaan 02"></textarea>
-                <span class="p-2 d-block">Faximile</span>
-                <input type="text" nbInput fullWidth placeholder="Alamat Faximile">
-                <span class="p-2 d-block">E-mail</span>
-                <input type="text" nbInput fullWidth placeholder="Alamat E-mail">
-            </div>
-        </div>
+        <ngx-datatable 
+        [class]="'bootstrap'" 
+        [scrollbarH]="true"
+        [rows]="data" 
+        [count]="data.length"
+        columnMode="force"
+        default>
+        <ngx-datatable-column [name]="'No'" [width]="50">
+            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                {{rowIndex+1}}
+            </ng-template>
+        </ngx-datatable-column>
+        <ngx-datatable-column [name]="'Nama Pengguna'" prop="nama pengguna"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Jabatan'" prop="jabatan"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Email'" prop="email"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Mobile Phone'" prop="mobile phone"></ngx-datatable-column>
+        </ngx-datatable>
     </nb-card-body>
 </nb-card>

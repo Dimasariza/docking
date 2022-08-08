@@ -1,44 +1,53 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
-  styleUrls: ['./report-batera.component.scss']
+  styleUrls: ['./report-batera.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 
-// @Component({
-//   selector: 'ngx-tab1',
-//   template: `
-//     <p>Early home automation began with labor-saving machines. Self-contained electric or gas powered
-//       <a target="_blank" href="https://en.wikipedia.org/wiki/Home_appliances">home appliances</a>
-//       became viable in the 1900s with the introduction of
-//       <a target="_blank" href="https://en.wikipedia.org/wiki/Electric_power_distribution">electric power distribution
-//       </a> and led to the introduction of washing machines (1904), water heaters (1889), refrigerators, sewing machines,
-//       dishwashers, and clothes dryers.
-//     </p>
-//   `,
-// })
-// export class Tab1Component { }
-
-// @Component({
-//   selector: 'ngx-tab2',
-//   template: `
-//     <p>Tab 2 works!</p>
-//   `,
-// })
-// export class Tab2Component { }
-
-
 export class ReportBateraComponent {
-  // tabs: any[] = [
-  //   {
-  //     title: 'Route tab #1',
-  //     route: '/pages/layout/tabs/tab1',
-  //   },
-  //   {
-  //     title: 'Route tab #2',
-  //     route: '/pages/layout/tabs/tab2',
-  //   },
-  // ];
+  evaIcons = [];
+
+  constructor(iconsLibrary: NbIconLibraries) {
+    this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
+      .filter(icon => icon.indexOf('outline') === -1);
+
+    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+  }
+
+  tabs: any[] = [
+    {
+      title: 'Key Positions',
+      route: '/pages/report-batera/key-positions',
+    },
+    {
+      title: 'Positions',
+      route: '/pages/report-batera/positions',
+    },
+    {
+      title: 'Activity Report',
+      route: '/pages/report-batera/activity-report',
+    },
+    {
+      title: 'Meetings',
+      route: '/pages/report-batera/meetings',
+    },
+    {
+      title: 'Status Report',
+      route: '/pages/report-batera/status-report',
+    },
+    {
+      title: 'Activity Flow',
+      route: '/pages/report-batera/activity-flow',
+    },
+  ];
 }
+
+
+

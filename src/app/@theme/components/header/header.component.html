@@ -5,21 +5,18 @@
     </a>
     <a class="logo" href="#" (click)="navigateHome()">Batera</a>
   </div>
+  
   <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
   </nb-select>
+
   <div class="greating-container">
-    <!-- <nb-actions size="small"> -->
       <ng-container>
         <h6 >Selamat datang, Bahri!</h6>
         <span >Kami senang Anda datang kembali lagi sejak kunjungan terkhir. <br>
         Silakan liat yang terbaru milik Anda.
         </span>
-  
       </ng-container>
-    <!-- </nb-actions> -->
   </div>
 </div>
 
-<div class="header-container">
-</div>

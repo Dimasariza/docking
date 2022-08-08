@@ -1,9 +1,48 @@
 <nb-card>
     <nb-card-header>
-        <button nbButton status="primary">
+        <button nbButton shape="rectangle" class="mx-1" ghost>
+            <nb-icon icon="star-outline" pack="eva"></nb-icon>
+            My Fleet
+        </button>
+        <button nbButton shape="rectangle" class="mx-1" ghost>
+            <nb-icon icon="list-outline" pack="eva"></nb-icon>
+            Fleet List
+        </button>
+        <button nbButton shape="rectangle" class="mx-1" ghost>
+            <nb-icon icon="menu-outline" pack="eva"></nb-icon>
+            All assets
+        </button>
+        <button nbButton status="primary" class="mx-1" ghost>
             <nb-icon icon="shuffle-2-outline" pack="eva"></nb-icon>
             Docking Plan
         </button>
+    </nb-card-header>
+    <nb-card-header class="justify-content-between d-flex" >
+        <div>
+            <button nbButton status="primary" class="mx-1" outline>
+                <nb-icon icon="book-outline" pack="eva"></nb-icon>
+                Export to PDF
+            </button>
+            <button nbButton status="primary" class="mx-1" outline>
+                <nb-icon icon="chevron-down-outline" pack="eva"></nb-icon>
+                Collapse All
+            </button>
+            <button nbButton status="primary" class="mx-1" outline>
+                <nb-icon icon="info-outline" pack="eva"></nb-icon>
+                Extended Info
+            </button>
+        </div>
+        <div>
+            <button nbButton status="primary" class="mx-1" outline size="tiny">
+                Week
+            </button>
+            <button nbButton status="primary" class="mx-1" outline size="tiny">
+                Month
+            </button>
+            <button nbButton status="primary" class="mx-1" outline size="tiny">
+                Year
+            </button>
+        </div>
     </nb-card-header>
     <nb-card-body>
         <div class="d-flex">
@@ -20,8 +59,8 @@
                 <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
             </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column name="Periode"></ngx-datatable-column>
-    </ngx-datatable>
+            <ngx-datatable-column name="Periode"></ngx-datatable-column>
+            </ngx-datatable>
             </div>
             <div style="flex: 1; margin-left: -18px; margin-top: 1.2em;">
                 <ng-container *ngTemplateOutlet="timeline"></ng-container>

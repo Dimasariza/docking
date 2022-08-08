@@ -1,33 +1,38 @@
 <nb-card>
     <nb-card-body>
         <h5>Tasks | Mine</h5>
-              <nb-select selected="1">
-                <nb-option value="1">Option 1</nb-option>
-                <nb-option value="2">Option 2</nb-option>
-              </nb-select>
-              <nb-select selected="1">
-                <nb-option value="1">Option 1</nb-option>
-                <nb-option value="2">Option 2</nb-option>
-              </nb-select>
-      <ngx-datatable 
-          [class]="'bootstrap'" 
-          [rows]="data" 
-          [count]="data.length"
-          [scrollbarH]="true"
-          columnMode="force"
-          default>
-          <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
-              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                  #{{row.name}}
-              </ng-template>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'Tasks'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Project / Asset'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Customer'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Status'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Responsible'" prop=""></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Due'" prop=""></ngx-datatable-column>
-      </ngx-datatable>
+        <button nbButton class="mx-1" ghost shape="rectangle">
+          <nb-icon icon="menu-outline" pack="eva"></nb-icon>
+            Projects
+        </button>
+        <input nbInput id="search" class="search-input mx-3" placeholder="Search">
+        <nb-select selected="1" class="mx-3">
+          <nb-option value="1">Option 1</nb-option>
+          <nb-option value="2">Option 2</nb-option>
+        </nb-select>
+        <nb-select selected="1" class="mx-3">
+          <nb-option value="1">Option 1</nb-option>
+          <nb-option value="2">Option 2</nb-option>
+        </nb-select>
+        <ngx-datatable 
+            [class]="'bootstrap'" 
+            [rows]="data" 
+            [count]="data.length"
+            [scrollbarH]="true"
+            columnMode="force"
+            default>
+            <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    #{{row.name}}
+                </ng-template>
+            </ngx-datatable-column> -->
+            <ngx-datatable-column [name]="'Tasks'" prop=""></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Project / Asset'" prop=""></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Customer'" prop=""></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Status'" prop=""></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Responsible'" prop=""></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Due'" prop=""></ngx-datatable-column>
+        </ngx-datatable>
     </nb-card-body>
   </nb-card>
 
@@ -50,9 +55,17 @@
               </ng-template>
           </ngx-datatable-column> -->
           <ngx-datatable-column [name]="'Vessel'" prop="vessel"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Shortcut'" prop="company"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Shortcut'" prop="company">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <nb-icon *ngFor="let stat of row.shortcuts" [ngStyle]="{'color': 'grey'}" [icon]="stat"></nb-icon>
+            </ng-template>  
+          </ngx-datatable-column>
           <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'RPE'" prop=""></ngx-datatable-column>
+          <ngx-datatable-column [name]="'RPE'" prop="">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
+            </ng-template>  
+          </ngx-datatable-column>
           <ngx-datatable-column [name]="'Start'" prop="start"></ngx-datatable-column>
       </ngx-datatable>
     </nb-card-body>

@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TenderBateraComponent } from './tender-batera.component';
+import { CardComponent } from './card/card.component';
+import { TableComponent } from './table/table.component';
+import { FsIconComponent, TenderBateraComponent } from './tender-batera.component';
 
 const routes: Routes = [{
     path: '',
@@ -14,5 +16,8 @@ const routes: Routes = [{
 export class TenderBateraRoutingModule { }
 
 export const routedComponents = [
-  TenderBateraComponent
+  TenderBateraComponent,
+  FsIconComponent,
+  TableComponent,
+  CardComponent
 ];

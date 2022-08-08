@@ -15,7 +15,7 @@ export class TrackingBateraComponent implements OnInit {
   ]
 
   chartOptions: Partial<ChartOptions> = {
-    series: [
+    series: [ 
       {
         data: [
           {

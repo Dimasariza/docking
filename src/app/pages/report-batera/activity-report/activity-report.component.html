@@ -1,0 +1,11 @@
+<nb-card class="m-4">
+    <div class="buttons" >
+        <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+        nbButton outline size = "tiny"  status = "primary" class="mx-1">
+            <nb-icon [icon]="icon.icon" pack="eva">
+            </nb-icon>
+            {{icon.desc}}
+        </button>
+        <ngx-activity-table></ngx-activity-table>
+    </div>
+</nb-card>

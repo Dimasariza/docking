@@ -28,7 +28,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Report',
     icon: 'book-outline',
-    link: '/pages/report-batera',
+    link: '/pages/report-batera/activity-report',
     home: true,
   },
   {
@@ -37,13 +37,8 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/profile-batera',
     home: true,
   },
-  // {
-  //   title: 'Project',
-  //   icon: 'briefcase-outline',
-  //   link: '/pages/iot-dashboard',
-  // },
 
-  // /*
+  /*
   {
     title: 'FEATURES',
     group: true,
@@ -308,7 +303,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
     ],
   },
 
-  // */
+  */
 
 
 ];
