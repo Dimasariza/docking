@@ -3,7 +3,8 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()"><img src="../../../../assets/images/Logo BKD.png" alt="Logo" width="180"></a>
+    <a class="logo" href="#" (click)="navigateHome()"><img src="../../../../assets/images/logo.png" alt="Logo" width="28"></a>
+    <span style="font-size: 12px; font-weight: 600; line-height: 16.34px;">BKD Kab. Sidoarjo</span>
   </div>
   <!-- <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
@@ -21,7 +22,7 @@
     <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
       <nb-user [nbContextMenu]="userMenu"
                [onlyPicture]="userPictureOnly"
-               name="ACHMAD FEBRIAN BAGUS PANGESTU"
+               name="Achmad Febri"
                [picture]="user?.picture">
       </nb-user>
     </nb-action>
