@@ -1,0 +1,93 @@
+<nb-card>
+    <nb-card-header class="d-flex align-items-center">
+        <button routerLink="/pages/manajemen-user/index" nbButton ghost><nb-icon icon="arrow-back-outline"></nb-icon></button>
+        <h6>Tambah User</h6>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="general-info">
+            <h6>General Information</h6>
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="input-name" style="font-size: .9rem;">Username</label>
+                <nb-form-field class="col-11">
+                <input class="mb-2" nbInput
+                    fullWidth
+                    name="password"
+                    type="text"
+                    id="input-name"
+                    placeholder="Masukkan username"
+                    fieldSize="medium">
+                </nb-form-field>
+            </div>
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="email" style="font-size: .9rem;">Email</label>
+                <nb-form-field class="col-11">
+                <input class="mb-2" nbInput
+                    fullWidth
+                    name="password"
+                    type="text"
+                    id="email"
+                    placeholder="Masukkan email"
+                    fieldSize="medium">
+                </nb-form-field>
+            </div>
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="email" style="font-size: .9rem;">Role</label>
+                <nb-form-field class="col-11">
+                <nb-select class="mb-2" placeholder="Pilih role" fullWidth>
+                    <nb-option value="Admin">Admin</nb-option>
+                    <nb-option value="Penyelenggara">Penyelenggara</nb-option>
+                    <nb-option value="Kepegawaian ODP">Kepegawaian ODP</nb-option>
+                    <nb-option value="Pegawai">Pegawai</nb-option>
+                </nb-select>
+                </nb-form-field>
+            </div>
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="email" style="font-size: .9rem;">Status</label>
+                <nb-form-field class="col-11">
+                <nb-select class="mb-2" placeholder="Pilih status" fullWidth>
+                    <nb-option value="Admin">Admin</nb-option>
+                    <nb-option value="Penyelenggara">Penyelenggara</nb-option>
+                    <nb-option value="Kepegawaian ODP">Kepegawaian ODP</nb-option>
+                    <nb-option value="Pegawai">Pegawai</nb-option>
+                </nb-select>
+                </nb-form-field>
+            </div>
+        </div>
+
+        <div class="password mt-5">
+            <h6>Password 
+               <nb-icon nbTooltip="Ganti password hanya jika diperlukan" nbTooltipPlacement="right" nbTooltipStatus="primary"icon="info" status="primary"></nb-icon>
+            </h6>
+            
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="input-password" style="font-size: .9rem;">Password</label>
+                <nb-form-field class="col-11">
+                <input class="mb-2" nbInput
+                    fullWidth
+                    name="password"
+                    type="text"
+                    id="input-password"
+                    placeholder="Masukkan password"
+                    fieldSize="medium">
+                </nb-form-field>
+            </div>
+            <div class="form-control-group d-flex align-items-center">
+                <label class="label col-2" for="konfirmasi" style="font-size: .9rem;">Konfirmasi Password</label>
+                <nb-form-field class="col-11">
+                <input class="mb-2" nbInput
+                    fullWidth
+                    name="password"
+                    type="text"
+                    id="konfirmasi"
+                    placeholder="Masukkan konfirmasi password"
+                    fieldSize="medium">
+                </nb-form-field>
+            </div>
+
+            <div style="text-align: end;">
+                <button class="mt-5" nbButton status="primary">Submit</button>
+            </div>
+        </div>
+        
+    </nb-card-body>
+</nb-card>

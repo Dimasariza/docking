@@ -1,0 +1,68 @@
+<nb-card>
+    <nb-card-header class="d-flex align-items-center">
+        <button routerLink="/pages/hak-akses/index" nbButton ghost><nb-icon icon="arrow-back-outline"></nb-icon></button>
+        <h6>Tambah Role</h6>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="form-control-group d-flex align-items-center">
+            <label class="label col-2" for="input-name" style="font-size: .9rem;">Nama Role</label>
+            <nb-form-field class="col-11">
+              <input class="mb-2" nbInput
+                  fullWidth
+                  name="password"
+                  type="text"
+                  id="input-name"
+                  placeholder="Input name"
+                  fieldSize="medium">
+            </nb-form-field>
+        </div>
+        <div class="form-control-group d-flex align-items-center">
+            <label class="label col-2" for="deskripsi" style="font-size: .9rem;">Deskripsi</label>
+            <nb-form-field class="col-11">
+              <input class="mb-2" nbInput
+                  fullWidth
+                  name="password"
+                  type="text"
+                  id="deskripsi"
+                  placeholder="Input deskripsi"
+                  fieldSize="medium">
+            </nb-form-field>
+        </div>
+
+        <div class="permission mt-5">
+            <h6>User Permissions</h6>
+            <ngx-datatable 
+            [class]="'bootstrap'" 
+            [rows]="dataTable" 
+            [count]="dataTable.length"
+            columnMode="force"
+            default>
+            <ngx-datatable-column [name]="'Menu Akses'" prop="menu" [width]= 300></ngx-datatable-column>
+                <ngx-datatable-column [name]="'Create'">
+                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                        <nb-checkbox (checkedChange)="toggle($event)"></nb-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'Read Only'">
+                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                        <nb-checkbox (checkedChange)="toggle($event)"></nb-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'Update'">
+                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                        <nb-checkbox (checkedChange)="toggle($event)"></nb-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column [name]="'Delete'">
+                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                        <nb-checkbox (checkedChange)="toggle($event)"></nb-checkbox>
+                    </ng-template>
+                </ngx-datatable-column>
+        </ngx-datatable>
+        <div style="text-align: end;">
+            <button class="mt-5" nbButton status="primary">Submit</button>
+        </div>
+        
+    </div>
+    </nb-card-body>
+</nb-card>

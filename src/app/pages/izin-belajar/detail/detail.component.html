@@ -1,0 +1,152 @@
+<nb-card>
+    <nb-card-header class="d-flex align-items-center">
+        <button routerLink="/pages/izin-belajar/index" nbButton ghost><nb-icon icon="arrow-back-outline"></nb-icon></button>
+        <h6>Detail Pengajuan Izin Belajar</h6>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="d-flex">
+            <div class="general-info col-8">
+                <h6>Detail Pegawai</h6>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">NPB</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder="Masukkan NPB"
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="tanggal" style="font-size: .9rem;">Tanggal</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="date"
+                        id="tanggal"
+                        placeholder="Masukkan tanggal"
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">Pemohon</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder="Masukkan Pemohon"
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">NIP</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder="Masukkan NIP"
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="opd" style="font-size: .9rem;">OPD</label>
+                    <nb-form-field class="col-10">
+                    <nb-select class="mb-2" placeholder="Pilih OPD" fullWidth>
+                        <nb-option value="Dinas Pariwisata">Dinas Pariwisata</nb-option>
+                        <nb-option value="Dinas Kesehatan">Dinas Kesehatan</nb-option>
+                        <nb-option value="Dinas Pendidikan dan Kebudayaan">Dinas Pendidikan dan Kebudayaan</nb-option>
+                    </nb-select>
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">Pangkat/Gol</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder=""
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">Jabatan</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder=""
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+                <div class="form-control-group d-flex align-items-center">
+                    <label class="label col-2" for="input-name" style="font-size: .9rem;">Tujuan Belajar</label>
+                    <nb-form-field class="col-10">
+                    <input class="mb-2" nbInput
+                        fullWidth
+                        name="password"
+                        type="text"
+                        id="input-name"
+                        placeholder=""
+                        fieldSize="medium">
+                    </nb-form-field>
+                </div>
+            </div>
+
+            <div class="link-document col-4">
+                <h6>Dokumen Pendukung</h6>
+                <button class="p-0 mb-2" nbButton ghost>
+                    <nb-icon class="mr-2" icon="link-2-outline"></nb-icon> 
+                    <a routerLink="">Download surat pengantar</a> <br>
+                </button>
+                <button class="p-0" nbButton ghost (click)="open()">
+                    <nb-icon class="" icon="link-2"></nb-icon>
+                    <a routerLink="/pages/izin-belajar/detail">Upload surat rekomendasi</a>
+                </button>
+                
+            </div>
+        </div>
+
+        <div class="manajemen-file mt-5 col-12">
+            <div class="title-manajamen">
+                <h6>Manajemen File</h6>
+            </div>
+            <div class="body-manajemen">
+              <ngx-datatable 
+                  [class]="'bootstrap'" 
+                  [rows]="dataTable" 
+                  [count]="dataTable.length"
+                  [scrollbarH]="false"
+                  columnMode="force"
+                  default>
+                  <ngx-datatable-column [name]="'Nama Dokumen'" prop="name"></ngx-datatable-column>
+                  <ngx-datatable-column [name]="'Action'">
+                    <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <div class="d-flex">
+                            <button nbButton size="small" class="btn btn-action">
+                                {{ row.button }}
+                                <nb-icon [icon]= row.icon ></nb-icon>
+                            </button>
+                        </div>
+                    </ng-template>
+                  </ngx-datatable-column>
+                    <ngx-datatable-column [name]="'Status'">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template >
+                            <nb-action *ngIf="row.button == 'Edit' "> <a href="" style="text-decoration: none;">Lihat File</a> </nb-action>
+                        </ng-template>
+                    </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+    </nb-card-body>
+</nb-card>

@@ -3,20 +3,28 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <a class="logo" href="#" (click)="navigateHome()">Batera</a>
+    <a class="logo" href="#" (click)="navigateHome()"><img src="../../../../assets/images/logo.png" alt="Logo" width="28"></a>
+    <span style="font-size: 12px; font-weight: 600; line-height: 16.34px;">BKD Kab. Sidoarjo</span>
   </div>
-  
-  <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
+  <!-- <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary">
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
-  </nb-select>
-
-  <div class="greating-container">
-      <ng-container>
-        <h6 >Selamat datang, Bahri!</h6>
-        <span >Kami senang Anda datang kembali lagi sejak kunjungan terkhir. <br>
-        Silakan liat yang terbaru milik Anda.
-        </span>
-      </ng-container>
-  </div>
+  </nb-select> -->
 </div>
 
+<div class="header-container">
+  <nb-actions size="small">
+
+    <nb-action class="control-item">
+      <nb-search type="rotate-layout"></nb-search>
+    </nb-action>
+    <nb-action class="control-item" > <nb-icon icon="email-outline"></nb-icon> </nb-action>
+    <nb-action class="control-item" > <nb-icon icon="bell-outline"></nb-icon> </nb-action>
+    <nb-action class="user-action" *nbIsGranted="['view', 'user']" >
+      <nb-user [nbContextMenu]="userMenu"
+               [onlyPicture]="userPictureOnly"
+               name="Achmad Febri"
+               [picture]="user?.picture">
+      </nb-user>
+    </nb-action>
+  </nb-actions>
+</div>

@@ -1,0 +1,67 @@
+<nb-layout>
+    <nb-layout-column class="colored-column-basic pt-0">
+        <nb-card class="p-3 d-flex flex-row">
+            <nb-action icon="search-outline"></nb-action>
+            <input nbInput nbFilterInput="Cloud" id="search" class="search-input border-0 ml-2 col-10" placeholder="Cari berkas">
+        </nb-card>
+        
+        <div class="row my-files">
+            <div class="col-3">
+                <nb-card accent="info">
+                    <nb-card-footer>Berkas - KTP</nb-card-footer>
+                    <nb-card-body #cobaFiles>
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, rerum?
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-3">
+                <nb-card accent="info">
+                    <nb-card-footer>Berkas - Ijazah</nb-card-footer>
+                    <nb-card-body>
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, rerum?
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-3">
+                <nb-card accent="info">
+                    <nb-card-footer>Berkas - SK CPNS</nb-card-footer>
+                    <nb-card-body>
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, rerum?
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-3">
+                <nb-card accent="info">
+                    <nb-card-footer>Berkas - SK CPNS</nb-card-footer>
+                    <nb-card-body>
+                      Lorem, ipsum dolor sit amet consectetur adipisicing elit. Quibusdam, rerum?
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            <div class="col-12">
+                <nb-card accent="info">
+                    <!-- <nb-card-footer>Tambah Berkas</nb-card-footer> -->
+                    <nb-card-header><h6 class="text-center">Tambah Berkas</h6></nb-card-header>
+                    <nb-card-body class="m-auto d-flex align-items-baseline">
+                        <input #tes type="file" (click)="onChange($event)">  
+                        <button nbButton status="primary"><nb-icon icon="file-add-outline"></nb-icon></button> 
+                        <div class="container text-center jumbotron"
+                            *ngIf="shortLink">
+                            <h2> Visit Here</h2>
+                            <a href="{{shortLink}}">{{shortLink}}</a>
+                        </div>
+                        
+                        <!--Flag variable is used here-->
+                        <div class="container" *ngIf="loading">
+                            <h3>Loading ...</h3>
+                        </div>
+                    </nb-card-body>
+                </nb-card>
+            </div>
+            
+        </div>
+      
+    </nb-layout-column>
+  </nb-layout>
+
+  <!-- https://www.geeksforgeeks.org/angular-file-upload/  -->
