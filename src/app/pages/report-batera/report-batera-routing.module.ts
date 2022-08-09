@@ -8,6 +8,7 @@ import { MeetingsComponent } from './meetings/meetings.component';
 import { PositionsComponent } from './positions/positions.component';
 import { ReportBateraComponent } from './report-batera.component';
 import { StatusReportComponent } from './status-report/status-report.component';
+import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 
 const routes: Routes = [{
   path: '',
@@ -38,7 +39,12 @@ const routes: Routes = [{
       component: ActivityFlowComponent
     },
   ],
-}];
+  },
+  {
+    path: 'sub-menu-report',
+    component: SubMenuReportComponent
+  }
+];
 
 
 @NgModule({

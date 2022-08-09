@@ -5,47 +5,65 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
-import { HomeComponent } from './home/home.component';
-import { IzinBelajarComponent } from './izin-belajar/izin-belajar.component';
-import { BerkasComponent } from './berkas/berkas.component';
-import { ManajemenFileComponent } from './manajemen-file/manajemen-file.component';
-import { HakAksesComponent } from './hak-akses/hak-akses.component';
-import { ManajemenUserComponent } from './manajemen-user/manajemen-user.component';
+import { HomeBateraComponent } from './home-batera/home-batera.component';
+import { ProjectBateraComponent } from './project-batera/project-batera.component';
+import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
 
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
     {
-      path: 'home',
-      component: HomeComponent
+      path: 'home-batera',
+      loadChildren: () => import('./home-batera/home-batera.module')
+        .then(m => m.HomeBateraModule),
+    },
+    {
+      path: 'project-batera',
+      loadChildren: () => import('./project-batera/project-batera.modules')
+      .then(m => m.ProjectBateraModule),
+    },
+    {
+      path: 'tender-batera',
+      loadChildren: () => import('./tender-batera/tender-batera.module')
+      .then(m => m.TenderBateraModule),
+    },
+    {
+      path: 'technical-batera',
+      component: TechnicalBateraComponent,
+    },
+    {
+      path: 'tracking-batera',
+      loadChildren: () => import('./tracking-batera/tracking-batera.module')
+      .then(m => m.TrackingBateraModule),
+    },
+    {
+      path: 'report-batera',
+      loadChildren: () => import('./report-batera/report-batera.module')
+      .then(m => m.ReportBateraModule),
+    },
+    {
+      path: 'profile-batera',
+      loadChildren: () => import('./profile-batera/profil-batera.modules')
+      .then(m => m.ProfilBateraModule),
+    },
+    {
+      path: 'home-batera',
+      loadChildren: () => import('./home-batera/home-batera.module')
+        .then(m => m.HomeBateraModule),
+    },
+    {
+      path: 'project-batera',
+      loadChildren: () => import('./project-batera/project-batera.modules')
+      .then(m => m.ProjectBateraModule),
+    },
+    {
+      path: 'technical-batera',
+      component: TechnicalBateraComponent,
     },
     {
       path: 'dashboard',
       component: ECommerceComponent,
-    },
-    { path: 'diklat',
-      loadChildren: () => import('./diklat/diklat.module').then(m => m.DiklatModule)
-    },
-    {
-      path: 'izin-belajar',
-      loadChildren: () => import('./izin-belajar/izin-belajar.module').then(m => m.IzinBelajarModule)
-    },
-    {
-      path: 'manajemen-file',
-      component: ManajemenFileComponent
-    },
-    {
-      path: 'manajemen-user',
-      loadChildren: () => import('./manajemen-user/manajemen-user.module').then(m => m.ManajemenUserModule)
-    },
-    {
-      path: 'hak-akses',
-      loadChildren: () => import('./hak-akses/hak-akses.module').then(m => m.HakAksesModule)
-    },
-    {
-      path: 'berkas',
-      loadChildren: () => import('./berkas/berkas.module').then(m => m.BerkasModule)
     },
     {
       path: 'iot-dashboard',
@@ -65,6 +83,11 @@ const routes: Routes = [{
       path: 'ui-features',
       loadChildren: () => import('./ui-features/ui-features.module')
         .then(m => m.UiFeaturesModule),
+    },
+    {
+      path: 'e-commerce',
+      loadChildren: () => import('./e-commerce/e-commerce.module')
+        .then(m => m.ECommerceModule),
     },
     {
       path: 'modal-overlays',
@@ -103,7 +126,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'home',
+      redirectTo: 'home-batera',
       pathMatch: 'full',
     },
     {

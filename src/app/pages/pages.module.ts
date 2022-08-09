@@ -7,11 +7,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
-import { HomeModule } from './home/home.module';
-import { IzinBelajarModule } from './izin-belajar/izin-belajar.module';
-import { ManajemenFileModule } from './manajemen-file/manajemen-file.module';
-import { HakAksesModule } from './hak-akses/hak-akses.module';
-import { ManajemenUserModule } from './manajemen-user/manajemen-user.module';
+import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
 
 @NgModule({
   imports: [
@@ -21,14 +17,10 @@ import { ManajemenUserModule } from './manajemen-user/manajemen-user.module';
     DashboardModule,
     ECommerceModule,
     MiscellaneousModule,
-    HomeModule,
-    IzinBelajarModule,
-    ManajemenFileModule,
-    HakAksesModule,
-    ManajemenUserModule
   ],
   declarations: [
-    PagesComponent
+    PagesComponent,
+    TechnicalBateraComponent,
   ],
 })
 export class PagesModule {
