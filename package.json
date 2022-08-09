@@ -14,7 +14,7 @@
     "conventional-changelog": "conventional-changelog",
     "start": "ng serve",
     "build": "ng build",
-    "buildProd": "ng build --configuration production --base-href=/batera-docking/",
+    "buildProd": "ng build --configuration production --base-href=/bkd/",
     "build:prod": "npm run build -- --configuration production --aot",
     "test": "ng test",
     "test:coverage": "rimraf coverage && npm run test -- --code-coverage",
