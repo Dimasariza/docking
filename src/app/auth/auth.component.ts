@@ -6,9 +6,9 @@ import { NbAuthComponent } from '@nebular/auth';
     styleUrls: ['./auth.component.scss'],
     template: `
     <nb-layout>
-      <nb-layout-column class="pt-0">
+      <nb-layout-column class="p-0">
         <ngx-login></ngx-login>
-        <!-- <nb-card>
+        <!--<nb-card>
           <nb-card-body>
             <nb-auth-block>
               <router-outlet></router-outlet>

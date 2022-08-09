@@ -1,120 +1,120 @@
-<nb-layout windowMode>
-  <nb-layout-column class="menu-sidebar w-50" tag="menu-sidebar" responsive>
-    <img class="mb-5" src="/assets/images/BKD.png" alt="Logo" width="200">
-      <div>
-        <h6>Login</h6>
-        <p style="font-size: .8rem;">Masukkan NIP dan Kata Sandi untuk mendapatkan akses</p>
-      </div>
-      <form action="">
-      <label class="label" for="input-email">NIP</label>
-      <div class="form-control-group">
-          <input class="mb-2" nbInput
-              fullWidth
-              [(ngModel)]="user.email"
-              #email="ngModel"
-              name="email"
-              id="input-email"
-              pattern=".+@.+\..+"
-              placeholder="NIP"
-              fieldSize="medium"
-              autofocus
-              [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
-              [required]="getConfigValue('forms.validation.email.required')"
-              [attr.aria-invalid]="email.invalid && email.touched ? true : null">
-          <ng-container *ngIf="email.invalid && email.touched">
-          <p class="caption status-danger" *ngIf="email.errors?.required">
-              Email is required!
-          </p>
-          <p class="caption status-danger" *ngIf="email.errors?.pattern">
-              Email should be the real one!
-          </p>
-          </ng-container>
-      </div>
-
-      <div class="form-control-group">
-          <!-- <span class="label-with-link">
-          <a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>
-          </span> -->
-          <label class="label" for="input-password">Password</label>
-          <nb-form-field>
+<nb-layout>
+    <nb-layout-column class="col-md-4 col-sm-12" style="background-color: #E1F3FF;">
+      <img class="mb-5" src="/assets/images/BKD.png" alt="Logo" width="200">
+        <div>
+          <h6>Login</h6>
+          <p style="font-size: .8rem;">Masukkan NIP dan Kata Sandi untuk mendapatkan akses</p>
+        </div>
+        <form action="">
+        <label class="label" for="input-email">NIP</label>
+        <div class="form-control-group">
             <input class="mb-2" nbInput
                 fullWidth
-                [(ngModel)]="user.password"
-                #password="ngModel"
-                name="password"
-                [type]="getInputType()"
-                id="input-password"
-                placeholder="Password"
+                [(ngModel)]="user.email"
+                #email="ngModel"
+                name="email"
+                id="input-email"
+                pattern=".+@.+\..+"
+                placeholder="NIP"
                 fieldSize="medium"
-                [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-                [required]="getConfigValue('forms.validation.password.required')"
-                [minlength]="getConfigValue('forms.validation.password.minLength')"
-                [maxlength]="getConfigValue('forms.validation.password.maxLength')"
-                [attr.aria-invalid]="password.invalid && password.touched ? true : null">
-            <button nbSuffix nbButton ghost (click)="toggleShowPass()">
-              <nb-icon class="mb-2" [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"></nb-icon>
-            </button>
-          </nb-form-field>
-          <ng-container *ngIf="password.invalid && password.touched ">
-          <p class="caption status-danger" *ngIf="password.errors?.required">
-              Password is required!
-          </p>
-          <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-              Password should contain
-              from {{ getConfigValue('forms.validation.password.minLength') }}
-              to {{ getConfigValue('forms.validation.password.maxLength') }}
-              characters
-          </p>
-          </ng-container>
-      </div>
+                autofocus
+                [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
+                [required]="getConfigValue('forms.validation.email.required')"
+                [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+            <ng-container *ngIf="email.invalid && email.touched">
+            <p class="caption status-danger" *ngIf="email.errors?.required">
+                Email is required!
+            </p>
+            <p class="caption status-danger" *ngIf="email.errors?.pattern">
+                Email should be the real one!
+            </p>
+            </ng-container>
+        </div>
 
-      <div class="form-control-group accept-group mb-5">
-          <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
-      </div>
+        <div class="form-control-group">
+            <!-- <span class="label-with-link">
+            <a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>
+            </span> -->
+            <label class="label" for="input-password">Password</label>
+            <nb-form-field>
+              <input class="mb-2" nbInput
+                  fullWidth
+                  [(ngModel)]="user.password"
+                  #password="ngModel"
+                  name="password"
+                  [type]="getInputType()"
+                  id="input-password"
+                  placeholder="Password"
+                  fieldSize="medium"
+                  [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
+                  [required]="getConfigValue('forms.validation.password.required')"
+                  [minlength]="getConfigValue('forms.validation.password.minLength')"
+                  [maxlength]="getConfigValue('forms.validation.password.maxLength')"
+                  [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+              <button nbSuffix nbButton ghost (click)="toggleShowPass()">
+                <nb-icon class="mb-2" [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"></nb-icon>
+              </button>
+            </nb-form-field>
+            <ng-container *ngIf="password.invalid && password.touched ">
+            <p class="caption status-danger" *ngIf="password.errors?.required">
+                Password is required!
+            </p>
+            <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
+                Password should contain
+                from {{ getConfigValue('forms.validation.password.minLength') }}
+                to {{ getConfigValue('forms.validation.password.maxLength') }}
+                characters
+            </p>
+            </ng-container>
+        </div>
 
-      <button nbButton
-              routerLink="/pages/home"
-              fullWidth
-              status="primary"
-              size="large"
-              [class.btn-pulse]="submitted">
-          Log In
-      </button>
-      </form>
-  </nb-layout-column>
+        <div class="form-control-group accept-group mb-5">
+            <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
+        </div>
 
-  <nb-layout-column style="background-color: white;">
-    
-    <h5>JADWAL DIKLAT 2022</h5>
+        <button nbButton
+                routerLink="/pages/home"
+                fullWidth
+                status="primary"
+                size="large"
+                [class.btn-pulse]="submitted">
+            Log In
+        </button>
+        </form>
+    </nb-layout-column>
 
-    <nb-card>
-      <nb-card-body>
-        <ngx-datatable 
-            [class]="'bootstrap'" 
-            [rows]="dataTable" 
-            [count]="dataTable.length"
-            [scrollbarH]="true"
-            columnMode="force"
-            default>
-            <ngx-datatable-column [name]="'No'" [width]="50">
-                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                    {{rowIndex+1}}
-                </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column [name]="'NAMA DIKLAT'" prop="name"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'WAKTU PELAKSANAAN'" prop="time"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'TEMPAT PELAKSANAAN'" prop="place"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'REGISTRASI'">
-            <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                      <div class="d-flex">
-                          <button nbButton outline status="primary" size="small" class="btn btn-action" (click)="open()">DAFTAR</button>
-                      </div>
+    <nb-layout-column class="col overflow-auto" style="background-color: white; height: 100vh;">
+      
+      <h5>JADWAL DIKLAT 2022</h5>
+
+      <!-- <nb-card>
+        <nb-card-body> -->
+          <ngx-datatable 
+              [class]="'bootstrap'" 
+              [rows]="dataTable" 
+              [count]="dataTable.length"
+              [scrollbarH]="true"
+              columnMode="force"
+              default>
+              <ngx-datatable-column [name]="'No'" [width]="50">
+                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                      {{rowIndex+1}}
                   </ng-template>
-            </ngx-datatable-column>
-        </ngx-datatable>
-      </nb-card-body>
-    </nb-card>
- 
-    <ng-content select="router-outlet"></ng-content>
-  </nb-layout-column>
+              </ngx-datatable-column>
+              <ngx-datatable-column [name]="'NAMA DIKLAT'" prop="name"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'WAKTU PELAKSANAAN'" prop="time"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'TEMPAT PELAKSANAAN'" prop="place"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'REGISTRASI'">
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <div class="d-flex">
+                            <button nbButton outline status="primary" size="small" class="btn btn-action" (click)="open()">DAFTAR</button>
+                        </div>
+                    </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable>
+        <!-- </nb-card-body>
+      </nb-card> -->
+  
+      <ng-content select="router-outlet"></ng-content>
+    </nb-layout-column>
 </nb-layout>

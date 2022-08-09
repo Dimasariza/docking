@@ -60,6 +60,56 @@ export class NgxLoginComponent extends NbLoginComponent {
       "name": "Diklat Prajabatan",
       "time": "12 Mei 2022 - 20 Mei 2022",
       "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
+    },
+    {
+      "name": "Diklat Prajabatan",
+      "time": "12 Mei 2022 - 20 Mei 2022",
+      "place": "Blended Learning"
     }
   ]
 
