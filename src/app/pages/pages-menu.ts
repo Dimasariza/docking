@@ -20,7 +20,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
         link: '/pages/diklat/kalender'
       },
       {
-        title: 'Diklat Individu',
+        title: 'Status',
         link: '/pages/diklat/diklat-individu'
       }
     ]

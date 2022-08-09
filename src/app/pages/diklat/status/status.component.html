@@ -1,1 +1,91 @@
-<p>status works!</p>
+<div class="row">
+    <div class="col-12">
+      <nb-card>
+        <nb-card-header class="d-flex justify-content-between align-items-baseline">
+          <div class="header-title">
+            <h6>Daftar Pengajuan Diklat</h6>
+            <span class="text-14 text-gray">Tabel berikut memuat daftar permintaan diklat oleh pegawai untuk direview dan disetujui oleh petugas yang berwenang</span>
+          </div>
+        </nb-card-header>
+        
+        <nb-card-body>
+          <div class="row justify-content-end">
+            <div class="col-auto">
+              <button nbButton ghost class="mr-3 text-muted" style="font-size: .8rem; text-decoration: none;" (click)="filterCheck.checked = !filterCheck.checked">
+                  Filter
+                  <input id="filter" name="filterCheck" #filterCheck ngModel="filterCheck" type="checkbox" style="position: absolute; z-index: -1">
+              </button>
+              <button nbButton status="success" size="small"  >Download .xls<nb-icon icon="download-outline"></nb-icon> </button>
+            </div>
+            <div class="col-12" *ngIf="filterCheck.checked">
+              <div  class="py-3" style="background-color: #EDF0F7;">
+                <div class="ml-3">
+                  <h6>Filters</h6>
+                </div>
+                
+                <div class="d-flex">
+                  <div class="col-6">
+                    <nb-form-field>
+                        <input  nbInput
+                                fullWidth
+                                name="search"
+                                type="text"
+                                id=""
+                                placeholder="Cari"
+                                fieldSize="medium">
+                        <nb-icon nbSuffix icon="search-outline"></nb-icon> 
+                    </nb-form-field>
+                  </div>
+                  <div class="col-3">
+                    <nb-select  fullWidth placeholder="OPD">
+                      <nb-option value="Dinas Pariwisata">Dinas Pariwisata</nb-option>
+                      <nb-option value="Dinas Kesehatan">Dinas Kesehatan</nb-option>
+                      <nb-option value="Dinas Sosial">Dinas Sosial</nb-option>
+                    </nb-select> 
+                  </div>
+                  <div class="col-3">
+                    <nb-select  fullWidth placeholder="Status">
+                      <nb-option value="Dinas Pariwisata">Dinas Pariwisata</nb-option>
+                      <nb-option value="Dinas Kesehatan">Dinas Kesehatan</nb-option>
+                      <nb-option value="Dinas Sosial">Dinas Sosial</nb-option>
+                    </nb-select>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <ngx-datatable 
+              [class]="'bootstrap'" 
+              [rows]="data" 
+              [count]="data.length"
+              [scrollbarH]="true"
+              columnMode="force"
+              default>
+              <ngx-datatable-column [name]="'NPD'" prop="npd" [width]="50"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'Diklat'" prop="diklat"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'OPD'" prop="opd" width="300"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'Pemohon'" prop="name" width="200"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'Tanggal'" prop="time"></ngx-datatable-column>
+              <ngx-datatable-column [name]="'Status'">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                  <div *ngIf="row.status == 'Permintaan baru' ">
+                    <span style="color: #FFAA00;">{{ row.status }}</span>
+                  </div>
+
+                  <div *ngIf="row.status == 'Disetujui' ">
+                    <span class="text-primary">{{ row.status }}</span>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column>
+              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                        <div>
+                            <nb-icon icon="more-horizontal-outline" style="cursor: pointer;"></nb-icon>
+                        </div>
+                    </ng-template>
+              </ngx-datatable-column>
+          </ngx-datatable>
+        </nb-card-body>
+      </nb-card>
+    </div>
+  </div>

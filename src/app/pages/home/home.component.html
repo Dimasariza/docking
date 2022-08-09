@@ -1,24 +1,32 @@
-<div class="row">
-    <div class="col-xxl-5">
-      <div class="row">
-        <div class="col-12">
-          <nb-card>
-            <nb-card-body class="d-flex bg-info">
-              <div class="photo col-3">
-                <img src="../../../assets/images/nick.png" alt="Nick" width="200">
-              </div>
-              <div class="title col-9" style="color: white;">
-                <h4>SELAMAT DATANG,</h4>
-                <h2>ACHMAD FEBRIAN BAGUS PANGESTU</h2>
-                <p>Minggu, 20 Mei 2022</p>
-                <span>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Accusamus quod dolor sit.</span>
-              </div>
-            </nb-card-body>
-          </nb-card>
-        </div>
-      </div>
-      <nb-card>
-        <h1 class="text-center">PENGUMUMAN</h1>
-      </nb-card>
+<nb-card class="mt-5">
+  <nb-card-body class="d-flex position-relative" style="overflow: unset;">
+    <!-- <div class="photo col-3">
+      <img src="../../../assets/images/nick.png" alt="Nick" width="200">
+    </div> -->
+    <div class="schedule-image position-absolute d-flex flex-column align-items-center" style="bottom: 0; right: 10px;">
+      <img class="rounded" src="./assets/images/schedule-animate.svg" alt="schedule-gif" width="300">
+      <a href="https://storyset.com/event" style="text-decoration: none; font-size: 8px; margin-top: -15px;">Event illustrations by Storyset</a>
     </div>
-  </div>
+    
+    <div class="row">
+        <div class="title col-md-6 col-sm-12">
+          <div class="d-flex flex-column">
+            <div class="welcome mb-4">
+              <span class="lead d-block mb-4"><span style="font-weight: 600;">Selamat Datang</span>, <strong style="font-weight: bold;">Achmad</strong></span>
+              <p class="text-gray">Kamu memiliki 2 jadwal diklat yang sudah disetujui, dan 1 izin belajar yang ditolak, dan 1 sedang dalam proses pengecekan</p>
+            </div>
+            <div class="date">
+              <button nbButton status="primary">
+                <nb-icon icon="calendar-outline"></nb-icon>
+                Lihat Status Diklat</button>
+            </div>
+          </div>
+        </div>
+    </div>
+  </nb-card-body>
+</nb-card>
+<nb-card>
+  <nb-card-body>
+    <full-calendar [options]="calendarOptions"></full-calendar>
+  </nb-card-body>
+</nb-card>
