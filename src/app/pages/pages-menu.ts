@@ -12,6 +12,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'briefcase-outline',
     link: '/pages/project-batera',
     home: true,
+    children : [
+      {
+        title: 'Batera Ship 01',
+        icon: 'settings-2-outline',
+        link: '/pages/project-batera/sub-menu-project',
+      },
+    ]
   },
   {
     title: 'Tender',
@@ -29,7 +36,13 @@ export const MENU_ITEMS: NbMenuItem[] = [
     title: 'Report',
     icon: 'book-outline',
     link: '/pages/report-batera/activity-report',
-    home: true,
+    children : [
+      {
+        title: 'Activity Report',
+        icon: 'book-open-outline',
+        link: '/pages/report-batera/sub-menu-report',
+      },
+    ]
   },
   {
     title: 'Profile',

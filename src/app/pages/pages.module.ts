@@ -20,7 +20,7 @@ import { TechnicalBateraComponent } from './technical-batera/technical-batera.co
   ],
   declarations: [
     PagesComponent,
-    TechnicalBateraComponent
+    TechnicalBateraComponent,
   ],
 })
 export class PagesModule {

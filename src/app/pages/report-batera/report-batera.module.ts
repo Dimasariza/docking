@@ -12,6 +12,7 @@ import { StatusReportComponent } from './status-report/status-report.component';
 import { ActivityFlowComponent } from './activity-flow/activity-flow.component';
 import { ActivityReportComponent } from './activity-report/activity-report.component';
 import { ActivityTableComponent, FsIconComponent } from './table/table.component';
+import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { ActivityTableComponent, FsIconComponent } from './table/table.component
     ActivityFlowComponent,
     ActivityReportComponent,
     ActivityTableComponent,
-    FsIconComponent
+    FsIconComponent,
+    SubMenuReportComponent
   ],
   imports: [
     CommonModule,
