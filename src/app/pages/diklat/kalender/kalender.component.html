@@ -17,8 +17,50 @@
 </nb-layout> -->
 
 <nb-card>
-    <nb-card-body class="d-flex">
-        <h6 class="col-3 fs-6 text-center">Kalender Pelaksanaan Diklat</h6>
-        <full-calendar class="col-9" [options]="calendarOptions"></full-calendar>
+    <nb-card-body class="row align-items-stretch">
+        <div class="col-md-3 col-sm-12">
+            <div class="d-flex flex-column">
+                <span class="text-14 py-2">Kalender Pelaksanaan Diklat</span>
+                <div style="padding: 12px; background-color: #FBFCFF; flex: 1;">
+                    <ng-container *ngTemplateOutlet="hasData"></ng-container>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <full-calendar [options]="calendarOptions"></full-calendar>
+        </div>
     </nb-card-body>
 </nb-card>
+
+<ng-template #noData>
+    <span class="text-10 text-gray">Text ada diklat mendatang</span>
+</ng-template>
+
+<ng-template #hasData>
+    <div class="d-flex flex-column">
+        <div class="diklat-header d-flex flex-column mb-3">
+            <span class="text-12">Diklat Prajabatan Golongan I</span>
+            <span class="text-10b">Dinas Sosial</span>
+            <span class="text-10">Senin, 01 Agustus 2022</span>
+        </div>
+
+        <div class="diklat-info">
+            <div class="d-flex flex-row align-items-center">
+                <nb-icon icon="clock-outline" class="text-gray text-10 mr-2"></nb-icon>
+                <span class="text-10 mr-2">09:00</span>
+                <nb-icon icon="arrow-forward-outline" class="text-gray text-10 mr-2"></nb-icon>
+                <span class="text-10">15:00</span>
+            </div>
+            <div class="d-flex align-items-center mb-3">
+                <nb-icon icon="pin-outline" class="text-gray text-10 mr-2"></nb-icon>
+                <span class="text-10">Online</span>
+            </div>
+            <hr>
+        </div>
+
+        <div class="diklat-desc d-flex flex-column">
+            <span class="text-8 text-gray">Description</span>
+            <span class="text-10">Diklat ini dilaksanakan dengan tujuan untuk mengembangkan kompetensi CPNS yang dilakukan secara terintegrasi.</span>
+        </div>
+    </div>
+</ng-template>
