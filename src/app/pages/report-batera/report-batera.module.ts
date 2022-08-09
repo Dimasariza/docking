@@ -27,7 +27,8 @@ import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.compon
     ActivityReportComponent,
     ActivityTableComponent,
     FsIconComponent,
-    SubMenuReportComponent
+    SubMenuReportComponent,
+    
   ],
   imports: [
     CommonModule,
