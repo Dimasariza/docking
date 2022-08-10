@@ -61,7 +61,7 @@
             </ng-template>  
           </ngx-datatable-column>
           <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'RPE'" prop="">
+          <ngx-datatable-column [name]="' R  P   E'" prop="">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
             </ng-template>  
