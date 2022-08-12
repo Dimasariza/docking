@@ -3,7 +3,12 @@
 @import '~@swimlane/ngx-datatable/themes/bootstrap.scss';
 @import '~@swimlane/ngx-datatable/assets/icons.css';
 
+:root {
+  --font-blue : rgb(12, 162, 255);
+}
+
 @include nb-install-component() {
+
   ::ng-deep router-outlet + * {
     display: block;
     animation: fade 1s;

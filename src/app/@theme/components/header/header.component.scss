@@ -10,7 +10,31 @@
   .logo-container {
     display: flex;
     align-items: center;
-    width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+    // width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+  }
+
+  .logo-wrapper {
+    width: 100%;
+    height: 70px;
+    padding: 0.3em;
+
+    .logo-desc {
+      margin: 0 1em;
+      
+          h6 {
+            font-size: 1.3em;
+            margin: 0;
+          }
+      
+          span {
+            font-size: 0.9em;
+            a{
+              text-decoration: none;
+              color: rgb(12, 162, 255);
+            }
+          }
+    }
+
   }
 
   nb-action {
