@@ -10,7 +10,6 @@ import { Component } from '@angular/core';
       </nb-layout-header>
 
       <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
-        <img src="./assets/images/logo.jpg" alt="" class="img-thumbnail rounded" width="350">
         <ng-content select="nb-menu"></ng-content>
       </nb-sidebar>
 
