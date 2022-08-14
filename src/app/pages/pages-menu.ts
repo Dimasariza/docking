@@ -35,12 +35,12 @@ export const MENU_ITEMS: NbMenuItem[] = [
     icon: 'book-outline',
     link: '/pages/report-batera/activity-report',
   },
-  {
-    title: 'Profile',
-    icon: 'person-outline',
-    link: '/pages/profile-batera',
-    home: true,
-  },
+  // {
+  //   title: 'Profile',
+  //   icon: 'person-outline',
+  //   link: '/pages/profile-batera',
+  //   home: true,
+  // },
 
   /*
   {
