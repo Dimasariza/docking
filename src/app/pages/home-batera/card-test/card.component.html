@@ -13,11 +13,15 @@
     <nb-card-back>
       <nb-card size="small">
         <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
-        <h6>{{image.shipName}}</h6>
-        <h5>35%</h5>
-            <span>status:</span>
-            <span>in-progress</span>
-            <span>salmon-sutafa-dd-2022</span>
+        <div class="p-5">
+          <h6>{{image.shipName}}</h6>
+          <div class="back-card--desc mt-5">
+            <h2>35%</h2>
+            <span>status :</span>
+            <span> in-progress</span> <br>
+            <span>{{image.shipName}}-dd-2022</span>
+          </div>
+        </div>
       </nb-card>      
     </nb-card-back>
   </nb-flip-card>

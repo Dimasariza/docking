@@ -13,3 +13,18 @@ img {
     overflow: hidden;
     justify-content: center;
 }
+
+nb-card-back {
+    h6 {
+        color: rgb(0, 208, 208);
+    }
+    nb-card{
+        background-color: rgba(183, 183, 183, .25);
+    }
+    .back-card--desc{
+        color: white;   
+        h2{
+            color: white;
+        }
+    }
+}

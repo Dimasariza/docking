@@ -36,11 +36,6 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/report-batera/activity-report',
   },
   {
-    title: 'Activity Report',
-    icon: 'book-open-outline',
-    link: '/pages/report-batera/sub-menu-report',
-  },
-  {
     title: 'Profile',
     icon: 'person-outline',
     link: '/pages/profile-batera',
