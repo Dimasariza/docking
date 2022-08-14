@@ -3,13 +3,13 @@
     <a (click)="toggleSidebar()" href="#" class="sidebar-toggle">
       <nb-icon icon="menu-2-outline"></nb-icon>
     </a>
-    <!-- <div class="logo-wrapper d-flex justify-content-start">
-      <img src="../../../assets/images/Logo/SIKOMODO TL.png" alt="Sikomodo Logo"> 
-      <div class="logo-desc">
+    <div class="logo-wrapper d-flex justify-content-start">
+      <img src="../../../assets/images/Logo/Logo Sikomodo.jpeg" alt="Sikomodo Logo"> 
+      <!-- <div class="logo-desc">
         <h6 class="logo-name">SIKOMODO</h6>
         <span class="text-hint">Sis.Kolaborasi Monitoring Docking</span> <br>   
-      </div>
-    </div> -->
+      </div> -->
+    </div>
   </div>
   <nb-select [selected]="currentTheme" (selectedChange)="changeTheme($event)" status="primary" >
     <nb-option *ngFor="let theme of themes" [value]="theme.value"> {{ theme.name }}</nb-option>
