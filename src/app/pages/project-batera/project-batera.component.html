@@ -14,27 +14,33 @@
           <nb-option value="1">Responsible</nb-option>
           <nb-option value="2">SS</nb-option>
         </nb-select>
-        <ngx-datatable 
-            [class]="'bootstrap'" 
-            [rows]="data" 
-            [count]="data.length"
-            [scrollbarH]="true"
-            columnMode="force"
-            default>
-            <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
-                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                    #{{row.name}}
-                </ng-template>
-            </ngx-datatable-column> -->
-            <ngx-datatable-column [name]="'Tasks'" prop=""></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Project / Asset'" prop=""></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Customer'" prop=""></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Status'" prop=""></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Responsible'" prop=""></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Due'" prop=""></ngx-datatable-column>
-        </ngx-datatable>
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+  
+          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+      
+          <ng-container [nbTreeGridColumnDef]="customColumn">
+              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+              {{customColumn}}
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+              {{row.data[customColumn]}}
+              </td>
+          </ng-container>
+      
+          <ng-container *ngFor="let column of defaultColumns; let index = index"
+                          [nbTreeGridColumnDef]="column"
+                          [showOn]="getShowOn(index)">
+              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+              {{column}}
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+          </ng-container>
+      </table>
     </nb-card-body>
   </nb-card>
+
 
 <nb-card>
     <nb-card-body>
@@ -44,8 +50,8 @@
         </nb-card-header>
       <ngx-datatable 
           [class]="'bootstrap'" 
-          [rows]="data" 
-          [count]="data.length"
+          [rows]="shipData" 
+          [count]="shipData.length"
           [scrollbarH]="true"
           columnMode="force"
           default>

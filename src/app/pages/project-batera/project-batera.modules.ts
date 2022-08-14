@@ -22,11 +22,8 @@ import { FsIconComponent, SubMenuProjectComponent } from './sub-menu-project/sub
     NumberCardModule,
     NbPopoverModule,
     NbSearchModule,
-    NbIconModule,
     NbAlertModule,
-    NbButtonModule,
     NbTreeGridModule,
-    NbInputModule,
   ],
   declarations: [
     ...routedComponents,
