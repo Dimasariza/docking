@@ -1,7 +1,7 @@
 <nb-card class="m-4">
     <div class="buttons" >
         <button *ngFor="let icon of useIcons; let indexOfelement=index;"
-        nbButton outline size = "tiny"  status = "primary" class="mx-1">
+        nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
             <nb-icon [icon]="icon.icon" pack="eva">
             </nb-icon>
             {{icon.desc}}
