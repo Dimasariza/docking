@@ -13,11 +13,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/project-batera',
     home: true,
   },
-  {
-    title: 'Batera Ship 01',
-    icon: 'settings-2-outline',
-    link: '/pages/project-batera/sub-menu-project',
-  },
+  // {
+  //   title: 'Batera Ship 01',
+  //   icon: 'settings-2-outline',
+  //   link: '/pages/project-batera/sub-menu-project',
+  // },
   {
     title: 'Tender',
     icon: 'cube-outline',

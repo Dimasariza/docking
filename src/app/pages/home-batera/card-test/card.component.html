@@ -1,7 +1,7 @@
-<!-- <nb-flip-card [showToggleButton]="false" [flipped]="flipped"> -->
-    <!-- <nb-card-front> -->
+<nb-flip-card [showToggleButton]="false" [flipped]="flipped">
+    <nb-card-front>
       <nb-card size="small">
-        <!-- <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon> -->
+        <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
         <div class="card image-card">
           <img src="{{image.imageSrc}}" alt="image.imageAlt">
         </div>
@@ -9,13 +9,18 @@
           <h6>{{image.shipName}}</h6>
         </nb-card-footer>
       </nb-card>
-    <!-- </nb-card-front> -->
-    <!-- <nb-card-back>
-      <nb-card size="tiny">
+    </nb-card-front>
+    <nb-card-back>
+      <nb-card size="small">
         <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
-      </nb-card>
-    </nb-card-back> -->
-  <!-- </nb-flip-card> -->
+        <h6>{{image.shipName}}</h6>
+        <h5>35%</h5>
+            <span>status:</span>
+            <span>in-progress</span>
+            <span>salmon-sutafa-dd-2022</span>
+      </nb-card>      
+    </nb-card-back>
+  </nb-flip-card>
 
 
   

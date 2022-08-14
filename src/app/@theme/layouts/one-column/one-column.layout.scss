@@ -7,7 +7,28 @@
     padding-top: nb-theme(layout-padding-top);
   }
   
-  // img {
-  //   width: 50%;
-  // }
+  .logo-wrapper{
+    // margin: -1.5em 0 0 -1.5em;
+    // width: 120%;
+    // justify-content : center;
+    // align-items: center;
+
+    .logo-desc {
+      // align-self: center;
+        h6 {
+          font-size: 0.9em;
+          font-weight: bolder;
+          line-height: 1.3em;
+          margin: 0;
+        }
+    
+        span {
+          font-size: 1em;
+          a{
+            text-decoration: none;
+            color: rgb(12, 162, 255);
+          }
+        }
+    }
+  }
 }

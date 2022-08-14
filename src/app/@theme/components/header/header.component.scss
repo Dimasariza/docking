@@ -10,7 +10,8 @@
   .logo-container {
     display: flex;
     align-items: center;
-    // width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+    width: calc(#{nb-theme(sidebar-width)} - #{nb-theme(header-padding)});
+    // width: auto;
   }
 
   .logo-wrapper {
@@ -20,21 +21,25 @@
 
     .logo-desc {
       margin: 0 1em;
+      align-self: center;
+      justify-self: center;
+      line-height: 0.5em;
       
-          h6 {
-            font-size: 1.3em;
-            margin: 0;
-          }
-      
-          span {
-            font-size: 0.9em;
-            a{
-              text-decoration: none;
-              color: rgb(12, 162, 255);
-            }
-          }
+      h6 {
+        font-size: 2em;
+        letter-spacing: 2px;
+        font-weight: 600;
+      }
+  
+      span {
+        font-size: 0.86em;
+        letter-spacing: -0.9px;
+        a{
+          text-decoration: none;
+          color: rgb(12, 162, 255);
+        }
+      }
     }
-
   }
 
   nb-action {

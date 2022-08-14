@@ -49,12 +49,11 @@
           [scrollbarH]="true"
           columnMode="force"
           default>
-          <!-- <ngx-datatable-column [name]="'Vessel'" [width]="50">
-              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                  #{{row.name}}
-              </ng-template>
-          </ngx-datatable-column> -->
-          <ngx-datatable-column [name]="'Vessel'" prop="vessel"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Vessel'" prop="vessel">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <a routerLink="/pages/project-batera/sub-menu-project" [data] = 'row'>{{row.vessel}}</a>
+           </ng-template>
+          </ngx-datatable-column>
           <ngx-datatable-column [name]="'Shortcut'" prop="company">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon *ngFor="let stat of row.shortcuts" [ngStyle]="{'color': 'grey'}" [icon]="stat"></nb-icon>

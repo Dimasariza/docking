@@ -8,9 +8,18 @@ import { Component } from '@angular/core';
       <nb-layout-header fixed>
         <ngx-header></ngx-header>
       </nb-layout-header>
-
       <nb-sidebar class="menu-sidebar" tag="menu-sidebar" responsive>
-        <ng-content select="nb-menu"></ng-content>
+        <nb-card>
+          <div class="d-flex justify-content-center  logo-wrapper p-2">
+            <img src="../../../assets/images/Logo/Pupuk Indonesia TL.png" alt="Pupuk Indonesia Logistik" style="width:20%">
+            <div class="logo-desc">
+              <h6 class="logo-name">PUPUK INDONESIA <br> LOGISTIK</h6>
+              <span class="text-hint">(PIHC Group)</span> <br>   
+            </div>
+          </div>
+        </nb-card>
+        <ng-content select="nb-menu">
+        </ng-content>
       </nb-sidebar>
 
       <nb-layout-column>
