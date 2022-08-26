@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
-  selector: 'ngx-icons',
-  styleUrls: ['./activity-report.component.scss'],
+  selector: 'ngx-activity-report',
   templateUrl: './activity-report.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

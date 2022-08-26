@@ -12,6 +12,7 @@ interface FSEntry {
   "Price A"?: string;
   "Price B"?: string;
   "Price C"?: string;
+  kind: string;
 }
 
 
@@ -20,7 +21,6 @@ interface FSEntry {
   templateUrl: './sub-menu-project.component.html',
   styleUrls: ['./sub-menu-project.component.scss']
 })
-
 
 export class SubMenuProjectComponent  {
   dataTable = [
@@ -37,7 +37,7 @@ export class SubMenuProjectComponent  {
   ]
 
   customColumn = 'Projects';
-  defaultColumns = [  ];
+  defaultColumns = [ 'kind' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
@@ -63,15 +63,15 @@ export class SubMenuProjectComponent  {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { Projects: 'General Service', },
+      data: { Projects: 'General Service', kind: 'dir' },
     },
     {
-      data: { Projects: 'Projects', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt' },
+      data: { Projects: 'Projects', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
       children: [
-        { data: { Projects: 'project-1.doc', "Price B": 'doc', "Price A": '240 KB' } },
-        { data: { Projects: 'project-2.doc', "Price B": 'doc', "Price A": '290 KB' } },
-        { data: { Projects: 'project-3', "Price B": 'txt', "Price A": '466 KB' } },
-        { data: { Projects: 'project-4.docx', "Price B": 'docx', "Price A": '900 KB' } },
+        { data: { Projects: 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
+        { data: { Projects: 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
+        { data: { Projects: 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
+        { data: { Projects: 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
       ],
     },
   ];
@@ -85,13 +85,20 @@ export class SubMenuProjectComponent  {
 
 
 @Component({
-  selector: 'ngx-fs-icon',
+  selector: 'ngx-sub-menu-icon',
   template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" >
-    </nb-tree-grid-row-toggle>
-    `,
+  <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+  </nb-tree-grid-row-toggle>
+  <ng-template #fileIcon>
+    <nb-icon icon="file-text-outline"></nb-icon>
+  </ng-template>
+`,
 })
   
-export class FsIconComponent {
+export class SubMenuIconComponent {
+  @Input() kind: string;
   @Input() expanded: boolean;
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
 }

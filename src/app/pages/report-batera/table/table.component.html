@@ -1,5 +1,4 @@
 <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-  
     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
     <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 

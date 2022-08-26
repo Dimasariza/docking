@@ -33,7 +33,7 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Report',
     icon: 'book-outline',
-    link: '/pages/report-batera/activity-report',
+    link: '/pages/report-batera/pic',
   },
   // {
   //   title: 'Profile',

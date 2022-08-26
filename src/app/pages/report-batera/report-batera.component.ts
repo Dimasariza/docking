@@ -23,28 +23,28 @@ export class ReportBateraComponent {
 
   tabs: any[] = [
     {
-      title: 'Key Positions',
-      route: '/pages/report-batera/key-positions',
+      title: 'PIC',
+      route: '/pages/report-batera/pic',
     },
     {
-      title: 'Positions',
-      route: '/pages/report-batera/positions',
+      title: 'Work Progress',
+      route: '/pages/report-batera/work-progress',
+    },
+    {
+      title: 'BAST*',
+      route: '/pages/report-batera/bast',
+    },
+    {
+      title: 'Surat Teguran*',
+      route: '/pages/report-batera/surat-teguran',
+    },
+    {
+      title: 'Close Out Report(COR)*',
+      route: '/pages/report-batera/close-out',
     },
     {
       title: 'Activity Report',
       route: '/pages/report-batera/activity-report',
-    },
-    {
-      title: 'Meetings',
-      route: '/pages/report-batera/meetings',
-    },
-    {
-      title: 'Status Report',
-      route: '/pages/report-batera/status-report',
-    },
-    {
-      title: 'Activity Flow',
-      route: '/pages/report-batera/activity-flow',
     },
   ];
 }

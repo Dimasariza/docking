@@ -14,6 +14,7 @@
           <nb-option value="1">Responsible</nb-option>
           <nb-option value="2">SS</nb-option>
         </nb-select>
+         
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
   
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
@@ -53,25 +54,48 @@
           [rows]="shipData" 
           [count]="shipData.length"
           [scrollbarH]="true"
-          columnMode="force"
+          [columnMode]="'force'"
+          class="row"
+          [rowHeight]="'auto'"
           default>
           <ngx-datatable-column [name]="'Vessel'" prop="vessel">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <a routerLink="/pages/project-batera/sub-menu-project" [data] = 'row'>{{row.vessel}}</a>
+              <a routerLink="/pages/project-batera/sub-menu-project" [data] = 'row' class="text-decoration-none">{{row.vessel}}</a>
            </ng-template>
           </ngx-datatable-column>
-          <ngx-datatable-column [name]="'Shortcut'" prop="company">
+
+          <ngx-datatable-column [name]="'Shortcut'" prop="">
             <ng-template let-row="row" ngx-datatable-cell-template>
+
               <nb-icon *ngFor="let stat of row.shortcuts" [ngStyle]="{'color': 'grey'}" [icon]="stat"></nb-icon>
             </ng-template>  
           </ngx-datatable-column>
+
           <ngx-datatable-column [name]="'Customer'" prop="customer"></ngx-datatable-column>
-          <ngx-datatable-column [name]="' R  P   E'" prop="">
+
+          <ngx-datatable-column [name]="'R'" width="1">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <nb-icon [stat]="row.R" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
+                </nb-icon>
+              </ng-template>  
+          </ngx-datatable-column>
+
+          <ngx-datatable-column [name]="'P'" width="1">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
+              <nb-icon [stat]="row.P" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
+
+          <ngx-datatable-column [name]="'E'" >
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              </nb-icon>
+            </ng-template>  
+          </ngx-datatable-column>
+
           <ngx-datatable-column [name]="'Start'" prop="start"></ngx-datatable-column>
       </ngx-datatable>
     </nb-card-body>
   </nb-card>
+

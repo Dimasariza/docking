@@ -124,8 +124,8 @@
                 </tr>
             </table>
 
-
-        <table style="width: 50%;">
+        <nb-card style="width: 100%; padding: 10px;">
+        <table>
             <tr>
                 <th>Totals</th>
                 <th>Budget</th>
@@ -197,8 +197,9 @@
                 <td><span>5.953.787.983</span></td>
                 <td><span>0</span></td>
             </tr>
-            
         </table>
+    </nb-card>
+
     </div>
     </nb-card-body>
 </nb-card>
@@ -235,7 +236,7 @@
           </th>
     
           <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-fs-icon [expanded]="row.expanded"></ngx-fs-icon>
+            <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
             {{row.data[customColumn]}}
           </td>
         </ng-container>

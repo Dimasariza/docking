@@ -20,7 +20,6 @@ interface FSEntry {
 @Component({
   selector: 'ngx-project-batera',
   templateUrl: './project-batera.component.html',
-  styleUrls: ['./project-batera.component.scss']
 })
 export class ProjectBateraComponent {
   customColumn = 'Tasks';
@@ -65,13 +64,13 @@ export class ProjectBateraComponent {
     {
       data: { Tasks: 'Mooring and Unmooring', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
       children: [{
-        data: { Tasks: 'Riggers/line handlers assistance when Vessel arrival Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
+        data: { Tasks: 'Riggers/line handlers assistance when Vessel arrival Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
       },
-      {data: { Tasks: 'Riggers/line handlers assistance provide for enter to Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
+      {data: { Tasks: 'Riggers/line handlers assistance provide for enter to Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
       },
-      {data: { Tasks: 'Riggers/line handlers assistance provide for undocking from Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
+      {data: { Tasks: 'Riggers/line handlers assistance provide for undocking from Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
       },
-      {data: { Tasks: 'Riggers/line handlers assistance when Vessel departure Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
+      {data: { Tasks: 'Riggers/line handlers assistance when Vessel departure Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
       },
       ],
     },
@@ -79,13 +78,13 @@ export class ProjectBateraComponent {
     data: { Tasks: 'Shore Power Supply', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
       children: [
       {
-      data: { Tasks: 'Connection and disconnection', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
+      data: { Tasks: 'Connection and disconnection', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
       },
       {
-        data: { Tasks: 'Per day', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
+        data: { Tasks: 'Per day', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
       },
       {
-        data: { Tasks: 'Per kWh unit', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
+        data: { Tasks: 'Per kWh unit', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
       },
       ],
     },
@@ -93,10 +92,10 @@ export class ProjectBateraComponent {
       data: { Tasks: 'Coolling Water Supply', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
         children: [
         {
-          data: { Tasks: 'Connection & Disconnection', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
+          data: { Tasks: 'Connection & Disconnection', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
         },
         {
-          data: { Tasks: 'Per day connected and under pressure', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
+          data: { Tasks: 'Per day connected and under pressure', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
         },
         ],
     },
@@ -122,49 +121,63 @@ export class ProjectBateraComponent {
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:09:19",
-      "phases": [true, true, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Batera Project3-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:08:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Batera Kapuas-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:07:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Batera Medan-1-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:06:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Batera Express-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:05:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Relance-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:04:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true
     },
     {
       "vessel": "Batera Gorontalo-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
       "customer": "Batera Line",
       "start": "15:03:19",
-      "phases": [true, false, true]
+      "R": true,
+      "P": true,
+      "E": true,
     }
   ]
 

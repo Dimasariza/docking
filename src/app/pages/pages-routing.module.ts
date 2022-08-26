@@ -5,9 +5,6 @@ import { PagesComponent } from './pages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
-import { HomeBateraComponent } from './home-batera/home-batera.component';
-import { ProjectBateraComponent } from './project-batera/project-batera.component';
-import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
 
 const routes: Routes = [{
   path: '',
@@ -27,10 +24,6 @@ const routes: Routes = [{
       path: 'tender-batera',
       loadChildren: () => import('./tender-batera/tender-batera.module')
       .then(m => m.TenderBateraModule),
-    },
-    {
-      path: 'technical-batera',
-      component: TechnicalBateraComponent,
     },
     {
       path: 'tracking-batera',
@@ -56,10 +49,6 @@ const routes: Routes = [{
       path: 'project-batera',
       loadChildren: () => import('./project-batera/project-batera.modules')
       .then(m => m.ProjectBateraModule),
-    },
-    {
-      path: 'technical-batera',
-      component: TechnicalBateraComponent,
     },
     {
       path: 'dashboard',

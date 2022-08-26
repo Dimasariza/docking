@@ -1,43 +1,43 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { ActivityFlowComponent } from './activity-flow/activity-flow.component';
-import { ActivityReportComponent } from './activity-report/activity-report.component';
-import { KeyPositionsComponent } from './key-positions/key-positions.component';
-import { MeetingsComponent } from './meetings/meetings.component';
-import { PositionsComponent } from './positions/positions.component';
+import { BastComponent } from './bast/bast.component';
+import { PicComponent } from './pic/pic.component';
+import { WorkProgressComponent } from './work-progress/work-progress.component';
 import { ReportBateraComponent } from './report-batera.component';
-import { StatusReportComponent } from './status-report/status-report.component';
+import { CloseOutComponent } from './close-out/status-report.component';
 import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
+import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
+import { ActivityReportComponent } from './activity-report/activity-report.component';
 
 const routes: Routes = [{
   path: '',
   component: ReportBateraComponent,
   children: [
     {
-      path: 'key-positions',
-      component: KeyPositionsComponent
+      path: 'pic',
+      component: PicComponent
     },
     {
-      path: 'positions',
-      component: PositionsComponent
+      path: 'work-progress',
+      component: WorkProgressComponent
+    },
+    {
+      path: 'bast',
+      component: BastComponent
+    },
+    {
+      path: 'surat-teguran',
+      component: SuratTeguranComponent
+    },
+    {
+      path: 'close-out',
+      component: CloseOutComponent
     },
     {
       path: 'activity-report',
       component: ActivityReportComponent
-    },
-    {
-      path: 'meetings',
-      component: MeetingsComponent
-    },
-    {
-      path: 'status-report',
-      component: StatusReportComponent
-    },
-    {
-      path: 'activity-flow',
-      component: ActivityFlowComponent
-    },
+    }
   ],
   },
   {
@@ -45,7 +45,6 @@ const routes: Routes = [{
     component: SubMenuReportComponent
   }
 ];
-
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],

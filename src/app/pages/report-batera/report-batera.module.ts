@@ -2,32 +2,32 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbListModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbStepperModule, NbTableModule, NbTabsetModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
 import { ReportBateraComponent } from './report-batera.component';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
-import { KeyPositionsComponent } from './key-positions/key-positions.component';
-import { PositionsComponent } from './positions/positions.component';
-import { MeetingsComponent } from './meetings/meetings.component';
-import { StatusReportComponent } from './status-report/status-report.component';
-import { ActivityFlowComponent } from './activity-flow/activity-flow.component';
+import { CloseOutComponent } from './close-out/status-report.component';
 import { ActivityReportComponent } from './activity-report/activity-report.component';
 import { ActivityTableComponent, FsIconComponent } from './table/table.component';
 import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
+import { PicComponent } from './pic/pic.component';
+import { WorkProgressComponent } from './work-progress/work-progress.component';
+import { BastComponent } from './bast/bast.component';
+import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
 
 
 @NgModule({
   declarations: [
     ReportBateraComponent,
     ReportBateraComponent,
-    KeyPositionsComponent,
-    PositionsComponent,
-    MeetingsComponent,
-    StatusReportComponent,
-    ActivityFlowComponent,
     ActivityReportComponent,
     ActivityTableComponent,
     FsIconComponent,
     SubMenuReportComponent,
+    PicComponent,
+    WorkProgressComponent,
+    BastComponent,
+    SuratTeguranComponent,
+    CloseOutComponent
     
   ],
   imports: [
@@ -44,6 +44,7 @@ import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.compon
     NbButtonModule,
     NbIconModule,
     NbTreeGridModule,
+    NbLayoutModule
   ]
 })
 export class ReportBateraModule {

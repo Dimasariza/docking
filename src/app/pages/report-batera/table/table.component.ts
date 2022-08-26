@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 interface TreeNode<T> {
@@ -11,22 +11,24 @@ interface FSEntry {
   Title: string;
   Type?: string;
   Status?:string;
+  "%"?:string;
   Start: string;
-  kind: string;
   Stop?: string;
   Responsible?: string;
-  'Last Change'?: string
+  'Last Change'?: string;
+  Approval?: boolean
+  kind: string;
 }
 
 @Component({
   selector: 'ngx-activity-table',
   templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
 })
 export class ActivityTableComponent {
   customColumn = 'Title';
-  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Approval' ];
+  approvalColumns = ['Approval']
+  allColumns = [ this.customColumn, ...this.defaultColumns, ...this.approvalColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -51,24 +53,24 @@ export class ActivityTableComponent {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { Title: 'Plan Docking', Type: 'Phase', Status: '', Start: '15-09-2018', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', Stop:'15-12-2018' },
+      data: { Title: 'Plan Docking', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:'15-12-2018' , Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'dir' },
     },
     {
-      data: { Title: 'Spesifications', Type: 'Phase', Status: '', kind: 'dir', Start: '15-09-2018', 'Last Change': '22-11-18 22:07 SS', Stop:"15-12-2018" },
+      data: { Title: 'Spesifications', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:"15-12-2018" , Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', },
       children: [
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Activity', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
-        { data: { Title: 'D-10 1st inspection', Type: 'Activity', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
-        { data: { Title: 'D-9 to D-6 Draft docking spec', Type: 'Activity', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
-        { data: { Title: 'D-9 to D-6 Produce Spares stores and services', Type: 'Activity', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
-        { data: { Title: 'D-5 Prepare docking spec', Type: 'Activity', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
-        { data: { Title: 'D-5 Spesification approved', Type: 'Milestone', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018", 'Last Change': '22-11-18 22:07 SS' } },
+        { data: { Title: 'D-12 Registration dock jobs', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',kind: 'doc'} },
+        { data: { Title: 'D-10 1st inspection', Type: 'Activity', Status: '',  Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc' } },
+        { data: { Title: 'D-9 to D-6 Draft docking spec', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'doc'} },
+        { data: { Title: 'D-9 to D-6 Produce Spares stores and services', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'doc'} },
+        { data: { Title: 'D-5 Prepare docking spec', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc'} },
+        { data: { Title: 'D-5 Spesification approved', Type: 'Milestone', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc'} },
       ],
     },
     {
-    data: { Title: 'Quote', Type: 'Phase', Status: '', kind: 'dir', Start: '15-09-2018', 'Last Change': '22-11-18 22:07 SS', Stop:"15-12-2018" },
+    data: { Title: 'Quote', Type: 'Phase', Status: '', Start: '15-09-2018',  Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir'},
       children: [
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018" } },
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', kind: 'doc', Start: '15-09-2018', Stop:"15-12-2018" } },
+        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
+        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
       ],
     },
   ];
