@@ -26,9 +26,9 @@ interface FSEntry {
 })
 export class ActivityTableComponent {
   customColumn = 'Title';
-  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Approval' ];
-  approvalColumns = ['Approval']
-  allColumns = [ this.customColumn, ...this.defaultColumns, ...this.approvalColumns ];
+  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change' ];
+  // approvalColumns = ['Approval']
+  allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 

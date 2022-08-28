@@ -6,7 +6,6 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profil-batera.component.scss']
 })
 export class ProfilBateraComponent implements OnInit {
-
   data = [
     {
       "nama pengguna": "Becky Tumewu",

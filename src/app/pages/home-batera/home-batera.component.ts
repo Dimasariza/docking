@@ -1,14 +1,20 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
+interface Item {
+  imageSrc: string;
+  imageAlt: string;
+}
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
-  styleUrls: ['./home-batera.component.scss']
+  styleUrls: ['./home.css']
 })
+export class HomeBateraComponent {
+  items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
+  expandedIndex = 0;
 
-export class HomeBateraComponent implements OnInit {
-  title = "image-gallery"
-
+  flipped = false;
+  @Input() image;
   data = [
     {
       imageSrc : '../../../assets/images/Ship/KM SALMON MUSTAFA.png',
@@ -43,9 +49,4 @@ export class HomeBateraComponent implements OnInit {
       shipName : 'KM JULIANTO MOELIODIHARDJO'
     },
   ]
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
 }

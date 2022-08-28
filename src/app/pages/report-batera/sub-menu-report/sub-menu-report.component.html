@@ -1,164 +1,121 @@
 <div class="row">
-<div class="col-8">
-    <nb-card>
-        <nb-card-header>
-            <div class="d-flex justify-content-between"> 
-                <h5>D-10 1st Inspection</h5>
-                <div>
-                    <button nbButton status="primary" class="mx-1" outline size="small">
+    <div class="col-md-12 col-sm-12 col-lg-6 col-xl-8">
+        <nb-card>
+            <nb-card-header >
+                <h5 >D-10 1st Inspection</h5>
+                <div class="ml-lg-auto">
+                    <button nbButton status="primary" class="m-2" outline size="small">
                         <nb-icon icon="close-outline" pack="eva"></nb-icon>
                         Close
                     </button>
-                    <button nbButton status="primary" class="mx-1" outline size="small">
+                    <button nbButton status="primary" class="m-2" outline size="small">
                         <nb-icon icon="checkmark-square-outline" pack="eva"></nb-icon>
                         New Task
                     </button>
-                    <button nbButton status="primary" class="mx-1" outline size="small">
+                    <button nbButton status="primary" class="m-2" outline size="small">
                         <nb-icon icon="people-outline" pack="eva"></nb-icon>
                         New Contact
                     </button>
                 </div>
-            </div>
-        </nb-card-header>
+            </nb-card-header>
 
-        <nb-card-body>
-            <table style="width: 80%; ">
-                <tr>
-                    <td><label for="test-label" class="label">Start</label></td>
-                    <td><span>19.11.2018</span></td>
-                    <td><label for="test-label" class="label">Type</label></td>
-                    <td><span>Activity 2</span></td> 
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Done</label></td>
-                    <td><span>03.12.2018</span></td>
-                    <td><label for="test-label" class="label">Status</label></td>
-                    <nb-select selected="1" class="mx-3" size="tiny">
-                        <nb-option value="1">Status</nb-option>
-                        <nb-option value="2">On Progress</nb-option>
-                    </nb-select>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Responsible</label></td>
-                    <td><span>Slamet Saputro</span></td>
-                    <td><label for="test-label" class="label">Progress</label></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Projects</label></td>
-                    <td><span>Batera Ship 01</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Area</label></td>
-                    <td>
-                        <nb-select selected="1" class="mx-3" size="tiny">
-                            <nb-option value="1">Status</nb-option>
-                            <nb-option value="2">On Progress</nb-option>
-                        </nb-select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Created</label></td>
-                    <td><span>04.05.2015 14.18 - <span style="color: rgb(12, 162, 255);">Adminstrator</span></span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Last Change Date</label></td>
-                    <td><span>06.10.2018 03.44 - <span style="color: rgb(12, 162, 255);">Slamet Spautro</span></span></td>
-                </tr>
-            </table>
-        </nb-card-body>
+            <nb-card-body>
+                <ngx-inspection-menu></ngx-inspection-menu>
+            </nb-card-body>
 
-        <nb-card-body>
-            <h5>Description</h5>
-            <div class="font-row my-2">
-                <span><strong>Purpose</strong></span>
+            <nb-card-body>
+                <h5>Description</h5>
+                <div class="font-row my-2">
+                    <span><strong>Purpose</strong></span>
+                    <ul class="list-group">
+                        <li>Identify Scope of Work</li>
+                    </ul>
+                </div>
+                <div class="font-row my-2">
+                    <span><strong>Responsible</strong></span>
+                    <ul class="list-group">
+                        <li>SUP, HSP</li>
+                    </ul>
+                </div>
+                <div class="font-row my-2">
+                    <span><strong>Input</strong></span>
+                    <ul class="list-group">
+                        <li>Last Docking Report</li>
+                        <li>Vessel Condition Report</li>
+                        <li>Ship's Repair List</li>
+                        <li>Specialist's Reports</li>
+                        <li>Own Inspection</li>
+                    </ul>
+                </div>
+                <h5>Delivery</h5>
+                <div class="font-row my-2">
+                    <span><strong>Deliverable</strong></span>
+                    <ul class="list-group">
+                        <li>Allocated scope of work : Yard, crew, subcontractors</li>
+                    </ul>
+                </div>
+                <div class="font-row my-2">
+                    <span><strong>Template</strong></span>
+                    <ul class="list-group">
+                        <li>HSP Inspection Template</li>
+                        <li>Dock Repair List</li>
+                    </ul>
+                </div>
+                <div class="font-row my-2">
+                    <span><strong>Recipent</strong></span>
+                    <ul class="list-group">
+                        <li>DPIC, SM</li>
+                    </ul>
+                </div>
+            </nb-card-body>
+            
+            <nb-card-body>
+                <h5>Attachments</h5>
+                <nb-card>
+                    <button nbButton class="m-2" shape="rectangle" >
+                        Add file from computer
+                    </button> 
+                </nb-card>
+            </nb-card-body>
+        </nb-card>
+    </div>
+
+    <div class="col-md-12 col-sm-12 col-lg-6 col-xl-4">
+        <nb-card>
+            <nb-card-header>
+                <h6>Updates</h6>
+            </nb-card-header>
+            <button nbButton class="m-2" shape="rectangle" status="info" hero>
+                Add update
+            </button> 
+            <div class="p-3">
+                <span><strong>1ST INSPECTION DURING BERTHING 9TH OCT 2018</strong></span>
+                <ol class="my-1">
+                    <li>Found deformation on hull before accomodation</li>
+                    <li>The container hull found broken</li>
+                    <li>Plan for wasting on Oct 2018</li>
+                    <li>Hatch Cover</li>
+                </ol>
+                <span style="color:  rgb(12, 162, 255);">Slamet Saputro</span>
+                <h6>Support</h6>
+                <span><strong>Supporting Documents</strong></span> <br>
                 <ul class="list-group">
-                    <li>Identify Scope of Work</li>
+                    <li class="list-group-item justify-content-between d-flex my-2 align-items-center">
+                        <span>
+                            <nb-icon status="primary" icon="book-outline"></nb-icon>
+                            Inspection Template
+                        </span>
+                        <button nbButton ghost size = 'small'>
+                            <nb-icon status="primary" icon="settings-outline"></nb-icon>
+                        </button>
+                    </li>
                 </ul>
+                <h6>Support</h6>
             </div>
-            <div class="font-row my-2">
-                <span><strong>Responsible</strong></span>
-                <ul class="list-group">
-                    <li>SUP, HSP</li>
-                </ul>
-            </div>
-            <div class="font-row my-2">
-                <span><strong>Input</strong></span>
-                <ul class="list-group">
-                    <li>Last Docking Report</li>
-                    <li>Vessel Condition Report</li>
-                    <li>Ship's Repair List</li>
-                    <li>Specialist's Reports</li>
-                    <li>Own Inspection</li>
-                </ul>
-            </div>
-            <h5>Delivery</h5>
-            <div class="font-row my-2">
-                <span><strong>Deliverable</strong></span>
-                <ul class="list-group">
-                    <li>Allocated scope of work : Yard, crew, subcontractors</li>
-                </ul>
-            </div>
-            <div class="font-row my-2">
-                <span><strong>Template</strong></span>
-                <ul class="list-group">
-                    <li>HSP Inspection Template</li>
-                    <li>Dock Repair List</li>
-                </ul>
-            </div>
-            <div class="font-row my-2">
-                <span><strong>Recipent</strong></span>
-                <ul class="list-group">
-                    <li>DPIC, SM</li>
-                </ul>
-            </div>
-        </nb-card-body>
-        
-        <nb-card-body>
-            <h5>Attachments</h5>
-            <nb-card>
-                <button nbButton class="m-2" shape="rectangle" >
-                    Add file from computer
-                </button> 
-            </nb-card>
-        </nb-card-body>
-    </nb-card>
+            <button nbButton class="m-2" shape="rectangle" status="info" hero>
+                Create
+            </button> 
+        </nb-card>
+    </div>
 </div>
 
-<div class="col-4">
-    <nb-card>
-        <nb-card-header>
-            <h6>Updates</h6>
-        </nb-card-header>
-        <button nbButton class="m-2" shape="rectangle" status="info" hero>
-            Add update
-        </button> 
-        <div class="p-3">
-            <span><strong>1ST INSPECTION DURING BERTHING 9TH OCT 2018</strong></span>
-            <ol class="my-1">
-                <li>Found deformation on hull before accomodation</li>
-                <li>The container hull found broken</li>
-                <li>Plan for wasting on Oct 2018</li>
-                <li>Hatch Cover</li>
-            </ol>
-            <span style="color:  rgb(12, 162, 255);">Slamet Saputro</span>
-            <h6>Support</h6>
-            <span><strong>Supporting Documents</strong></span> <br>
-            <ul class="list-group">
-                <li class="list-group-item justify-content-between d-flex my-2 align-items-center">
-                    <span>
-                        <nb-icon status="primary" icon="book-outline"></nb-icon>
-                        Inspection Template
-                    </span>
-                    <button nbButton ghost size = 'small'>
-                        <nb-icon status="primary" icon="settings-outline"></nb-icon>
-                    </button>
-                </li>
-            </ul>
-            <h6>Support</h6>
-        </div>
-        <button nbButton class="m-2" shape="rectangle" status="info" hero>
-            Create
-        </button> 
-    </nb-card>
-</div>
-</div>

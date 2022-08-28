@@ -8,11 +8,11 @@ import { ReportBateraRoutingModule } from './report-batera-routing.module';
 import { CloseOutComponent } from './close-out/status-report.component';
 import { ActivityReportComponent } from './activity-report/activity-report.component';
 import { ActivityTableComponent, FsIconComponent } from './table/table.component';
-import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
-import { PicComponent } from './pic/pic.component';
+import { InspectionMenuComponent, SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 import { WorkProgressComponent } from './work-progress/work-progress.component';
 import { BastComponent } from './bast/bast.component';
 import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
+import { PicComponent } from './pic/pic.component';
 
 
 @NgModule({
@@ -23,12 +23,12 @@ import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
     ActivityTableComponent,
     FsIconComponent,
     SubMenuReportComponent,
-    PicComponent,
     WorkProgressComponent,
     BastComponent,
     SuratTeguranComponent,
-    CloseOutComponent
-    
+    CloseOutComponent,
+    InspectionMenuComponent,
+    PicComponent
   ],
   imports: [
     CommonModule,
@@ -44,7 +44,7 @@ import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
     NbButtonModule,
     NbIconModule,
     NbTreeGridModule,
-    NbLayoutModule
+    NbLayoutModule,
   ]
 })
 export class ReportBateraModule {

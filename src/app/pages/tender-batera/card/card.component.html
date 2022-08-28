@@ -1,57 +1,14 @@
-<nb-card class="p-3 mx-1">
-    <div class="font-row">
-        <div class="header d-inline-block">
-          <div class="name bold"><strong>Yard</strong></div>
-          <span>Marcopolo</span>
-        </div>
-        <table style="width: 100%;">
-            <tr>
-                <td><strong>Currency</strong></td>
-                <td>IDA*</td>
-            </tr>
-            <tr>
-                <td><strong>Offhire</strong></td>
-                <td>19 Days</td>
-            </tr>
-            <tr>
-                <td><strong> Repair Period (In Dock)</strong></td>
-                <td>13 Days</td>
-            </tr>
-            <tr>
-                <td><strong>Offhire Cost</strong></td>
-                <td>2.759.920.000</td>
-            </tr>
-            <tr>
-                <td><strong>Owner Cost</strong></td>
-                <td>2.412.000.000</td>
-            </tr>
-            <tr>
-                <td class="line"><strong>Owner Total Cost</strong></td>
-                <td class="line">4.171.950.000</td>
-            </tr>
-            <tr>
-                <td><strong>Yard Total Quote</strong></td>
-                <td>4.560.753.000</td>
-            </tr>
-            <tr>
-                <td><strong>General Discount 15%</strong></td>
-                <td>-684.000.000</td>
-            </tr>
-            <tr>
-                <td><strong>Additional Discount</strong></td>
-                <td>0</td>
-            </tr>
-            <tr>
-                <td><strong>Sum Internal Adjusment</strong></td>
-                <td>811.000.000</td>
-            </tr>
-        </table>
-
+<nb-card class="p-3">
+    <div class="header d-inline-block">
+        <strong>Yard</strong> <br>
+        <span>Marcopolo</span>
     </div>
-
+    <div *ngFor="let item of objectKeys(dataTable)" class="row">
+        <div class="col-lg col-xl-4 col-md"><strong>{{item}}</strong></div>
+        <div class="col-auto">:</div>
+        <div class="col text-right">{{dataTable[item]}}</div>
+    </div>
     <div class="text-center">
-        <button nbButton status="success">
-            Select Yard
-        </button>
+        <button nbButton status="success">Select Yard</button>
     </div>
 </nb-card>

@@ -30,8 +30,9 @@
             <nb-option value="2">Show Details</nb-option>
         </nb-select>
 
-        <div class="my-4 d-flex">
-            <table style="width: 50%;">
+        <div class="my-4 row">
+            <div class="col-md-4 col-sm-12">
+            <table>
                 <tr>
                     <td><label for="test-label" class="label">Vessel</label></td>
                     <td><span>Batera Ship 01</span></td>
@@ -123,85 +124,89 @@
                     </td>
                 </tr>
             </table>
+        </div>
 
-        <nb-card style="width: 100%; padding: 10px;">
-        <table>
-            <tr>
-                <th>Totals</th>
-                <th>Budget</th>
-                <th>Contact</th>
-                <th>Actual</th>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Offhire Days</label></td> 
-                <td><span>20</span></td> 
-                <td><span>-</span></td> 
-                <td><span>0</span></td> 
-                <td>                        
-                    <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                    <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                </button></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Owner Exp</label></td>
-                <td><span>1.412.000.000</span></td>
-                <td><span>1.412.000.000</span></td>
-                <td><span>0</span></td>
-            </tr> 
+        <div class="col">
+            <nb-card>
+                <nb-card-body>
+                    <table style="width: 100%;">
+                        <tr>
+                            <th>Totals</th>
+                            <th>Budget</th>
+                            <th>Contact</th>
+                            <th>Actual</th>
+                        </tr>
+                        <tr>
+                            <td><label for="test-label" class="label">Offhire Days</label></td> 
+                            <td><span>20</span></td> 
+                            <td><span>-</span></td> 
+                            <td><span>0</span></td> 
+                            <td>                        
+                                <button nbButton status="primary" class="mx-1" outline size="small" ghost>
+                                    <nb-icon icon="edit-outline" pack="eva"></nb-icon>
+                                </button></td>
+                            </tr>
+                            <tr>
+                                <td><label for="test-label" class="label">Owner Exp</label></td>
+                                <td><span>1.412.000.000</span></td>
+                                <td><span>1.412.000.000</span></td>
+                                <td><span>0</span></td>
+                </tr> 
 
-            <tr>
-                <td><label for="test-label" class="label">- Supplies</label></td>
-                <td><span>877.000.000</span></td>
-                <td><span>877.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Services</label></td>
-                <td><span>350.000.000</span></td>
-                <td><span>350.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Class</label></td>
-                <td><span>0</span></td>
-                <td><span>0</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Other</label></td>
-                <td><span>185.000.000</span></td>
-                <td><span>185.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label" style="color: burlywood;">Owner Canceled Jobs</label></td>
-                <td><span>-</span></td>
-                <td><span>0</span></td>
-                <td><span>-</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Yard Cost</label></td>
-                <td><span>5.056.566.061</span></td>
-                <td><span>4.541.787.983</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label" style="color: burlywood;">Yard Canceled Jobs</label></td>
-                <td><span>-</span></td>
-                <td><span>0</span></td>
-                <td><span>-</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Total Cost</label></td>
-                <td><span>6.468.566.061</span></td>
-                <td><span>5.953.787.983</span></td>
-                <td><span>0</span></td>
-            </tr>
-        </table>
-    </nb-card>
-
+                <tr>
+                    <td><label for="test-label" class="label">- Supplies</label></td>
+                    <td><span>877.000.000</span></td>
+                    <td><span>877.000.000</span></td>
+                    <td><span>0</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label">- Services</label></td>
+                    <td><span>350.000.000</span></td>
+                    <td><span>350.000.000</span></td>
+                    <td><span>0</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label">- Class</label></td>
+                    <td><span>0</span></td>
+                    <td><span>0</span></td>
+                    <td><span>0</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label">- Other</label></td>
+                    <td><span>185.000.000</span></td>
+                    <td><span>185.000.000</span></td>
+                    <td><span>0</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label" style="color: burlywood;">Owner Canceled Jobs</label></td>
+                    <td><span>-</span></td>
+                    <td><span>0</span></td>
+                    <td><span>-</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label">Yard Cost</label></td>
+                    <td><span>5.056.566.061</span></td>
+                    <td><span>4.541.787.983</span></td>
+                    <td><span>0</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label" style="color: burlywood;">Yard Canceled Jobs</label></td>
+                    <td><span>-</span></td>
+                    <td><span>0</span></td>
+                    <td><span>-</span></td>
+                </tr>
+                <tr>
+                    <td><label for="test-label" class="label">Total Cost</label></td>
+                    <td><span>6.468.566.061</span></td>
+                    <td><span>5.953.787.983</span></td>
+                    <td><span>0</span></td>
+                </tr>
+            </table>
+            </nb-card-body>
+        </nb-card>
+        </div>
     </div>
-    </nb-card-body>
+</nb-card-body>
 </nb-card>
 
 <nb-card>

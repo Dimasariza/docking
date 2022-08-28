@@ -6,6 +6,7 @@ import { ChartOptions } from '../../charts/apexchart/apexchart.component';
   templateUrl: './sub-menu-report.component.html',
   styleUrls: ['./sub-menu-report.component.scss']
 })
+
 export class SubMenuReportComponent   {
     data = [
       {title: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
@@ -13,7 +14,6 @@ export class SubMenuReportComponent   {
       {title: 'Batera 03', phases: [true, true, false], periode: '12/12/2022'},
       {title: 'Batera 04', phases: [true, true, false], periode: '12/12/2022'}
     ]
-  
     chartOptions: Partial<ChartOptions> = {
       series: [ 
         {
@@ -75,4 +75,35 @@ export class SubMenuReportComponent   {
         },
       }
     }
+}
+
+@Component({
+  selector: 'ngx-inspection-menu',
+  template: 
+  `<div *ngFor = "let items of objectKeys(dataStatus)" class="row">
+  <div *ngIf="dataStatus.Date; else elseBlock" class="col-6 d-flex" >
+  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 " >{{items}}</div>
+  <div class="col-xl-3 col-lg-3 col-md-3 col-sm-6 ml-auto" >{{dataStatus[items]}}</div>
+  </div>
+  </div>`,
+})
+export class InspectionMenuComponent {
+  objectKeys = Object.keys;
+  dataStatus = {
+    Start: '19.11.2018',
+    Done: '03.12.2018',
+    Responsible : 'Slamet Saputro',
+    Projects: '	Batera Ship 01',
+    Area: '',
+    Date: {
+      Created_date : '04.05.2015',
+      Created_time : '14.18',
+      Created_person: 'Adminstrator',
+      Last_date: '06.10.2018',
+      Last_time: '03.44',
+      Last_person : 'Slamet Saputro',
+    },
+    Type: 'Activity 2',
+    Status: '',
+    Progress: ''}
 }
