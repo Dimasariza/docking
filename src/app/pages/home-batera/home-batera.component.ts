@@ -12,7 +12,7 @@ export class HomeBateraComponent{
   title = "image-gallery"
   data = [
     {
-      imageSrc : '../../../assets/images/Ship/KM SALMON MUSTAFA.png',
+      imageSrc : './assets/images/Ship/KM SALMON MUSTAFA.png',
       imageAlt : 'MT SALMON MUSTAFA SHIP',
       shipName : 'MT SALMON MUSTAFA'
     },
@@ -22,24 +22,24 @@ export class HomeBateraComponent{
       shipName : 'MT SULTAN MAHMUD BADARUDDIN II'
     },
     {
-      imageSrc : '../../../assets/images/Ship/KM PUSRI INDONESIA I.png',
+      imageSrc : './assets/images/Ship/KM PUSRI INDONESIA I.png',
       imageAlt : 'KM PUSRI INDONESIA I SHIP',
       shipName : 'KM PUSRI INDONESIA I'
 
     },
     {
-      imageSrc : '../../../assets/images/Ship/KM ABUSAMAH.png',
+      imageSrc : './assets/images/Ship/KM ABUSAMAH.png',
       imageAlt : 'KM ABUSAMAH SHIP',
       shipName : 'KM ABUSAMAH'
     },
     {
       
-      imageSrc : '../../../assets/images/Ship/KM IBRAHIM ZAHIER.png',
+      imageSrc : './assets/images/Ship/KM IBRAHIM ZAHIER.png',
       imageAlt : 'KM IBRAHIM ZAHIER SHIP',
       shipName : 'KM IBRAHIM ZAHIER'
     },
     {
-      imageSrc : '../../../assets/images/Ship/KM JULIANTO.png',
+      imageSrc : './assets/images/Ship/KM JULIANTO.png',
       imageAlt : 'KM JULIANTO MOELIODIHARDJO SHIP',
       shipName : 'KM JULIANTO MOELIODIHARDJO'
     },
