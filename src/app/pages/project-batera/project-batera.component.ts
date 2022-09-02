@@ -1,4 +1,6 @@
+import { query } from '@angular/animations';
 import { Component, Input } from '@angular/core';
+import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 interface TreeNode<T> {
@@ -31,7 +33,10 @@ export class ProjectBateraComponent {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+  constructor(
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private route : Router
+    ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
@@ -191,6 +196,10 @@ export class ProjectBateraComponent {
       due : '06.08.2022'
     }
   ]
+
+  navToSubProject(){
+    this.route.navigate([''], {queryParams:{data : this.shipData}})
+  }
 }
 
 @Component({
