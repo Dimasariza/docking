@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeBateraComponent } from './home-batera.component';
+import { HomeBateraComponent, HomeCardComponent } from './home-batera.component';
 
 const routes: Routes = [{
     path: '',
@@ -14,5 +14,6 @@ const routes: Routes = [{
 export class HomeBateraRoutingModule { }
 
 export const routedComponents = [
-  HomeBateraComponent
+  HomeBateraComponent,
+  HomeCardComponent
 ];

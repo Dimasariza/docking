@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ProjectBateraComponent } from './project-batera.component';
-import { SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
+import { FsIconComponent, ProjectBateraComponent } from './project-batera.component';
+import { SubMenuIconComponent, SubMenuProjectComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
 
 const routes: Routes = [{
     path: '',
@@ -21,4 +21,8 @@ export class ProjectBateraRoutingModule { }
 
 export const routedComponents = [
   ProjectBateraComponent,
+  SubProjectDataComponent,
+  SubMenuProjectComponent,
+  SubMenuIconComponent,
+  FsIconComponent
 ];

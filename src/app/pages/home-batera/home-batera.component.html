@@ -1,31 +1,5 @@
 <div class="row">
-  <div class="col-lg-4 col-md-6 col-sm-12 " *ngFor="let image of data;">
-      <nb-flip-card [showToggleButton]="false" [flipped]="flipped">
-        <nb-card-front>
-          <nb-card size="small">
-            <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
-            <div class="card image-card w-100 h-75">
-              <img src="{{image.imageSrc}}" alt="image.imageAlt" class="w-auto h-100">
-            </div>
-            <nb-card-footer>
-              <h6>{{image.shipName}}</h6>
-            </nb-card-footer>
-          </nb-card>
-        </nb-card-front>
-        <nb-card-back>
-          <nb-card size="small" class="bg-secondary">
-            <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
-            <div class="p-5">
-              <h6 style="color: rgb(0, 208, 208);">{{image.shipName}}</h6>
-              <div class="back-card--desc mt-5">
-                <h2>35%</h2>
-                <span>status :</span>
-                <span> in-progress</span> <br>
-                <span>{{image.shipName}}-dd-2022</span>
-              </div>
-            </div>
-          </nb-card>      
-        </nb-card-back>
-      </nb-flip-card>
+  <div class="col-lg-4 col-md-6 col-sm-12 " *ngFor="let item of data;">
+    <ngx-home-card [image] = "item"></ngx-home-card>
   </div>
 </div>

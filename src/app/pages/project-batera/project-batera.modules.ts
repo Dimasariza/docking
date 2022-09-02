@@ -29,9 +29,6 @@ import { SubMenuIconComponent, SubMenuProjectComponent } from './sub-menu-projec
   ],
   declarations: [
     ...routedComponents,
-    SubMenuProjectComponent,
-    SubMenuIconComponent,
-    FsIconComponent
   ],
 })
 export class ProjectBateraModule{ 

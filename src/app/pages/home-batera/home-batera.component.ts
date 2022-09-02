@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 interface Item {
   imageSrc: string;
@@ -7,14 +7,9 @@ interface Item {
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
-  styleUrls: ['./home.css']
 })
-export class HomeBateraComponent {
-  items = ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'];
-  expandedIndex = 0;
-
-  flipped = false;
-  @Input() image;
+export class HomeBateraComponent{
+  title = "image-gallery"
   data = [
     {
       imageSrc : '../../../assets/images/Ship/KM SALMON MUSTAFA.png',
@@ -50,3 +45,48 @@ export class HomeBateraComponent {
     },
   ]
 }
+
+@Component({
+  selector: 'ngx-home-card',
+  template: `
+  <nb-flip-card [showToggleButton]="false" [flipped]="flipped">
+  <nb-card-front>
+    <nb-card size="small">
+      <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
+      <div class="card h-100">
+        <img src="{{image.imageSrc}}" alt="{{image.imageAlt}}" class="h-100">
+        <div class="card-body">
+          <h6>{{image.shipName}}</h6>
+        </div>
+      </div>
+    </nb-card>
+  </nb-card-front>
+  <nb-card-back>
+    <nb-card size="small" class="bg-secondary">
+      <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
+      <div class="p-5">
+        <h6 style="color: rgb(0, 208, 208);">{{image.shipName}}</h6>
+        <div class="back-card--desc mt-5">
+          <h2>35%</h2>
+          <span>status :</span>
+          <span> in-progress</span> <br>
+          <span>{{image.shipName}}-dd-2022</span>
+        </div>
+      </div>
+    </nb-card>      
+  </nb-card-back>
+</nb-flip-card>`
+})
+
+export class HomeCardComponent {
+  flipped = false;
+  @Input() image;
+  constructor() { }
+  ngOnInit(): void {
+  }
+
+  toggleView() {
+    this.flipped = !this.flipped;
+  }
+}
+

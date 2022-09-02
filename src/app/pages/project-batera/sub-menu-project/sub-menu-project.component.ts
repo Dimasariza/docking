@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { KeyValue } from '@angular/common';
+import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 interface TreeNode<T> {
@@ -15,11 +17,9 @@ interface FSEntry {
   kind: string;
 }
 
-
 @Component({
   selector: 'ngx-sub-menu-project',
   templateUrl: './sub-menu-project.component.html',
-  styleUrls: ['./sub-menu-project.component.scss']
 })
 
 export class SubMenuProjectComponent  {
@@ -83,7 +83,6 @@ export class SubMenuProjectComponent  {
   }
 }
 
-
 @Component({
   selector: 'ngx-sub-menu-icon',
   template: `
@@ -95,10 +94,79 @@ export class SubMenuProjectComponent  {
 `,
 })
   
-export class SubMenuIconComponent {
+export class SubMenuIconComponent implements OnInit{
   @Input() kind: string;
   @Input() expanded: boolean;
   isDir(): boolean {
     return this.kind === 'dir';
   }
+
+  constructor(
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params: any) => {
+      
+    })
+  }
 }
+
+
+@Component ({
+  selector: 'ngx-sub-project-data',
+  templateUrl: './sub-project-data.component.html',
+})
+export class SubProjectDataComponent {
+  orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+    return 0
+  }
+  objectKeys = Object.keys;
+  reportData = {
+    "Start/End": {
+      type : 'text',
+      value : '10.10.2022'
+    },
+    "Master Plan": {
+      type : 'drop-down',
+      value: ['Dry Docking',]
+    },
+    "Status": {
+      type : 'drop-down',
+      value : ['In Progress', 'Done']
+    },
+    "State": {
+      type : 'drop-down',
+      value: ['Planning', 'Done']
+    },
+    "Project Type": {
+      type : 'drop-down',
+      value : ['Dry-Docking']
+    },
+    "Priority": {
+      type : 'drop-down',
+      value: ['2 Medium', '1 Hard']
+    },
+    "Company": {
+      type : 'edit',
+      value: 'Meratus Line', 
+    } ,
+    "Veseel/Asset": {
+      type : 'edit',
+      value : 'Meratus Batam',
+    }, 
+    "Responsible": {
+      type: 'edit',
+      value : 'Slamet Saputro', 
+    },
+    "Partner": {
+      type : 'text',
+      value : 'pertamana' 
+    },
+    "Estimate Cost": {
+      type : 'edit',
+      value : 'Rp 1.400.000.000',
+    } 
+  }
+}
+

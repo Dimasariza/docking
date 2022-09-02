@@ -1,5 +1,9 @@
-<nb-card>
-    <nb-card-header>
-        <span>work Progress works!</span>
-    </nb-card-header>
-</nb-card>
+<div class="buttons mx-4 my-2" >
+    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
+        <nb-icon [icon]="icon.icon" pack="eva">
+        </nb-icon>
+        {{icon.desc}}
+    </button>
+    <ngx-activity-table></ngx-activity-table>
+</div>

@@ -1,7 +1,7 @@
 
 <nb-card>
     <nb-card-header>
-    <h5>Batera Ship 01</h5>
+    <h5 style="color:burlywood;">Batera Ship 01</h5>
     <div class="my-3">
         <button nbButton status="primary" class="mx-1" outline size="small">
             <nb-icon icon="list-outline" pack="eva"></nb-icon>
@@ -20,7 +20,7 @@
 
     <nb-card-body>
         <div class="d-flex">
-            <h6>Summary</h6>
+            <h6 style="color: burlywood;">Summary</h6>
             <button nbButton status="primary" class="mx-1" outline size="small" ghost>
                 <nb-icon icon="settings-outline" pack="eva"></nb-icon>
             </button>
@@ -30,6 +30,7 @@
             <nb-option value="2">Show Details</nb-option>
         </nb-select>
 
+        <ngx-sub-project-data></ngx-sub-project-data>
         <div class="my-4 row">
             <div class="col-md-4 col-sm-12">
             <table>
@@ -209,6 +210,8 @@
 </nb-card-body>
 </nb-card>
 
+
+
 <nb-card>
     <div class="m-3">
         <button nbButton status="primary" class="mx-1" outline size="small">
@@ -227,11 +230,8 @@
             Show Contract
         </button>
     </div>
-
-    <h6 class="m-3">Work Area</h6>      
-  
+    <h6 class="m-3" style="color: burlywood;">Work Area</h6>      
     <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
-    
         <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
     
@@ -254,6 +254,5 @@
           </th>
           <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
         </ng-container>
-        
       </table>
 </nb-card>

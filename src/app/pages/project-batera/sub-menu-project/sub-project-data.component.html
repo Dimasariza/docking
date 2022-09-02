@@ -1,0 +1,31 @@
+<div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+    <div *ngIf="reportData[item.value].type === 'drop-down'; else editBlock;">
+      <div class="w-50 float-left">
+        <div class="row m-2">
+          <div class="col-3"><strong>{{item.value}}</strong></div>
+
+          <div class="dropdown" >
+            <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
+              {{reportData[item.value].value[0]}}
+            </button>
+            <div class="dropdown-menu">
+              <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none">{{value}}</a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>  
+
+    <ng-template #editBlock>
+      <div class="w-50 float-left">
+        <div class="row m-2">
+          <div class="col-3"><strong>{{item.value}}</strong></div>
+          <div class="col-3">{{reportData[item.value].value}}</div>
+          <button nbButton status="primary" class="mx-1" outline size="small" ghost>
+            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
+          </button>
+        </div>
+      </div>
+    </ng-template>
+  </div>
