@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 
 
@@ -21,9 +21,18 @@ interface FSEntry {
 })
 export class SuratTeguranComponent implements OnInit {
 
-  ngOnInit(): void {
+  evaIcons = [];
+  constructor(
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    iconsLibrary: NbIconLibraries,
+    ) {
+    this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
+      .filter(icon => icon.indexOf('outline') === -1);
+    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+    this.dataSource = this.dataSourceBuilder.create(this.data);
   }
-
   
   customColumn = 'Title';
   defaultColumns = [ 'Date', 'Last Change' ];
@@ -34,9 +43,6 @@ export class SuratTeguranComponent implements OnInit {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
-  }
   
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -79,25 +85,20 @@ export class SuratTeguranComponent implements OnInit {
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
-}
 
+  
+  useIcons = [
+    {
+      icon: 'refresh',
+      desc: 'Refresh'
+    },
+    {
+      icon: 'file-text-outline',
+      desc: 'Add Document'
+    },
+  ]
 
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
+  ngOnInit(): void {
   }
 }
+

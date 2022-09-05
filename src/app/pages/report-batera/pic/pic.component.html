@@ -1,3 +1,13 @@
+<div class="buttons mx-4 my-2" >
+    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
+        <nb-icon [icon]="icon.icon" pack="eva">
+        </nb-icon>
+        {{icon.desc}}
+    </button>
+</div>
+
+
 <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
     <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
     <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
@@ -22,4 +32,3 @@
     </ng-container>
 </table>
 
-<nb-card class="mx-3"><button nbButton class="m-2" shape="rectangle">Add file from computer</button></nb-card>

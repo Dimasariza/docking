@@ -5,9 +5,9 @@ import { BastComponent } from './bast/bast.component';
 import { PicComponent } from './pic/pic.component';
 import { WorkProgressComponent } from './work-progress/work-progress.component';
 import { ReportBateraComponent } from './report-batera.component';
-import { CloseOutComponent } from './close-out/status-report.component';
 import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
+import { CloseOutComponent } from './close-out/close-out.component';
 
 const routes: Routes = [{
   path: '',

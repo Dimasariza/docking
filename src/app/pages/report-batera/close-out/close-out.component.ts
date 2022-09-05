@@ -1,5 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+
+
 
 interface TreeNode<T> {
   data: T;
@@ -12,16 +14,23 @@ interface FSEntry {
   'Last Change'?: string;
   kind?: string;
 }
+
+
 @Component({
-  selector: 'ngx-pic',
-  templateUrl: './pic.component.html',
+  selector: 'ngx-close-out',
+  templateUrl: './close-out.component.html',
 })
-export class PicComponent  {
+export class CloseOutComponent implements OnInit {
+
+
+  ngOnInit(): void {
+  }
+
   customColumn = 'Title';
   defaultColumns = [ 'Date', 'Last Change' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
   
-  dataSource: NbTreeGridDataSource<FSEntry>;z
+  dataSource: NbTreeGridDataSource<FSEntry>;
   
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -80,51 +89,16 @@ export class PicComponent  {
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
-
+  
   useIcons = [
     {
-    icon: 'refresh',
-    desc: 'Refresh'
+      icon: 'refresh',
+      desc: 'Refresh'
     },
     {
-      icon: 'plus',
-      desc: 'Add Phase'
+      icon: 'file-text-outline',
+      desc: 'Add Document'
     },
-    {
-      icon: 'list',
-      desc: 'Add Activity'
-    },
-    {
-      icon: 'flag-outline',
-      desc: 'Add Milestone'
-    },
-    {
-      icon: 'clock-outline',
-      desc: 'Add Meeting'
-    },
-    {
-      icon: 'checkmark-square',
-      desc: 'Add Task'
-    },
-    {
-      icon: 'arrow-right-outline',
-      desc: 'Add Microflow'
-    },
-    {
-      icon: 'external-link',
-      desc: 'Export to Excel'
-    },
-    {
-      icon: 'plus-square-outline',
-      desc: 'Expand'
-    },
-    {
-      icon: 'minus',
-      desc: 'Collapse'
-    }
   ]
-
-  ngOnInit(): void {
-  }
 }
 

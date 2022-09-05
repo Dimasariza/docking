@@ -2,6 +2,7 @@ import { KeyValue } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { title } from 'process';
 
 interface TreeNode<T> {
   data: T;
@@ -23,6 +24,53 @@ interface FSEntry {
 })
 
 export class SubMenuProjectComponent  {
+  menuButton = [
+    {
+      position: 'top',
+      icon: 'list-outline',
+      text : 'List'
+    },
+    {
+      position: 'top',
+      icon: 'calendar-outline',
+      text: 'Schedule'
+    },
+    {
+      position: 'top',
+      icon: 'file-add-outline',
+      text: 'Extract Data File'
+    },
+    {
+      position: 'top',
+      icon: 'clipboard-outline',
+      text: 'Gant'
+    },
+    {
+      position: 'bottom',
+      text : 'Add Job'
+    },
+    {
+      position: 'bottom',
+      text : 'Export To PDF'
+    },
+    {
+      position: 'bottom',
+      text : 'Expand All'
+    },
+    {
+      position: 'bottom',
+      text : 'Refresh'
+    },
+    {
+      position: 'bottom',
+      text : 'Show Budget'
+    },
+    {
+      position: 'bottom',
+      text: 'Show Contract'
+    }
+  ]
+
   dataTable = [
     {
       "vessel": "General Service",
@@ -123,50 +171,140 @@ export class SubProjectDataComponent {
   }
   objectKeys = Object.keys;
   reportData = {
-    "Start/End": {
+    "Vessel": {
       type : 'text',
-      value : '10.10.2022'
+      value : 'Batera Ship 01'
     },
-    "Master Plan": {
+    "Phase": {
       type : 'drop-down',
-      value: ['Dry Docking',]
+      value: ['Repair','Done']
     },
-    "Status": {
-      type : 'drop-down',
-      value : ['In Progress', 'Done']
+    "Selected Yard": {
+      type : 'text',
+      value : 'Batera Yard 01'
     },
-    "State": {
-      type : 'drop-down',
-      value: ['Planning', 'Done']
+    "Base Currency": {
+      type : 'text',
+      value : '*IDR'
     },
-    "Project Type": {
-      type : 'drop-down',
-      value : ['Dry-Docking']
-    },
-    "Priority": {
-      type : 'drop-down',
+    "Off Hire Period": {
+      type : 'date range',
       value: ['2 Medium', '1 Hard']
     },
-    "Company": {
-      type : 'edit',
-      value: 'Meratus Line', 
+    "-Deviation": {
+      type : 'date',
+      value: '4 days'
+    },
+    "-Rate": {
+      type : 'price',
+      value: '71050000 / day.', 
+      subvalue : '1.421.000.000'
     } ,
-    "Veseel/Asset": {
-      type : 'edit',
-      value : 'Meratus Batam',
+    "-Bunker": {
+      type : 'price',
+      value : '	282000000 / day.',
+      subvalue : '1.128.000.000'
     }, 
-    "Responsible": {
-      type: 'edit',
+    "Repair Period": {
+      type: 'date range',
       value : 'Slamet Saputro', 
     },
-    "Partner": {
-      type : 'text',
+    "-In Dock": {
+      type : 'date range',
       value : 'pertamana' 
     },
-    "Estimate Cost": {
-      type : 'edit',
-      value : 'Rp 1.400.000.000',
+    "-Additional Days": {
+      type : 'date',
+      value : '0 days',
     } 
   }
 }
 
+@Component({
+  selector: 'nb-rangepicker-showcase',
+  template: `
+    <nb-card size="large">
+      <nb-card-body>
+        <input nbInput placeholder="Pick Date Range" [nbDatepicker]="formpicker">
+        <nb-rangepicker #formpicker></nb-rangepicker>
+      </nb-card-body>
+    </nb-card>
+  `,
+})
+export class RangepickerShowcaseComponent {
+}
+@Component({
+  selector: 'ngx-sub-price-data',
+  templateUrl: './sub-price-data.component.html'
+})
+export class SubPriceDataComponent {
+  orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+    return 0
+  }
+  objectKeys = Object.keys;
+  priceHeadData = [
+    'Totals', 'Budget', 'Contact', 'Actual'
+  ]
+  priceData = {
+    'Offhire Days' : {
+      type : 'title',
+      Budget: 20,
+      Contact: '_',
+      Actual: 0,
+    },
+    'Owner Exp': {
+      type : 'title',
+      Budget: '1.412.000.000',
+      Contact: '1.412.000.000',
+      Actual: 0,
+    },
+    Supplies: {
+      type : 'subTitle',
+      Budget: '877.000.000',
+      Contact: '877.000.000',
+      Actual: 0,
+    },
+    Services: {
+      type : 'subTitle',
+      Budget: '350.000.000',
+      Contact: '350.000.000',
+      Actual: 0,
+    },
+    Class: {
+      type : 'subTitle',
+      Budget: 0,
+      Contact: 0,
+      Actual: 0,
+    },
+    Other: {
+      type : 'subTitle',
+      Budget: '185.000.000',
+      Contact: '185.000.000',
+      Actual: 0,
+    },
+    'Owner Canceled Jobs': {
+      type : 'highlight',
+      Budget: '_',
+      Contact: 0,
+      Actual: '_',
+    },
+    'Yard Cost': {
+      type : 'title',
+      Budget: '5.056.566.061',
+      Contact: '4.541.787.983',
+      Actual: 0,
+    },
+    'Yard Canceled Jobs' : {
+      type : 'highlight',
+      Budget: '_',
+      Contact: 0,
+      Actual: '_',
+    },
+    'Total Cost' : {
+      type : 'title',
+      Budget: '6.468.566.061',
+      Contact: '5.953.787.983',
+      Actual: 0,
+    }
+  } 
+}

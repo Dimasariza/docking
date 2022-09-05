@@ -1,11 +1,11 @@
 import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NbIconLibraries } from '@nebular/theme';
 
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
-  styleUrls: ['./report-batera.component.scss'],
+  // styleUrls: ['./report-batera.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportBateraComponent {
@@ -63,25 +63,33 @@ export class ReportBateraComponent {
   selector: 'ngx-report-data',
   template: `
     <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
-      <div *ngIf="reportData[item.value].type === 'drop-down'; else editBlock;">
+      <div *ngIf="reportData[item.value].type === 'date';"> 
         <div class="w-50 float-left">
           <div class="row m-2">
             <div class="col-3"><strong>{{item.value}}</strong></div>
+            <input type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
+            <nb-datepicker format="dd.MM.yyyy" #datepicker></nb-datepicker>  
+          </div>
+        </div>
+      </div>
 
+      <div *ngIf="reportData[item.value].type === 'drop-down';">
+        <div class="w-50 float-left">
+          <div class="row m-2">
+            <div class="col-3"><strong>{{item.value}}</strong></div>
             <div class="dropdown" >
               <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                {{reportData[item.value].value[0]}}
+                DropDown
               </button>
               <div class="dropdown-menu">
                 <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none">{{value}}</a>
               </div>
             </div>
-
           </div>
         </div>
       </div>  
 
-      <ng-template #editBlock>
+      <div *ngIf="reportData[item.value].type === 'edit';">
         <div class="w-50 float-left">
           <div class="row m-2">
             <div class="col-3"><strong>{{item.value}}</strong></div>
@@ -91,7 +99,8 @@ export class ReportBateraComponent {
             </button>
           </div>
         </div>
-      </ng-template>
+      </div>
+
     </div>
   `,
 })
@@ -101,13 +110,15 @@ export class reportData {
   }
   objectKeys = Object.keys;
   reportData = {
-    "Start/End": {
-      type : 'text',
-      value : '10.10.2022'
+    "Start": {
+      type : 'date',
     },
     "Master Plan": {
       type : 'drop-down',
       value: ['Dry Docking',]
+    },
+    "End": {
+      type: 'date',
     },
     "Status": {
       type : 'drop-down',
@@ -115,7 +126,7 @@ export class reportData {
     },
     "State": {
       type : 'drop-down',
-      value: ['Planning', 'Done']
+      value: ['Reposition', 'Plan','Evaluation']
     },
     "Project Type": {
       type : 'drop-down',
@@ -138,7 +149,7 @@ export class reportData {
       value : 'Slamet Saputro', 
     },
     "Partner": {
-      type : 'text',
+      type : 'edit',
       value : 'pertamana' 
     },
     "Estimate Cost": {
@@ -149,3 +160,36 @@ export class reportData {
 }
 
 
+@Component({
+  selector: 'nb-rangepicker-showcase',
+  template: `
+    <nb-card size="large">
+      <nb-card-body>
+        <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker">
+        <nb-datepicker #dateTimePicker></nb-datepicker>
+      </nb-card-body>
+    </nb-card>
+  `,
+})
+export class RangepickerShowcaseComponent {
+}
+
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
+}

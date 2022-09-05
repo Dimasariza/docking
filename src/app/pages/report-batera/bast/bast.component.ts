@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 
 interface TreeNode<T> {
@@ -29,7 +29,16 @@ export class BastComponent  {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
   
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+  evaIcons = [];
+  constructor(
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    iconsLibrary: NbIconLibraries,
+    ) {
+    this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
+      .filter(icon => icon.indexOf('outline') === -1);
+    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
+    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
   
@@ -74,24 +83,16 @@ export class BastComponent  {
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
-}
 
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
+  
+  useIcons = [
+    {
+    icon: 'refresh',
+    desc: 'Refresh'
+    },
+    {
+      icon: 'file-text-outline',
+      desc: 'Add Document'
+    },
+  ]
 }

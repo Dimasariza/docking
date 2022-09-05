@@ -68,9 +68,9 @@ export class HomeBateraComponent{
         <h6 style="color: rgb(0, 208, 208);">{{image.shipName}}</h6>
         <div class="back-card--desc mt-5">
           <h2>35%</h2>
-          <span>status :</span>
-          <span> in-progress</span> <br>
-          <span>{{image.shipName}}-dd-2022</span>
+          <span class="font-weight-bold">Status : </span>
+          <span class="font-weight-bolder"> in-progress</span> <br>
+          <span class="font-weight-bolder">{{image.shipName}}-dd-2022</span>
         </div>
       </div>
     </nb-card>      

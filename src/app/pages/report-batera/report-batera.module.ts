@@ -2,11 +2,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
-import { ReportBateraComponent, reportData } from './report-batera.component';
+import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
+import { FsIconComponent, RangepickerShowcaseComponent, ReportBateraComponent, reportData } from './report-batera.component';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
-import { CloseOutComponent } from './close-out/status-report.component';
-import { ActivityTableComponent, FsIconComponent } from './table/table.component';
+import { CloseOutComponent } from './close-out/close-out.component';
 import { InspectionMenuComponent, SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 import { WorkProgressComponent } from './work-progress/work-progress.component';
 import { BastComponent } from './bast/bast.component';
@@ -18,8 +17,6 @@ import { PicComponent } from './pic/pic.component';
   declarations: [
     ReportBateraComponent,
     ReportBateraComponent,
-    ActivityTableComponent,
-    FsIconComponent,
     SubMenuReportComponent,
     WorkProgressComponent,
     BastComponent,
@@ -27,7 +24,10 @@ import { PicComponent } from './pic/pic.component';
     CloseOutComponent,
     InspectionMenuComponent,
     PicComponent,
-    reportData
+    reportData,
+    RangepickerShowcaseComponent,
+    CloseOutComponent,
+    FsIconComponent
   ],
   imports: [
     CommonModule,
@@ -44,6 +44,7 @@ import { PicComponent } from './pic/pic.component';
     NbIconModule,
     NbTreeGridModule,
     NbLayoutModule,
+    NbDatepickerModule
   ]
 })
 export class ReportBateraModule {

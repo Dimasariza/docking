@@ -1,20 +1,13 @@
-
 <nb-card>
     <nb-card-header>
     <h5 style="color:burlywood;">Batera Ship 01</h5>
-    <div class="my-3">
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="list-outline" pack="eva"></nb-icon>
-            List
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="calendar-outline" pack="eva"></nb-icon>
-            Schedule
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="clipboard-outline" pack="eva"></nb-icon>
-            Gant
-        </button>
+    <div class="d-flex">
+        <div class="my-3" *ngFor = "let button of menuButton">
+            <button *ngIf = "button.position === 'top'" nbButton status="primary" class="mx-1" outline size="small">
+                <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
+                {{button.text}}
+            </button>
+        </div>
     </div>
     </nb-card-header>
 
@@ -30,206 +23,27 @@
             <nb-option value="2">Show Details</nb-option>
         </nb-select>
 
-        <ngx-sub-project-data></ngx-sub-project-data>
-        <div class="my-4 row">
-            <div class="col-md-4 col-sm-12">
-            <table>
-                <tr>
-                    <td><label for="test-label" class="label">Vessel</label></td>
-                    <td><span>Batera Ship 01</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Phase</label></td>
-                    <td>
-                        <nb-select selected="1" class="" size="tiny">
-                            <nb-option value="1">Repair</nb-option>
-                            <nb-option value="2">On Progress</nb-option>
-                        </nb-select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Selected Yard</label></td>
-                    <td><span>Batera Yard 01</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Base Currency</label></td>
-                    <td><span>*IDR</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Off Hire Period</label></td>
-                    <td><span>03.02.2019 - 22.02.2019</span></td>
-                    <td>
-                        <span>20 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Deviation</label></td>
-                    <td>
-                        <span>4 Days.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Rate</label></td>
-                    <td>
-                        <span>71050000 per day.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                    <td><span>1.421.000.000</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Bunker</label></td>
-                    <td>
-                        <span>282000000 per day.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                    <td><span>1.128.000.000</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Repair Period</label></td>
-                    <td><span>05.02.2019 - 18.02.2019</span></td>
-                    <td>
-                        <span>14 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- In Dock</label></td>
-                    <td><span>06.02.2019 - 13.02.2019</span></td>
-                    <td>
-                        <span>8 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Additional Days</label></td>
-                    <td>
-                        <span>0 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-            </table>
+        <div class="row">
+            <div class="col-lg-4 col-md-12 col-sm-12">
+                <ngx-sub-project-data></ngx-sub-project-data>
+            </div>
+            <div class="col-lg-auto"></div>
+            <div class="col-lg-7 col-md-12 col-sm-12">
+                <ngx-sub-price-data></ngx-sub-price-data>
+            </div>
         </div>
-
-        <div class="col">
-            <nb-card>
-                <nb-card-body>
-                    <table style="width: 100%;">
-                        <tr>
-                            <th>Totals</th>
-                            <th>Budget</th>
-                            <th>Contact</th>
-                            <th>Actual</th>
-                        </tr>
-                        <tr>
-                            <td><label for="test-label" class="label">Offhire Days</label></td> 
-                            <td><span>20</span></td> 
-                            <td><span>-</span></td> 
-                            <td><span>0</span></td> 
-                            <td>                        
-                                <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                                    <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                                </button></td>
-                            </tr>
-                            <tr>
-                                <td><label for="test-label" class="label">Owner Exp</label></td>
-                                <td><span>1.412.000.000</span></td>
-                                <td><span>1.412.000.000</span></td>
-                                <td><span>0</span></td>
-                </tr> 
-
-                <tr>
-                    <td><label for="test-label" class="label">- Supplies</label></td>
-                    <td><span>877.000.000</span></td>
-                    <td><span>877.000.000</span></td>
-                    <td><span>0</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Services</label></td>
-                    <td><span>350.000.000</span></td>
-                    <td><span>350.000.000</span></td>
-                    <td><span>0</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Class</label></td>
-                    <td><span>0</span></td>
-                    <td><span>0</span></td>
-                    <td><span>0</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Other</label></td>
-                    <td><span>185.000.000</span></td>
-                    <td><span>185.000.000</span></td>
-                    <td><span>0</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label" style="color: burlywood;">Owner Canceled Jobs</label></td>
-                    <td><span>-</span></td>
-                    <td><span>0</span></td>
-                    <td><span>-</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Yard Cost</label></td>
-                    <td><span>5.056.566.061</span></td>
-                    <td><span>4.541.787.983</span></td>
-                    <td><span>0</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label" style="color: burlywood;">Yard Canceled Jobs</label></td>
-                    <td><span>-</span></td>
-                    <td><span>0</span></td>
-                    <td><span>-</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Total Cost</label></td>
-                    <td><span>6.468.566.061</span></td>
-                    <td><span>5.953.787.983</span></td>
-                    <td><span>0</span></td>
-                </tr>
-            </table>
-            </nb-card-body>
-        </nb-card>
-        </div>
-    </div>
-</nb-card-body>
+    </nb-card-body>
 </nb-card>
 
-
-
 <nb-card>
-    <div class="m-3">
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Export To PDF
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Expand All
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Refresh
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Show Budget
-        </button>
-        <button nbButton status="success" class="mx-1" outline size="small">
-            Show Contract
-        </button>
+    <div class="d-flex" >
+        <div *ngFor = "let button of menuButton" class="mx-1 my-4">
+            <button *ngIf = "button.position === 'bottom'"  nbButton status="primary" class="mx-1" outline size="small">
+                {{button.text}}
+            </button>
+        </div>
     </div>
+
     <h6 class="m-3" style="color: burlywood;">Work Area</h6>      
     <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
         <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
