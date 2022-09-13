@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { TenderBateraService } from './tender-batera.service'
 
 interface TreeNode<T> {
   data: T;
@@ -20,7 +21,7 @@ interface FSEntry {
   styleUrls: ['./tender-batera.component.scss']
 })
 
-export class TenderBateraComponent {
+export class TenderBateraComponent implements OnInit {
   
   dataTable = [
     {
@@ -44,8 +45,24 @@ export class TenderBateraComponent {
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
+
+  dataTenders : any
+  constructor(
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private tenderBateraService : TenderBateraService
+    ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  ngOnInit(): void {
+    this.getDataTender()
+  }
+
+  getDataTender(){
+    this.tenderBateraService.getDataTender().subscribe(res => {
+      this.dataTenders = res
+      console.log(res)
+    }) 
   }
 
   updateSort(sortRequest: NbSortRequest): void {

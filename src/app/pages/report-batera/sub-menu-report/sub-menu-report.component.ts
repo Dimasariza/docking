@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ChartOptions } from '../../charts/apexchart/apexchart.component';
+import { SubMenuReportBateraService } from './sub-menu-report.service';
 
 @Component({
   selector: 'ngx-sub-menu-report',
@@ -7,7 +8,21 @@ import { ChartOptions } from '../../charts/apexchart/apexchart.component';
   styleUrls: ['./sub-menu-report.component.scss']
 })
 
-export class SubMenuReportComponent   {
+export class SubMenuReportComponent implements OnInit  {
+  dataSubReport : any
+  constructor (private tenderBateraService : SubMenuReportBateraService) {  }
+
+  ngOnInit(): void {
+    this.getDataSubMenuReport()
+  }
+
+  getDataSubMenuReport(){
+    this.tenderBateraService.getDataSubMenuReport().subscribe(res => {
+      this.dataSubReport = res
+      console.log(res)
+    }) 
+  }
+
     data = [
       {title: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
       {title: 'Batera 02', phases: [true, true, false], periode: '12/12/2022'},

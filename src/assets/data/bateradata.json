@@ -1,0 +1,94 @@
+{
+  "report": {
+    "update_progress": {
+      "id_proyek_pekerjaan": 1,
+      "qty": 5,
+      "harga_satuan": 60000,
+      "status": "in_progress"
+    }
+  },
+  "test": [
+    {
+      "testData1": 1,
+      "id": 1
+    },
+    {
+      "testData2": 2,
+      "id": 2
+    },
+    {
+      "testData3": 3,
+      "id": 3
+    },
+    {
+      "id": 4
+    },
+    {
+      "id": 5
+    },
+    {
+      "testData4": 4,
+      "id": 6
+    }
+  ],
+  "homeData": [
+    {
+      "imageSrc": "./assets/images/Ship/KM SALMON MUSTAFA.png",
+      "imageAlt": "MT SALMON MUSTAFA SHIP",
+      "shipName": "MT SALMON MUSTAFA"
+    },
+    {
+      "imageSrc": "https://www.pupuk-indonesia.com/public/uploads/2020/11/IMG_20181117_202559_3241605578072_berita.jpg",
+      "imageAlt": "MT SULTAN MAHMUD BADARUDDIN II SHIP",
+      "shipName": "MT SULTAN MAHMUD BADARUDDIN II"
+    },
+    {
+      "imageSrc": "./assets/images/Ship/KM PUSRI INDONESIA I.png",
+      "imageAlt": "KM PUSRI INDONESIA I SHIP",
+      "shipName": "KM PUSRI INDONESIA I"
+    },
+    {
+      "imageSrc": "./assets/images/Ship/KM ABUSAMAH.png",
+      "imageAlt": "KM ABUSAMAH SHIP",
+      "shipName": "KM ABUSAMAH"
+    },
+    {
+      "imageSrc": "./assets/images/Ship/KM IBRAHIM ZAHIER.png",
+      "imageAlt": "KM IBRAHIM ZAHIER SHIP",
+      "shipName": "KM IBRAHIM ZAHIER"
+    },
+    {
+      "imageSrc": "./assets/images/Ship/KM JULIANTO.png",
+      "imageAlt": "KM JULIANTO MOELIODIHARDJO SHIP",
+      "shipName": "KM JULIANTO MOELIODIHARDJO"
+    },
+    {
+      "id": 6,
+      "status": "on Progress"
+    },
+    {
+      "status": "on Progress",
+      "id": 7
+    },
+    {
+      "status": "on Progress",
+      "id": 8
+    },
+    {
+      "status": "on Progress",
+      "id": 9
+    },
+    {
+      "status": "on Progress",
+      "id": 10
+    },
+    {
+      "status": "on Progress",
+      "id": 11
+    },
+    {
+      "status": "on Progress",
+      "id": 12
+    }
+  ]
+}

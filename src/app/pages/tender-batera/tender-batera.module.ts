@@ -9,6 +9,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { FsIconComponent } from './tender-batera.component';
 import { TableComponent } from './table/table.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   imports: [
@@ -28,7 +29,6 @@ import { TableComponent } from './table/table.component';
   ],
   declarations: [
     ...routedComponents,
-    CardComponent
   ],
   providers: [
   ]

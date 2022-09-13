@@ -1,6 +1,8 @@
 import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
 import { NbIconLibraries } from '@nebular/theme';
+import { ReportBateraService } from './report-batera.service';
 
 @Component({
   selector: 'ngx-report-batera',
@@ -10,14 +12,28 @@ import { NbIconLibraries } from '@nebular/theme';
 })
 export class ReportBateraComponent {
   evaIcons = [];
+  dataReport : any
 
-  constructor(iconsLibrary: NbIconLibraries) {
+  constructor(iconsLibrary: NbIconLibraries,
+    private tenderBateraService : ReportBateraService
+    ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
 
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+  }
+
+  ngOnInit(): void {
+    this.getDataReport()
+  }
+
+  getDataReport(){
+    this.tenderBateraService.getDataReport().subscribe(res => {
+      this.dataReport = res
+      console.log(res)
+    }) 
   }
 
   tabs: any[] = [
@@ -82,7 +98,9 @@ export class ReportBateraComponent {
                 DropDown
               </button>
               <div class="dropdown-menu">
-                <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none">{{value}}</a>
+                <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none"
+                (click)="updateStatus()"
+                >{{value}}</a>
               </div>
             </div>
           </div>
@@ -104,11 +122,21 @@ export class ReportBateraComponent {
     </div>
   `,
 })
-export class reportData {
+export class reportData implements OnInit{
+  constructor(public ReportBateraService: ReportBateraService){}
+  ngOnInit(): void {  }
+  updateStatus(){
+    const newFormData = { status: "on Progress"}
+
+    this.ReportBateraService.createStatus(newFormData).subscribe(data => {
+      console.log(data)
+    })
+  }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
   objectKeys = Object.keys;
+  
   reportData = {
     "Start": {
       type : 'date',
