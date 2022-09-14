@@ -5,4 +5,5 @@
  */
 export const environment = {
   production: true,
+  apiUrl: "http://env-6573880.jh-beon.cloud"
 };
