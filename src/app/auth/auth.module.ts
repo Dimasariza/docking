@@ -45,13 +45,13 @@ import { environment } from '../../environments/environment';
           token: {
             class: NbAuthJWTToken,
 
-            key: 'access_token'
+            key: 'data.access_token'
           },
          
           baseEndpoint: environment.apiUrl,
            login: {
              // ...
-             endpoint: '/login',
+             endpoint: '/auth/login',
              redirect: {
               success: '/pages',
               failure: null,
@@ -59,7 +59,7 @@ import { environment } from '../../environments/environment';
            },
            logout: {
              // ...
-             endpoint: '/logout',
+             endpoint: '/auth/logout',
              redirect: {
               success: '/'
              }
