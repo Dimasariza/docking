@@ -1,29 +1,34 @@
-import { Component, OnInit } from '@angular/core';
-import { NbAuthResult, NbLoginComponent } from '@nebular/auth';
-import { LoginBateraService } from './login.service';
+
+import { Component } from '@angular/core';
+import { NbAuthResult, NbLoginComponent,} from '@nebular/auth';
+
 
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
-export class NgxLoginComponent extends NbLoginComponent implements OnInit{
-  private loginBateraService : LoginBateraService
-  ngOnInit(): void {
-    this.getVerifyLogin()
+export class NgxLoginComponent extends NbLoginComponent {
+  showPassword = true;
+
+  getInputType() {
+    if (this.showPassword) {
+      return 'text';
+    }
+    return 'password';
   }
 
-  getVerifyLogin(){
-    this.loginBateraService.getVerifyLogin().subscribe(res => {
-      console.log(res)
-    }) 
+  toggleShowPass() {
+    this.showPassword = !this.showPassword
   }
-
+  
   login(): void {
     this.errors = [];
     this.messages = [];
     this.submitted = true;
-
-    this.service.authenticate(this.strategy, this.user).subscribe((result: NbAuthResult) => {
+    this.service.authenticate(this.strategy, {user_email: this.user.email, password: this.user.password, remember: this.rememberMe}).subscribe((result: NbAuthResult) => {
+      console.log(result);
+      
       this.submitted = false;
 
       if (result.isSuccess()) {
@@ -33,15 +38,13 @@ export class NgxLoginComponent extends NbLoginComponent implements OnInit{
       }
 
       const redirect = result.getRedirect();
-      console.log(redirect);
       
       if (redirect) {
         setTimeout(() => {
-          return this.router.navigateByUrl(/*redirect*/'/pages');
+          return this.router.navigateByUrl(redirect);
         }, this.redirectDelay);
       }
       this.cd.detectChanges();
     });
-  }
-
+  } 
 }

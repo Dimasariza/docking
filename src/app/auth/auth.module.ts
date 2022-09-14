@@ -4,19 +4,26 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { NgxAuthRoutingModule } from './auth-routing.module';
-import { NbAuthModule } from '@nebular/auth';
+import { NbAuthJWTToken, NbAuthModule, NbPasswordAuthStrategy } from '@nebular/auth';
 import { 
   NbAlertModule,
   NbButtonModule,
   NbCardModule,
   NbCheckboxModule,
+  NbFormFieldModule,
+  NbIconModule,
   NbInputModule,
-  NbLayoutModule
+  NbLayoutModule,
+  NbMenuModule,
+  NbSidebarModule,
+  NbSpinnerModule,
+  NbTreeGridModule
 } from '@nebular/theme';
+import { ThemeModule } from '../@theme/theme.module';
 import { NgxLoginComponent } from './login/login.component';
 import { AuthComponent } from './auth.component';
-import { LoginBateraService } from './login/login.service';
-
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { environment } from '../../environments/environment';
 
 @NgModule({
   imports: [
@@ -28,13 +35,58 @@ import { LoginBateraService } from './login/login.service';
     NbButtonModule,
     NbCheckboxModule,
     NgxAuthRoutingModule,
-    NbAuthModule,
+    ThemeModule,
+    NbMenuModule,
+    NbAuthModule.forRoot({
+      strategies: [
+        NbPasswordAuthStrategy.setup({
+          name: 'email',
+
+          token: {
+            class: NbAuthJWTToken,
+
+            key: 'data.access_token'
+          },
+         
+          baseEndpoint: environment.apiUrl,
+           login: {
+             // ...
+             endpoint: '/auth/login',
+             redirect: {
+              success: '/pages',
+              failure: null,
+             }
+           },
+           logout: {
+             // ...
+             endpoint: '/auth/logout',
+             redirect: {
+              success: '/'
+             }
+           }
+        }),
+      ],
+      forms: {
+        login: {
+          redirectDelay: 0,
+          showMessages: {
+            success: true,
+          },
+        },
+      },
+    }),
+    NbLayoutModule,
+    NbSidebarModule,
     NbCardModule,
-    NbLayoutModule
+    NbTreeGridModule,
+    NbIconModule,
+    NgxDatatableModule,
+    NbFormFieldModule,
+    NbSpinnerModule
   ],
   declarations: [
-    AuthComponent,
     NgxLoginComponent,
+    AuthComponent
   ],
 })
 export class NgxAuthModule {
