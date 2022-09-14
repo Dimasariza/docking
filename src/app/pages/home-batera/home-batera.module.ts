@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { NbCardModule, NbIconModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbIconModule, NbInputModule } from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
 import { HomeBateraRoutingModule, routedComponents } from './home-batera-routing.module';
 
@@ -11,6 +11,8 @@ import { HomeBateraRoutingModule, routedComponents } from './home-batera-routing
     NgxEchartsModule,
     NbCardModule,
     NbIconModule,
+    NbButtonModule,
+    NbInputModule
   ],
   exports: [],
   declarations: [

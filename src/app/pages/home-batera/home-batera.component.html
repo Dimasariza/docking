@@ -1,5 +1,19 @@
+<!-- <div class="row justify-content-end">
+  <span class="col-auto">
+    
+  </span>
+</div> -->
 <div class="row">
   <div class="col-lg-4 col-md-6 col-sm-12 " *ngFor="let item of data;">
     <ngx-home-card [image] = "item"></ngx-home-card>
+  </div>
+  <div class="col-lg-4">
+    <nb-card>
+      <nb-card-body class="d-flex flex-column justify-content-center">
+        <span style="min-height: 250px;"></span>
+        <input nbInput class="my-2" status="primary" type="text" placeholder="nama kapal">
+        <button nbButton status="primary">Tambah Kapal</button>
+      </nb-card-body>
+    </nb-card>
   </div>
 </div>
