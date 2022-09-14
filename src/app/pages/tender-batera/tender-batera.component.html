@@ -1,74 +1,80 @@
-<nb-card> 
-  <nb-card-body>
+<div class="row">
+  <nb-card class="p-3">  
     <div class="row">
-      <div class="col-xl-4 col-lg-12 col-md-12 col-sm-12">
-        <div class='p-3'>
+        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
           <h5 class="float-xl-left float-lg-left float-md-left">Selected Yard : 
             <Span>Pax Ocean Batam</Span>
           </h5>
-          <div class="text-xl-left text-lg-right text-md-right">
+          <div class="text-xl-right text-lg-right text-md-right">
             <button nbButton status='danger'>Clear Selected Yard</button>
           </div>
-        </div>
-        <div class="p-3">
+    
           <span><strong>Internal Comment</strong></span> 
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque odit debitis in, nisi distinctio iure facilis aut dolores maiores ipsum optio unde veritatis qui deleniti voluptate corporis velit? Aut, quidem!</p>
           <span><strong>Yard Comment</strong></span> <br> 
           <span><strong>Yard Terms</strong></span> <br>
           <span><strong>Attachments</strong></span> 
+          
+          <button nbButton class="w-100" shape="rectangle">Add file from computer</button>
         </div>
-        <nb-card ><button nbButton class="m-2" shape="rectangle">Add file from computer</button></nb-card>
-      </div>
-      <ngx-card class="col-md-12 col-lg"></ngx-card>
-      <ngx-card class="col-md-12 col-lg"></ngx-card>
-      <ngx-card class="col-md-12 col-lg"></ngx-card>
     </div>
-  </nb-card-body> 
-</nb-card>
-  
+  </nb-card>
+</div>
 
+<div class="row">
+  <nb-card class="p-3 col-12"> 
+    <div class="row">
+      <ngx-card class="col"></ngx-card>
+      <ngx-card class="col"></ngx-card>
+      <ngx-card class="col"></ngx-card>
+    </div>
+  </nb-card>
+</div>
 
- <nb-card>
-  <nb-card-header class="text-center">
-    Load Details
-  </nb-card-header>
-   <ngx-datatable 
-     [class]="'bootstrap'" 
-     [rows]="dataTable" 
-     [count]="dataTable.length"
-     columnMode="force"
-     default>
-     <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-   </ngx-datatable>
-
-
-   <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
+<div class="row">
+  <nb-card>
+   <nb-accordion>
+    <nb-accordion-item>
+     <nb-accordion-item-header >Load Details</nb-accordion-item-header>
+     <nb-accordion-item-body>
+        <ngx-datatable 
+        [class]="'bootstrap'" 
+        [rows]="dataTable" 
+        [count]="dataTable.length"
+        columnMode="force"
+        [headerHeight]="0"
+        default>
+        <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
+        <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
+        <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
+        <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
+      </ngx-datatable>
     
-    <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+      
+        <ng-container [nbTreeGridColumnDef]="customColumn">
+            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
+            {{customColumn}}
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+            {{row.data[customColumn]}}
+            </td>
+        </ng-container>
+        <ng-container *ngFor="let column of defaultColumns; let index = index"
+                        [nbTreeGridColumnDef]="column"
+                        [showOn]="getShowOn(index)">
+            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+            {{column}}
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        </ng-container>
+      </table>    
+     </nb-accordion-item-body>
+    </nb-accordion-item>
+   </nb-accordion>
+  </nb-card>
+</div>
 
-    <ng-container [nbTreeGridColumnDef]="customColumn">
-      <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-        {{customColumn}}
-      </th>
 
-      <td nbTreeGridCell *nbTreeGridCellDef="let row">
-        <ngx-fs-icon [expanded]="row.expanded"></ngx-fs-icon>
-        {{row.data[customColumn]}}
-      </td>
-    </ng-container>
-
-    <ng-container *ngFor="let column of defaultColumns; let index = index"
-                  [nbTreeGridColumnDef]="column"
-                  [showOn]="getShowOn(index)">
-      <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-        {{column}}
-      </th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-    </ng-container>
-    
-  </table>
- </nb-card>

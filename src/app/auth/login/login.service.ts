@@ -4,21 +4,17 @@ import { Injectable } from "@angular/core";
 @Injectable({
     providedIn: 'root'
 })
-export class ReportBateraService {
+export class LoginBateraService {
     constructor(
         private httpClient : HttpClient
     ){}
 
     httpOptions : any
-    url = 'http://env-6573880.jh-beon.cloud/report/proyek'
+    url = 'http://env-6573880.jh-beon.cloud'
 
-    getDataReport(){
+    getVerifyLogin(){
         const httpHeaders = new HttpHeaders();
         httpHeaders.append('content-type', 'application/json')
         return this.httpClient.get(this.url, this.httpOptions)
-    }
-
-    createStatus(createStat){
-        return this.httpClient.post(this.url, createStat )
     }
 }

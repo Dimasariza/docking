@@ -1,11 +1,22 @@
 import { Component, OnInit } from '@angular/core';
 import { NbAuthResult, NbLoginComponent } from '@nebular/auth';
+import { LoginBateraService } from './login.service';
 
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
 })
-export class NgxLoginComponent extends NbLoginComponent {
+export class NgxLoginComponent extends NbLoginComponent implements OnInit{
+  private loginBateraService : LoginBateraService
+  ngOnInit(): void {
+    this.getVerifyLogin()
+  }
+
+  getVerifyLogin(){
+    this.loginBateraService.getVerifyLogin().subscribe(res => {
+      console.log(res)
+    }) 
+  }
 
   login(): void {
     this.errors = [];

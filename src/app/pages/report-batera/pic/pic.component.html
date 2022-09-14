@@ -1,34 +1,57 @@
-<div class="buttons mx-4 my-2" >
-    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
-    nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
-        <nb-icon [icon]="icon.icon" pack="eva">
-        </nb-icon>
-        {{icon.desc}}
-    </button>
-</div>
 
 
-<table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-    <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-    <ng-container [nbTreeGridColumnDef]="customColumn">
-        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-        {{customColumn}}
-        </th>
-        <td nbTreeGridCell *nbTreeGridCellDef="let row">
-        <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-        {{row.data[customColumn]}}
-        </td>
-    </ng-container>
 
-    <ng-container *ngFor="let column of defaultColumns; let index = index"
-                    [nbTreeGridColumnDef]="column"
-                    [showOn]="getShowOn(index)">
-        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-        {{column}}
-        </th>
-        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-    </ng-container>
-</table>
+<nb-card>
+    <nb-card-body>
+        
+        <div class="buttons mx-4 my-2" >
+            <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+            nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
+                <nb-icon [icon]="icon.icon" pack="eva">
+                </nb-icon>
+                {{icon.desc}}
+            </button>
+        </div>
+        <ngx-datatable 
+        [class]="'bootstrap'" 
+        [rows]="shipData" 
+        [count]="shipData.length"   
+        [scrollbarH]="true"
+        [columnMode]="'force'"
+        class="row"
+        [rowHeight]="'auto'"
+        default>
 
+            <ngx-datatable-column [name]="'No'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{rowIndex+1}}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Nama Personil'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    _
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Title/Jabatan'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    _
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Join Date'" prop="">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                _
+            </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Last Change'" prop="">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+                _
+            </ng-template>  
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </nb-card-body>
+</nb-card>

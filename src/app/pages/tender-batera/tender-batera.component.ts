@@ -13,12 +13,12 @@ interface FSEntry {
   "Price A": string;
   "Price B": string;
   "Price C"?: string;
+  kind?: string
 }
 
 @Component({
   selector: 'ngx-tender-batera',
   templateUrl: './tender-batera.component.html',
-  styleUrls: ['./tender-batera.component.scss']
 })
 
 export class TenderBateraComponent implements OnInit {
@@ -79,10 +79,10 @@ export class TenderBateraComponent implements OnInit {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { Part: 'General Service', "Price B" : 'di', "Price A": '400 KB', "Price C": '2' },
+      data: { Part: 'General Service', "Price B" : 'di', "Price A": '400 KB', "Price C": '2', kind : "dir" },
     },
     {
-      data: { Part: 'Projects', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt' },
+      data: { Part: 'Projects', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt' , kind: 'dir'},
       children: [
         { data: { Part: 'project-1.doc', "Price B": 'doc', "Price A": '240 KB' } },
         { data: { Part: 'project-2.doc', "Price B": 'doc', "Price A": '290 KB' } },
@@ -102,11 +102,20 @@ export class TenderBateraComponent implements OnInit {
 @Component({
   selector: 'ngx-fs-icon',
   template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" >
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
     </nb-tree-grid-row-toggle>
-    `,
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
 })
-  
 export class FsIconComponent {
+  @Input() kind: string;
   @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
 }
+
+

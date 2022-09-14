@@ -7,7 +7,7 @@ import { FsIconComponent, RangepickerShowcaseComponent, ReportBateraComponent, r
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
 import { CloseOutComponent } from './close-out/close-out.component';
 import { InspectionMenuComponent, SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
-import { WorkProgressComponent } from './work-progress/work-progress.component';
+import { approvalIconComponent, WorkProgressComponent } from './work-progress/work-progress.component';
 import { BastComponent } from './bast/bast.component';
 import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
 import { PicComponent } from './pic/pic.component';
@@ -27,7 +27,8 @@ import { PicComponent } from './pic/pic.component';
     reportData,
     RangepickerShowcaseComponent,
     CloseOutComponent,
-    FsIconComponent
+    FsIconComponent,
+    approvalIconComponent
   ],
   imports: [
     CommonModule,

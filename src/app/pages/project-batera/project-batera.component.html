@@ -11,6 +11,7 @@
           <nb-option value="2">Plan</nb-option>
           <nb-option value="3">Evaluation</nb-option>
         </nb-select>
+
         <nb-select selected="1" class="mx-3">
           <nb-option value="1">Responsible</nb-option>
           <nb-option value="2">SS</nb-option>
@@ -47,9 +48,11 @@
 <nb-card>
     <nb-card-body>
         <h5>Project List</h5>
-        <nb-card-header>
+        <nb-card-header class="d-flex justify-content-between w-100" >
             Current Project
+            <button nbButton outline status="primary">Add New Project</button>
         </nb-card-header>
+
       <ngx-datatable 
           [class]="'bootstrap'" 
           [rows]="shipData" 
@@ -59,7 +62,7 @@
           class="row"
           [rowHeight]="'auto'"
           default>
-          <ngx-datatable-column [name]="'Vessel'" prop="vessel">
+          <ngx-datatable-column [name]="'Project name'" prop="vessel">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <a routerLink="/pages/project-batera/sub-menu-project" [data] = 'row' class="text-decoration-none">{{row.vessel}}</a>
            </ng-template>

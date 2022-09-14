@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { CardComponent } from './card/card.component';
-import { TableComponent } from './table/table.component';
 import { FsIconComponent, TenderBateraComponent } from './tender-batera.component';
 import { TenderBateraService } from './tender-batera.service';
 
@@ -19,6 +18,5 @@ export class TenderBateraRoutingModule { }
 export const routedComponents = [
   TenderBateraComponent,
   FsIconComponent,
-  TableComponent,
   CardComponent,
 ];

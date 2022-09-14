@@ -61,34 +61,6 @@
       "imageSrc": "./assets/images/Ship/KM JULIANTO.png",
       "imageAlt": "KM JULIANTO MOELIODIHARDJO SHIP",
       "shipName": "KM JULIANTO MOELIODIHARDJO"
-    },
-    {
-      "id": 6,
-      "status": "on Progress"
-    },
-    {
-      "status": "on Progress",
-      "id": 7
-    },
-    {
-      "status": "on Progress",
-      "id": 8
-    },
-    {
-      "status": "on Progress",
-      "id": 9
-    },
-    {
-      "status": "on Progress",
-      "id": 10
-    },
-    {
-      "status": "on Progress",
-      "id": 11
-    },
-    {
-      "status": "on Progress",
-      "id": 12
     }
   ]
 }

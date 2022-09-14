@@ -4,11 +4,11 @@
         <span>Marcopolo</span>
     </div>
     <div *ngFor="let item of objectKeys(dataTable)" class="row">
-        <div class="col-lg col-xl-4 col-md"><strong>{{item}}</strong></div>
-        <div class="col-auto">:</div>
+        <div class="col-lg col-xl-7 col-md"><strong>{{item}}</strong></div>
+        <div class="">:</div>
         <div class="col text-right">{{dataTable[item]}}</div>
     </div>
-    <div class="text-center">
+    <div class="text-center mt-3">
         <button nbButton status="success">Select Yard</button>
     </div>
 </nb-card>

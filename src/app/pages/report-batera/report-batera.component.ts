@@ -1,13 +1,14 @@
 import { KeyValue } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { NbIconLibraries } from '@nebular/theme';
+import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ReportBateraService } from './report-batera.service';
+
+
 
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
-  // styleUrls: ['./report-batera.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportBateraComponent {
@@ -15,7 +16,7 @@ export class ReportBateraComponent {
   dataReport : any
 
   constructor(iconsLibrary: NbIconLibraries,
-    private tenderBateraService : ReportBateraService
+    private tenderBateraService : ReportBateraService,
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -23,6 +24,7 @@ export class ReportBateraComponent {
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
+
   }
 
   ngOnInit(): void {
@@ -73,6 +75,7 @@ export class ReportBateraComponent {
       menu : "New Project Status"
     },
   ];
+
 }
 
 @Component ({
@@ -80,18 +83,18 @@ export class ReportBateraComponent {
   template: `
     <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
       <div *ngIf="reportData[item.value].type === 'date';"> 
-        <div class="w-50 float-left">
-          <div class="row m-2">
+        <div class="w-50 float-left my-1">
+          <div class="row">
             <div class="col-3"><strong>{{item.value}}</strong></div>
             <input type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
-            <nb-datepicker format="dd.MM.yyyy" #datepicker></nb-datepicker>  
+            <nb-datepicker format="" #datepicker></nb-datepicker>  
           </div>
         </div>
       </div>
 
       <div *ngIf="reportData[item.value].type === 'drop-down';">
-        <div class="w-50 float-left">
-          <div class="row m-2">
+        <div class="w-50 float-left my-1">
+          <div class="row">
             <div class="col-3"><strong>{{item.value}}</strong></div>
             <div class="dropdown" >
               <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
@@ -108,8 +111,8 @@ export class ReportBateraComponent {
       </div>  
 
       <div *ngIf="reportData[item.value].type === 'edit';">
-        <div class="w-50 float-left">
-          <div class="row m-2">
+        <div class="w-50 float-left my-1">
+          <div class="row">
             <div class="col-3"><strong>{{item.value}}</strong></div>
             <div class="col-3">{{reportData[item.value].value}}</div>
             <button nbButton status="primary" class="mx-1" outline size="small" ghost>
@@ -212,7 +215,6 @@ export class RangepickerShowcaseComponent {
     </ng-template>
   `,
 })
-
 export class FsIconComponent {
   @Input() kind: string;
   @Input() expanded: boolean;
@@ -221,3 +223,8 @@ export class FsIconComponent {
     return this.kind === 'dir';
   }
 }
+
+
+
+
+

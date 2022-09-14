@@ -18,7 +18,8 @@ interface FSEntry {
   Stop?: string;
   Responsible?: string;
   'Last Change'?: string;
-  Approval?: boolean
+  Approval?: boolean;
+  Comment?: string,
   kind: string;
 }
 
@@ -44,7 +45,11 @@ export class WorkProgressComponent {
 
   customColumn = 'Title';
   defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  approvalColumns = 'Approval';
+  commentColumns = "Comment";
+
+  
+  allColumns = [ this.customColumn, ...this.defaultColumns, this.approvalColumns, this.commentColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
@@ -66,7 +71,7 @@ export class WorkProgressComponent {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { Title: 'Plan Docking', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:'15-12-2018' , Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'dir' },
+      data: { Title: 'Plan Docking', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:'15-12-2018' , Responsible:'', 'Last Change': '22-11-18 22:07 SS' , Approval: true ,kind: 'dir' },
     },
     {
       data: { Title: 'Spesifications', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:"15-12-2018" , Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', },
@@ -80,7 +85,7 @@ export class WorkProgressComponent {
       ],
     },
     {
-    data: { Title: 'Quote', Type: 'Phase', Status: '', Start: '15-09-2018',  Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir'},
+    data: { Title: 'Quote', Type: 'Phase', Status: '', Start: '15-09-2018',  Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', Approval: true},
       children: [
         { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
         { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
@@ -136,4 +141,44 @@ export class WorkProgressComponent {
       desc: 'Collapse'
     }
   ]
+}
+
+
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
+}
+
+
+@Component({
+  selector: 'ngx-approval-icon',
+  template: `
+    <nb-tree-grid-row-toggle [approval]="expanded" *ngIf="isCheck(); else fileIcon"></nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="check"></nb-icon>
+    </ng-template>
+  `,
+})
+
+export class approvalIconComponent {
+  @Input() approval: boolean;
+
+  isCheck(): boolean {
+    return this.approval === true;
+  }
 }
