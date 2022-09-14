@@ -1,17 +1,30 @@
-import { Component, OnInit } from '@angular/core';
-import { NbAuthResult, NbLoginComponent } from '@nebular/auth';
+import { Component } from '@angular/core';
+import { NbAuthResult, NbLoginComponent,} from '@nebular/auth';
+
 
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
 })
 export class NgxLoginComponent extends NbLoginComponent {
+  showPassword = true;
 
+  getInputType() {
+    if (this.showPassword) {
+      return 'text';
+    }
+    return 'password';
+  }
+
+  toggleShowPass() {
+    this.showPassword = !this.showPassword
+  }
+  
   login(): void {
     this.errors = [];
     this.messages = [];
     this.submitted = true;
-
     this.service.authenticate(this.strategy, this.user).subscribe((result: NbAuthResult) => {
       this.submitted = false;
 
@@ -22,15 +35,13 @@ export class NgxLoginComponent extends NbLoginComponent {
       }
 
       const redirect = result.getRedirect();
-      console.log(redirect);
       
       if (redirect) {
         setTimeout(() => {
-          return this.router.navigateByUrl(/*redirect*/'/pages');
+          return this.router.navigateByUrl(redirect);
         }, this.redirectDelay);
       }
       this.cd.detectChanges();
     });
-  }
-
+  } 
 }
