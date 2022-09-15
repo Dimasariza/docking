@@ -1,7 +1,7 @@
-import { query } from '@angular/animations';
 import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { PostService } from './project-batera.service';
 
 interface TreeNode<T> {
   data: T;
@@ -24,6 +24,9 @@ interface FSEntry {
   templateUrl: './project-batera.component.html',
 })
 export class ProjectBateraComponent {
+  posts:any;
+
+
   customColumn = 'Tasks';
   defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -35,9 +38,18 @@ export class ProjectBateraComponent {
 
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private route : Router
+    private route : Router,
+    private service:PostService
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  ngOnInit() {
+    this.service.getPosts()
+      .subscribe(response => {
+        this.posts = response;
+        console.log(response)
+      });
   }
 
   updateSort(sortRequest: NbSortRequest): void {

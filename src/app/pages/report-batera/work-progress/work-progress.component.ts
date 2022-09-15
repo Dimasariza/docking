@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NbIconLibraries } from '@nebular/theme';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
@@ -34,6 +35,7 @@ export class WorkProgressComponent {
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     iconsLibrary: NbIconLibraries,
+    public dialog : MatDialog
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -41,6 +43,11 @@ export class WorkProgressComponent {
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  openDialog(){
+    this.dialog.open(ApprovalDetailComponent)
+    console.log("open dialog")
   }
 
   customColumn = 'Title';
@@ -164,7 +171,6 @@ export class FsIconComponent {
   }
 }
 
-
 @Component({
   selector: 'ngx-approval-icon',
   template: `
@@ -180,5 +186,25 @@ export class approvalIconComponent {
 
   isCheck(): boolean {
     return this.approval === true;
+  }
+}
+
+@Component({
+  selector: 'ngx-approval-detail',
+  template: `
+    <nb-card>
+      <nb-card-header>
+        <h5>Approval Detail</h5>
+      </nb-card-header>
+      <nb-card-body>
+        Lorem Ipusm Dolor Sitamet
+      </nb-card-body>
+    </nb-card>
+  `,
+})
+export class ApprovalDetailComponent implements OnInit {
+  constructor() { }
+
+  ngOnInit(): void {
   }
 }

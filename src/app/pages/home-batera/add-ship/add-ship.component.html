@@ -1,0 +1,26 @@
+<nb-card>
+    <nb-card-header>
+        <h5>Add Ship</h5>
+    </nb-card-header>
+    <nb-card-body>
+        <form #addShipForm="ngForm" class="row" >
+            <section class="col-12">
+                <label class="col-3" for="ship name input">Ship Name</label>
+                <input class="col-6" nbInput class="my-2" type="text" placeholder="Ship Name" >
+            </section>
+            <section class="col-12">
+                <label class="col-3" for="ship image file">Company Name</label>
+                <input class="col-6" nbInput class="my-2" type="text" placeholder="Company Name" >
+            </section>
+            
+            <section class="col-12">
+                <label class="col-3" for="ship image file">Add Ship</label>
+                <input class="col-6" nbInput class="my-2" type="file" (change)="getFile($event)"  placeholder="Ship Image" >
+            </section>
+            
+            <section class="col-12 text-center">
+                <button disabled nbButton class="w-50 my-2"  type="submit">Add Ship</button>
+            </section>
+        </form>
+    </nb-card-body>
+</nb-card>

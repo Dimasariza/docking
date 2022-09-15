@@ -1,4 +1,7 @@
+import { HttpClient } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { TenderBateraService } from './tender-batera.service'
 
@@ -22,7 +25,6 @@ interface FSEntry {
 })
 
 export class TenderBateraComponent implements OnInit {
-  
   dataTable = [
     {
       "vessel": "General Service",
@@ -49,7 +51,9 @@ export class TenderBateraComponent implements OnInit {
   dataTenders : any
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private tenderBateraService : TenderBateraService
+    private tenderBateraService : TenderBateraService,
+    public dialog : MatDialog
+
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -77,6 +81,11 @@ export class TenderBateraComponent implements OnInit {
     return NbSortDirection.NONE;
   }
 
+  openDialog(){
+    this.dialog.open(YardDetailComponent)
+    console.log("open dialog")
+  }
+
   private data: TreeNode<FSEntry>[] = [
     {
       data: { Part: 'General Service', "Price B" : 'di', "Price A": '400 KB', "Price C": '2', kind : "dir" },
@@ -98,6 +107,28 @@ export class TenderBateraComponent implements OnInit {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 }
+
+
+@Component({
+  selector: 'ngx-yard-detail',
+  template: `
+    <nb-card>
+      <nb-card-header>
+        <h5>Yard Comment</h5>
+      </nb-card-header>
+      <nb-card-body>
+        Lorem Ipusm Dolor Sitamet
+      </nb-card-body>
+    </nb-card>
+  `,
+})
+export class YardDetailComponent implements OnInit {
+  constructor() { }
+
+  ngOnInit(): void {
+  }
+}
+
 
 @Component({
   selector: 'ngx-fs-icon',

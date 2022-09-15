@@ -11,9 +11,11 @@
     
           <span><strong>Internal Comment</strong></span> 
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque odit debitis in, nisi distinctio iure facilis aut dolores maiores ipsum optio unde veritatis qui deleniti voluptate corporis velit? Aut, quidem!</p>
-          <span><strong>Yard Comment</strong></span> <br> 
-          <span><strong>Yard Terms</strong></span> <br>
-          <span><strong>Attachments</strong></span> 
+          <div class="d-flex">
+            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny" (click)="openDialog()">Yard Comment</button><br> 
+            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny">Yard Terms</button><br> 
+            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny">Attachments</button><br> 
+          </div>
           
           <button nbButton class="w-100" shape="rectangle">Add file from computer</button>
         </div>

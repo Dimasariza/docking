@@ -1,8 +1,9 @@
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { NbButtonGroupModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
-import { ProfilBateraRoutingModule, routedComponents } from './profil-batera-routing.module';
+import { ProfilBateraRoutingModule } from './profil-batera-routing.module';
 import { ProfilBateraComponent } from './profil-batera.component';
 
 @NgModule({
@@ -14,7 +15,8 @@ import { ProfilBateraComponent } from './profil-batera.component';
     NbButtonGroupModule,
     NbButtonModule,
     NbInputModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    HttpClientModule
   ],
   declarations: [
     ProfilBateraComponent

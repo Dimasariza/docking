@@ -15,5 +15,5 @@ export class HomeBateraRoutingModule { }
 
 export const routedComponents = [
   HomeBateraComponent,
-  HomeCardComponent
+  HomeCardComponent,
 ];

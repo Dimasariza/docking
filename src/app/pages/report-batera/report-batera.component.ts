@@ -1,10 +1,8 @@
 import { KeyValue } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { FormGroup } from '@angular/forms';
+import { NbDateService, NbIconLibraries, } from '@nebular/theme';
 import { ReportBateraService } from './report-batera.service';
-
-
 
 @Component({
   selector: 'ngx-report-batera',
@@ -24,7 +22,6 @@ export class ReportBateraComponent {
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
-
   }
 
   ngOnInit(): void {
@@ -81,53 +78,87 @@ export class ReportBateraComponent {
 @Component ({
   selector: 'ngx-report-data',
   template: `
+  <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6">
     <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
-      <div *ngIf="reportData[item.value].type === 'date';"> 
-        <div class="w-50 float-left my-1">
-          <div class="row">
-            <div class="col-3"><strong>{{item.value}}</strong></div>
-            <input type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
-            <nb-datepicker format="" #datepicker></nb-datepicker>  
-          </div>
-        </div>
+      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'date';" > 
+        <div class="col-6"><strong>{{item.value}}</strong></div>
+        <input class="col-3" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
+        <nb-datepicker #datepicker [min]="min"></nb-datepicker>  
       </div>
 
-      <div *ngIf="reportData[item.value].type === 'drop-down';">
-        <div class="w-50 float-left my-1">
-          <div class="row">
-            <div class="col-3"><strong>{{item.value}}</strong></div>
-            <div class="dropdown" >
-              <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-                DropDown
-              </button>
-              <div class="dropdown-menu">
-                <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none"
-                (click)="updateStatus()"
-                >{{value}}</a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>  
-
-      <div *ngIf="reportData[item.value].type === 'edit';">
-        <div class="w-50 float-left my-1">
-          <div class="row">
-            <div class="col-3"><strong>{{item.value}}</strong></div>
-            <div class="col-3">{{reportData[item.value].value}}</div>
-            <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-              <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-            </button>
+      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'drop-down';">
+        <div class="col-6"><strong>{{item.value}}</strong></div>
+        <div class="dropdown col-6" >
+          <button class="btn btn-outline-primary dropdown-toggle " type="button" data-toggle="dropdown" aria-expanded="false">
+            DropDown
+          </button>
+          <div class="dropdown-menu">
+            <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none"
+            (click)="updateStatus()">{{value}}</a>
           </div>
         </div>
       </div>
 
     </div>
-  `,
+  </div>
+
+  <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6" >
+    <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'edit';">
+        <div class="col-6"><strong>{{item.value}}</strong></div>
+        <div class="col-4">{{reportData[item.value].value}}</div>
+        <button nbButton status="primary" class="mx-1 col-auto" outline size="small" ghost (click)="onEdit(reportData[item.value])">
+          <nb-icon icon="edit-outline" pack="eva"></nb-icon>
+        </button>
+      </div>
+
+      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'onEdit';">
+        <div class="col-6"><strong>{{item.value}}</strong></div>
+          <form #dataForms (ngSubmit)="onSubmit(dataForms)" [formGroup]="myform">
+            <input class="col-4" type="text" nbInput placeholder="{{reportData[item.value].value}}" fieldSize="tiny" [(ngModel)]="inputData" (keydown.enter)="handleKeyEnter($event)">
+            <button nbButton type="submit" status="primary" class="mx-1 col-auto" outline size="small" ghost (click)="onEdit(reportData[item.value])">
+            <nb-icon icon="checkmark-square-2-outline" pack="eva"></nb-icon>
+            </button>
+        </form> 
+      </div>
+
+    </div>
+  </div>
+
+      `,
 })
 export class reportData implements OnInit{
-  constructor(public ReportBateraService: ReportBateraService){}
+  min: Date;
+  myform : FormGroup;
+
+  constructor(
+    public ReportBateraService: ReportBateraService,
+    protected dateService: NbDateService<Date>,
+  )
+  {
+    this.min = this.dateService.addMonth(this.dateService.today(), 0);
+  }
+
   ngOnInit(): void {  }
+
+  onEdit(item : any){
+    item.type === "edit" ? item.type = "onEdit" : item.type = "edit"
+    console.log(item.type)
+  }
+
+
+  onSubmit(data){
+    console.log(data)
+    if (this.myform.valid) {
+      console.log("Form Submitted!");
+    }
+  }
+
+  handleKeyEnter(event) {
+    event.preventDefault();
+    console.log("done")
+  }
+
   updateStatus(){
     const newFormData = { status: "on Progress"}
 
@@ -144,12 +175,12 @@ export class reportData implements OnInit{
     "Start": {
       type : 'date',
     },
+    "End": {
+      type: 'date',
+    },
     "Master Plan": {
       type : 'drop-down',
       value: ['Dry Docking',]
-    },
-    "End": {
-      type: 'date',
     },
     "Status": {
       type : 'drop-down',
@@ -171,7 +202,7 @@ export class reportData implements OnInit{
       type : 'edit',
       value: 'Meratus Line', 
     } ,
-    "Veseel/Asset": {
+    "Vessel/Asset": {
       type : 'edit',
       value : 'Meratus Batam',
     }, 
@@ -188,21 +219,6 @@ export class reportData implements OnInit{
       value : 'Rp 1.400.000.000',
     } 
   }
-}
-
-
-@Component({
-  selector: 'nb-rangepicker-showcase',
-  template: `
-    <nb-card size="large">
-      <nb-card-body>
-        <input nbInput placeholder="Pick Date" [nbDatepicker]="dateTimePicker">
-        <nb-datepicker #dateTimePicker></nb-datepicker>
-      </nb-card-body>
-    </nb-card>
-  `,
-})
-export class RangepickerShowcaseComponent {
 }
 
 @Component({

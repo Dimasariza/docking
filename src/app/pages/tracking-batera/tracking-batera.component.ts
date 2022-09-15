@@ -8,10 +8,10 @@ import { ChartOptions } from '../charts/apexchart/apexchart.component';
 })
 export class TrackingBateraComponent implements OnInit {
   data = [
-    {title: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
-    {title: 'Batera 02', phases: [true, true, false], periode: '12/12/2022'},
-    {title: 'Batera 03', phases: [true, true, false], periode: '12/12/2022'},
-    {title: 'Batera 04', phases: [true, true, false], periode: '12/12/2022'}
+    {Project: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
+    {Project: 'Batera 02', phases: [true, true, false], periode: '12/12/2022'},
+    {Project: 'Batera 03', phases: [true, true, false], periode: '12/12/2022'},
+    {Project: 'Batera 04', phases: [true, true, false], periode: '12/12/2022'}
   ]
 
   chartOptions: Partial<ChartOptions> = {

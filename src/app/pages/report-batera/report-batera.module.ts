@@ -3,14 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbLayoutModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
-import { FsIconComponent, RangepickerShowcaseComponent, ReportBateraComponent, reportData } from './report-batera.component';
+import { FsIconComponent, ReportBateraComponent, reportData } from './report-batera.component';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
 import { CloseOutComponent } from './close-out/close-out.component';
 import { InspectionMenuComponent, SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
-import { approvalIconComponent, WorkProgressComponent } from './work-progress/work-progress.component';
+import { ApprovalDetailComponent, approvalIconComponent, WorkProgressComponent } from './work-progress/work-progress.component';
 import { BastComponent } from './bast/bast.component';
 import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
 import { PicComponent } from './pic/pic.component';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -25,11 +26,12 @@ import { PicComponent } from './pic/pic.component';
     InspectionMenuComponent,
     PicComponent,
     reportData,
-    RangepickerShowcaseComponent,
     CloseOutComponent,
     FsIconComponent,
-    approvalIconComponent
+    approvalIconComponent,
+    ApprovalDetailComponent
   ],
+  entryComponents: [ApprovalDetailComponent],
   imports: [
     CommonModule,
     NgxDatatableModule,
@@ -45,7 +47,8 @@ import { PicComponent } from './pic/pic.component';
     NbIconModule,
     NbTreeGridModule,
     NbLayoutModule,
-    NbDatepickerModule
+    NbDatepickerModule,
+    MatDialogModule
   ]
 })
 export class ReportBateraModule {

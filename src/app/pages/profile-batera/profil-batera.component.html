@@ -24,8 +24,8 @@
                 <input type="text" nbInput fullWidth placeholder="NPWP Perusahaan">
             </div>
             <div class="col-6">
-                <span class="p-2 d-block">Merk Perusahaan</span>
-                <input type="text" nbInput fullWidth placeholder="Merk Perusahaan">
+                <span class="p-2 d-block">Brand Perusahaan</span>
+                <input type="text" nbInput fullWidth placeholder="Brand Perusahaan">
                 <span class="p-2 d-block">Alamat Perusahaan</span>
                 <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Alamat Perusahaan 02"></textarea>
                 <span class="p-2 d-block">Faximile</span>
@@ -42,7 +42,6 @@
         [class]="'bootstrap'" 
         [scrollbarH]="true"
         [rows]="data" 
-        [count]="data.length"
         columnMode="force"
         default>
         <ngx-datatable-column [name]="'No'" [width]="50">
@@ -50,10 +49,14 @@
                 {{rowIndex+1}}
             </ng-template>
         </ngx-datatable-column>
-        <ngx-datatable-column [name]="'Nama Pengguna'" prop="nama pengguna"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Nama Pengguna'" prop="nama_lengkap"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Organisasi'" prop="no_hp"></ngx-datatable-column>
         <ngx-datatable-column [name]="'Jabatan'" prop="jabatan"></ngx-datatable-column>
         <ngx-datatable-column [name]="'Email'" prop="email"></ngx-datatable-column>
-        <ngx-datatable-column [name]="'Mobile Phone'" prop="mobile phone"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Nomor HP'" prop="no_hp"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Id Pengguna'" prop="no_hp"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Departemen'" prop="no_hp"></ngx-datatable-column>
+        <ngx-datatable-column [name]="'Peran'" prop="no_hp"></ngx-datatable-column>
         </ngx-datatable>
     </nb-card-body>
 </nb-card>

@@ -53,7 +53,7 @@
         [count]="data.length"
         columnMode="force"
         default>
-        <ngx-datatable-column name="Title"></ngx-datatable-column>
+        <ngx-datatable-column name="Project" prop="Project"></ngx-datatable-column>
         <ngx-datatable-column name="Phases">
             <ng-template let-row="row" ngx-datatable-cell-template>
                 <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
@@ -76,7 +76,7 @@
         [count]="data.length"
         columnMode="force"
         default>
-        <ngx-datatable-column name="Title"></ngx-datatable-column>
+        <ngx-datatable-column name="Project"></ngx-datatable-column>
         <ngx-datatable-column name="Phases">
             <ng-template let-row="row">
                 <button nbButton *ngFor="let stat of row.phases">

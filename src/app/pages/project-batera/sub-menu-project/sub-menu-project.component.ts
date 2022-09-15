@@ -10,10 +10,20 @@ interface TreeNode<T> {
 }
 
 interface FSEntry {
-  Projects: string;
   "Price A"?: string;
   "Price B"?: string;
   "Price C"?: string;
+  "Job No": string;
+  Job? : string;
+  Dept?: string;
+  Resp? : string;
+  Start? : string;
+  Stop? : string;
+  Budget?: string;
+  Contract? : string;
+  Additional?: string;
+  Total?: string;
+  Edit?: boolean
   kind: string;
 }
 
@@ -83,9 +93,10 @@ export class SubMenuProjectComponent  {
     },
   ]
 
-  customColumn = 'Projects';
-  defaultColumns = [ 'kind' ];
-  allColumns = [ this.customColumn, ...this.defaultColumns ];
+  customColumn = "Job No";
+  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Budget','Contract', 'Additional', 'Total' ];
+  editColumn = 'Edit'
+  allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
 
@@ -110,15 +121,15 @@ export class SubMenuProjectComponent  {
 
   private data: TreeNode<FSEntry>[] = [
     {
-      data: { Projects: 'General Service', kind: 'dir' },
+      data: { "Job No": '2.20.1', kind: 'dir' },
     },
     {
-      data: { Projects: 'Projects', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
+      data: { "Job No": '2.20.2', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
       children: [
-        { data: { Projects: 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
-        { data: { Projects: 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
-        { data: { Projects: 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
-        { data: { Projects: 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
       ],
     },
   ];
@@ -176,7 +187,7 @@ export class SubProjectDataComponent {
     },
     "Phase": {
       type : 'drop-down',
-      value: ['Repair','Done']
+      value: ['Perencanaan','Pelaksanaan', 'Evaluasi']
     },
     "Selected Yard": {
       type : 'text',
@@ -307,3 +318,5 @@ export class SubPriceDataComponent {
     }
   } 
 }
+
+

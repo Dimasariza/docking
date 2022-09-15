@@ -10,7 +10,7 @@ export class ReportBateraService {
     ){}
 
     httpOptions : any
-    url = 'http://env-6573880.jh-beon.cloud/report/proyek'
+    url = ''
 
     getDataReport(){
         const httpHeaders = new HttpHeaders();

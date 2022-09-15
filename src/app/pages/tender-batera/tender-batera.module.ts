@@ -4,11 +4,11 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TenderBateraRoutingModule } from './tender-batera-routing.module';
 import { NumberCardModule } from '@swimlane/ngx-charts';
 import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbPopoverModule, NbSearchModule, NbTreeGridModule } from '@nebular/theme';
-import { CardComponent } from './card/card.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
-import { FsIconComponent } from './tender-batera.component';
-import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { YardDetailComponent } from './tender-batera.component';
+
 
 @NgModule({
   imports: [
@@ -25,10 +25,13 @@ import { HttpClientModule } from '@angular/common/http';
     NbTreeGridModule,
     NbInputModule,
     TablesRoutingModule,
-    NbAccordionModule
+    NbAccordionModule,
+    MatDialogModule
   ],
+  entryComponents: [YardDetailComponent],
   declarations: [
     ...routedComponents,
+    YardDetailComponent
   ],
   providers: [
   ]
