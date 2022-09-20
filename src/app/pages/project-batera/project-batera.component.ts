@@ -1,6 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbMenuItem, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { PostService } from './project-batera.service';
 
 interface TreeNode<T> {
@@ -26,7 +29,6 @@ interface FSEntry {
 export class ProjectBateraComponent {
   posts:any;
 
-
   customColumn = 'Tasks';
   defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -37,11 +39,18 @@ export class ProjectBateraComponent {
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
   constructor(
+    public dialog : MatDialog,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private route : Router,
-    private service:PostService
+    private service:PostService,
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  openDialog(){
+    const dialogConfig = new MatDialogConfig();
+    this.dialog.open(AddNewProjectComponent, {disableClose : true})
+    dialogConfig.autoFocus = true;
   }
 
   ngOnInit() {
@@ -50,6 +59,14 @@ export class ProjectBateraComponent {
         this.posts = response;
         console.log(response)
       });
+  }
+
+  postDataProject(){
+    this.service.addDataProject()
+    .subscribe(res => {
+      console.log(res)
+      console.log("send data project")
+    })
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -132,70 +149,35 @@ export class ProjectBateraComponent {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
+
   shipData = [
     {
-      "vessel": "Batera Batam-DD-2019",
+      "vessel": "MT Salmon Mustava-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
+      "customer": "PT PI Logistik",
       "start": "15:09:19",
       "R": true,
       "P": true,
       "E": true
     },
     {
-      "vessel": "Batera Project3-DD-2019",
+      "vessel": "KM-Fusri-Indonesia-I-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
+      "customer": "PT PI Logistik",
       "start": "15:08:19",
       "R": true,
       "P": true,
       "E": true
     },
     {
-      "vessel": "Batera Kapuas-DD-2019",
+      "vessel": "KM-Ibrahim Zahir-DD-2019",
       "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
+      "customer": "PT PI Logistik",
       "start": "15:07:19",
       "R": true,
       "P": true,
       "E": true
     },
-    {
-      "vessel": "Batera Medan-1-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:06:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Express-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:05:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Relance-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:04:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Gorontalo-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:03:19",
-      "R": true,
-      "P": true,
-      "E": true,
-    }
   ]
 
   projectsData = [
@@ -209,8 +191,20 @@ export class ProjectBateraComponent {
     }
   ]
 
-  navToSubProject(){
-    this.route.navigate([''], {queryParams:{data : this.shipData}})
+  @ViewChild('teams') teams!: ElementRef;
+	selectedTeam = '';
+  selecTeam = ""
+	onSelected():void {
+		this.selectedTeam = this.teams.nativeElement.value;
+	}
+  
+  navToSubProject(row){
+    this.route.navigate(['/pages/project-batera/sub-menu-project'], {queryParams:{data : this.shipData[row].vessel}})
+  }
+
+  testDropDown = [ 'repair', 'on dokc', 'done']
+  chooseOption(id){
+    console.log("index number :", id)
   }
 }
 

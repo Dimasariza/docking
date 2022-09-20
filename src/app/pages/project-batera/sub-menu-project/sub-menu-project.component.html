@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-header>
-    <h5 style="color:burlywood;">Batera Ship 01</h5>
+    <h5 style="color:burlywood;">{{vesselName}}</h5>
     <div class="d-flex">
         <div class="my-3" *ngFor = "let button of menuButton">
             <button *ngIf = "button.position === 'top'" nbButton status="primary" class="mx-1" outline size="small">
@@ -17,17 +17,16 @@
             <button nbButton status="primary" class="mx-1" outline size="small" ghost>
                 <nb-icon icon="settings-outline" pack="eva"></nb-icon>
             </button>
+            <nb-select selected="1" class="" size="tiny">
+                <nb-option value="1">Hide Details</nb-option>
+                <nb-option value="2">Show Details</nb-option>
+            </nb-select>
         </div>
-        <nb-select selected="1" class="" size="tiny">
-            <nb-option value="1">Hide Details</nb-option>
-            <nb-option value="2">Show Details</nb-option>
-        </nb-select>
 
         <div class="row">
-            <div class="col-lg-4 col-md-12 col-sm-12">
+            <div class="col-lg-5 col-md-12 col-sm-12">
                 <ngx-sub-project-data></ngx-sub-project-data>
             </div>
-            <div class="col-lg-auto"></div>
             <div class="col-lg-7 col-md-12 col-sm-12">
                 <ngx-sub-price-data></ngx-sub-price-data>
             </div>

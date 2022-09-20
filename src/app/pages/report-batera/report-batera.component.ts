@@ -88,15 +88,9 @@ export class ReportBateraComponent {
 
       <div class="mt-2 row" *ngIf="reportData[item.value].type === 'drop-down';">
         <div class="col-6"><strong>{{item.value}}</strong></div>
-        <div class="dropdown col-6" >
-          <button class="btn btn-outline-primary dropdown-toggle " type="button" data-toggle="dropdown" aria-expanded="false">
-            DropDown
-          </button>
-          <div class="dropdown-menu">
-            <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none"
-            (click)="updateStatus()">{{value}}</a>
-          </div>
-        </div>
+        <nb-select selected="1" class="" size="tiny" status="primary">
+          <nb-option value="1" *ngFor = "let value of reportData[item.value].value">{{value}}</nb-option>
+        </nb-select>
       </div>
 
     </div>

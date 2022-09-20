@@ -46,11 +46,6 @@ const routes: Routes = [{
         .then(m => m.HomeBateraModule),
     },
     {
-      path: 'project-batera',
-      loadChildren: () => import('./project-batera/project-batera.modules')
-      .then(m => m.ProjectBateraModule),
-    },
-    {
       path: 'dashboard',
       component: ECommerceComponent,
     },

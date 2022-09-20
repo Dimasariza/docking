@@ -10,7 +10,7 @@ export class TenderBateraService {
     ){}
 
     httpOptions : any
-    url = 'http://localhost:3002/test'
+        private url = 'http://env-6573880.jh-beon.cloud/tender/proyek/';
 
     getDataTender(){
         return this.httpClient.get(this.url, this.httpOptions)

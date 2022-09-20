@@ -1,16 +1,15 @@
-<nb-card>
-    <nb-card-header>
+<!-- <nb-card>
+    <nb-card-header class="d-flex justify-content-between">
         <h5>Add Ship</h5>
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
     </nb-card-header>
     <nb-card-body>
         <form #addShipForm="ngForm" class="row" >
             <section class="col-12">
                 <label class="col-3" for="ship name input">Ship Name</label>
                 <input class="col-6" nbInput class="my-2" type="text" placeholder="Ship Name" >
-            </section>
-            <section class="col-12">
-                <label class="col-3" for="ship image file">Company Name</label>
-                <input class="col-6" nbInput class="my-2" type="text" placeholder="Company Name" >
             </section>
             
             <section class="col-12">
@@ -19,8 +18,49 @@
             </section>
             
             <section class="col-12 text-center">
-                <button disabled nbButton class="w-50 my-2"  type="submit">Add Ship</button>
+                <button  nbButton class="w-50 my-2"  type="submit" (click)="onUpload()" >Add Ship</button>
             </section>
         </form>
+    </nb-card-body>
+</nb-card> -->
+
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5>Add Ship</h5>
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form [formGroup]="addShipForm" (ngSubmit)="submit()">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input 
+                    formControlName="name"
+                    id="name" 
+                    type="text" 
+                    class="form-control">
+                <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger">
+                    <div *ngIf="f.name.errors.required">Name is required.</div>
+                    <div *ngIf="f.name.errors.minlength">Name should be 3 character.</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="file">File</label>
+                <input 
+                    formControlName="file"
+                    id="file" 
+                    type="file" 
+                    class="form-control"
+                    (change)="onFileChange($event)">
+                <div *ngIf="f.file.touched && f.file.invalid" class="alert alert-danger">
+                    <div *ngIf="f.file.errors.required">File is required.</div>
+                </div>
+            </div>
+                
+            <button class="btn btn-primary" type="submit">Submit</button>
+        </form>
+
     </nb-card-body>
 </nb-card>

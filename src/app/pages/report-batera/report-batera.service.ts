@@ -10,7 +10,7 @@ export class ReportBateraService {
     ){}
 
     httpOptions : any
-    url = ''
+    private url = 'http://env-6573880.jh-beon.cloud/home/kapal';
 
     getDataReport(){
         const httpHeaders = new HttpHeaders();

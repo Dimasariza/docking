@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { FsIconComponent, ProjectBateraComponent } from './project-batera.component';
-import { RangepickerShowcaseComponent, SubMenuIconComponent, SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
+import { SubMenuIconComponent, SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
 
 const routes: Routes = [{
     path: '',
@@ -10,7 +11,7 @@ const routes: Routes = [{
   {
     path: 'sub-menu-project',
     component: SubMenuProjectComponent
-  }
+  },
 ];
 
 @NgModule({
@@ -26,5 +27,5 @@ export const routedComponents = [
   SubMenuIconComponent,
   SubPriceDataComponent,
   FsIconComponent,
-  RangepickerShowcaseComponent,
+  AddNewProjectComponent
 ];

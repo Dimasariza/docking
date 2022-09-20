@@ -32,7 +32,22 @@ interface FSEntry {
   templateUrl: './sub-menu-project.component.html',
 })
 
-export class SubMenuProjectComponent  {
+export class SubMenuProjectComponent implements OnInit {
+  constructor(
+    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private route: ActivatedRoute
+    ) {
+    this.dataSource = this.dataSourceBuilder.create(this.data);
+  }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params: any) => {
+    console.log(params)
+      this.vesselName = params.data
+    })
+  }
+  
+  vesselName : string
   menuButton = [
     {
       position: 'top',
@@ -94,18 +109,14 @@ export class SubMenuProjectComponent  {
   ]
 
   customColumn = "Job No";
-  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Budget','Contract', 'Additional', 'Total' ];
+  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Budget','Contract', 'Additional', 'Total' ];
   editColumn = 'Edit'
   allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
 
-  dataSource: NbTreeGridDataSource<FSEntry>; 
 
+  dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
-
-  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
-  }
 
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -141,41 +152,18 @@ export class SubMenuProjectComponent  {
   }
 }
 
-@Component({
-  selector: 'ngx-sub-menu-icon',
-  template: `
-  <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-  </nb-tree-grid-row-toggle>
-  <ng-template #fileIcon>
-    <nb-icon icon="file-text-outline"></nb-icon>
-  </ng-template>
-`,
-})
-  
-export class SubMenuIconComponent implements OnInit{
-  @Input() kind: string;
-  @Input() expanded: boolean;
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-
-  constructor(
-    private route: ActivatedRoute
-  ) {}
-
-  ngOnInit(): void {
-    this.route.queryParams.subscribe((params: any) => {
-      
-    })
-  }
-}
-
-
 @Component ({
   selector: 'ngx-sub-project-data',
   templateUrl: './sub-project-data.component.html',
 })
-export class SubProjectDataComponent {
+export class SubProjectDataComponent implements OnInit{
+  constructor(private route: ActivatedRoute ) {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params: any) => {
+    console.log(params)
+      this.reportData.Vessel.value = params.data
+    })
+  }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
@@ -230,19 +218,6 @@ export class SubProjectDataComponent {
   }
 }
 
-@Component({
-  selector: 'nb-rangepicker-showcase',
-  template: `
-    <nb-card size="large">
-      <nb-card-body>
-        <input nbInput placeholder="Pick Date Range" [nbDatepicker]="formpicker">
-        <nb-rangepicker #formpicker></nb-rangepicker>
-      </nb-card-body>
-    </nb-card>
-  `,
-})
-export class RangepickerShowcaseComponent {
-}
 @Component({
   selector: 'ngx-sub-price-data',
   templateUrl: './sub-price-data.component.html'
@@ -320,3 +295,22 @@ export class SubPriceDataComponent {
 }
 
 
+@Component({
+  selector: 'ngx-sub-menu-icon',
+  template: `
+  <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+  </nb-tree-grid-row-toggle>
+  <ng-template #fileIcon>
+    <nb-icon icon="file-text-outline"></nb-icon>
+  </ng-template>
+`,
+})
+export class SubMenuIconComponent implements OnInit{
+  @Input() kind: string;
+  @Input() expanded: boolean;
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
+  constructor(  ) {}
+  ngOnInit(): void {  }
+}

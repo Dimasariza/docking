@@ -14,8 +14,8 @@ export class CardComponent {
     'Owner Cost': '2.412.000.000',
     'Owner Total Cost': '4.171.950.000',
     'Yard Total Quote': '4.560.753.000',
-    'General Discount 15%': '-684.000.000',
-    'Additional Discount': '0',
+    'General Discount _%': '-684.000.000',
+    'After Discount': '0',
     'Sum Internal Adjusment': '811.000.000'
   }
 

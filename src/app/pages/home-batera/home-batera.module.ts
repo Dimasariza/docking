@@ -6,7 +6,9 @@ import { HomeBateraRoutingModule, routedComponents } from './home-batera-routing
 import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddShipComponent } from './add-ship/add-ship.component';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { BrowserModule } from '@angular/platform-browser';
 
 
 @NgModule({
@@ -21,7 +23,9 @@ import { FormsModule } from '@angular/forms';
     HttpClientModule,
     MatDialogModule,
     NbFormFieldModule,
-    FormsModule
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
   ],
   entryComponents: [AddShipComponent],
   exports: [],

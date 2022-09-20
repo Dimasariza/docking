@@ -3,20 +3,15 @@
     <div *ngIf="reportData[item.value].type === 'drop-down';">
       <div class="row my-2">
         <div class="col-4"><strong>{{item.value}}</strong></div>
-        <div class="dropdown" >
-          <button class="btn btn-outline-primary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">
-            {{reportData[item.value].value[0]}}
-          </button>
-          <div class="dropdown-menu">
-            <a *ngFor = "let value of reportData[item.value].value" class="dropdown-item text-decoration-none">{{value}}</a>
-          </div>
-        </div>
+        <nb-select selected="1" class="" size="tiny" status="primary">
+            <nb-option value="1" *ngFor = "let value of reportData[item.value].value">{{value}}</nb-option>
+        </nb-select>
       </div> 
     </div>  
     <div *ngIf="reportData[item.value].type === 'text';">
         <div class="row my-2">
           <div class="col-4"><strong>{{item.value}}</strong></div>
-          <div class="col-4">{{reportData[item.value].value}}</div>
+          <div class="col-8">{{reportData[item.value].value}}</div>
         </div>
     </div>
 
@@ -34,10 +29,7 @@
         <div class="row my-2">
           <div class="col-4"><strong>{{item.value}}</strong></div>
           <input type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date Range" [nbDatepicker]="rangepicker">
-          <nb-rangepicker format="dd.MM.yyyy" #rangepicker></nb-rangepicker>  
-          <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-          </button>
+          <nb-rangepicker #rangepicker></nb-rangepicker>  
         </div>
     </div>
 

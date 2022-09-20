@@ -1,15 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddShipComponent } from './add-ship/add-ship.component';
 import { HomeService } from './home-batera.service';
 
-export class ShipData{
-  constructor(
-    public shipImg,
-    public shipName,
-    public shipUrl
-  ){  }
-}
+
 
 @Component({
   selector: 'ngx-home-batera',
@@ -17,8 +11,6 @@ export class ShipData{
 })
 export class HomeBateraComponent implements OnInit {
   data: any;
-
-  shipModel = new ShipData('MT Toba', 'Kapal Toba', 'kapaltoba.com')
 
   constructor(
     private homeservice:HomeService,
@@ -35,12 +27,29 @@ export class HomeBateraComponent implements OnInit {
   }
 
   openDialog(){
-    this.dialog.open(AddShipComponent)
+    const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(AddShipComponent ,{disableClose : true})
     console.log("open dialog")
-  }
 
-  title : string = "this is my title"
+    dialogConfig.autoFocus = true;
+
+    dialogRef.afterClosed().subscribe(res=>{
+        console.log(res);
+      }
+    );
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
 
 @Component({
   selector: 'ngx-home-card',
@@ -50,7 +59,7 @@ export class HomeBateraComponent implements OnInit {
       <nb-card size="small">
         <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
         <div class="card h-100">
-          <img src="{{image.foto}}" alt="{{image.nama_kapal}}" class="h-100">
+          <img src="http://env-6573880.jh-beon.cloud/uploads/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
           <div class="card-body">
             <h6>{{image.nama_kapal}}</h6>
           </div>
@@ -74,17 +83,11 @@ export class HomeBateraComponent implements OnInit {
   </nb-flip-card>
   `
 })
-
-export class HomeCardComponent implements OnInit{
+export class HomeCardComponent{
   flipped = false;
   @Input() image;
-
-  constructor() { }
-  ngOnInit(): void {
-  }
 
   toggleView() {
     this.flipped = !this.flipped;
   }
 }
-

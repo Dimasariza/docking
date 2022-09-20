@@ -121,19 +121,7 @@ export class WorkProgressComponent {
     },
     {
       icon: 'flag-outline',
-      desc: 'Add Milestone'
-    },
-    {
-      icon: 'clock-outline',
-      desc: 'Add Meeting'
-    },
-    {
-      icon: 'checkmark-square',
-      desc: 'Add Task'
-    },
-    {
-      icon: 'arrow-right-outline',
-      desc: 'Add Microflow'
+      desc: 'Add Job'
     },
     {
       icon: 'external-link',
@@ -145,7 +133,7 @@ export class WorkProgressComponent {
     },
     {
       icon: 'minus',
-      desc: 'Collapse'
+      desc: 'Send Notification'
     }
   ]
 }

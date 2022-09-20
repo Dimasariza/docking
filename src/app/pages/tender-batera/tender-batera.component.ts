@@ -59,7 +59,9 @@ export class TenderBateraComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDataTender()
+    this.tenderBateraService.getDataTender().subscribe(res => {
+      console.log(res)
+    })
   }
 
   getDataTender(){
@@ -82,7 +84,7 @@ export class TenderBateraComponent implements OnInit {
   }
 
   openDialog(){
-    this.dialog.open(YardDetailComponent)
+    this.dialog.open(YardDetailComponent),
     console.log("open dialog")
   }
 

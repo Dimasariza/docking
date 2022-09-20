@@ -1,0 +1,20 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5>Update Company Logo</h5>
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form #addShipForm="ngForm" (ngSubmit)="testData(addShipForm)" class="row" >
+            <section class="col-12">
+                <label class="col-3" for="ship image file">Company Logo</label>
+                <input class="col-6" nbInput class="my-2" type="file" name="shipimage" (change)="getImage($event)" placeholder="Ship Image" (ngModel)="shipimage" #shipimage>
+            </section>
+            
+            <section class="col-12 text-center">
+                <button  nbButton class="w-50 my-2"  type="submit" status="success" [disabled]="enabledImgButton" >Upload</button>
+            </section>
+        </form>
+    </nb-card-body>
+</nb-card>

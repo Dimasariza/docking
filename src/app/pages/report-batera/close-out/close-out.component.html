@@ -51,8 +51,14 @@
                 <ng-template let-row="row" ngx-datatable-cell-template>
                     _
                 </ng-template>  
-                </ngx-datatable-column>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'Add File'" prop="">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button nbButton size="tiny" status="success">
+                        Add File
+                    </button>
+                </ng-template>  
+            </ngx-datatable-column>
         </ngx-datatable>
     </nb-card-body>
 </nb-card>
-<nb-card class="mx-3"><button nbButton class="m-2" shape="rectangle">Add file from computer</button></nb-card>

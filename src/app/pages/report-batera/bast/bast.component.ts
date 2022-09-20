@@ -23,10 +23,6 @@ export class BastComponent  {
     icon: 'refresh',
     desc: 'Refresh'
     },
-    {
-      icon: 'file-text-outline',
-      desc: 'Add Document'
-    },
   ]
 
   shipData = [
