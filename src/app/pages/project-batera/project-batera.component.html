@@ -32,9 +32,7 @@
               </td>
           </ng-container>
       
-          <ng-container *ngFor="let column of defaultColumns; let index = index"
-                          [nbTreeGridColumnDef]="column"
-                          [showOn]="getShowOn(index)">
+          <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
               <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
               {{column}}
               </th>
@@ -50,68 +48,59 @@
       <nb-card-header class="d-flex justify-content-between w-100" >
           <h5>Project List</h5>
           <button nbButton outline status="primary" (click)="openDialog()" >Add New Project</button>
-          <button nbButton outline status="primary" (click)="postDataProject()" >Add New Project test</button>
         </nb-card-header>
 
-      <ngx-datatable 
-          [class]="'bootstrap'" 
-          [rows]="shipData" 
-          [count]="shipData.length"
-          [scrollbarH]="true"
-          [columnMode]="'force'"
-          class="row"
-          [rowHeight]="'auto'"
-          default>
-          <ngx-datatable-column [name]="'Project name'" prop="vessel">
+      <ngx-datatable [class]="'bootstrap'" [rows]="allProjectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
+          <ngx-datatable-column [name]="'Project name'" prop="nama_proyek">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <a class="text-primary" style="cursor: pointer;" (click)="navToSubProject(rowIndex)" [data] = 'row'>{{row.vessel}}</a>
+              <a class="text-primary" style="cursor: pointer;" (click)="navToSubProject(rowIndex)" [data] = 'row'>{{row.nama_proyek}}</a>
            </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'Shortcut'" prop="">
+          <!-- <ngx-datatable-column [name]="'Shortcut'" prop="">
             <ng-template let-row="row" ngx-datatable-cell-template>
 
               <nb-icon *ngFor="let stat of row.shortcuts" [ngStyle]="{'color': 'grey'}" [icon]="stat"></nb-icon>
             </ng-template>  
-          </ngx-datatable-column>
+          </ngx-datatable-column> -->
 
-          <ngx-datatable-column [name]="'Ship Management'" prop="customer"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Ship Management'" prop="kapal.owner.nama_lengkap"></ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'R'" width="1">
+          <!-- <ngx-datatable-column [name]="'R'" width="30">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <nb-icon [stat]="row.R" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
                 </nb-icon>
               </ng-template>  
           </ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'P'" width="1">
+          <ngx-datatable-column [name]="'P'" width="30">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.P" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'E'" width="1" >
+          <ngx-datatable-column [name]="'E'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'F'"  >
+          <ngx-datatable-column [name]="'F'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
-          </ngx-datatable-column>
+          </ngx-datatable-column> -->
 
-          <ngx-datatable-column [name]="'Start Date'" prop="start"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Last Change'" prop="start"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Start Date'" prop="created_at"></ngx-datatable-column>
+          <ngx-datatable-column [name]="'Last Change'" prop="updated_at"></ngx-datatable-column>
       </ngx-datatable>
     </nb-card-body>
   </nb-card>
 
-
+<!-- 
   <nb-card>
     <div class="col">
       <p>You select your team {{ selectedTeam }} using viewChild</p>
@@ -139,4 +128,4 @@
            {{ a }}
         </option>
      </select>
-  </nb-card>
+  </nb-card> -->

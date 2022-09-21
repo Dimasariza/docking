@@ -51,12 +51,12 @@ export class WorkProgressComponent {
   }
 
   customColumn = 'Title';
-  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change' ];
-  approvalColumns = 'Approval';
+  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  approvalColumns = ['Approv by owner' , 'Approv by Ship Yard'];
   commentColumns = "Comment";
 
   
-  allColumns = [ this.customColumn, ...this.defaultColumns, this.approvalColumns, this.commentColumns ];
+  allColumns = [ this.customColumn, ...this.defaultColumns, ...this.approvalColumns, this.commentColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 

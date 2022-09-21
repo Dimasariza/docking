@@ -1,1 +1,61 @@
-<p>add-user works!</p>
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5>ADD USER</h5> 
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+    <nb-card-body>
+    <form #addUserForm="ngForm" (ngSubmit)="onSubmit(addUserForm)" (keyup.enter)="posts=$event.target.value">
+        <div class="d-flex justify-content-center">
+            <picture style="width: 100px; height:100px; border-radius:50%; border: 1px solid rgba(0,0,0, 0.3); position: relative;">
+                <nb-icon icon="plus-outline" style="position: absolute; top:calc(50% - 1.25rem / 2); right:calc(50% - 1.25rem/2);" class="text-secondary"></nb-icon>
+                <input type="file" style="width: 100px; height:100px; border-radius:50%; opacity: 0;">
+                <!-- <source srcset="..." type="image/svg+xml"> -->
+                <!-- <img src="..." class="img-fluid img-thumbnail" alt="..."> -->
+            </picture>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <span class="p-2 d-block">User name</span>
+                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name"
+                required (ngModel)="userName" name="userName" #userName="ngModel" >
+                <span class="p-2 d-block">Full Name</span>
+                <input type="text" nbInput fullWidth placeholder="Full Name" id="full_name" 
+                required (ngModel)="fullName" name="fullName" #fullName="ngModel">
+                <span class="p-2 d-block">Ship Name</span>
+                <input type="text" nbInput fullWidth placeholder="Ship Name" id="ship_name" 
+                required (ngModel)="shipName" name="shipName" #shipName="ngModel">
+                <span class="p-2 d-block">Title</span>
+                <input type="text" nbInput fullWidth placeholder="Title" id="title" 
+                required (ngModel)="title" name="title" #title="ngModel">
+                <span class="p-2 d-block">Department</span>
+                <input type="text" nbInput fullWidth placeholder="Department" id="department" 
+                required (ngModel)="department" name="department" #department="ngModel">
+                <span class="p-2 d-block">User Id</span>
+                <input type="text" nbInput fullWidth placeholder="User Id" id="user_id" 
+                required (ngModel)="userId" name="userId" #userId="ngModel">
+            </div>
+            <div class="col-6">
+                <span class="p-2 d-block">Position</span>
+                <input type="text" nbInput fullWidth placeholder="Position" id="position"
+                required (ngModel)="position" name="position" #position="ngModel">
+                <span class="p-2 d-block">Mobile Number</span>
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" 
+                required (ngModel)="mobileNo" name="mobileNo" #mobileNo="ngModel">
+                <span class="p-2 d-block">E-mail</span>
+                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" 
+                required (ngModel)="email" name="email" #email="ngModel">
+                <span class="p-2 d-block">Password</span>
+                <input type="text" nbInput fullWidth placeholder="Password" id="password" 
+                required (ngModel)="password" name="password" #password="ngModel">
+                <span class="p-2 d-block">Role</span>
+                <input type="text" nbInput fullWidth placeholder="Role" id="role" 
+                required (ngModel)="role" name="role" #role="ngModel">
+            </div>
+        </div>
+
+        <button type="submit" nbButton status="success" [disabled]="!addUserForm.form.valid" class="my-2" fullWidth>Submit</button>
+    </form>
+    </nb-card-body>
+</nb-card>

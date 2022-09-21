@@ -4,10 +4,8 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 @Injectable({
   providedIn: 'root'
 })
-export class PostService {
+export class ProjectBateraService {
   private url = 'http://env-6573880.jh-beon.cloud/proyek';
-
-  private urlTest = "http://localhost:3002/homeData"
    
   constructor(private httpClient: HttpClient) { }
   
@@ -51,7 +49,12 @@ export class PostService {
         "yard_cancel_job":"0",
         "deskripsi":""
       }
-      return this.httpClient.post(this.urlTest, postBody)
+      return this.httpClient.post(this.url, postBody)
+    }
+
+    public getSubProjectData(id){
+      const getSubUrl = this.url + "/" + id
+      return this.httpClient.get(getSubUrl)
     }
   
 }

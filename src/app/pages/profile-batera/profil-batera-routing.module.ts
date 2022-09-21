@@ -8,10 +8,6 @@ const routes: Routes = [{
     path: '',
     component: ProfilBateraComponent,
   },
-  {
-    path: 'add-user',
-    component: AddUserComponent
-  },
 ];
 
 @NgModule({

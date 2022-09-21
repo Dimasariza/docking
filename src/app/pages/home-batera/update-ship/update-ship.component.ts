@@ -4,32 +4,22 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HomeService } from '../home-batera.service';
 
-interface userData {
-  id_user : any;
-  nama_kapal : any
-  foto : string
-  nama_perusahaan : string
-  merk_perusahaan : string
-  alamat_perusahaan_1 : string
-  alamat_perusahaan_2 : string
-  telepon : number
-  faximile : string
-  npwp : string
-  email : string
-}
-
 @Component({
-  selector: 'ngx-add-ship',
-  templateUrl: './add-ship.component.html',
-  styleUrls : ['./add-ship.component.scss']
+  selector: 'ngx-update-ship',
+  templateUrl: './update-ship.component.html',
+  styleUrls: ['./update-ship.component.scss']
 })
-export class AddShipComponent {
+export class UpdateShipComponent implements OnInit {
+
+  ngOnInit(): void {
+    
+  }
   file : File = null;
   public formIsValid : boolean = true
   public uploadSuccess = false
   constructor(
      private homeservice: HomeService,
-     private dialogRef: MatDialogRef<AddShipComponent>
+     private dialogRef: MatDialogRef<UpdateShipComponent>
      ) { }
 
   getFile(event){

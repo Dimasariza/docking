@@ -1,8 +1,5 @@
 <nb-card>
     <nb-card-body>
-
-
-        
         <div class="buttons my-1" >
             <button *ngFor="let icon of useIcons; let indexOfelement=index;"
             nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
@@ -26,8 +23,10 @@
                 </td>
             </ng-container>
         
-            <ng-container [nbTreeGridColumnDef]="approvalColumns">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{approvalColumns}}</th>
+            <ng-container  *ngFor="let column of approvalColumns; let index = index"
+            [nbTreeGridColumnDef]="column"
+            [showOn]="getShowOn(index)">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm" (click)="openDialog()">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
@@ -40,7 +39,11 @@
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(commentColumns)" *nbTreeGridHeaderCellDef>
                 {{commentColumns}}
                 </th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm">
+                        <nb-icon icon="file-text-outline"></nb-icon>
+                    </button>
+                </td>
             </ng-container>
         
             <ng-container *ngFor="let column of defaultColumns; let index = index"

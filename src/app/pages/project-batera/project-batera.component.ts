@@ -1,10 +1,9 @@
-import { Component, ElementRef, Input, ViewChild } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { NbMenuItem, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
-import { PostService } from './project-batera.service';
+import { ProjectBateraService } from './project-batera.service';
 
 interface TreeNode<T> {
   data: T;
@@ -27,7 +26,7 @@ interface FSEntry {
   templateUrl: './project-batera.component.html',
 })
 export class ProjectBateraComponent {
-  posts:any;
+  public allProjectDatas : any
 
   customColumn = 'Tasks';
   defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due' ];
@@ -42,7 +41,7 @@ export class ProjectBateraComponent {
     public dialog : MatDialog,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private route : Router,
-    private service:PostService,
+    private service:ProjectBateraService,
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -56,18 +55,19 @@ export class ProjectBateraComponent {
   ngOnInit() {
     this.service.getPosts()
       .subscribe(response => {
-        this.posts = response;
-        console.log(response)
-      });
+        this.allProjectDatas = response
+        this.allProjectDatas = this.allProjectDatas.data
+        console.log(this.allProjectDatas)
+    });
   }
 
-  postDataProject(){
-    this.service.addDataProject()
-    .subscribe(res => {
-      console.log(res)
-      console.log("send data project")
-    })
-  }
+  // postDataProject(){
+  //   this.service.addDataProject()
+  //   .subscribe(res => {
+  //     console.log(res)
+  //     console.log("send data project")
+  //   })
+  // }
 
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -150,56 +150,40 @@ export class ProjectBateraComponent {
   }
 
 
-  shipData = [
-    {
-      "vessel": "MT Salmon Mustava-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "PT PI Logistik",
-      "start": "15:09:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "KM-Fusri-Indonesia-I-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "PT PI Logistik",
-      "start": "15:08:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "KM-Ibrahim Zahir-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "PT PI Logistik",
-      "start": "15:07:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-  ]
-
-  projectsData = [
-    {
-      tasks: 'Docking Preparation',
-      asset: 'MT Salmon Mustafa',
-      customer : 'PILSM',
-      status : 'Preparation',
-      responsible : 'FDM',
-      due : '06.08.2022'
-    }
-  ]
-
-  @ViewChild('teams') teams!: ElementRef;
-	selectedTeam = '';
-  selecTeam = ""
-	onSelected():void {
-		this.selectedTeam = this.teams.nativeElement.value;
-	}
+  // allProjectDatas = [
+  //   {
+  //     "vessel": "MT Salmon Mustava-DD-2019",w
+  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
+  //     "customer": "PT PI Logistik",
+  //     "start": "15:09:19",
+  //     "R": true,
+  //     "P": true,
+  //     "E": true
+  //   },
+  //   {
+  //     "vessel": "KM-Fusri-Indonesia-I-DD-2019",
+  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
+  //     "customer": "PT PI Logistik",
+  //     "start": "15:08:19",
+  //     "R": true,
+  //     "P": true,
+  //     "E": true
+  //   },
+  //   {
+  //     "vessel": "KM-Ibrahim Zahir-DD-2019",
+  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
+  //     "customer": "PT PI Logistik",
+  //     "start": "15:07:19",
+  //     "R": true,
+  //     "P": true,
+  //     "E": true
+  //   },
+  // ]
   
-  navToSubProject(row){
-    this.route.navigate(['/pages/project-batera/sub-menu-project'], {queryParams:{data : this.shipData[row].vessel}})
+  navToSubProject(projectId){
+    this.route.navigate(['/pages/project-batera/sub-menu-project'], {
+      queryParams:{data : this.allProjectDatas[projectId].id_proyek}
+    })
   }
 
   testDropDown = [ 'repair', 'on dokc', 'done']
@@ -207,6 +191,9 @@ export class ProjectBateraComponent {
     console.log("index number :", id)
   }
 }
+
+
+
 
 @Component({
   selector: 'ngx-fs-icon',
@@ -218,7 +205,6 @@ export class ProjectBateraComponent {
     </ng-template>
   `,
 })
-
 export class FsIconComponent {
   @Input() kind: string;
   @Input() expanded: boolean;

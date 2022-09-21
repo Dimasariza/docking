@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
-import { DatatableComponent } from '@swimlane/ngx-datatable';
+import { AddUserComponent } from './add-user/add-user.component';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfileBateraService } from './profil-batera.service';
 
@@ -29,6 +28,7 @@ export class ProfilBateraComponent implements OnInit {
     email : ''
   }
 
+  activeStatus = ['Active', 'Deactive']
   formCondition = true
   submitted = false;
 
@@ -39,7 +39,6 @@ export class ProfilBateraComponent implements OnInit {
   constructor(
     private service:ProfileBateraService,
     public dialog : MatDialog,
-    public route : Router
   ) {}
 
   ngOnInit(){
@@ -80,6 +79,21 @@ export class ProfilBateraComponent implements OnInit {
     // );
   }
 
+  
+  addNewUser(){
+    const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(AddUserComponent)
+    console.log("open dialog")
+
+    // dialogConfig.disableClose = true;
+    // dialogConfig.autoFocus = true;
+
+    // dialogRef.afterClosed().subscribe(res=>{
+    //     console.log(res);
+    //   }
+    // );
+  }
+
   addUser(){
     this.service.addUser()
       .subscribe(res => {console.log(res)},
@@ -108,9 +122,5 @@ export class ProfilBateraComponent implements OnInit {
     sessionStorage.setItem('id', data.id);
     let userId = sessionStorage.getItem('id');
     console.log(userId)
-  }
-
-  navToAddUser(){
-    this.route.navigate(['/pages/profile-batera/add-user'])
   }
 }

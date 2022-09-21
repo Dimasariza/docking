@@ -8,61 +8,29 @@
   <nb-card-body>
     <form action="" class="row">
       <div class="left_side col-6">
-        <label for="Vessel Name" class="">Vessel</label>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div> 
+        <label for="Vessel Name" class="">Vessel</label> <br>
+        <nb-select selected="1" class="" size="small" status="primary">
+          <nb-option value="1" *ngFor="let vessel of reportData.Vessel.value">{{vessel}}</nb-option>
+        </nb-select>
         <label for="Year Project" class="d-block">Year Project</label>
         <input nbInput class=""> <br>
         <label for="Year Project" class="">Ship Management</label> <br>
         <input nbInput class=""> <br>
-        <label for="Vessel Name" class="">Responsible</label>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div>
+        <label for="Vessel Name" class="">Responsible</label> <br>
+        <nb-select selected="1" class="" size="tiny" status="primary">
+          <nb-option value="1" *ngFor="let status of reportData.responsible.value">{{status}}</nb-option>
+        </nb-select>
         <label for="Phase" class="d-block">Phase</label>
         <input nbInput class=""> <br>
         <label for="Selected Yard" class="d-block">Selected Yard</label>
         <input nbInput class="">
-
-        <!-- <mat-form-field >
-          <mat-label>Select an option</mat-label>
-          <mat-select>
-            <mat-option>None</mat-option>
-            <mat-option value="option1">Option 1</mat-option>
-            <mat-option value="option2">Option 2</mat-option>
-            <mat-option value="option3">Option 3</mat-option>
-          </mat-select>
-        </mat-form-field> -->
-
       </div>
 
       <div class="right_site col-6">
-        <label for="Base Currency" class="">Base Currency</label>
-        <div class="dropdown">
-          <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Dropdown button
-          </button>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" href="#">Action</a>
-            <a class="dropdown-item" href="#">Another action</a>
-            <a class="dropdown-item" href="#">Something else here</a>
-          </div>
-        </div>
+        <label for="Base Currency" class="">Base Currency</label> <br>
+        <nb-select selected="1" class="" size="tiny" status="primary">
+          <nb-option value="1" *ngFor="let status of reportData.BaseCurrency.value">{{status}}</nb-option>
+        </nb-select>
         <label for="Off Hire Period" class="d-block">Off Hire Period</label>
         <input class="" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
         <label for="Deviation" class="d-block">-Deviation</label>
@@ -70,13 +38,13 @@
         <nb-datepicker #datepicker [min]="min"></nb-datepicker>  
         <label for="Charter Rate" class="d-block" >-Chareter Rate</label>
         <input type="text" class="" nbInput>
-        <label for="Bunker" class="d-block" >-Bunker</label>
+        <label for="Bunker" class="d-block" >- Bunker</label>
         <input type="text" class="" nbInput>
         <label for="Repari Period" class="d-block">Repair Period</label>
         <input class="" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
-        <label for="In Dock" class="d-block">-In Dock</label> 
+        <label for="In Dock" class="d-block">- In Dock</label> 
         <input class="" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
-        <label for="Additinal Day" class="d-block">-Additional Day</label>
+        <label for="Additinal Day" class="d-block">- Additional Day</label>
         <input type="text" class="" nbInput>
       </div>
     </form>

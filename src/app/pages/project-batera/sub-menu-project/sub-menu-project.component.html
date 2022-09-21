@@ -1,4 +1,4 @@
-<nb-card>
+<nb-card >
     <nb-card-header>
     <h5 style="color:burlywood;">{{vesselName}}</h5>
     <div class="d-flex">
@@ -36,14 +36,14 @@
 
 <nb-card>
     <div class="d-flex" >
-        <div *ngFor = "let button of menuButton" class="mx-1 my-4">
+        <div *ngFor = "let button of menuButton" class="mx-1 my-3">
             <button *ngIf = "button.position === 'bottom'"  nbButton status="primary" class="mx-1" outline size="small">
                 {{button.text}}
             </button>
         </div>
     </div>
 
-    <h6 class="m-3" style="color: burlywood;">Work Area</h6>      
+    <h6 class="mx-3" style="color: burlywood;">Work Area</h6>      
     <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
         <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
@@ -62,8 +62,8 @@
         <ng-container [nbTreeGridColumnDef]="editColumn">
             <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-            <button class="btn btn-light btn-sm text-center">
-                <nb-icon icon="edit-outline"></nb-icon>
+            <button class="btn btn-light btn-sm text-center" ghost>
+                <nb-icon icon="edit-outline" status="primary"></nb-icon>
             </button>
             </td>
         </ng-container>

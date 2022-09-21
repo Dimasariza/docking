@@ -59,7 +59,7 @@
     <nb-card-body>
         <div class="d-flex justify-content-between">
             <h6>User Account</h6>
-            <button outline nbButton status="primary" size="small" (click)="navToAddUser()">Add User</button>
+            <button outline nbButton status="primary" size="small" (click)="addNewUser()">Add User</button>
         </div>
 
         <ngx-datatable 
@@ -80,21 +80,20 @@
             <ngx-datatable-column [name]="'Mobile No'" prop="no_hp"></ngx-datatable-column>
             <ngx-datatable-column [name]="'User Id'" prop="no_hp"></ngx-datatable-column>
             <ngx-datatable-column [name]="'Departement'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Role'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Start Date'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column width="50" name="Status">
-                <!-- <ng-template let-row="row" ngx-datatable-cell-template>
-                    <nb-icon [ngStyle]="{'color': 'green'}" icon="checkmark-square-2-outline"></nb-icon>
-                </ng-template> -->
-            </ngx-datatable-column> 
-            <ngx-datatable-column width="50">
+            <ngx-datatable-column [name]="'Role'" prop="role"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Start Date'" prop="updated_at"></ngx-datatable-column>
+            <ngx-datatable-column name="Status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                    <nb-icon [ngStyle]="{'color': stat ? 'green' : 'blue'}" icon="image-outline"></nb-icon>
+                    <nb-select selected="1" class="" size="tiny" status="primary">
+                        <nb-option value="1" *ngFor="let status of activeStatus">{{status}}</nb-option>
+                    </nb-select>
                 </ng-template>
-            </ngx-datatable-column>
-            <ngx-datatable-column width="50">
-                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex"  let-value="value">
-                    <nb-icon [ngStyle]="{'color': stat ? 'green' : 'blue'}" icon="edit-outline" (click)="this.isEditable[rowIndex]=!this.isEditable[rowIndex]"></nb-icon>
+            </ngx-datatable-column> 
+            <ngx-datatable-column width="60">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button nbButton size="small" ghost status="primary">
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>

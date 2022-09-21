@@ -2,6 +2,21 @@ import { KeyValue } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ProjectBateraService } from '../project-batera.service';
+
+interface subProjectData {
+  "Vessel"?: string ;
+  "Phase"?: string ;
+  "Selected Yard"?: string ;
+  "Base Currency"?: string ;
+  "Off Hire Period"?: string ;
+  "Deviation"?: string ;
+  "Rate"?: string ;
+  "Bunker"?: string ;
+  "Repair Period"?: string ;
+  "In Dock"?: string ;
+  "Additional Days"?: string ;
+}
 
 interface TreeNode<T> {
   data: T;
@@ -19,10 +34,10 @@ interface FSEntry {
   Resp? : string;
   Start? : string;
   Stop? : string;
-  Budget?: string;
-  Contract? : string;
-  Additional?: string;
-  Total?: string;
+  "Unit Price Budget"?: string;
+  "Total Price Budget"? : string;
+  "Category"?: string;
+  Remarks?: string;
   Edit?: boolean
   kind: string;
 }
@@ -35,7 +50,7 @@ interface FSEntry {
 export class SubMenuProjectComponent implements OnInit {
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
@@ -46,6 +61,10 @@ export class SubMenuProjectComponent implements OnInit {
       this.vesselName = params.data
     })
   }
+
+  private subProjectData : subProjectData[] = [
+    
+  ]
   
   vesselName : string
   menuButton = [
@@ -109,7 +128,7 @@ export class SubMenuProjectComponent implements OnInit {
   ]
 
   customColumn = "Job No";
-  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Budget','Contract', 'Additional', 'Total' ];
+  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
   editColumn = 'Edit'
   allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
 
@@ -157,16 +176,23 @@ export class SubMenuProjectComponent implements OnInit {
   templateUrl: './sub-project-data.component.html',
 })
 export class SubProjectDataComponent implements OnInit{
-  constructor(private route: ActivatedRoute ) {}
+  allSubProjectData : any
+  constructor(private route: ActivatedRoute, private service : ProjectBateraService ) {}
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: any) => {
-    console.log(params)
-      this.reportData.Vessel.value = params.data
+      this.service.getSubProjectData(params.data).subscribe(res => {
+        this.allSubProjectData = res
+        console.log(this.allSubProjectData)
+        this.reportData.Vessel.value = params.data.kapal.nama_kapal
+      })
     })
   }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
+
+  private subProjectData : subProjectData[] = [
+  ]
   objectKeys = Object.keys;
   reportData = {
     "Vessel": {

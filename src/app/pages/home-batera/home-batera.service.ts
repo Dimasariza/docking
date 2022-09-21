@@ -7,7 +7,6 @@ import { HttpClient } from '@angular/common/http';
 export class HomeService {
   private url = 'http://env-6573880.jh-beon.cloud/home/kapal';
   private uploadImage = 'http://env-6573880.jh-beon.cloud/file/upload';
-  private testUrl = "http://localhost:3002/homedata"
    
   constructor(private httpClient: HttpClient) { }
   
@@ -18,6 +17,11 @@ export class HomeService {
   addShip(body){
     console.log(body)
     return this.httpClient.post(this.uploadImage, body, {reportProgress : true, observe : 'events'})
+  }
+
+  deleteShip(id){
+    const deleteUrl = this.url + "/" + id
+    return this.httpClient.delete(deleteUrl)
   }
 
 }

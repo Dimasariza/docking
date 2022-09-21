@@ -2,15 +2,14 @@ import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddShipComponent } from './add-ship/add-ship.component';
 import { HomeService } from './home-batera.service';
-
-
+import { UpdateShipComponent } from './update-ship/update-ship.component';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
 })
 export class HomeBateraComponent implements OnInit {
-  data: any;
+  public data: any;
 
   constructor(
     private homeservice:HomeService,
@@ -27,11 +26,11 @@ export class HomeBateraComponent implements OnInit {
   }
 
   openDialog(){
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(AddShipComponent ,{disableClose : true})
-    console.log("open dialog")
-
-    dialogConfig.autoFocus = true;
+    // const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(AddShipComponent ,{
+      disableClose : true,
+      autoFocus : true
+    })
 
     dialogRef.afterClosed().subscribe(res=>{
         console.log(res);
@@ -57,11 +56,15 @@ export class HomeBateraComponent implements OnInit {
   <nb-flip-card [showToggleButton]="false" [flipped]="flipped">
     <nb-card-front>
       <nb-card size="small">
-        <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
-        <div class="card h-100">
-          <img src="http://env-6573880.jh-beon.cloud/uploads/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
-          <div class="card-body">
-            <h6>{{image.nama_kapal}}</h6>
+        <div class="d-flex bd-highlight">
+          <nb-icon class="m-1 mr-auto flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView()"></nb-icon>
+          <nb-icon class="m-1 flip-icon" icon="edit-outline" pack="eva" (click)="updateShip()" nbPopover="Update Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button"></nb-icon>
+          <nb-icon class="m-1 mr-3 flip-icon" icon="trash-2-outline" pack="eva" (click)="deleteShip()" nbPopover="Delete Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button"></nb-icon>
+        </div>
+        <div class="card bg-transparent h-100 ">
+          <img src="http://env-6573880.jh-beon.cloud/file/show/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
+          <div class="p-2">
+            <h5>{{image.nama_kapal}}</h5> 
           </div>
         </div>
       </nb-card>
@@ -84,10 +87,38 @@ export class HomeBateraComponent implements OnInit {
   `
 })
 export class HomeCardComponent{
-  flipped = false;
-  @Input() image;
+  constructor(
+    private homeservice: HomeService,
+    public dialog : MatDialog
+  ){
 
+  }
+  flipped = false;
+  @Input() image
+  @Input() imgIndex
   toggleView() {
     this.flipped = !this.flipped;
+  }
+
+  deleteShip(){
+    let id_kapal = this.image.id_kapal
+    this.homeservice.deleteShip(id_kapal).subscribe(res => {
+      console.log(res)
+    })
+  }
+
+  updateShip(){
+    let id_kapal = this.image.id_kapal
+    console.log(id_kapal)
+
+    const dialogRef = this.dialog.open(UpdateShipComponent ,{
+      disableClose : true,
+      autoFocus : true
+    })
+
+    dialogRef.afterClosed().subscribe(res=>{
+      console.log(res);
+    }
+  );
   }
 }

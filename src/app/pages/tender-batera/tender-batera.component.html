@@ -1,14 +1,13 @@
 <div class="row">
   <nb-card class="p-3">  
     <div class="row">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12">
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
           <h5 class="float-xl-left float-lg-left float-md-left">Selected Yard : 
             <Span>Pax Ocean Batam</Span>
           </h5>
           <div class="text-xl-right text-lg-right text-md-right">
             <button nbButton status='danger'>Clear Selected Yard</button>
           </div>
-    
           <span><strong>Internal Comment</strong></span> 
           <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque odit debitis in, nisi distinctio iure facilis aut dolores maiores ipsum optio unde veritatis qui deleniti voluptate corporis velit? Aut, quidem!</p>
           <div class="d-flex">
@@ -17,18 +16,9 @@
             <button class="mr-2 mb-2" nbButton hero status="info" size="tiny">Attachments</button><br> 
           </div>
           
-          <button nbButton class="w-100" shape="rectangle">Add file from computer</button>
+          <button nbButton class="w-100 align-baseline" shape="rectangle" >Add file from computer</button>
         </div>
-    </div>
-  </nb-card>
-</div>
-
-<div class="row">
-  <nb-card class="p-3 col-12"> 
-    <div class="row">
-      <ngx-card class="col"></ngx-card>
-      <ngx-card class="col"></ngx-card>
-      <ngx-card class="col"></ngx-card>
+        <ngx-card class="col-xl-6 col-lg-6 col-md-12 col-sm-12"></ngx-card>
     </div>
   </nb-card>
 </div>
@@ -39,18 +29,13 @@
     <nb-accordion-item>
      <nb-accordion-item-header >Load Details</nb-accordion-item-header>
      <nb-accordion-item-body>
-        <ngx-datatable 
-        [class]="'bootstrap'" 
-        [rows]="dataTable" 
-        [count]="dataTable.length"
-        columnMode="force"
-        [headerHeight]="0"
-        default>
-        <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
-        <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
-        <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-        <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-      </ngx-datatable>
+<!--       
+        <ngx-datatable [class]="'bootstrap'"  [rows]="dataTable" [count]="dataTable.length" columnMode="force" [headerHeight]="0" default>
+          <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
+          <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
+          <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
+          <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
+        </ngx-datatable>
     
       <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
@@ -72,7 +57,41 @@
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
         </ng-container>
-      </table>    
+      </table>    -->
+      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
+        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+    
+        <ng-container [nbTreeGridColumnDef]="customColumn">
+          <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
+            {{customColumn}}
+          </th>
+    
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">
+            <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
+            {{row.data[customColumn]}}
+          </td>
+        </ng-container>
+  
+        <ng-container [nbTreeGridColumnDef]="editColumn">
+            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+            <button class="btn btn-light btn-sm text-center" ghost>
+                <nb-icon icon="edit-outline" status="primary"></nb-icon>
+            </button>
+            </td>
+        </ng-container>
+    
+        <ng-container *ngFor="let column of defaultColumns; let index = index"
+                      [nbTreeGridColumnDef]="column"
+                      [showOn]="getShowOn(index)">
+          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+            {{column}}
+          </th>
+          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+        </ng-container>
+      </table>
+
      </nb-accordion-item-body>
     </nb-accordion-item>
    </nb-accordion>
@@ -80,3 +99,17 @@
 </div>
 
 
+<!-- 
+<nb-card>
+
+  <div class="d-flex" >
+      <div *ngFor = "let button of menuButton" class="mx-1 my-3">
+          <button *ngIf = "button.position === 'bottom'"  nbButton status="primary" class="mx-1" outline size="small">
+              {{button.text}}
+          </button>
+      </div>
+  </div>
+
+  <h6 class="mx-3" style="color: burlywood;">Work Area</h6>      
+  
+</nb-card> -->
