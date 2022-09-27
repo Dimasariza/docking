@@ -1,18 +1,15 @@
 <div class="row">
-  <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let item of data; let id=index;">
+  <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let item of shipData; let id=index;">
     <ngx-home-card [image] = "item" [imgIndex]="id"></ngx-home-card>
   </div>
 
   <div class="col-xl-4 col-lg-4 col-md-6" >
-    <nb-card class="h-100" style="cursor: pointer;" (click)="openDialog()">
-      <nb-card-header class="text-center">
-        <h5>Add Ship</h5> 
-      </nb-card-header>
-      <nb-card-body class="d-flex justify-content-center" >
-        <nb-icon icon="plus-square-outline" pack="eva" style="font-size: 7rem;" class="align-self-center"></nb-icon>
-      </nb-card-body>
+    <nb-card class="h-75" style="cursor: pointer;" (click)="openDialog()" >
+        <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
+          <nb-icon icon="plus-square-outline" pack="eva" style="font-size: 5rem;" class="align-self-center" [options]="{ animation: { type: 'zoom' }}"></nb-icon>
+          <h5>Add Ship</h5> 
+        </div>
     </nb-card>
   </div>
 </div>
-
 

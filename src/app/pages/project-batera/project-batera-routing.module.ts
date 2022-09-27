@@ -1,8 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { FsIconComponent } from '../report-batera/work-progress/work-progress.component';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
-import { FsIconComponent, ProjectBateraComponent } from './project-batera.component';
-import { SubMenuIconComponent, SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
+import { ProjectBateraComponent } from './project-batera.component';
+import { SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
+import { WorkAreaComponent } from './work-area/work-area.component';
 
 const routes: Routes = [{
     path: '',
@@ -24,8 +26,8 @@ export const routedComponents = [
   ProjectBateraComponent,
   SubProjectDataComponent,
   SubMenuProjectComponent,
-  SubMenuIconComponent,
   SubPriceDataComponent,
+  AddNewProjectComponent,
   FsIconComponent,
-  AddNewProjectComponent
+  WorkAreaComponent
 ];

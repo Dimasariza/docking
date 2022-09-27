@@ -1,3 +1,4 @@
+<!-- <div *ngIf="subProjectData as variable"> -->
   <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
 
     <div *ngIf="reportData[item.value].type === 'drop-down';">
@@ -55,4 +56,4 @@
     </div>
 
   </div>
-  
+<!-- </div> -->

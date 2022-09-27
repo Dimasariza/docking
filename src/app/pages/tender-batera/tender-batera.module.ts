@@ -26,7 +26,8 @@ import { YardDetailComponent } from './tender-batera.component';
     NbInputModule,
     TablesRoutingModule,
     NbAccordionModule,
-    MatDialogModule
+    MatDialogModule,
+    NbInputModule
   ],
   entryComponents: [YardDetailComponent],
   declarations: [

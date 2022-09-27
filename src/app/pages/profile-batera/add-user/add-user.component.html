@@ -6,51 +6,50 @@
         </button>   
     </nb-card-header>
     <nb-card-body>
-    <form #addUserForm="ngForm" (ngSubmit)="onSubmit(addUserForm)" (keyup.enter)="posts=$event.target.value">
+    <form #addUserForm="ngForm" (ngSubmit)="onSubmit(addUserForm)" (keyup.enter)="$event.target.value">
         <div class="d-flex justify-content-center">
-            <picture style="width: 100px; height:100px; border-radius:50%; border: 1px solid rgba(0,0,0, 0.3); position: relative;">
-                <nb-icon icon="plus-outline" style="position: absolute; top:calc(50% - 1.25rem / 2); right:calc(50% - 1.25rem/2);" class="text-secondary"></nb-icon>
-                <input type="file" style="width: 100px; height:100px; border-radius:50%; opacity: 0;">
-                <!-- <source srcset="..." type="image/svg+xml"> -->
-                <!-- <img src="..." class="img-fluid img-thumbnail" alt="..."> -->
+            <picture *ngIf="!userData.avatar_url.exist" class="add_image">
+                <nb-icon icon="plus-outline" class="text-secondary add_icon"></nb-icon>
+                <input type="file" (change)="onFileChange($event)">
+            </picture>
+            <picture *ngIf="userData.avatar_url.exist" class="avatar_image">
+                <img [src]="userData.avatar_url.url" (load)="onImageLoad($event)"  crossorigin="anonymous">
+                <input type="file"  class="change_image" (change)="onFileChange($event)">
             </picture>
         </div>
         <div class="row">
             <div class="col-6">
-                <span class="p-2 d-block">User name</span>
-                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name"
+                <label class="p-2">User name</label> 
+                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name" fieldSize="small"
                 required (ngModel)="userName" name="userName" #userName="ngModel" >
-                <span class="p-2 d-block">Full Name</span>
-                <input type="text" nbInput fullWidth placeholder="Full Name" id="full_name" 
+                <label class="p-2">Full Name</label>
+                <input type="text" nbInput fullWidth placeholder="Full Name" id="full_name" fieldSize="small"
                 required (ngModel)="fullName" name="fullName" #fullName="ngModel">
-                <span class="p-2 d-block">Ship Name</span>
-                <input type="text" nbInput fullWidth placeholder="Ship Name" id="ship_name" 
+                <label class="p-2">Ship Name</label>
+                <input type="text" nbInput fullWidth placeholder="Ship Name" id="ship_name" fieldSize="small"
                 required (ngModel)="shipName" name="shipName" #shipName="ngModel">
-                <span class="p-2 d-block">Title</span>
-                <input type="text" nbInput fullWidth placeholder="Title" id="title" 
+                <label class="p-2">Title</label>
+                <input type="text" nbInput fullWidth placeholder="Title" id="title" fieldSize="small"
                 required (ngModel)="title" name="title" #title="ngModel">
-                <span class="p-2 d-block">Department</span>
-                <input type="text" nbInput fullWidth placeholder="Department" id="department" 
+                <label class="p-2">Department</label>
+                <input type="text" nbInput fullWidth placeholder="Department" id="department" fieldSize="small"
                 required (ngModel)="department" name="department" #department="ngModel">
-                <span class="p-2 d-block">User Id</span>
-                <input type="text" nbInput fullWidth placeholder="User Id" id="user_id" 
-                required (ngModel)="userId" name="userId" #userId="ngModel">
             </div>
             <div class="col-6">
-                <span class="p-2 d-block">Position</span>
-                <input type="text" nbInput fullWidth placeholder="Position" id="position"
+                <label class="p-2">Position</label>
+                <input type="text" nbInput fullWidth placeholder="Position" id="position" fieldSize="small"
                 required (ngModel)="position" name="position" #position="ngModel">
-                <span class="p-2 d-block">Mobile Number</span>
-                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" 
+                <label class="p-2">Mobile Number</label>
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" fieldSize="small"
                 required (ngModel)="mobileNo" name="mobileNo" #mobileNo="ngModel">
-                <span class="p-2 d-block">E-mail</span>
-                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" 
+                <label class="p-2">E-mail</label>
+                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" fieldSize="small"
                 required (ngModel)="email" name="email" #email="ngModel">
-                <span class="p-2 d-block">Password</span>
-                <input type="text" nbInput fullWidth placeholder="Password" id="password" 
-                required (ngModel)="password" name="password" #password="ngModel">
-                <span class="p-2 d-block">Role</span>
-                <input type="text" nbInput fullWidth placeholder="Role" id="role" 
+                <label class="p-2">Password</label>
+                <input [type]="passwordFieldType ? 'password' : 'text'" nbInput fullWidth placeholder="Password" id="password" fieldSize="small"
+                required (ngModel)="password" name="password" #password  >
+                <label class="p-2">Role</label>
+                <input type="text" nbInput fullWidth placeholder="Role" id="role" fieldSize="small"
                 required (ngModel)="role" name="role" #role="ngModel">
             </div>
         </div>
@@ -59,3 +58,4 @@
     </form>
     </nb-card-body>
 </nb-card>
+

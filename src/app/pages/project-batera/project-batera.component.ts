@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
+import { WorkAreaComponent } from './work-area/work-area.component';
 
 interface TreeNode<T> {
   data: T;
@@ -53,21 +54,13 @@ export class ProjectBateraComponent {
   }
 
   ngOnInit() {
-    this.service.getPosts()
+    this.service.getProjects()
       .subscribe(response => {
         this.allProjectDatas = response
         this.allProjectDatas = this.allProjectDatas.data
         console.log(this.allProjectDatas)
     });
   }
-
-  // postDataProject(){
-  //   this.service.addDataProject()
-  //   .subscribe(res => {
-  //     console.log(res)
-  //     console.log("send data project")
-  //   })
-  // }
 
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -186,6 +179,8 @@ export class ProjectBateraComponent {
     })
   }
 
+
+
   testDropDown = [ 'repair', 'on dokc', 'done']
   chooseOption(id){
     console.log("index number :", id)
@@ -194,22 +189,3 @@ export class ProjectBateraComponent {
 
 
 
-
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-}

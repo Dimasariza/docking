@@ -12,6 +12,17 @@
                 <input class="col-6" nbInput class="my-2" type="file" name="shipimage" (change)="getImage($event)" placeholder="Ship Image" (ngModel)="shipimage" #shipimage>
             </section>
             
+            <!-- <div class="d-flex justify-content-center">
+                <picture *ngIf="!userData.avatar_url.exist" class="add_image">
+                    <nb-icon icon="plus-outline" class="text-secondary add_icon"></nb-icon>
+                    <input type="file" (change)="onFileChange($event)">
+                </picture>
+                <picture *ngIf="userData.avatar_url.exist" class="avatar_image">
+                    <img [src]="userData.avatar_url.url" (load)="onImageLoad($event)"  (onerror)="checkError($event)"   crossorigin="anonymous">
+                    <input type="file"  class="change_image" (change)="onFileChange($event)">
+                </picture>
+            </div> -->
+
             <section class="col-12 text-center">
                 <button  nbButton class="w-50 my-2"  type="submit" status="success" [disabled]="enabledImgButton" >Upload</button>
             </section>

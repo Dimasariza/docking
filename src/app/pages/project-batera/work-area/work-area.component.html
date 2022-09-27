@@ -1,0 +1,51 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5>ADD JOB</h5> 
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+    <nb-card-body>
+    <form  (keyup.enter)="$event.target.value" (ngForm)="updateUserForm">
+        <div class="row">
+            <div class="col-6">
+                <span class="p-2 d-block">User name</span>
+                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name" fieldSize="small"
+                required #userName (ngModel)="userName">
+                <span class="p-2 d-block">Full Name</span>
+                <input type="text" nbInput fullWidth placeholder="Full Name" fieldSize="small"
+                required (ngModel)="fullName" #fullName>
+                <span class="p-2 d-block">Ship Name</span>
+                <input type="text" nbInput fullWidth placeholder="Ship Name" id="ship_name" fieldSize="small"
+                required (ngModel)="shipName" name="shipName" #shipName>
+                <span class="p-2 d-block">Title</span>
+                <input type="text" nbInput fullWidth placeholder="Title" id="title" fieldSize="small"
+                required (ngModel)="title" name="title" #title>
+                <span class="p-2 d-block">Department</span>
+                <input type="text" nbInput fullWidth placeholder="Department" id="department" fieldSize="small"
+                required (ngModel)="department" name="department" #department>
+            </div>
+            <div class="col-6">
+                <span class="p-2 d-block">Status</span>
+                <input type="text" nbInput fullWidth placeholder="Status" id="status" fieldSize="small"
+                required (ngModel)="status" name="status" #status>
+                <span class="p-2 d-block">Position</span>
+                <input type="text" nbInput fullWidth placeholder="Position" id="position" fieldSize="small"
+                required (ngModel)="position" name="position" #position>
+                <span class="p-2 d-block">Mobile Number</span>
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" fieldSize="small"
+                required (ngModel)="mobileNo" name="mobileNo" #mobileNo>
+                <span class="p-2 d-block">E-mail</span>
+                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" fieldSize="small"
+                required (ngModel)="email" name="email" #email>
+                <span class="p-2 d-block">Password</span>
+                <input type="text" nbInput fullWidth placeholder="Password" id="password" fieldSize="small"
+                required (ngModel)="password" name="password" #password>
+            </div>
+        </div>
+
+        <button type="submit" nbButton status="success" class="my-2" fullWidth>Submit</button>
+    </form>
+    </nb-card-body>
+</nb-card>
+

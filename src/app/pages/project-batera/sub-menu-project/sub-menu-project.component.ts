@@ -3,20 +3,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
-
-interface subProjectData {
-  "Vessel"?: string ;
-  "Phase"?: string ;
-  "Selected Yard"?: string ;
-  "Base Currency"?: string ;
-  "Off Hire Period"?: string ;
-  "Deviation"?: string ;
-  "Rate"?: string ;
-  "Bunker"?: string ;
-  "Repair Period"?: string ;
-  "In Dock"?: string ;
-  "Additional Days"?: string ;
-}
+import { HttpResponse } from '@angular/common/http';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { WorkAreaComponent } from '../work-area/work-area.component';
 
 interface TreeNode<T> {
   data: T;
@@ -48,25 +37,67 @@ interface FSEntry {
 })
 
 export class SubMenuProjectComponent implements OnInit {
+  public workArea : any
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private route: ActivatedRoute,
-    ) {
+    public dialog : MatDialog,
+    private service : ProjectBateraService){
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
+  public subProjectMenu
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: any) => {
-    console.log(params)
-      this.vesselName = params.data
+      this.service.getSubProjectData(params.data).subscribe(res => {
+        this.subProjectMenu = res
+        this.subProjectMenu = this.subProjectMenu.data
+        console.log(this.subProjectMenu)
+      })
     })
   }
 
-  private subProjectData : subProjectData[] = [
-    
-  ]
+  customColumn = "Job No";
+  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
+  editColumn = 'Edit'
+  allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
+
+  dataSource: NbTreeGridDataSource<FSEntry>; 
+  sortColumn: string;
+  sortDirection: NbSortDirection = NbSortDirection.NONE;
+
+  updateSort(sortRequest: NbSortRequest): void {
+    this.sortColumn = sortRequest.column;
+    this.sortDirection = sortRequest.direction;
+  }
+
+  getSortDirection(column: string): NbSortDirection {
+    if (this.sortColumn === column) {
+      return this.sortDirection;
+    }
+    return NbSortDirection.NONE;
+  }
+
+  private data: TreeNode<FSEntry>[] = [{
+      data: { "Job No": '2.20.1', kind: 'dir' },
+    },
+    {
+      data: { "Job No": '2.20.2', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
+      children: [
+        { data: { "Job No": 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
+        { data: { "Job No": 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
+      ],
+    },
+  ];
+
+  getShowOn(index: number) {
+    const minWithForMultipleColumns = 400;
+    const nextColumnStep = 100;
+    return minWithForMultipleColumns + (nextColumnStep * index);
+  }
   
-  vesselName : string
   menuButton = [
     {
       position: 'top',
@@ -90,7 +121,7 @@ export class SubMenuProjectComponent implements OnInit {
     },
     {
       position: 'bottom',
-      text : 'Add Job'
+      text : 'Add Job',
     },
     {
       position: 'bottom',
@@ -114,90 +145,57 @@ export class SubMenuProjectComponent implements OnInit {
     }
   ]
 
-  dataTable = [
-    {
-      "vessel": "General Service",
-      "customer": "Batera Line",
-      "start": "15:09:19"
-    },
-    {
-      "vessel": "Hull",
-      "customer": "Batera Line",
-      "start": "15:08:19"
-    },
-  ]
-
-  customColumn = "Job No";
-  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
-  editColumn = 'Edit'
-  allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
-
-
-  dataSource: NbTreeGridDataSource<FSEntry>; 
-  sortColumn: string;
-  sortDirection: NbSortDirection = NbSortDirection.NONE;
-
-  updateSort(sortRequest: NbSortRequest): void {
-    this.sortColumn = sortRequest.column;
-    this.sortDirection = sortRequest.direction;
-  }
-
-  getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
-      return this.sortDirection;
+  btnAct(e){
+    switch(e) {
+      case 'Add Job':
+        this.addWorkAreaDial()
+        break;
     }
-    return NbSortDirection.NONE;
   }
-
-  private data: TreeNode<FSEntry>[] = [
-    {
-      data: { "Job No": '2.20.1', kind: 'dir' },
-    },
-    {
-      data: { "Job No": '2.20.2', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
-      children: [
-        { data: { "Job No": 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
-      ],
-    },
-  ];
-
-  getShowOn(index: number) {
-    const minWithForMultipleColumns = 400;
-    const nextColumnStep = 100;
-    return minWithForMultipleColumns + (nextColumnStep * index);
+  addWorkAreaDial(){
+    const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
+      disableClose : true, autoFocus:true, 
+    })
   }
 }
+
+
 
 @Component ({
   selector: 'ngx-sub-project-data',
   templateUrl: './sub-project-data.component.html',
 })
 export class SubProjectDataComponent implements OnInit{
-  allSubProjectData : any
+  @Input() dataProyek : any
+
   constructor(private route: ActivatedRoute, private service : ProjectBateraService ) {}
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: any) => {
-      this.service.getSubProjectData(params.data).subscribe(res => {
-        this.allSubProjectData = res
-        console.log(this.allSubProjectData)
-        this.reportData.Vessel.value = params.data.kapal.nama_kapal
+      this.service.getSubProjectData(params.data)
+      .subscribe((res) => {
+        this.dataProyek = res
+        this.reportData.Vessel.value = this.dataProyek.data.kapal.nama_kapal
+        this.reportData["Base Currency"].value = this.dataProyek.data.mata_uang
+        this.reportData["-Bunker"].value = this.dataProyek.data.off_hire_bunker_per_day + ' / day'
+        this.reportData["-Rate"].value = this.dataProyek.data.off_hire_rate_per_day + ' / day'
+        this.reportData["-Deviation"].value = this.dataProyek.data.off_hire_deviasi + 'days'
+        this.reportData["Off Hire Period"].value = this.dataProyek.data.off_hire_period + ' days'
+        this.reportData["Repair Period"].value = this.dataProyek.data.repair_period + ' days'
+        this.reportData["-In Dock"].value = this.dataProyek.data.repair_in_dock_period + ' days'
+        this.reportData["-Additional Days"].value = this.dataProyek.data.repair_additional_day + ' days'
       })
     })
   }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
-
-  private subProjectData : subProjectData[] = [
-  ]
   objectKeys = Object.keys;
+
   reportData = {
     "Vessel": {
       type : 'text',
-      value : 'Batera Ship 01'
+      value : ''
     },
     "Phase": {
       type : 'drop-down',
@@ -212,8 +210,8 @@ export class SubProjectDataComponent implements OnInit{
       value : '*IDR'
     },
     "Off Hire Period": {
-      type : 'date range',
-      value: ['2 Medium', '1 Hard']
+      type : 'text',
+      value: ''
     },
     "-Deviation": {
       type : 'date',
@@ -226,117 +224,115 @@ export class SubProjectDataComponent implements OnInit{
     } ,
     "-Bunker": {
       type : 'price',
-      value : '	282000000 / day.',
+      value : '',
       subvalue : '1.128.000.000'
     }, 
     "Repair Period": {
-      type: 'date range',
-      value : 'Slamet Saputro', 
+      type: 'text',
+      value : '', 
     },
     "-In Dock": {
-      type : 'date range',
-      value : 'pertamana' 
+      type : 'text',
+      value : '' 
     },
     "-Additional Days": {
-      type : 'date',
-      value : '0 days',
+      type : 'text',
+      value : '',
     } 
   }
 }
+
+
+
 
 @Component({
   selector: 'ngx-sub-price-data',
   templateUrl: './sub-price-data.component.html'
 })
-export class SubPriceDataComponent {
+export class SubPriceDataComponent implements OnInit {
+  constructor(private route: ActivatedRoute, private service : ProjectBateraService ) {}
+
+  private dataPrice : any
+  ngOnInit() : void {
+    this.route.queryParams.subscribe((params: any) => {
+      this.service.getSubProjectData(params.data)
+      .subscribe((res) => {
+        this.dataPrice = res
+        this.dataPrice = this.dataPrice.data
+        this.priceData['Owner Canceled Jobs'].Budget = this.dataPrice.owner_cancel_job
+      })
+    })
+
+  }
+  
+
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
   objectKeys = Object.keys;
   priceHeadData = [
-    'Totals', 'Budget', 'Contact', 'Actual'
+    'Totals', 'Budget', 'Contract', 'Actual'
   ]
   priceData = {
     'Offhire Days' : {
       type : 'title',
       Budget: 20,
-      Contact: '_',
+      Contract: '_',
       Actual: 0,
     },
     'Owner Exp': {
       type : 'title',
       Budget: '1.412.000.000',
-      Contact: '1.412.000.000',
+      Contract: '1.412.000.000',
       Actual: 0,
     },
     Supplies: {
       type : 'subTitle',
       Budget: '877.000.000',
-      Contact: '877.000.000',
+      Contract: '877.000.000',
       Actual: 0,
     },
     Services: {
       type : 'subTitle',
       Budget: '350.000.000',
-      Contact: '350.000.000',
+      Contract: '350.000.000',
       Actual: 0,
     },
     Class: {
       type : 'subTitle',
       Budget: 0,
-      Contact: 0,
+      Contract: 0,
       Actual: 0,
     },
     Other: {
       type : 'subTitle',
       Budget: '185.000.000',
-      Contact: '185.000.000',
+      Contract: '185.000.000',
       Actual: 0,
     },
     'Owner Canceled Jobs': {
       type : 'highlight',
       Budget: '_',
-      Contact: 0,
+      Contract: 0,
       Actual: '_',
     },
     'Yard Cost': {
       type : 'title',
       Budget: '5.056.566.061',
-      Contact: '4.541.787.983',
+      Contract: '4.541.787.983',
       Actual: 0,
     },
     'Yard Canceled Jobs' : {
       type : 'highlight',
       Budget: '_',
-      Contact: 0,
+      Contract: 0,
       Actual: '_',
     },
     'Total Cost' : {
       type : 'title',
       Budget: '6.468.566.061',
-      Contact: '5.953.787.983',
+      Contract: '5.953.787.983',
       Actual: 0,
     }
   } 
-}
-
-
-@Component({
-  selector: 'ngx-sub-menu-icon',
-  template: `
-  <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-  </nb-tree-grid-row-toggle>
-  <ng-template #fileIcon>
-    <nb-icon icon="file-text-outline"></nb-icon>
-  </ng-template>
-`,
-})
-export class SubMenuIconComponent implements OnInit{
-  @Input() kind: string;
-  @Input() expanded: boolean;
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-  constructor(  ) {}
-  ngOnInit(): void {  }
 }

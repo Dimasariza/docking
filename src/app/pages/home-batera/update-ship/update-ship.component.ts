@@ -34,7 +34,7 @@ export class UpdateShipComponent implements OnInit {
   onUpload(){
     const dataFile : FormData = new FormData()
     dataFile.append('image', this.file, this.file.name )
-    this.homeservice.addShip(dataFile).subscribe((res) => {
+    this.homeservice.uploadShipimg(dataFile).subscribe((res) => {
       console.log(res)
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
@@ -47,7 +47,7 @@ export class UpdateShipComponent implements OnInit {
   submit(){
     const formData = new FormData();
     formData.append('dokumen', this.addShipForm.get('fileSource').value);
-    this.homeservice.addShip(formData)
+    this.homeservice.uploadShipimg(formData)
       .subscribe(res => {
         console.log(res);
         if (res.type === HttpEventType.UploadProgress) {
@@ -93,7 +93,6 @@ export class UpdateShipComponent implements OnInit {
         this.urlLink = event.target.result
       }
     }
-    console.log(res)
   }
 
   save(){
@@ -111,7 +110,7 @@ export class UpdateShipComponent implements OnInit {
       "email":"bs@gmail.com"
     }
     this.dialogRef.close(); 
-    this.homeservice.addShip(postBody).subscribe( (res) => {
+    this.homeservice.uploadShipimg(postBody).subscribe( (res) => {
       console.log(res)
     })
   }

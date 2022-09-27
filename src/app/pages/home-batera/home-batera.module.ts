@@ -27,7 +27,7 @@ import { UpdateShipComponent } from './update-ship/update-ship.component';
     CommonModule,
     ReactiveFormsModule,
     NbPopoverModule,
-    NbAlertModule
+    NbAlertModule,
   ],
   entryComponents: [AddShipComponent, UpdateShipComponent],
   exports: [],

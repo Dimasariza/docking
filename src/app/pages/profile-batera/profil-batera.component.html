@@ -1,7 +1,7 @@
 <nb-card>
     <nb-card-header class="d-flex">
         <div style="min-width: 8rem;">
-            <nb-card class="h-100" style="cursor: pointer;" (click)="changeLogo()">
+            <nb-card class="h-100" style="cursor: pointer;" (click)="changeLogoDial()">
                 <nb-card-body class="text-secondary d-flex justify-content-center">
                     <nb-icon *ngIf="companyProfile" icon="plus-square-outline" pack="eva" style="font-size: 2rem;" class="align-self-center"></nb-icon>
                     <img *ngIf="!companyProfile" src="" alt="">
@@ -9,45 +9,46 @@
             </nb-card>
         </div>
         <div class="mx-3 w-100 align-middle">
-            <h5>{{profileData.companyName}}</h5>
+            <h5>{{companyData.companyBrand}} {{companyData.companyName}}</h5>
         </div>
     </nb-card-header>
 
     <nb-card-body>
         <div class="d-flex justify-content-between">
             <h6>Company Profile</h6> 
-            <button outline nbButton [status]="changeButtonStatus" (ngModel)="changeText"  class="float-right" size="small" (click)="changeProfile()">{{changeText}}</button>
+            <button outline nbButton [status]="formCondition ? 'primary' : 'danger' "  class="float-right" size="small" (click)="changeProfile()" >{{changeText}}</button>
         </div>
 
-        <form #companyForm="ngForm" (ngSubmit)="onSubmit(companyForm)" (keyup.enter)="posts=$event.target.value">
+
+        <form #companyForm="ngForm" (ngSubmit)="updateCompanyProfile(companyForm)" (keyup.enter)="$event.target.value">
         <div class="row">
             <div class="col-6">
                 <span class="p-2 d-block">Company Name</span>
-                <input type="text" nbInput fullWidth placeholder="profileData.companyName" class="form-control" id="name" (change)="changename($event.target.value)"
-                required [(ngModel)]="profileData.companyName" name="name" [disabled]="formCondition">
+                <input type="text" nbInput fullWidth placeholder="companyData.companyName" class="form-control" id="name" (change)="companyData.companyName = $event.target.value"
+                required [(ngModel)]="companyData.companyName" name="name" [disabled]="formCondition">
                 <span class="p-2 d-block">Company Adress</span>
                 <textarea rows="5" nbInput fullWidth shape="round"  placeholder="First Company Address" id="adreess_01"
-                required (ngModel)="address_01" name="address_01" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
-                <span class="p-2 d-block">Telepon Number</span>
-                <input type="text" nbInput fullWidth placeholder="Telepon Number" id="telp_number" [disabled]="formCondition"
-                required (ngModel)="telp_number" name="telp_number" #telp_number="ngModel">
+                required [(ngModel)]="companyData.companyAddress1" name="address_01" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
+                <span class="p-2 d-block">Mobile Number</span>
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="telp_number" [disabled]="formCondition"
+                required [(ngModel)]="companyData.mobileNo" name="telp_number" #telp_number="ngModel">
                 <span class="p-2 d-block">NPWP</span>
                 <input type="text" nbInput fullWidth placeholder="Company NPWP" id="npwp" [disabled]="formCondition"
-                required (ngModel)="npwp" name="npwp" #npwp="ngModel">
+                required [(ngModel)]="companyData.npwp" name="npwp" #npwp="ngModel">
             </div>
             <div class="col-6">
                 <span class="p-2 d-block">Company Brand</span>
                 <input type="text" nbInput fullWidth placeholder="Company Brand" id="brand" [disabled]="formCondition"
-                required (ngModel)="brand" name="brand" #brand="ngModel">
+                required [(ngModel)]="companyData.companyBrand" name="brand" #brand="ngModel">
                 <span class="p-2 d-block">Company Address</span>
                 <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Second Company Address" id="adreess_02" [disabled]="formCondition"
-                required (ngModel)="address_02" name="address_02" #address_02="ngModel" shape="rectangle"></textarea>
+                required [(ngModel)]="companyData.companyAddress2" name="address_02" #address_02="ngModel" shape="rectangle"></textarea>
                 <span class="p-2 d-block">Faximile</span>
                 <input type="text" nbInput fullWidth placeholder="Faximile Address" id="faximile" [disabled]="formCondition"
-                required (ngModel)="faximile" name="faximile" #faximile="ngModel">
+                required [(ngModel)]="companyData.fax" name="faximile" #faximile="ngModel">
                 <span class="p-2 d-block">E-mail</span>
                 <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" [disabled]="formCondition"
-                required (ngModel)="email" name="email" #email="ngModel">
+                required [(ngModel)]="companyData.email" name="email" #email="ngModel">
             </div>
         </div>
 
@@ -59,13 +60,13 @@
     <nb-card-body>
         <div class="d-flex justify-content-between">
             <h6>User Account</h6>
-            <button outline nbButton status="primary" size="small" (click)="addNewUser()">Add User</button>
+            <button outline nbButton status="primary" size="small" (click)="addNewUserDial()">Add User</button>
         </div>
 
         <ngx-datatable 
         [class]="'bootstrap'" 
         [scrollbarH]="true"
-        [rows]="data" 
+        [rows]="userData" 
         columnMode="force"
         default>
             <ngx-datatable-column [name]="'No'" [width]="50">
@@ -82,16 +83,16 @@
             <ngx-datatable-column [name]="'Departement'" prop="no_hp"></ngx-datatable-column>
             <ngx-datatable-column [name]="'Role'" prop="role"></ngx-datatable-column>
             <ngx-datatable-column [name]="'Start Date'" prop="updated_at"></ngx-datatable-column>
-            <ngx-datatable-column name="Status">
+            <ngx-datatable-column name="Status" prop="status">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                    <nb-select selected="1" class="" size="tiny" status="primary">
-                        <nb-option value="1" *ngFor="let status of activeStatus">{{status}}</nb-option>
+                    <nb-select selected="2" class="" size="tiny" status="primary">
+                        <nb-option value="2" *ngFor="let status of ['Active', 'Deactive']">{{status}}</nb-option>
                     </nb-select>
                 </ng-template>
             </ngx-datatable-column> 
             <ngx-datatable-column width="60">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                    <button nbButton size="small" ghost status="primary">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <button nbButton size="small" ghost status="primary" (click)="updateUserDial(rowIndex)"> 
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
                 </ng-template>

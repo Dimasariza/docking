@@ -1,7 +1,9 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { NbDateService } from '@nebular/theme';
+import { ProjectBateraService } from '../project-batera.service';
 
 @Component({
   selector: 'ngx-add-new-project',
@@ -13,42 +15,64 @@ export class AddNewProjectComponent implements OnInit {
   }
   objectKeys = Object.keys;
   min: Date;
-
   constructor(
     protected dateService: NbDateService<Date>,
-    private dialogRef: MatDialogRef<AddNewProjectComponent>
-
-  ) { 
+    private dialogRef: MatDialogRef<AddNewProjectComponent>,
+    private service:ProjectBateraService) { 
     this.min = this.dateService.addMonth(this.dateService.today(), 0);
   }
 
+  newProjectForm = new FormGroup({
+    name: new FormControl('', [Validators.required, Validators.minLength(3)]),
+    file: new FormControl('', [Validators.required]),
+    fileSource: new FormControl('', [Validators.required])
+  });
+
+  vesselData : any
   ngOnInit(): void {
+    this.service.getShip()
+    .subscribe(res => {
+      this.vesselData = res
+      this.vesselData = this.vesselData.data
+      this.vesselData.forEach(ship => {
+        this.newProjectMenu.Vessel.value.push(ship.nama_kapal) 
+      });
+    })
+  }
+  
+  @ViewChild('inDockDate') inDockDate: ElementRef;
+  @ViewChild('offHirePeriodDate') offHirePeriodDate: ElementRef;
+  @ViewChild('repairPeriodDate') repairPeriodDate: ElementRef;
+
+  addNewProject(data){
+    console.log(data)
+    console.log(this.inDockDate.nativeElement.value)
+    console.log(this.offHirePeriodDate.nativeElement.value)
+    console.log(this.repairPeriodDate.nativeElement.value)
+
+    let repairPeriode = this.repairPeriodDate.nativeElement.value
+    console.log(repairPeriode.split("-"))
   }
 
-  close(){
-    this.dialogRef.close(); 
+  baseCurrency(e){
+    console.log(e)
   }
 
-  selected = {
+  responsible(e){
+    console.log(e)
+  }
 
-    'option1' : 'test',
-    'option2' : 'test',
-    'option3' : 'test',
+  vesselName(e){
+    console.log(this.vesselData[e].nama_kapal)
+    console.log(this.vesselData[e].id_kapal)
+  }
 
-  } 
-
-  reportData = {
+  newProjectMenu = {
     "Vessel": {
-      value : ['Batera Ship 01', 'Batera Ship 01'],
-    },
-    "Year Project": {
-      value : 'Batera Yard 01 ',
+      value : [],
     },
     "Phase": {
       value: ['Requisition','In Progress','Finish', 'Evaluation'],
-    },
-    "Selected Yard": {
-      value : 'Batera Yard 01',
     },
     "BaseCurrency": {
       value : ['*IDR', 'EURO', 'US'],
@@ -59,25 +83,31 @@ export class AddNewProjectComponent implements OnInit {
     "Off Hire Period": {
       value: ['2 Medium', '1 Hard'],
     },
-    "-Deviation": {
-      value: '4 days',
-    },
-    "-Charter Rate": {
-      value: '71050000 / day.', 
-      subvalue : '1.421.000.000',
-    } ,
-    "-Bunker": {
-      value : '	282000000 / day.',
-      subvalue : '1.128.000.000',
-    }, 
-    "Repair Period": {
-      value : 'Slamet Saputro', 
-    },
-    "-In Dock": {
-      value : 'pertamana' ,
-    },
-    "-Additional Days": {
-      value : '0 days',
-    } 
+  }
+
+  close(){this.dialogRef.close();}
+
+  addProjectData = {
+    "id_kapal" : '',
+    "tahun" : "",
+    "nama_proyek" : "",
+    "mata_uang" : "",
+    "off_hire_start" : "",
+    "off_hire_end" : "",
+    "off_hire_deviasi" : "",
+    "off_hire_rate_per_day" : "",
+    "off_hire_bunker_per_day" : "",
+    "repair_start" : "",
+    "repair_end" : "",
+    "repair_in_dock_start" : "",
+    "repair_in_dock_end" : "",
+    "repair_additional_day" : "",
+    "owner_supplies" : "",
+    "owner_services" : "",
+    "owner_class" : "",
+    "owner_other" : "",
+    "owner_cancel_job" : "",
+    "yard_cost" : "",
+    "yard_cancel_job" : ""
   }
 }

@@ -1,7 +1,8 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { emit } from 'process';
 import { HomeService } from '../home-batera.service';
 
 interface userData {
@@ -23,52 +24,25 @@ interface userData {
   templateUrl: './add-ship.component.html',
   styleUrls : ['./add-ship.component.scss']
 })
-export class AddShipComponent {
+export class AddShipComponent implements OnInit {
   file : File = null;
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+  
   public formIsValid : boolean = true
   public uploadSuccess = false
   constructor(
-     private homeservice: HomeService,
-     private dialogRef: MatDialogRef<AddShipComponent>
-     ) { }
-
-  getFile(event){
-    this.file = <File>event.target.files[0]
-    console.log(this.file)
+    private homeservice: HomeService,
+    private dialogRef: MatDialogRef<AddShipComponent>
+    ){ 
   }
 
-  close(){
-    this.dialogRef.close(); 
-  }
-
-  onUpload(){
-    const dataFile : FormData = new FormData()
-    dataFile.append('image', this.file, this.file.name )
-    this.homeservice.addShip(dataFile).subscribe((res) => {
-      console.log(res)
-      if (res.type === HttpEventType.UploadProgress) {
-        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
-      } else if ( res.type === HttpEventType.Response){
-        console.log(res)
-      }
-    })
-  }
-
-  submit(){
-    const formData = new FormData();
-    formData.append('dokumen', this.addShipForm.get('fileSource').value);
-    this.homeservice.addShip(formData)
+  public companyId : any
+  ngOnInit(): void {
+    this.homeservice.getIdPerusahaan()
       .subscribe(res => {
-        console.log(res);
-        if (res.type === HttpEventType.UploadProgress) {
-          console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
-        } else if ( res.type === HttpEventType.Response){
-          console.log("final Response uploading image")
-          this.uploadSuccess = !this.uploadSuccess
-          setTimeout(()=>{
-            this.dialogRef.close(); 
-          },2000);
-        }
+        this.companyId = res
+        this.companyId = this.companyId.data[0].id_perusahaan
+        console.log(this.companyId)
     })
   }
 
@@ -89,40 +63,51 @@ export class AddShipComponent {
   }
      
   public urlLink : any
-
   onFileChange(res) {
     const file = res.target.files[0];
     if (res.target.files.length > 0) {
       this.addShipForm.patchValue({
         fileSource: file
       });
-        
       var reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = (event ) => {
         this.urlLink = event.target.result
       }
     }
-    console.log(res)
   }
 
-  save(){
-    const postBody = {
-      "id_user":"4",
-      "nama_kapal":"MT Slahung 1",
-      "foto":"1__20092022__6329e7566267f_WCPDzOL7F0bVvGoeaI0L_ship.jpg",
-      "nama_perusahaan":"Batera",
-      "merk_perusahaan":"PT",
-      "alamat_perusahaan_1":"",
-      "alamat_perusahaan_2":"",
-      "telepon":"081234567",
-      "faximile":"00979879",
-      "npwp":"1",
-      "email":"bs@gmail.com"
-    }
-    this.dialogRef.close(); 
-    this.homeservice.addShip(postBody).subscribe( (res) => {
-      console.log(res)
+  private imageShipUrl
+  onImageLoad(event){
+    const formData = new FormData();
+    formData.append('dokumen', this.addShipForm.get('fileSource').value);
+    this.homeservice.uploadShipimg(formData)
+      .subscribe(res => {
+      console.log(res);
+      if (res.type === HttpEventType.UploadProgress) {
+        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+      } else if ( res.type === HttpEventType.Response){
+        console.log("final Response uploading image")
+        this.imageShipUrl = res
+        this.imageShipUrl = this.imageShipUrl.body.data.file
+      }
     })
   }
+
+  submit(data){
+    const postBody = {
+      "id_user": 4,
+      "id_perusahaan": this.companyId,
+      "nama_kapal": data.value.name,
+      "foto": this.imageShipUrl,
+    }
+    this.homeservice.addShipData(postBody)
+    .subscribe(res => {
+      this.uploadSuccess = !this.uploadSuccess
+      this.onSuccess.emit()
+      this.close()
+    })
+  }
+
+  close(){this.dialogRef.close(); }
 }

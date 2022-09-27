@@ -5,12 +5,11 @@ import { NbButtonGroupModule, NbButtonModule, NbCardModule, NbIconModule, NbInpu
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
 import { ProfilBateraRoutingModule, routedComponents } from './profil-batera-routing.module';
-import { ProfilBateraComponent } from './profil-batera.component';
 import { MatInputModule } from '@angular/material/input';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddUserComponent } from './add-user/add-user.component';
-
+import { UpdateUserComponent } from './update-user/update-user.component';
 
 @NgModule({
   imports: [
@@ -26,9 +25,9 @@ import { AddUserComponent } from './add-user/add-user.component';
     FormsModule,
     MatInputModule,
     MatDialogModule,
-    NbSelectModule
+    NbSelectModule,
   ],
-  entryComponents: [ChangeLogoComponent, AddUserComponent],
+  entryComponents: [ChangeLogoComponent, AddUserComponent, UpdateUserComponent],
   declarations: [
     ...routedComponents
   ],

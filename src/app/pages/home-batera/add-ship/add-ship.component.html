@@ -10,11 +10,11 @@
         </button>
     </nb-card-header>
     <nb-card-body>
-        <form [formGroup]="addShipForm" (ngSubmit)="submit()"   >
+        <form [formGroup]="addShipForm" (ngSubmit)="submit(addShipForm)" >
             <div class="form-group">
                 <label for="name">Name</label>
                 <input formControlName="name" id="name" type="text" class="form-control">
-                <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger">
+                <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger ">
                     <div *ngIf="f.name.errors.required">Name is required.</div>
                     <div *ngIf="f.name.errors.minlength">Name should be 3 character.</div>
                 </div>
@@ -23,7 +23,9 @@
             <div class="form-group">
                 <label for="file">Image</label>
                 <div class="img_wrapper text-center">
-                    <div class="img_container m-auto p-2"><img [src]="urlLink" class="img-fluid" alt=""></div>
+                    <div class="img_container m-auto p-2">
+                        <img [src]="urlLink" class="img-fluid" alt="" (load)="onImageLoad($event)"  crossorigin="anonymous">
+                    </div>
                     <input formControlName="file" id="file" type="file" class="img_input col-12" (change)="onFileChange($event)" fullWidth>
                     <span class="col-12">Drop Your Image Here</span>
                 </div>

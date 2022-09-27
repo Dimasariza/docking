@@ -17,7 +17,7 @@
           <nb-option value="2">SS</nb-option>
         </nb-select>
          
-        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)" equalColumnsWidth>
   
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
@@ -29,6 +29,7 @@
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
               <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
               {{row.data[customColumn]}}
+              <!-- <input type="text" placeholder="Tasks" nbInput fieldSize="small"> -->
               </td>
           </ng-container>
       
@@ -36,7 +37,11 @@
               <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
               {{column}}
               </th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                {{row.data[column] || '-'}}
+              <!-- <input type="text" nbInput fieldSize="small"> -->
+
+              </td>
           </ng-container>
       </table>
     </nb-card-body>

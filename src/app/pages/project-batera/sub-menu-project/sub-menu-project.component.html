@@ -1,6 +1,6 @@
-<nb-card >
+<nb-card *ngIf="subProjectMenu as variable">
     <nb-card-header>
-    <h5 style="color:burlywood;">{{vesselName}}</h5>
+    <h5 style="color:burlywood;">{{subProjectMenu.nama_proyek}}</h5>
     <div class="d-flex">
         <div class="my-3" *ngFor = "let button of menuButton">
             <button *ngIf = "button.position === 'top'" nbButton status="primary" class="mx-1" outline size="small">
@@ -37,7 +37,7 @@
 <nb-card>
     <div class="d-flex" >
         <div *ngFor = "let button of menuButton" class="mx-1 my-3">
-            <button *ngIf = "button.position === 'bottom'"  nbButton status="primary" class="mx-1" outline size="small">
+            <button *ngIf = "button.position === 'bottom'" (click)="btnAct(button.text)" nbButton status="primary" class="mx-1" outline size="small">
                 {{button.text}}
             </button>
         </div>
@@ -54,7 +54,7 @@
           </th>
     
           <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
+            <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
             {{row.data[customColumn]}}
           </td>
         </ng-container>
@@ -68,9 +68,7 @@
             </td>
         </ng-container>
     
-        <ng-container *ngFor="let column of defaultColumns; let index = index"
-                      [nbTreeGridColumnDef]="column"
-                      [showOn]="getShowOn(index)">
+        <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
           <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
             {{column}}
           </th>

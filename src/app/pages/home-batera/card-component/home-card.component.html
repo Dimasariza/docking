@@ -1,0 +1,31 @@
+<nb-flip-card [showToggleButton]="false" [flipped]="flipped">
+    <nb-card-front>
+      <nb-card size="">
+        <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView()"></nb-icon>
+        <div class="card bg-transparent h-100 ">
+          <img src="http://env-6573880.jh-beon.cloud/file/show/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
+          <div class="d-flex align-items-center">
+            <span class="m-1 col-8 text-uppercase font-weight-bold h6">{{image.nama_kapal}}</span> 
+              <div class="col m-3 text-right">
+                <nb-icon class="flip-icon mr-2" icon="edit-outline" pack="eva" (click)="updateShip()" nbPopover="Update Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button" size="medium" [options]="{ animation: { type: 'zoom' } }" style="font-size: 1.2rem" status="primary"></nb-icon>
+                <nb-icon class="flip-icon" icon="trash-2-outline" pack="eva" (click)="deleteShip()" nbPopover="Delete Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button" size="medium" [options]="{ animation: { type: 'zoom' } }" style="font-size: 1.2rem" status="primary"></nb-icon>
+            </div>
+          </div>
+        </div>
+      </nb-card>
+    </nb-card-front>
+    <nb-card-back>
+      <nb-card size="" class="bg-secondary">
+        <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
+        <div class="p-5">
+          <h6 style="color: rgb(0, 208, 208);">{{image.nama_kapal}}</h6>
+          <div class="back-card--desc mt-5">
+            <h2>35%</h2>
+            <span class="font-weight-bold">Status : </span>
+            <span class="font-weight-bolder"> in-progress</span> <br>
+            <span class="font-weight-bolder">{{image.nama_kapal}}-dd-2022</span>
+          </div>
+        </div>
+      </nb-card>      
+    </nb-card-back>
+  </nb-flip-card>

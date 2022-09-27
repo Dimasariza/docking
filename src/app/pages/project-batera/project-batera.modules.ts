@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,6 +10,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraRoutingModule, routedComponents } from './project-batera-routing.module';
+import { WorkAreaComponent } from './work-area/work-area.component';
 
 @NgModule({
   imports: [
@@ -32,9 +34,10 @@ import { ProjectBateraRoutingModule, routedComponents } from './project-batera-r
     MatDialogModule,
     MatFormFieldModule,
     MatOptionModule,
-    NbTagModule
+    NbTagModule,
+    FormsModule,
   ],
-  entryComponents: [AddNewProjectComponent],
+  entryComponents: [AddNewProjectComponent, WorkAreaComponent],
   declarations: [
     ...routedComponents,
   ],

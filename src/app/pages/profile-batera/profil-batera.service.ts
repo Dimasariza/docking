@@ -5,60 +5,80 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProfileBateraService {
-    private url = 'http://env-6573880.jh-beon.cloud/user';
+  private userUrl = 'http://env-6573880.jh-beon.cloud/user';
+  private companyUrl = 'http://env-6573880.jh-beon.cloud/perusahaan';
+  private uploadUrl = 'http://env-6573880.jh-beon.cloud/file/upload';
 
-    constructor(private httpClient: HttpClient) { }
-  
-    headers = new HttpHeaders().append('header', 'value');
-    params = new HttpParams().append('param', "value");
+  private testUrl = 'http://localhost:3002/testPutData'
 
-    public getPosts() {
-        let queryParams = new HttpParams();
-        queryParams = queryParams.append("per_page", 10)
-                                .append("q", "")
-                                .append("role", "all")
-                                .append("status", "active")
-        return this.httpClient.get(this.url,  {params  : queryParams})
-    }
+  constructor(private httpClient: HttpClient) { }
 
-    public addUser() {
-      const httpHeaders = new HttpHeaders();
-      httpHeaders.append('content-type', 'application/json')
-
-      const body = { 
-        username : "K18_PD",
-        nama_lengkap : "Kiseki Provider",
-        jabatan : "provider",
-        no_hp : "",
-        email : "kzenkipasdflk25@gmail.com",
-        password : "kiseki",
-        role : "admin"
-      };
-      return this.httpClient.post(this.url, body, {headers : httpHeaders})
+  public getUserData() {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("per_page", 1)
+                            .append("q", "")
+                            .append("role", "all")
+                            .append("status", "all")
+    return this.httpClient.get(this.userUrl,  {params  : queryParams})
   }
 
-  public deleteUser(){
-    let delelteUrl = 'http://env-6573880.jh-beon.cloud/user/6'
-    const httpHeaders = new HttpHeaders();
-    return this.httpClient.delete(delelteUrl)
-  }
-
-  public updateUser(){
+  public updateUser(postData){
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
     
-    const postData = {
-        "username":"SA_MA",
-        "nama_lengkap":"Super Admin boy",
-        "jabatan":"admin",
-        "no_hp":"",
-        "email":"admin@gmail.com",
-        "password":"",
-        "status":"active"
-    }
+    let id = 5;
+    let endPoints = this.userUrl + "/" + id
+    return this.httpClient.put(endPoints , postData, {headers : httpHeaders})
+  }
 
-    let id: number = 1;
+  public addUser() {
+    const httpHeaders = new HttpHeaders();
+    httpHeaders.append('content-type', 'application/json')
+
+    const body = { 
+      username : "K18_PD",
+      nama_lengkap : "Kiseki Provider",
+      jabatan : "provider",
+      no_hp : "",
+      email : "kzenkipasdflk25@gmail.com",
+      password : "kiseki",
+      role : "admin"
+    };
+    return this.httpClient.post(this.userUrl, body, {headers : httpHeaders})
+  }
+
+  public deleteUser(id){
+    // let id: number = 1;
     let endPoints = "/" + id
-    return this.httpClient.put(this.url + endPoints, postData, {headers : httpHeaders})
+    return this.httpClient.delete(this.userUrl + endPoints)
+  }
+
+  public getCompanyProfile(){
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("per_page", 1)
+                            .append("q", "")
+    return this.httpClient.get(this.companyUrl, {params  : queryParams})
+  }
+
+  public updateCompanyProfile(body){
+    const httpHeaders = new HttpHeaders();
+    httpHeaders.append('content-type', 'application/json')
+    const bodyData = {
+      "nama_perusahaan": body.companyName,
+      "merk_perusahaan": body.companyBrand,
+      "alamat_perusahaan_1": body.companyAddress1,
+      "alamat_perusahaan_2": body.companyAddress2,
+      "telepon": body.mobileNo,
+      "fax": body.fax,
+      "npwp": body.npwp,
+      "email": body.email
+    }
+    return this.httpClient.put(this.companyUrl + '/' + 1, bodyData , {headers : httpHeaders})
+  }
+
+  public loadImage(body){
+    return this.httpClient.post(this.uploadUrl, body, {
+      reportProgress : true, observe : 'events'
+    })
   }
 }

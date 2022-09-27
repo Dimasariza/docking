@@ -3,10 +3,18 @@
         <strong>Yard</strong> <br>
         <span>Marcopolo</span>
     </div>
-    <div *ngFor="let item of objectKeys(dataTable)" class="row">
-        <div class="col-lg col-xl-7 col-md"><strong>{{item}}</strong></div>
-        <div class="">:</div>
-        <div class="col text-right">{{dataTable[item]}}</div>
+    <div *ngFor="let item of objectKeys(dataTable)">
+        <div *ngIf="item !== 'General Discount'" class="row">
+            <div class="col-7"><strong>{{item}}</strong></div>
+            <div class="">:</div>
+            <div class="col text-right">{{dataTable[item]}}</div>
+        </div>
+
+        <div *ngIf="item === 'General Discount'" class="row">
+            <strong class="col-7">{{item}} ( {{dataTable[item]['After Discount']}} % )</strong>
+            <div class="">:</div>
+            <div class="col text-right">{{dataTable[item].discount}}</div>
+        </div>
     </div>
     <div class="text-center mt-3">
         <button nbButton class="mx-1" status="success">Select Yard</button>
