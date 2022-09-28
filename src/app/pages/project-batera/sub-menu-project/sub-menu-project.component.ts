@@ -45,15 +45,28 @@ export class SubMenuProjectComponent implements OnInit {
   public workArea : TreeNode<FSEntry> []
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params: any) => {
-      this.service.getSubProjectData(params.data)
-      .toPromise()
-      .then(res => {
-        this.subProjectMenu = res
-        this.subProjectMenu = this.subProjectMenu.data
-        console.log(res)
+
+    const id = this.route.snapshot.paramMap.get('id')
+
+    this.service.getSubProjectData(id)
+      .subscribe(({data} : any) => {
+        const {work_area} = data
+        const populateData = (work, kind) => {          
+          const {items, sfi, pekerjaan, start, end, departemen, } = work           
+          return {
+            data: {
+              "Job No": sfi,
+              "Job": pekerjaan,
+              "Start": start,
+              "Stop": end,
+              "Dept": departemen,
+              kind
+            },
+            children: items?.length ? items.map(child => populateData(child, 'doc')) : []
+          }
+        }
+        this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
       })
-    })
   }
 
   customColumn = "Job No";
@@ -77,8 +90,7 @@ export class SubMenuProjectComponent implements OnInit {
     return NbSortDirection.NONE;
   }
 
-  private datas: TreeNode<FSEntry>[] =  
-  
+  private datas: TreeNode<FSEntry>[] =   
     [
       {
         data: { "Job No": '2.20.1', kind: 'dir' },

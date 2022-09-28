@@ -11,7 +11,7 @@ const routes: Routes = [{
     component: ProjectBateraComponent,
   },
   {
-    path: 'sub-menu-project',
+    path: 'sub-menu-project/:id',
     component: SubMenuProjectComponent
   },
 ];
