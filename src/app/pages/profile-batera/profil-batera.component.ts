@@ -16,7 +16,6 @@ export class ProfilBateraComponent implements OnInit {
     private service:ProfileBateraService,
     public dialog : MatDialog,
   ) {}
-
   userData : any;
   ngOnInit(){
     this.service.getUserData()

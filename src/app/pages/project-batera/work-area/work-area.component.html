@@ -9,38 +9,30 @@
     <form  (keyup.enter)="$event.target.value" (ngForm)="updateUserForm">
         <div class="row">
             <div class="col-6">
-                <span class="p-2 d-block">User name</span>
-                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name" fieldSize="small"
-                required #userName (ngModel)="userName">
-                <span class="p-2 d-block">Full Name</span>
-                <input type="text" nbInput fullWidth placeholder="Full Name" fieldSize="small"
-                required (ngModel)="fullName" #fullName>
-                <span class="p-2 d-block">Ship Name</span>
-                <input type="text" nbInput fullWidth placeholder="Ship Name" id="ship_name" fieldSize="small"
-                required (ngModel)="shipName" name="shipName" #shipName>
-                <span class="p-2 d-block">Title</span>
-                <input type="text" nbInput fullWidth placeholder="Title" id="title" fieldSize="small"
-                required (ngModel)="title" name="title" #title>
-                <span class="p-2 d-block">Department</span>
-                <input type="text" nbInput fullWidth placeholder="Department" id="department" fieldSize="small"
-                required (ngModel)="department" name="department" #department>
+                <span class="p-2 d-block">Job Number</span>
+                <input type="text" nbInput fullWidth placeholder="Job Number" class="form-control" id="jobNumber" fieldSize="small" required #jobNumber (ngModel)="jobNumber">
+                <span class="p-2 d-block">Job</span>
+                <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required (ngModel)="job" #job>
+                <span class="p-2 d-block">Departement</span>
+                <input type="text" nbInput fullWidth placeholder="Departement" id="departement" fieldSize="small" required (ngModel)="departement" name="departement" #departement>
+                <span class="p-2 d-block">Responsible</span>
+                <input type="text" nbInput fullWidth placeholder="Responsible" id="responsible" fieldSize="small" required (ngModel)="responsible" name="responsible" #responsible>
+                <span class="p-2 d-block">Start</span>
+                <input type="text" nbInput fullWidth placeholder="Start Date" id="start" fieldSize="small" required (ngModel)="start" name="start" #start>
+                <span class="p-2 d-block">Stop</span>
+                <input type="text" nbInput fullWidth placeholder="Stop Date" id="stop" fieldSize="small" required (ngModel)="stop" name="stop" #stop>
             </div>
             <div class="col-6">
-                <span class="p-2 d-block">Status</span>
-                <input type="text" nbInput fullWidth placeholder="Status" id="status" fieldSize="small"
-                required (ngModel)="status" name="status" #status>
-                <span class="p-2 d-block">Position</span>
-                <input type="text" nbInput fullWidth placeholder="Position" id="position" fieldSize="small"
-                required (ngModel)="position" name="position" #position>
-                <span class="p-2 d-block">Mobile Number</span>
-                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" fieldSize="small"
-                required (ngModel)="mobileNo" name="mobileNo" #mobileNo>
-                <span class="p-2 d-block">E-mail</span>
-                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" fieldSize="small"
-                required (ngModel)="email" name="email" #email>
-                <span class="p-2 d-block">Password</span>
-                <input type="text" nbInput fullWidth placeholder="Password" id="password" fieldSize="small"
-                required (ngModel)="password" name="password" #password>
+                <span class="p-2 d-block">Volume</span>
+                <input type="text" nbInput fullWidth placeholder="Volume" id="volume" fieldSize="small" required (ngModel)="volume" name="volume" #volume>
+                <span class="p-2 d-block">Unit</span>
+                <input type="text" nbInput fullWidth placeholder="Unit" id="unit" fieldSize="small" required (ngModel)="unit" name="unit" #unit>
+                <span class="p-2 d-block">Unit Price</span>
+                <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required (ngModel)="unitPrice" name="unitPrice" #unitPrice>
+                <span class="p-2 d-block">Total Price Budget</span>
+                <input type="text" nbInput fullWidth placeholder="Total Price Budget" id="totalPriceBudget" fieldSize="small" required (ngModel)="totalPriceBudget" name="totalPriceBudget" #totalPriceBudget>
+                <span class="p-2 d-block">Category</span>
+                <input type="text" nbInput fullWidth placeholder="Category" id="cactegory" fieldSize="small" required (ngModel)="cactegory" name="cactegory" #cactegory>
             </div>
         </div>
 

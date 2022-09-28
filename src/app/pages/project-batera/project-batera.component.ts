@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -30,7 +30,7 @@ export class ProjectBateraComponent {
   public allProjectDatas : any
 
   customColumn = 'Tasks';
-  defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due' ];
+  defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due', 'Delete' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
@@ -53,12 +53,14 @@ export class ProjectBateraComponent {
     dialogConfig.autoFocus = true;
   }
 
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+
+
   ngOnInit() {
     this.service.getProjects()
       .subscribe(response => {
         this.allProjectDatas = response
         this.allProjectDatas = this.allProjectDatas.data
-        console.log(this.allProjectDatas)
     });
   }
 
@@ -72,6 +74,17 @@ export class ProjectBateraComponent {
       return this.sortDirection;
     }
     return NbSortDirection.NONE;
+  }
+
+  deleteProject(row){
+    let id_proyek = this.allProjectDatas[row].id_proyek
+    this.service.deleteProject(id_proyek)
+    .subscribe(res  => {
+      console.log(res)
+    })
+    this.onSuccess.asObservable().subscribe(()=>{
+      this.ngOnInit()
+    })
   }
 
   private data: TreeNode<FSEntry>[] = [

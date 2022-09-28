@@ -14,9 +14,6 @@ interface TreeNode<T> {
 }
 
 interface FSEntry {
-  "Price A"?: string;
-  "Price B"?: string;
-  "Price C"?: string;
   "Job No": string;
   Job? : string;
   Dept?: string;
@@ -37,22 +34,24 @@ interface FSEntry {
 })
 
 export class SubMenuProjectComponent implements OnInit {
-  public workArea : any
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private route: ActivatedRoute,
     public dialog : MatDialog,
     private service : ProjectBateraService){
-    this.dataSource = this.dataSourceBuilder.create(this.data);
+    this.dataSource = this.dataSourceBuilder.create(this.datas);
   }
   public subProjectMenu
+  public workArea : TreeNode<FSEntry> []
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params: any) => {
-      this.service.getSubProjectData(params.data).subscribe(res => {
+      this.service.getSubProjectData(params.data)
+      .toPromise()
+      .then(res => {
         this.subProjectMenu = res
         this.subProjectMenu = this.subProjectMenu.data
-        console.log(this.subProjectMenu)
+        console.log(res)
       })
     })
   }
@@ -78,19 +77,22 @@ export class SubMenuProjectComponent implements OnInit {
     return NbSortDirection.NONE;
   }
 
-  private data: TreeNode<FSEntry>[] = [{
-      data: { "Job No": '2.20.1', kind: 'dir' },
-    },
-    {
-      data: { "Job No": '2.20.2', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
-      children: [
-        { data: { "Job No": 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
-      ],
-    },
-  ];
+  private datas: TreeNode<FSEntry>[] =  
+  
+    [
+      {
+        data: { "Job No": '2.20.1', kind: 'dir' },
+      },
+      {
+        data: { "Job No": '2.20.2', kind: "dir" },
+        children: [
+          { data: { "Job No": 'project-1.doc', kind: 'doc' } },
+          { data: { "Job No": 'project-2.doc', kind: 'doc' } },
+          { data: { "Job No": 'project-3', kind: 'doc' } },
+          { data: { "Job No": 'project-4.docx', kind: 'doc' } },
+        ],
+      },
+    ];
 
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
@@ -152,13 +154,20 @@ export class SubMenuProjectComponent implements OnInit {
         break;
     }
   }
+
   addWorkAreaDial(){
     const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, autoFocus:true, 
     })
   }
+
 }
+
+
+
+
+
 
 
 
@@ -199,7 +208,7 @@ export class SubProjectDataComponent implements OnInit{
     },
     "Phase": {
       type : 'drop-down',
-      value: ['Perencanaan','Pelaksanaan', 'Evaluasi']
+      value: ['Requisition','In Progress', 'Evaluation', 'Finish']
     },
     "Selected Yard": {
       type : 'text',

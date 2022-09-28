@@ -1,4 +1,4 @@
-import { KeyValue } from '@angular/common';
+import { DatePipe, KeyValue } from '@angular/common';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
@@ -18,7 +18,8 @@ export class AddNewProjectComponent implements OnInit {
   constructor(
     protected dateService: NbDateService<Date>,
     private dialogRef: MatDialogRef<AddNewProjectComponent>,
-    private service:ProjectBateraService) { 
+    private service:ProjectBateraService,
+    public datepipe: DatePipe) { 
     this.min = this.dateService.addMonth(this.dateService.today(), 0);
   }
 
@@ -35,7 +36,7 @@ export class AddNewProjectComponent implements OnInit {
       this.vesselData = res
       this.vesselData = this.vesselData.data
       this.vesselData.forEach(ship => {
-        this.newProjectMenu.Vessel.value.push(ship.nama_kapal) 
+        this.newProjectMenu.Vessel.push(ship.nama_kapal) 
       });
     })
   }
@@ -44,70 +45,87 @@ export class AddNewProjectComponent implements OnInit {
   @ViewChild('offHirePeriodDate') offHirePeriodDate: ElementRef;
   @ViewChild('repairPeriodDate') repairPeriodDate: ElementRef;
 
-  addNewProject(data){
-    console.log(data)
-    console.log(this.inDockDate.nativeElement.value)
-    console.log(this.offHirePeriodDate.nativeElement.value)
-    console.log(this.repairPeriodDate.nativeElement.value)
+  public addProjectData = {
+    "id_kapal" : "17",
+    "tahun" : "2023",
+    "nama_proyek" : "MT Salmon",
+    "mata_uang" : "IDR",
+    "off_hire_start" : "2022-08-13",
+    "off_hire_end" : "2022-08-29",
+    "off_hire_deviasi" : "3",
+    "off_hire_rate_per_day" : "1500000",
+    "off_hire_bunker_per_day" : "1250000",
+    "repair_start" : "2022-08-15",
+    "repair_end" : "2022-08-25",
+    "repair_in_dock_start" : "2022-08-16",
+    "repair_in_dock_end" : "2022-08-24",
+    "repair_additional_day" : "0",
 
-    let repairPeriode = this.repairPeriodDate.nativeElement.value
-    console.log(repairPeriode.split("-"))
+    "owner_supplies" : "5000000",
+    "owner_services" : "6000000",
+    "owner_class" : "1500000",
+    "owner_other" : "0",
+    "owner_cancel_job" : "0",
+    "yard_cost" : "13000000",
+    "yard_cancel_job" : "0"
+  }
+
+  addNewProject(data){
+    let repairPeriode = this.repairPeriodDate.nativeElement.value.split("-")
+    let startRepairPeriode = this.datepipe.transform(repairPeriode[0], 'yyyy-MM-dd');
+    let endRepairPeriode = this.datepipe.transform(repairPeriode[1], 'yyyy-MM-dd');
+    
+    let offhirePeriod = this.offHirePeriodDate.nativeElement.value.split("-")
+    let startOffhirePeriod = this.datepipe.transform(offhirePeriod[0], 'yyyy-MM-dd');
+    let endOffhirePeriod = this.datepipe.transform(offhirePeriod[1], 'yyyy-MM-dd');
+
+    let inDockPeriod = this.inDockDate.nativeElement.value.split("-")
+    let startInDockPeriod = this.datepipe.transform(inDockPeriod[0], 'yyyy-MM-dd');
+    let endInDockPeriod = this.datepipe.transform(inDockPeriod[1], 'yyyy-MM-dd');
+
+    this.addProjectData.repair_start = startRepairPeriode
+    this.addProjectData.repair_end = endRepairPeriode
+    this.addProjectData.off_hire_start = startOffhirePeriod
+    this.addProjectData.off_hire_end = endOffhirePeriod
+    this.addProjectData.repair_in_dock_start = startInDockPeriod
+    this.addProjectData.repair_in_dock_end = endInDockPeriod
+
+    this.addProjectData.off_hire_deviasi = data.value.deviation
+    this.addProjectData.repair_additional_day = data.value.additionalDay
+    this.addProjectData.off_hire_rate_per_day = data.value.charterRate
+    this.addProjectData.off_hire_bunker_per_day = data.value.bunker
+    this.addProjectData.tahun = data.value.yearProject
+
+    this.service.addDataProject(this.addProjectData)
+    .subscribe(res => {
+      console.log(res)
+      // this.close()
+    })
+
   }
 
   baseCurrency(e){
-    console.log(e)
+    this.addProjectData.mata_uang = this.newProjectMenu.BaseCurrency[e]
   }
 
   responsible(e){
-    console.log(e)
+    console.log(this.newProjectMenu.responsible[e])
   }
 
   vesselName(e){
-    console.log(this.vesselData[e].nama_kapal)
-    console.log(this.vesselData[e].id_kapal)
+    this.addProjectData.nama_proyek = this.vesselData[e].nama_kapal
+    this.addProjectData.id_kapal = this.vesselData[e].id_kapal
   }
 
   newProjectMenu = {
-    "Vessel": {
-      value : [],
-    },
-    "Phase": {
-      value: ['Requisition','In Progress','Finish', 'Evaluation'],
-    },
-    "BaseCurrency": {
-      value : ['*IDR', 'EURO', 'US'],
-    },
-    "responsible" : {
-      value : [ 'SM', 'MT', 'BP' ]
-    },
-    "Off Hire Period": {
-      value: ['2 Medium', '1 Hard'],
-    },
+    "Vessel": [],
+    "Phase": ['Requisition','In Progress','Finish', 'Evaluation'],
+    "BaseCurrency": ['IDR', 'EURO', 'US'],
+    "responsible" : ['SM', 'MT', 'BP'],
   }
 
   close(){this.dialogRef.close();}
 
-  addProjectData = {
-    "id_kapal" : '',
-    "tahun" : "",
-    "nama_proyek" : "",
-    "mata_uang" : "",
-    "off_hire_start" : "",
-    "off_hire_end" : "",
-    "off_hire_deviasi" : "",
-    "off_hire_rate_per_day" : "",
-    "off_hire_bunker_per_day" : "",
-    "repair_start" : "",
-    "repair_end" : "",
-    "repair_in_dock_start" : "",
-    "repair_in_dock_end" : "",
-    "repair_additional_day" : "",
-    "owner_supplies" : "",
-    "owner_services" : "",
-    "owner_class" : "",
-    "owner_other" : "",
-    "owner_cancel_job" : "",
-    "yard_cost" : "",
-    "yard_cancel_job" : ""
-  }
+
+
 }

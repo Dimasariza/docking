@@ -15,7 +15,7 @@ export class ProfileBateraService {
 
   public getUserData() {
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", 1)
+    queryParams = queryParams.append("per_page", 10)
                             .append("q", "")
                             .append("role", "all")
                             .append("status", "all")

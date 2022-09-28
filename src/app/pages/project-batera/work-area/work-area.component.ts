@@ -18,7 +18,6 @@ export class WorkAreaComponent implements OnInit {
     private service:ProjectBateraService,
     public dialog : MatDialog,
     private dialogRef: MatDialogRef<WorkAreaComponent>,
-    // @Inject(MAT_DIALOG_DATA) public userData: any
   ) {}
 
   updateUserForm = new FormGroup({
@@ -51,33 +50,10 @@ export class WorkAreaComponent implements OnInit {
   onSubmit(data){
     this.updateUserData = {
       username: data.userName,
-      // nama_lengkap : data.fullName,
-      // nama_kapal : data.shipName,
-      // title : data.title,
-      // departemen : data.department,
-      // user_id : this.userData.user_id,
-      // jabatan : data.position,
-      // no_hp : data.mobileNo,
-      // email : data.email,
-      // password : data.password,
-      // status : data.status,
-      // avatar_url : this.uploadLink.data.file
     }
     console.log(this.updateUserData)
-    // this.service.updateUser()
-    //   .subscribe(res => {console.log(res)},
-    //   err => {console.log('HTTP Error', err)},
-    //   () => console.log('HTTP request completed.')
-    // )
-    // this.userData.avatar_url = this.uploadLink.data.file
-    // this.avatarUrlConds = false
   }
   
   close(){ this.dialogRef.close();}
   
-  // public userData : any = {
-  //   name : "roganda"
-  // }
-  
-
 }

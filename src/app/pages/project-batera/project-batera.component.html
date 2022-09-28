@@ -29,7 +29,6 @@
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
               <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
               {{row.data[customColumn]}}
-              <!-- <input type="text" placeholder="Tasks" nbInput fieldSize="small"> -->
               </td>
           </ng-container>
       
@@ -39,8 +38,6 @@
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
                 {{row.data[column] || '-'}}
-              <!-- <input type="text" nbInput fieldSize="small"> -->
-
               </td>
           </ng-container>
       </table>
@@ -70,28 +67,28 @@
           </ngx-datatable-column> -->
 
           <ngx-datatable-column [name]="'Ship Management'" prop="kapal.owner.nama_lengkap"></ngx-datatable-column>
-
+          
           <!-- <ngx-datatable-column [name]="'R'" width="30">
-              <ng-template let-row="row" ngx-datatable-cell-template>
-                <nb-icon [stat]="row.R" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
-                </nb-icon>
-              </ng-template>  
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              <nb-icon [stat]="row.R" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              </nb-icon>
+            </ng-template>  
           </ngx-datatable-column>
-
+          
           <ngx-datatable-column [name]="'P'" width="30">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.P" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
-
+          
           <ngx-datatable-column [name]="'E'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
-
+          
           <ngx-datatable-column [name]="'F'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
@@ -101,36 +98,14 @@
 
           <ngx-datatable-column [name]="'Start Date'" prop="created_at"></ngx-datatable-column>
           <ngx-datatable-column [name]="'Last Change'" prop="updated_at"></ngx-datatable-column>
-      </ngx-datatable>
-    </nb-card-body>
-  </nb-card>
-
-<!-- 
-  <nb-card>
-    <div class="col">
-      <p>You select your team {{ selectedTeam }} using viewChild</p>
-        <select #teams (change)="onSelected()">
-          <option default>Pick a team</option>
-          <option>Lakers</option>	
-          <option>Miami</option>
-          <option>Cleveland</option>
-        </select>
-    </div>
-
-    <div class="col">
-      <p>You select your team {{ selecTeam }}</p>
-      <p>The change Event</p>
-        <select (ngModel)="selecTeam">
-          <option default>Pick a team</option>
-          <option >Lakers</option>
-          <option>Miami</option>
-          <option>Cleveland</option>
-        </select>
-      </div>
-
-      <select class="form-control selectpicker" (change)="chooseOption($event.target.selectedIndex) ;"> Select One
-        <option *ngFor="let a of testDropDown;let i = index;" value="{{ a.val }}"  [selected]="selIdx == i" (click)="chooseOption(i)">
-           {{ a }}
-        </option>
-     </select>
-  </nb-card> -->
+          <ngx-datatable-column [name]="'Delete'">
+            <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+              <button nbButton size="small" ghost (click)="deleteProject(rowIndex)">
+                <nb-icon icon="trash-2-outline" status="danger"></nb-icon>
+              </button>
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </nb-card-body>
+    </nb-card>
+    

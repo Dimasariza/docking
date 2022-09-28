@@ -8,17 +8,26 @@
     }
   },
   "testPutData": {
-    "username": "FE_DP",
-    "nama_lengkap": "Febi Provider",
-    "nama_kapal": "",
-    "title": "",
-    "departemen": "",
-    "user_id": "",
-    "jabatan": "admin",
-    "no_hp": "",
-    "email": "febipd@gmail.com",
-    "password": "1234",
-    "status": "active",
-    "avatar_url": ""
+    "id_kapal": 17,
+    "tahun": "",
+    "nama_proyek": "MT Salmon",
+    "mata_uang": "IDR",
+    "off_hire_start": null,
+    "off_hire_end": null,
+    "off_hire_deviasi": null,
+    "off_hire_rate_per_day": null,
+    "off_hire_bunker_per_day": null,
+    "repair_start": null,
+    "repair_end": null,
+    "repair_in_dock_start": null,
+    "repair_in_dock_end": null,
+    "repair_additional_day": null,
+    "owner_supplies": "5000000",
+    "owner_services": "6000000",
+    "owner_class": "1500000",
+    "owner_other": "0",
+    "owner_cancel_job": "0",
+    "yard_cost": "13000000",
+    "yard_cancel_job": "0"
   }
 }
