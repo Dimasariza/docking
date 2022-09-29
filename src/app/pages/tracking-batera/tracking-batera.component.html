@@ -64,11 +64,15 @@
                 <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
             </ng-template>
         </ngx-datatable-column>
-            <ngx-datatable-column name="Periode"></ngx-datatable-column>
+            <ngx-datatable-column name="Periode">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.periode | date:'shortDate'}} - {{row.updated_at | date:'shortDate'}}
+                </ng-template>
+            </ngx-datatable-column>
             </ngx-datatable>
             </div>
             <div style="flex: 1; margin-left: -18px; margin-top: 1.2em;">
-                <ng-container *ngTemplateOutlet="timeline"></ng-container>
+                <ng-container *ngTemplateOutlet="timeline; context: {$implicit: series}"></ng-container>
             </div>
         </div>
     </nb-card-body>
@@ -95,15 +99,18 @@
     </ngx-datatable>
 </ng-template>
 
-<ng-template #timeline>
-    <apx-chart
-        [title]="chartOptions.title"
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [grid]="chartOptions.grid"
-        [plotOptions]="chartOptions.plotOptions"
-        [dataLabels]="chartOptions.dataLabels"
-    ></apx-chart>
+<ng-template #timeline let-series>
+    <!-- {{series | json}} -->
+    <ng-container *ngIf="series">
+        <apx-chart 
+            [title]="chartOptions.title"
+            [series]="series ?? [{data:{}}]"
+            [chart]="chartOptions.chart"
+            [xaxis]="chartOptions.xaxis"
+            [yaxis]="chartOptions.yaxis"
+            [grid]="chartOptions.grid"
+            [plotOptions]="chartOptions.plotOptions"
+            [dataLabels]="chartOptions.dataLabels"
+        ></apx-chart>
+    </ng-container>
 </ng-template>
