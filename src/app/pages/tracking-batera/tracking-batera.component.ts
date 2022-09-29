@@ -63,7 +63,7 @@ export class TrackingBateraComponent implements OnInit {
       console.log(data);
       
       this.trackingData = data.map(({nama_kapal, created_at, updated_at}) => 
-        ({"Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at}))
+        ({"Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at: moment(updated_at).add(1, 'day')}))
 
       this.series = [{
         data:  data.map(({nama_kapal, created_at, updated_at}) => ({
