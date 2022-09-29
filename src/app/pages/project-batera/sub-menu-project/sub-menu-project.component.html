@@ -43,36 +43,41 @@
         </div>
     </div>
 
-    <h6 class="mx-3" style="color: burlywood;">Work Area</h6>      
-    <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-    
-        <ng-container [nbTreeGridColumnDef]="customColumn">
-          <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-            {{customColumn}}
-          </th>
-    
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-            {{row.data[customColumn]}}
-          </td>
-        </ng-container>
+    <h6 class="mx-3" style="color: burlywood;">Work Area</h6>
 
-        <ng-container [nbTreeGridColumnDef]="editColumn">
-            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-            <button class="btn btn-light btn-sm text-center" ghost>
-                <nb-icon icon="edit-outline" status="primary"></nb-icon>
-            </button>
-            </td>
-        </ng-container>
-    
-        <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
-          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-            {{column}}
-          </th>
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-        </ng-container>
-      </table>
+    <div style="overflow: auto; width: 100%;">
+        <div style="width: 1024px;">
+            <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
+                <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+            
+                <ng-container [nbTreeGridColumnDef]="customColumn">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
+                    {{customColumn}}
+                  </th>
+            
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                    {{row.data[customColumn]}}
+                  </td>
+                </ng-container>
+        
+                <ng-container [nbTreeGridColumnDef]="editColumn">
+                    <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm text-center" ghost>
+                        <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                    </button>
+                    </td>
+                </ng-container>
+            
+                <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
+                  <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+                    {{column}}
+                  </th>
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                </ng-container>
+            </table>
+        </div>
+    </div>
 </nb-card>
