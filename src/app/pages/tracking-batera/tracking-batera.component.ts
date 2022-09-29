@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ApexAxisChartSeries } from 'ng-apexcharts';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
+import * as moment from 'moment'
 
 @Component({
   selector: 'ngx-tracking-batera',
@@ -24,7 +25,7 @@ export class TrackingBateraComponent implements OnInit {
     // ],
 
     chart: {
-      height: 350,
+      height: 698,
       type: 'rangeBar'
     },
     plotOptions: {
@@ -61,15 +62,15 @@ export class TrackingBateraComponent implements OnInit {
     .subscribe(({data} : any) => {
       console.log(data);
       
-      this.trackingData = data.map(({nama_kapal, created_at}) => 
-        ({"Ship Name": nama_kapal, phases: [true, true, false], periode: created_at}))
+      this.trackingData = data.map(({nama_kapal, created_at, updated_at}) => 
+        ({"Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at}))
 
       this.series = [{
         data:  data.map(({nama_kapal, created_at, updated_at}) => ({
           x: nama_kapal,
           y: [
             new Date(created_at).getTime(),
-            new Date(updated_at).getTime()
+            new Date(updated_at).getTime() + (3600*24*1000)
           ]
         }))
       }]

@@ -66,7 +66,7 @@
         </ngx-datatable-column>
             <ngx-datatable-column name="Periode">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{row.periode | date:'shortDate'}} - {{row.periode | date:'shortDate'}}
+                    {{row.periode | date:'shortDate'}} - {{row.updated_at | date:'shortDate'}}
                 </ng-template>
             </ngx-datatable-column>
             </ngx-datatable>
