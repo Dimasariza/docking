@@ -70,7 +70,7 @@ export class TrackingBateraComponent implements OnInit {
           x: nama_kapal,
           y: [
             new Date(created_at).getTime(),
-            new Date(updated_at).getTime() + (3600*24*1000)
+            new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
           ]
         }))
       }]
