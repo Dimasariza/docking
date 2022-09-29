@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
+import { TrackingBateraService } from './tracking-batera.service';
 
 @Component({
   selector: 'ngx-tracking-batera',
@@ -7,48 +8,20 @@ import { ChartOptions } from '../charts/apexchart/apexchart.component';
   styleUrls: ['./tracking-batera.component.scss']
 })
 export class TrackingBateraComponent implements OnInit {
-  data = [
-    {Project: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
-    {Project: 'Batera 02', phases: [true, true, false], periode: '12/12/2022'},
-    {Project: 'Batera 03', phases: [true, true, false], periode: '12/12/2022'},
-    {Project: 'Batera 04', phases: [true, true, false], periode: '12/12/2022'}
-  ]
-
+  public chartData : any
   chartOptions: Partial<ChartOptions> = {
     series: [ 
-      {
-        data: [
-          {
-            x: 'Batera 01',
-            y: [
-              new Date('2019-03-02').getTime(),
-              new Date('2019-03-04').getTime()
-            ]
-          },
-          {
-            x: 'Batera 02',
-            y: [
-              new Date('2019-03-04').getTime(),
-              new Date('2019-03-08').getTime()
-            ]
-          },
-          {
-            x: 'Batera 03',
-            y: [
-              new Date('2019-03-08').getTime(),
-              new Date('2019-03-12').getTime()
-            ]
-          },
-          {
-            x: 'Batera 04',
-            y: [
-              new Date('2019-03-12').getTime(),
-              new Date('2019-03-18').getTime()
-            ]
-          }
-        ]
-      }
+      // {
+      //   data: {
+      //     x : 'nama kapal',
+      //     y: [
+      //       new Date('2019-03-02').getTime(),
+      //       new Date('2019-03-04').getTime()
+      //     ]
+      //   }
+      // }
     ],
+
     chart: {
       height: 350,
       type: 'rangeBar'
@@ -75,9 +48,42 @@ export class TrackingBateraComponent implements OnInit {
       },
     }
   }
-  constructor() { }
+  constructor(
+    private trackingService : TrackingBateraService
+  ) { }
+
+  public trackingData : any
 
   ngOnInit(): void {
-  }
+    this.trackingService.getDataTracking()
+    .subscribe(({data} : any) => {
+      let dataTracking = new Array
+      let chartTracking = new Array
+      data.forEach(item => {
+        dataTracking.push(
+          {'Ship Name': item.nama_kapal, phases: [true, true, false], periode: item.created_at}
+        )
+
+        const populateData = (item) => {
+          const {nama_kapal} = item
+          return {
+            data: {
+                x : nama_kapal,
+                y: [
+                  new Date('2019-03-02').getTime(),
+                  new Date('2019-03-04').getTime()
+                ]
+            },
+          }
+        }
+        // this.chartOptions.series =  [populateData(item)]
+      });
+      this.trackingData = dataTracking
+      this.chartData = chartTracking
+      console.log(this.chartData)
+      
+    })
+  } 
+
 
 }

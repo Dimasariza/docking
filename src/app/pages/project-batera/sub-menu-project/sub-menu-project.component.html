@@ -1,6 +1,6 @@
-<nb-card *ngIf="subProjectMenu as variable">
+<nb-card >
     <nb-card-header>
-    <h5 style="color:burlywood;">{{subProjectMenu.nama_proyek}}</h5>
+    <h5 style="color:burlywood;">{{shipName}}</h5>
     <div class="d-flex">
         <div class="my-3" *ngFor = "let button of menuButton">
             <button *ngIf = "button.position === 'top'" nbButton status="primary" class="mx-1" outline size="small">

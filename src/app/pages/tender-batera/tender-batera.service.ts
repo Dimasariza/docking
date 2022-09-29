@@ -5,14 +5,14 @@ import { Injectable } from "@angular/core";
     providedIn: 'root'
 })
 export class TenderBateraService {
-    private url = 'http://env-6573880.jh-beon.cloud/tender';
+    private dataTenderURL = 'http://env-6573880.jh-beon.cloud/tender/2';
     constructor (private httpClient : HttpClient){}
 
     getDataTender(){
         let queryParams = new HttpParams();
-        queryParams = queryParams.append("per_page", "")
+        queryParams = queryParams.append("per_page", "10")
                                 .append("status", "all")
-        return this.httpClient.get(this.url,  {params  : queryParams})
+        return this.httpClient.get(this.dataTenderURL,  {params  : queryParams})
     }
     
 }

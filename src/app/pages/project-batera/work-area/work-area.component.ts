@@ -55,5 +55,5 @@ export class WorkAreaComponent implements OnInit {
   }
   
   close(){ this.dialogRef.close();}
-  
+  public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"yard cost", "yard cancelled jobs"]
 }

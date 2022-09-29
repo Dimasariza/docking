@@ -32,7 +32,10 @@
                 <span class="p-2 d-block">Total Price Budget</span>
                 <input type="text" nbInput fullWidth placeholder="Total Price Budget" id="totalPriceBudget" fieldSize="small" required (ngModel)="totalPriceBudget" name="totalPriceBudget" #totalPriceBudget>
                 <span class="p-2 d-block">Category</span>
-                <input type="text" nbInput fullWidth placeholder="Category" id="cactegory" fieldSize="small" required (ngModel)="cactegory" name="cactegory" #cactegory>
+                <nb-select >
+                    <nb-option *ngFor="let value of category">{{value}}</nb-option>
+                </nb-select>
+                <!-- <input type="text" nbInput fullWidth placeholder="Category" id="cactegory" fieldSize="small" required (ngModel)="cactegory" name="cactegory" #cactegory> -->
             </div>
         </div>
 

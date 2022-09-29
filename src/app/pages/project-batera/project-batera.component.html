@@ -55,7 +55,10 @@
       <ngx-datatable [class]="'bootstrap'" [rows]="allProjectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
           <ngx-datatable-column [name]="'Project name'" prop="nama_proyek">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <a class="text-primary" style="cursor: pointer;" [routerLink]="['./sub-menu-project', row.id_proyek]" [data] = 'row'>{{row.nama_proyek}}</a>
+              <a class="text-primary" 
+              style="cursor: pointer;" 
+              [routerLink]="['./sub-menu-project', row.id_proyek]" 
+              [data] = 'row'>{{row.nama_proyek}}</a>
            </ng-template>
           </ngx-datatable-column>
 

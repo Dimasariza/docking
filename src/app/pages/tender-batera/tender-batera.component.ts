@@ -150,10 +150,39 @@ export class TenderBateraComponent implements OnInit {
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
+  // ngOnInit(): void {
+  //   this.tenderBateraService.getDataTender().subscribe(res => {
+  //     console.log(res)
+  //   })
+
+  public tenderLoadDetails : TreeNode<FSEntry> []
   ngOnInit(): void {
-    this.tenderBateraService.getDataTender().subscribe(res => {
-      console.log(res)
-    })
+    this.tenderBateraService.getDataTender()
+      .subscribe(({data} : any) => {
+        const {work_area} = data
+        console.log(data)
+        const populateData = (work, kind) => {          
+          const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks} = work           
+          return {
+            data: {
+              "Job No": sfi,
+              "Job": pekerjaan,
+              "Dept": departemen,
+              "Start": start,
+              "Stop": end,
+              "Vol" : volume,
+              "Unit" : '',
+              "Unit Price": harga_satuan,
+              "Total Price Budget" : kontrak,
+              "Category" : type,
+              "Remarks" : remarks,
+              kind
+            },
+            children: items?.length ? items.map(child => populateData(child, 'doc')) : []
+          }
+        }
+        this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      })
   }
 
   getDataTender(){

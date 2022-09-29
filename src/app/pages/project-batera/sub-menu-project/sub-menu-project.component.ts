@@ -3,7 +3,6 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
-import { HttpResponse } from '@angular/common/http';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
 
@@ -39,27 +38,32 @@ export class SubMenuProjectComponent implements OnInit {
     private route: ActivatedRoute,
     public dialog : MatDialog,
     private service : ProjectBateraService){
-    this.dataSource = this.dataSourceBuilder.create(this.datas);
   }
-  public subProjectMenu
+
+  @Input() shipName 
   public workArea : TreeNode<FSEntry> []
-
   ngOnInit(): void {
-
     const id = this.route.snapshot.paramMap.get('id')
-
     this.service.getSubProjectData(id)
       .subscribe(({data} : any) => {
         const {work_area} = data
+        const {kapal} = data
+        this.shipName = kapal.nama_kapal
         const populateData = (work, kind) => {          
-          const {items, sfi, pekerjaan, start, end, departemen, } = work           
+          const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at } = work           
           return {
             data: {
               "Job No": sfi,
               "Job": pekerjaan,
+              "Dept": departemen,
               "Start": start,
               "Stop": end,
-              "Dept": departemen,
+              "Vol" : volume,
+              "Unit" : '',
+              "Unit Price": harga_satuan,
+              "Total Price Budget" : kontrak,
+              "Category" : type,
+              "Remarks" : updated_at,
               kind
             },
             children: items?.length ? items.map(child => populateData(child, 'doc')) : []
@@ -89,22 +93,6 @@ export class SubMenuProjectComponent implements OnInit {
     }
     return NbSortDirection.NONE;
   }
-
-  private datas: TreeNode<FSEntry>[] =   
-    [
-      {
-        data: { "Job No": '2.20.1', kind: 'dir' },
-      },
-      {
-        data: { "Job No": '2.20.2', kind: "dir" },
-        children: [
-          { data: { "Job No": 'project-1.doc', kind: 'doc' } },
-          { data: { "Job No": 'project-2.doc', kind: 'doc' } },
-          { data: { "Job No": 'project-3', kind: 'doc' } },
-          { data: { "Job No": 'project-4.docx', kind: 'doc' } },
-        ],
-      },
-    ];
 
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
@@ -192,8 +180,8 @@ export class SubProjectDataComponent implements OnInit{
 
   constructor(private route: ActivatedRoute, private service : ProjectBateraService ) {}
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params: any) => {
-      this.service.getSubProjectData(params.data)
+      const id = this.route.snapshot.paramMap.get('id')
+      this.service.getSubProjectData(id )
       .subscribe((res) => {
         this.dataProyek = res
         this.reportData.Vessel.value = this.dataProyek.data.kapal.nama_kapal
@@ -206,7 +194,6 @@ export class SubProjectDataComponent implements OnInit{
         this.reportData["-In Dock"].value = this.dataProyek.data.repair_in_dock_period + ' days'
         this.reportData["-Additional Days"].value = this.dataProyek.data.repair_additional_day + ' days'
       })
-    })
   }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
@@ -275,14 +262,13 @@ export class SubPriceDataComponent implements OnInit {
 
   private dataPrice : any
   ngOnInit() : void {
-    this.route.queryParams.subscribe((params: any) => {
-      this.service.getSubProjectData(params.data)
+    const id = this.route.snapshot.paramMap.get('id')
+      this.service.getSubProjectData(id)
       .subscribe((res) => {
         this.dataPrice = res
         this.dataPrice = this.dataPrice.data
         this.priceData['Owner Canceled Jobs'].Budget = this.dataPrice.owner_cancel_job
       })
-    })
 
   }
   
