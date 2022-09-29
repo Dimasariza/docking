@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApexAxisChartSeries } from 'ng-apexcharts';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
 
@@ -10,17 +11,17 @@ import { TrackingBateraService } from './tracking-batera.service';
 export class TrackingBateraComponent implements OnInit {
   public chartData : any
   chartOptions: Partial<ChartOptions> = {
-    series: [ 
-      // {
-      //   data: {
-      //     x : 'nama kapal',
-      //     y: [
-      //       new Date('2019-03-02').getTime(),
-      //       new Date('2019-03-04').getTime()
-      //     ]
-      //   }
-      // }
-    ],
+    // series: [ 
+    //   {
+    //     data: {
+    //       x: 'test',
+    //       y: [
+    //         new Date('2019-03-02').getTime(),
+    //         new Date('2019-03-04').getTime()
+    //       ]
+    //     }
+    //   }
+    // ],
 
     chart: {
       height: 350,
@@ -53,34 +54,49 @@ export class TrackingBateraComponent implements OnInit {
   ) { }
 
   public trackingData : any
+  series: ApexAxisChartSeries
 
   ngOnInit(): void {
     this.trackingService.getDataTracking()
     .subscribe(({data} : any) => {
-      let dataTracking = new Array
-      let chartTracking = new Array
-      data.forEach(item => {
-        dataTracking.push(
-          {'Ship Name': item.nama_kapal, phases: [true, true, false], periode: item.created_at}
-        )
+      console.log(data);
+      
+      this.trackingData = data.map(({nama_kapal, created_at}) => 
+        ({"Ship Name": nama_kapal, phases: [true, true, false], periode: created_at}))
 
-        const populateData = (item) => {
-          const {nama_kapal} = item
-          return {
-            data: {
-                x : nama_kapal,
-                y: [
-                  new Date('2019-03-02').getTime(),
-                  new Date('2019-03-04').getTime()
-                ]
-            },
-          }
-        }
-        // this.chartOptions.series =  [populateData(item)]
-      });
-      this.trackingData = dataTracking
-      this.chartData = chartTracking
-      console.log(this.chartData)
+      this.series = [{
+        data:  data.map(({nama_kapal, created_at, updated_at}) => ({
+          x: nama_kapal,
+          y: [
+            new Date(created_at).getTime(),
+            new Date(updated_at).getTime()
+          ]
+        }))
+      }]
+      // let dataTracking = new Array
+      // let chartTracking = new Array
+      // data.forEach(item => {
+      //   dataTracking.push(
+      //     {'Ship Name': item.nama_kapal, phases: [true, true, false], periode: item.created_at}
+      //   )
+
+      //   const populateData = (item) => {
+      //     const {nama_kapal} = item
+      //     return {
+      //       data: {
+      //           x : nama_kapal,
+      //           y: [
+      //             new Date('2019-03-02').getTime(),
+      //             new Date('2019-03-04').getTime()
+      //           ]
+      //       },
+      //     }
+      //   }
+      //   // this.chartOptions.series =  [populateData(item)]
+      // });
+      // this.trackingData = dataTracking
+      // this.chartData = chartTracking
+      // console.log(this.chartData)
       
     })
   } 
