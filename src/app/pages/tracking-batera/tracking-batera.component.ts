@@ -76,14 +76,10 @@ export class TrackingBateraComponent implements OnInit {
             },
           }
         }
-        // this.chartOptions.series =  [populateData(item)]
       });
       this.trackingData = dataTracking
       this.chartData = chartTracking
       console.log(this.chartData)
-      
     })
   } 
-
-
 }

@@ -5,16 +5,8 @@
             My Fleet
         </button>
         <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="list-outline" pack="eva"></nb-icon>
-            Fleet List
-        </button>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
             <nb-icon icon="menu-outline" pack="eva"></nb-icon>
             All assets
-        </button>
-        <button nbButton status="primary" class="mx-1" ghost>
-            <nb-icon icon="shuffle-2-outline" pack="eva"></nb-icon>
-            Docking Plan
         </button>
         <button nbButton class="mx-1" ghost>
             <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
@@ -57,8 +49,16 @@
         [rows]="trackingData"
         [count]="trackingData"
         columnMode="force"
+        [scrollbarH]="true"
         default>
-        <ngx-datatable-column name="Ship Name" prop="Ship Name"></ngx-datatable-column>
+        <ngx-datatable-column name="Ship Name" prop="Ship Name" routeLink="/">
+            <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                <a class="text-primary text-decoration-none" 
+                style="cursor: pointer;" 
+                [routerLink]="['./sub-menu-project', row.id_proyek]" 
+                [data] = 'row'>{{row['Ship Name']}}</a>
+             </ng-template>
+        </ngx-datatable-column>
         <ngx-datatable-column name="Phases">
             <ng-template let-row="row" ngx-datatable-cell-template>
                 <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>

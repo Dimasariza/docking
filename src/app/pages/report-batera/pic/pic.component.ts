@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ReportBateraService } from '../report-batera.service';
 
 interface TreeNode<T> {
   data: T;
@@ -16,7 +17,7 @@ interface FSEntry {
   selector: 'ngx-pic',
   templateUrl: './pic.component.html',
 })
-export class PicComponent  {
+export class PicComponent {
   customColumn = 'Title';
   defaultColumns = [ 'Date', 'Last Change' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -30,6 +31,7 @@ export class PicComponent  {
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     iconsLibrary: NbIconLibraries,
+    private reportService : ReportBateraService
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -38,7 +40,6 @@ export class PicComponent  {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
-
   
   shipData = [
     {
@@ -193,6 +194,10 @@ export class PicComponent  {
   ]
 
   ngOnInit(): void {
+    this.reportService.getDataReport()
+    .subscribe(res => {
+      console.log(res)
+    })
   }
 }
 

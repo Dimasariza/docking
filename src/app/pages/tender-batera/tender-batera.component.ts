@@ -84,24 +84,10 @@ export class TenderBateraComponent implements OnInit {
     }
   ]
 
-  dataTable = [
-    {
-      "vessel": "General Service",
-      "customer": "Batera Line",
-      "start": "15:09:19"
-    },
-    {
-      "vessel": "Hull",
-      "customer": "Batera Line",
-      "start": "15:08:19"
-    },
-  ]
-
   customColumn = "Job No";
   defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract','Total Price Contract', 'Category', 'Remarks' ];
   editColumn = 'Edit'
   allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
-
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
@@ -119,21 +105,6 @@ export class TenderBateraComponent implements OnInit {
     return NbSortDirection.NONE;
   }
 
-  private data: TreeNode<FSEntry>[] = [
-    {
-      data: { "Job No": '2.20.1', kind: 'dir' },
-    },
-    {
-      data: { "Job No": '2.20.2', "Price A": '1.8 MB', "Price C": 'five', "Price B": 'dirt', kind: "dir" },
-      children: [
-        { data: { "Job No": 'project-1.doc', "Price B": 'doc', "Price A": '240 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-2.doc', "Price B": 'doc', "Price A": '290 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-3', "Price B": 'txt', "Price A": '466 KB', kind: 'doc' } },
-        { data: { "Job No": 'project-4.docx', "Price B": 'docx', "Price A": '900 KB', kind: 'doc' } },
-      ],
-    },
-  ];
-
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
@@ -145,15 +116,10 @@ export class TenderBateraComponent implements OnInit {
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private tenderBateraService : TenderBateraService,
     public dialog : MatDialog
-
     ) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
-  // ngOnInit(): void {
-  //   this.tenderBateraService.getDataTender().subscribe(res => {
-  //     console.log(res)
-  //   })
+  public scrollVisibility: any = { horizontal: false, vertical: false }
 
   public tenderLoadDetails : TreeNode<FSEntry> []
   ngOnInit(): void {

@@ -29,36 +29,8 @@
     <nb-accordion-item>
      <nb-accordion-item-header >Load Details</nb-accordion-item-header>
      <nb-accordion-item-body>
-<!--       
-        <ngx-datatable [class]="'bootstrap'"  [rows]="dataTable" [count]="dataTable.length" columnMode="force" [headerHeight]="0" default>
-          <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
-          <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
-          <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-          <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-        </ngx-datatable>
-    
-      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-      
-        <ng-container [nbTreeGridColumnDef]="customColumn">
-            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-            {{customColumn}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-            {{row.data[customColumn]}}
-            </td>
-        </ng-container>
-        <ng-container *ngFor="let column of defaultColumns; let index = index"
-                        [nbTreeGridColumnDef]="column"
-                        [showOn]="getShowOn(index)">
-            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-            {{column}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-        </ng-container>
-      </table>    -->
-      <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
+        
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource">
         <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
         <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
     
