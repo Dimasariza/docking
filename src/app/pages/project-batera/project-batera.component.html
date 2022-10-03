@@ -1,21 +1,21 @@
 <nb-card>
-    <nb-card-body>
-        <h5>Tasks | Mine</h5>
-        <button nbButton class="mx-1" ghost shape="rectangle">
-          <nb-icon icon="menu-outline" pack="eva"></nb-icon>
-            Projects
-        </button>
-        <input nbInput id="search" class="search-input mx-3" placeholder="Search">
-        <nb-select selected="1" class="mx-3">
-          <nb-option value="1">Reposition</nb-option>
-          <nb-option value="2">Plan</nb-option>
-          <nb-option value="3">Evaluation</nb-option>
-        </nb-select>
+  <nb-card-body>
+    <h5>Tasks | Mine</h5>
+    <button nbButton class="mx-1" ghost shape="rectangle">
+      <nb-icon icon="menu-outline" pack="eva"></nb-icon>
+        Projects
+    </button>
+    <input nbInput id="search" class="search-input mx-3" placeholder="Search">
+    <nb-select selected="1" class="mx-3">
+      <nb-option value="1">Reposition</nb-option>
+      <nb-option value="2">Plan</nb-option>
+      <nb-option value="3">Evaluation</nb-option>
+    </nb-select>
 
-        <nb-select selected="1" class="mx-3">
-          <nb-option value="1">Responsible</nb-option>
-          <nb-option value="2">SS</nb-option>
-        </nb-select>
+    <nb-select selected="1" class="mx-3">
+      <nb-option value="1">Responsible</nb-option>
+      <nb-option value="2">SS</nb-option>
+    </nb-select>
          
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)" equalColumnsWidth>
   
@@ -41,37 +41,36 @@
               </td>
           </ng-container>
       </table>
-    </nb-card-body>
-  </nb-card>
+  </nb-card-body>
+</nb-card>
 
 
 <nb-card>
     <nb-card-body>
       <nb-card-header class="d-flex justify-content-between w-100" >
           <h5>Project List</h5>
-          <button nbButton outline status="primary" (click)="openDialog()" >Add New Project</button>
+          <button nbButton outline status="primary" (click)="openDialog()" >Add Project</button>
         </nb-card-header>
 
       <ngx-datatable [class]="'bootstrap'" [rows]="allProjectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
-          <ngx-datatable-column [name]="'Project name'" prop="nama_proyek">
+          <ngx-datatable-column [name]="'Project name'" prop="kapal">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <a class="text-primary text-decoration-none" 
               style="cursor: pointer;" 
               [routerLink]="['./sub-menu-project', row.id_proyek]" 
-              [data] = 'row'>{{row.nama_proyek}}</a>
+              [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}}</a>
            </ng-template>
           </ngx-datatable-column>
 
           <!-- <ngx-datatable-column [name]="'Shortcut'" prop="">
             <ng-template let-row="row" ngx-datatable-cell-template>
-
               <nb-icon *ngFor="let stat of row.shortcuts" [ngStyle]="{'color': 'grey'}" [icon]="stat"></nb-icon>
             </ng-template>  
           </ngx-datatable-column> -->
 
           <ngx-datatable-column [name]="'Ship Management'" prop="kapal.owner.nama_lengkap"></ngx-datatable-column>
           
-          <!-- <ngx-datatable-column [name]="'R'" width="30">
+          <ngx-datatable-column [name]="'R'" width="30">
             <ng-template let-row="row" ngx-datatable-cell-template>
               <nb-icon [stat]="row.R" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
@@ -97,11 +96,19 @@
               <nb-icon [stat]="row.E" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
-          </ngx-datatable-column> -->
+          </ngx-datatable-column>
 
-          <ngx-datatable-column [name]="'Start Date'" prop="created_at"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Last Change'" prop="updated_at"></ngx-datatable-column>
-          <ngx-datatable-column [name]="'Delete'">
+          <ngx-datatable-column [name]="'Start Date'" prop="off_hire_start">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row.created_at | date:'medium' }}
+            </ng-template> 
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="'Last Change'" prop="updated_at">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row.updated_at | date:'medium' }}
+            </ng-template> 
+          </ngx-datatable-column>
+          <ngx-datatable-column [name]="''">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <button nbButton size="small" ghost (click)="deleteProject(rowIndex)">
                 <nb-icon icon="trash-2-outline" status="danger"></nb-icon>

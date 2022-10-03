@@ -7,16 +7,17 @@ import { Component } from '@angular/core';
 export class CardComponent {
   objectKeys = Object.keys;
   dataTable = {
-    'Currency': 'IDA*',
+    'Yard' : 'Marcopolo',
+    'Currency': 'IDR',
     'Offhire	Repair': '19 Days',
     'Period (In Dock)': '13 Days',
     'Offhire Cost': '2.759.920.000',
     'Owner Cost': '2.412.000.000',
     'Owner Total Cost': '4.171.950.000',
-    'Yard Total Quote': '4.560.753.000',
+    'Yard Total Contract': '4.560.753.000',
     'General Discount': {
       discount : '-684.000.000',
-      'After Discount' : 15  
+      'After Discount' : 15   
     },
     'Sum Internal Adjusment': '811.000.000'
   }

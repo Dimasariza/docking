@@ -3,52 +3,50 @@
         <div style="min-width: 8rem;">
             <nb-card class="h-100" style="cursor: pointer;" (click)="changeLogoDial()">
                 <nb-card-body class="text-secondary d-flex justify-content-center">
-                    <nb-icon *ngIf="companyProfile" icon="plus-square-outline" pack="eva" style="font-size: 2rem;" class="align-self-center"></nb-icon>
-                    <img *ngIf="!companyProfile" src="" alt="">
+                    <nb-icon *ngIf="companyData" icon="plus-square-outline" pack="eva" style="font-size: 2rem;" class="align-self-center"></nb-icon>
+                    <img *ngIf="!companyData" src="" alt="">
                 </nb-card-body>
             </nb-card>
         </div>
         <div class="mx-3 w-100 align-middle">
-            <h5>{{companyData.companyBrand}} {{companyData.companyName}}</h5>
+            <h5>{{companyData.profile_nama_perusahaan}}</h5>
         </div>
     </nb-card-header>
 
     <nb-card-body>
         <div class="d-flex justify-content-between">
             <h6>Company Profile</h6> 
-            <button outline nbButton [status]="formCondition ? 'primary' : 'danger' "  class="float-right" size="small" (click)="changeProfile()" >{{changeText}}</button>
+            <button outline nbButton [status]="formCondition ? 'primary' : 'danger'"  class="float-right" size="small" (click)="changeProfile()" >{{changeText}}</button>
         </div>
-
-
         <form #companyForm="ngForm" (ngSubmit)="updateCompanyProfile(companyForm)" (keyup.enter)="$event.target.value">
         <div class="row">
             <div class="col-6">
                 <span class="p-2 d-block">Company Name</span>
-                <input type="text" nbInput fullWidth placeholder="companyData.companyName" class="form-control" id="name" (change)="companyData.companyName = $event.target.value"
-                required [(ngModel)]="companyData.companyName" name="name" [disabled]="formCondition">
+                <input type="text" nbInput fullWidth placeholder="Company Name" class="form-control" id="name" (change)="companyData.profile_nama_perusahaan = $event.target.value"
+                required [(ngModel)]="companyData.profile_nama_perusahaan" name="name" [disabled]="formCondition">
                 <span class="p-2 d-block">Company Adress</span>
                 <textarea rows="5" nbInput fullWidth shape="round"  placeholder="First Company Address" id="adreess_01"
-                required [(ngModel)]="companyData.companyAddress1" name="address_01" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
+                required [(ngModel)]="companyData.profile_alamat_perusahaan_1" name="address_01" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
                 <span class="p-2 d-block">Mobile Number</span>
                 <input type="text" nbInput fullWidth placeholder="Mobile Number" id="telp_number" [disabled]="formCondition"
-                required [(ngModel)]="companyData.mobileNo" name="telp_number" #telp_number="ngModel">
+                required [(ngModel)]="companyData.profile_telepon" name="telp_number" #telp_number="ngModel">
                 <span class="p-2 d-block">NPWP</span>
                 <input type="text" nbInput fullWidth placeholder="Company NPWP" id="npwp" [disabled]="formCondition"
-                required [(ngModel)]="companyData.npwp" name="npwp" #npwp="ngModel">
+                required [(ngModel)]="companyData.profile_npwp" name="npwp" #npwp="ngModel">
             </div>
             <div class="col-6">
                 <span class="p-2 d-block">Company Brand</span>
                 <input type="text" nbInput fullWidth placeholder="Company Brand" id="brand" [disabled]="formCondition"
-                required [(ngModel)]="companyData.companyBrand" name="brand" #brand="ngModel">
+                required [(ngModel)]="companyData.profile_merk_perusahaan" name="brand" #brand="ngModel">
                 <span class="p-2 d-block">Company Address</span>
                 <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Second Company Address" id="adreess_02" [disabled]="formCondition"
-                required [(ngModel)]="companyData.companyAddress2" name="address_02" #address_02="ngModel" shape="rectangle"></textarea>
+                required [(ngModel)]="companyData.profile_alamat_perusahaan_2" name="address_02" #address_02="ngModel" shape="rectangle"></textarea>
                 <span class="p-2 d-block">Faximile</span>
                 <input type="text" nbInput fullWidth placeholder="Faximile Address" id="faximile" [disabled]="formCondition"
-                required [(ngModel)]="companyData.fax" name="faximile" #faximile="ngModel">
+                required [(ngModel)]="companyData.profile_fax" name="faximile" #faximile="ngModel">
                 <span class="p-2 d-block">E-mail</span>
                 <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" [disabled]="formCondition"
-                required [(ngModel)]="companyData.email" name="email" #email="ngModel">
+                required [(ngModel)]="companyData.profile_email" name="email" #email="ngModel">
             </div>
         </div>
 
@@ -69,27 +67,25 @@
         [rows]="userData" 
         columnMode="force"
         default>
-            <ngx-datatable-column [name]="'No'" [width]="50">
+            <ngx-datatable-column [name]="'No'" [width]="40" >
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                     {{rowIndex+1}}
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [name]="'User Name'" prop="nama_lengkap"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Vessel Name'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Title'" prop="jabatan"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Email'" prop="email"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Mobile No'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'User Id'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Departement'" prop="no_hp"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Role'" prop="role"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Start Date'" prop="updated_at"></ngx-datatable-column>
-            <ngx-datatable-column name="Status" prop="status">
+            <ngx-datatable-column [name]="'User Name'" prop="nama_lengkap" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Vessel Name'" prop="nama_kapal" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Title'" prop="jabatan" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Departement'" prop="departemen" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Email'" prop="email" resizeable="true" minWidth="200"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Mobile No'" prop="no_hp" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'User Id'" prop="user_id" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Role'" prop="role" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Start Date'" prop="updated_at" resizeable="true" minWidth="200" >
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                    <nb-select selected="2" class="" size="tiny" status="primary">
-                        <nb-option value="2" *ngFor="let status of ['Active', 'Deactive']">{{status}}</nb-option>
-                    </nb-select>
-                </ng-template>
-            </ngx-datatable-column> 
+                    {{ row.updated_at | date:'medium' }}
+                  </ng-template> 
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Status" prop="status"  width="60"></ngx-datatable-column> 
             <ngx-datatable-column width="60">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                     <button nbButton size="small" ghost status="primary" (click)="updateUserDial(rowIndex)"> 

@@ -13,40 +13,14 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 })
 export class UpdateUserComponent implements OnInit {
   ngOnInit(): void {
-    this.userData.username = this.passUserData.username
-    this.userData.nama_lengkap = this.passUserData.nama_lengkap
-    this.userData.nama_kapal = this.passUserData.nama_kapal
-    this.userData.title = this.passUserData.title
-    this.userData.departemen = this.passUserData.departemen
-    this.userData.user_id = this.passUserData.user_id
-    this.userData.jabatan = this.passUserData.jabatan
-    this.userData.no_hp = this.passUserData.no_hp
-    this.userData.email = this.passUserData.email
-    this.userData.password = this.passUserData.password
-    this.userData.status = this.passUserData.status
-    this.userData.avatar_url = this.passUserData.avatar_url
-  }
-
-  public userData = {
-    username: 'user name',
-    nama_lengkap : 'full name',
-    nama_kapal : 'ship name',
-    title : 'title',
-    departemen : 'departement',
-    user_id : 'user id',
-    jabatan : 'position',
-    no_hp : 'mobile number',
-    email : 'email',
-    password : 'password',
-    status : 'status',
-    avatar_url : 'avatar url'
+    console.log(this.userData)
   }
 
   constructor(
     private service:ProfileBateraService,
     public dialog : MatDialog,
     private dialogRef: MatDialogRef<UpdateUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public passUserData: any
+    @Inject(MAT_DIALOG_DATA) public userData: any
   ) {}
 
   updateUserForm = new FormGroup({
@@ -55,7 +29,6 @@ export class UpdateUserComponent implements OnInit {
     fileSource: new FormControl('', [Validators.required])
   });
 
-  public formCondition : boolean = false
   public avatarUrlConds : boolean = false
   public avatarUrl : any
   onFileChange(res){
@@ -69,39 +42,47 @@ export class UpdateUserComponent implements OnInit {
       reader.readAsDataURL(file)
       reader.onload = (event ) => {
         this.avatarUrl = event.target.result
+        console.log(event)
       }
     }
   }
 
-  private uploadLink : any
+  private uploadLink 
   onImageLoad(){
     const formData = new FormData();
     formData.append('dokumen', this.updateUserForm.get('fileSource').value);
     this.service.loadImage(formData)
-      .subscribe(res => {
+      .subscribe(({res} : any) => {
         if (res.type === HttpEventType.UploadProgress) {
           console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
         } else if ( res.type === HttpEventType.Response){
           console.log("final Response uploading image")
-          console.log(res)
         }
-        this.uploadLink = res
-        this.uploadLink = this.uploadLink.body
+        let link = res.body
+        console.log(link)
+
     })
   }
 
-  updateUserProfile(data){
-    if(this.uploadLink !== undefined) {
-      this.userData.avatar_url = this.uploadLink.data.file
-    }
-    this.service.updateUser(this.userData)
-      .subscribe(res => {console.log(res)}
+  addElement (ElementList, element) {
+    let newList = Object.assign(ElementList, element)
+    return newList
+  }
 
-      // err => {console.log('HTTP Error', err)},
-      // () => console.log('HTTP request completed.')
+  updateUserProfile(data){
+    this.uploadLink === 'undefined' ? 
+    this.userData.avatar_url = this.uploadLink.data.file :
+    this.uploadLink = " "
+    this.addElement(data.value , {avatar_url : this.uploadLink})
+    this.addElement(data.value , {id_user : this.userData.id_user })
+    console.log(data.value)
+    this.service.updateUser(data.value)
+      .subscribe(res =>console.log(res),
+      err => {console.log('HTTP Error', err)},
+      () => console.log('HTTP request completed.')
     )
     this.avatarUrlConds = false
-    console.log(this.userData)
+    this.close()
   }
   
   close(){ this.dialogRef.close();}

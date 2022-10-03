@@ -1,7 +1,11 @@
 import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { NbDateService, NbIconLibraries, } from '@nebular/theme';
+import { PagesRoutingModule } from '../pages-routing.module';
+import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ReportBateraService } from './report-batera.service';
 
 @Component({
@@ -15,6 +19,9 @@ export class ReportBateraComponent {
 
   constructor(iconsLibrary: NbIconLibraries,
     private tenderBateraService : ReportBateraService,
+    private dialog : MatDialog,
+    public activatedRoute : ActivatedRoute,
+    public pageService : PagesRoutingModule
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -25,20 +32,43 @@ export class ReportBateraComponent {
   }
 
   ngOnInit(): void {
-    this.getDataReport()
-  }
-
-  getDataReport(){
     this.tenderBateraService.getDataReport().subscribe(res => {
       this.dataReport = res
-      console.log(res)
+      console.log(this.dataReport)
     }) 
+
+    this.activatedRoute.params.subscribe((params) => {
+      this.project_id = params.id
+      this.tenderBateraService.getProjectData(this.project_id)
+      .subscribe(({data} : any) => {
+        console.log(data)
+        this.project.name = data.kapal.nama_kapal
+        this.project.year = data.tahun
+        console.log(this.project.name)
+      })
+
+      this.tabs.map(data => {
+        let route = data.route
+        console.log(route)
+        // return {
+        //   title : data.title,
+        //   route : data
+        // }
+      })
+    })
+  }
+
+  @Input() project_id : any
+
+  project = {
+    name : 'name',
+    year : ''
   }
 
   tabs: any[] = [
     {
       title: 'PIC',
-      route: '/pages/report-batera/pic',
+      route: '/pages/report-batera/4/pic' ,
     },
     {
       title: 'Work Progress',
@@ -72,6 +102,13 @@ export class ReportBateraComponent {
       menu : "New Project Status"
     },
   ];
+
+  addJobDial(){
+    const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
+      disableClose : true, autoFocus:true, 
+    })
+  }
 
 }
 
@@ -157,7 +194,6 @@ export class reportData implements OnInit{
     const newFormData = { status: "on Progress"}
 
     this.ReportBateraService.createStatus(newFormData).subscribe(data => {
-      console.log(data)
     })
   }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {

@@ -2,11 +2,11 @@
     <nb-card-header>
         <button nbButton shape="rectangle" class="mx-1" ghost>
             <nb-icon icon="star-outline" pack="eva"></nb-icon>
-            My Fleet
+            All Assets
         </button>
         <button nbButton shape="rectangle" class="mx-1" ghost>
             <nb-icon icon="menu-outline" pack="eva"></nb-icon>
-            All assets
+            Docking Plan
         </button>
         <button nbButton class="mx-1" ghost>
             <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
@@ -55,7 +55,7 @@
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
                 <a class="text-primary text-decoration-none" 
                 style="cursor: pointer;" 
-                [routerLink]="['./sub-menu-project', row.id_proyek]" 
+                [routerLink]="['/pages/report-batera', row.id_kapal]" 
                 [data] = 'row'>{{row['Ship Name']}}</a>
              </ng-template>
         </ngx-datatable-column>
@@ -71,12 +71,11 @@
             </ngx-datatable-column>
             </ngx-datatable>
             </div>
-            <div style="flex: 1; margin-left: -18px; margin-top: 1.2em;">
+            <div style="flex: 1; margin-left: -19px; margin-top: 1.2em;">
                 <ng-container *ngTemplateOutlet="timeline; context: {$implicit: series}"></ng-container>
             </div>
         </div>
     </nb-card-body>
-    
 </nb-card>
 
 <ng-template #table>

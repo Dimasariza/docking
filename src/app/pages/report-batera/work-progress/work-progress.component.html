@@ -1,18 +1,17 @@
-<nb-card>
-    <nb-card-body>
-        <div class="buttons my-1" >
-            <button *ngFor="let icon of useIcons; let indexOfelement=index;"
-            nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report">
-                <nb-icon [icon]="icon.icon" pack="eva">
-                </nb-icon>
-                {{icon.desc}}
-            </button>
-        </div>
-        
+<div class="buttons my-1" >
+    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClick(icon.desc)">
+        <nb-icon [icon]="icon.icon" pack="eva">
+        </nb-icon>
+        {{icon.desc}}
+    </button>
+</div>
+<div style="overflow: auto; width: 100%;">
+    <div style="width: 2000px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-        
+
             <ng-container [nbTreeGridColumnDef]="customColumn">
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
                 {{customColumn}}
@@ -22,7 +21,7 @@
                 {{row.data[customColumn]}}
                 </td>
             </ng-container>
-        
+
             <ng-container  *ngFor="let column of approvalColumns; let index = index"
             [nbTreeGridColumnDef]="column"
             [showOn]="getShowOn(index)">
@@ -45,7 +44,7 @@
                     </button>
                 </td>
             </ng-container>
-        
+
             <ng-container *ngFor="let column of defaultColumns; let index = index"
                             [nbTreeGridColumnDef]="column"
                             [showOn]="getShowOn(index)">
@@ -55,5 +54,5 @@
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
             </ng-container>
         </table>    
-    </nb-card-body>
-</nb-card>
+    </div>
+</div>

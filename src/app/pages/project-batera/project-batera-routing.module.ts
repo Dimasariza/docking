@@ -29,5 +29,5 @@ export const routedComponents = [
   SubPriceDataComponent,
   AddNewProjectComponent,
   FsIconComponent,
-  WorkAreaComponent
+  WorkAreaComponent,
 ];

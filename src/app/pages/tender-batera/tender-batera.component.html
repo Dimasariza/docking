@@ -1,87 +1,75 @@
-<div class="row">
   <nb-card class="p-3">  
     <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
-          <h5 class="float-xl-left float-lg-left float-md-left">Selected Yard : 
-            <Span>Pax Ocean Batam</Span>
-          </h5>
-          <div class="text-xl-right text-lg-right text-md-right">
-            <button nbButton status='danger'>Clear Selected Yard</button>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+          <div class="d-flex justify-content-between">
+            <h5>Selected Yard : <Span>{{selectedYard}}</Span></h5>
+            <button nbButton size="tiny" status="primary" hero (click)="addYard()">Add Contract</button>
           </div>
-          <span><strong>Internal Comment</strong></span> 
-          <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque odit debitis in, nisi distinctio iure facilis aut dolores maiores ipsum optio unde veritatis qui deleniti voluptate corporis velit? Aut, quidem!</p>
-          <div class="d-flex">
-            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny" (click)="openDialog()">Yard Comment</button><br> 
-            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny">Yard Terms</button><br> 
-            <button class="mr-2 mb-2" nbButton hero status="info" size="tiny">Attachments</button><br> 
-          </div>
-          <input type="file" nbInput placeholder="Add file from computer" class="custom-file-input">
-          <!-- <button nbButton class="w-100 align-baseline" shape="rectangle" >Add file from computer</button> -->
+            <span class="d-block">Project Name</span>  
+            <span class="text-danger">display</span>
+            <span class="d-block w-100">Yard Name</span>
+            <span class="text-danger">display</span>
+            <span class="d-block">Yard Location</span> 
+            <span class="text-danger">display </span>
+            <span class="d-block">Responsible</span>
+            <span class="text-danger">display</span>
+            <span class="d-block">Contract Number</span> 
+            <span class="text-danger">display</span>
+            <span class="d-block">Yard Quote</span> 
+            <span class="text-danger">display</span>
+            <span class="d-block">Comment</span>
+            <p class="text-danger">commentar comeentar comment </p>
         </div>
-        <ngx-card class="col-xl-6 col-lg-6 col-md-12 col-sm-12"></ngx-card>
+        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+          <ngx-card></ngx-card>
+        </div>
     </div>
   </nb-card>
-</div>
 
-<div class="row">
-  <nb-card>
-   <nb-accordion>
-    <nb-accordion-item>
-     <nb-accordion-item-header >Load Details</nb-accordion-item-header>
-     <nb-accordion-item-body>
-        
-        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource">
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-    
-        <ng-container [nbTreeGridColumnDef]="customColumn">
-          <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-            {{customColumn}}
-          </th>
-    
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
-            {{row.data[customColumn]}}
-          </td>
-        </ng-container>
-  
-        <ng-container [nbTreeGridColumnDef]="editColumn">
-            <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-            <button class="btn btn-light btn-sm text-center" ghost>
-                <nb-icon icon="edit-outline" status="primary"></nb-icon>
-            </button>
+<nb-accordion>
+  <nb-accordion-item>
+    <nb-accordion-item-header >Load Details</nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <button nbButton class="m-1" status="primary" outline type="button" size="small" (click)="triggerSelectFile(addFromFile)">
+        Add From File
+      <input type="file" style="display: none;" #addFromFile>
+      </button>
+      <div style="overflow: auto; width: 100%;">
+        <div style="width: 1524px;">
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
+          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+      
+          <ng-container [nbTreeGridColumnDef]="customColumn">
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
+              {{customColumn}}
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
+              {{row.data[customColumn]}}
             </td>
-        </ng-container>
+          </ng-container>
     
-        <ng-container *ngFor="let column of defaultColumns; let index = index"
-                      [nbTreeGridColumnDef]="column"
-                      [showOn]="getShowOn(index)">
-          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-            {{column}}
-          </th>
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-        </ng-container>
-      </table>
-
-     </nb-accordion-item-body>
-    </nb-accordion-item>
-   </nb-accordion>
-  </nb-card>
-</div>
-
-
-<!-- 
-<nb-card>
-
-  <div class="d-flex" >
-      <div *ngFor = "let button of menuButton" class="mx-1 my-3">
-          <button *ngIf = "button.position === 'bottom'"  nbButton status="primary" class="mx-1" outline size="small">
-              {{button.text}}
-          </button>
+          <ng-container [nbTreeGridColumnDef]="editColumn">
+              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+              <button class="btn btn-light btn-sm text-center" ghost>
+                  <nb-icon icon="edit-outline" status="primary"></nb-icon>
+              </button>
+              </td>
+          </ng-container>
+      
+          <ng-container *ngFor="let column of defaultColumns; let index = index"
+                        [nbTreeGridColumnDef]="column"
+                        [showOn]="getShowOn(index)">
+            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
+              {{column}}
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+          </ng-container>
+        </table>
       </div>
-  </div>
-
-  <h6 class="mx-3" style="color: burlywood;">Work Area</h6>      
-  
-</nb-card> -->
+    </div>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

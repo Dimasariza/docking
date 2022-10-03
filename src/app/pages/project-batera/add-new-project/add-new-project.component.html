@@ -1,6 +1,6 @@
 <nb-card >
   <nb-card-header class="d-flex justify-content-between">
-    <h5 style="color:burlywood;">Add New Project</h5>
+    <h5 style="color:burlywood;">Add Project</h5>
     <button nbButton status="danger" size="small" (click)="close()">
       <nb-icon icon="close-square-outline"></nb-icon>
     </button>
@@ -8,20 +8,20 @@
   <nb-card-body>
     <form class="row" #newProjectForm="ngForm" (ngSubmit)="addNewProject(newProjectForm)">
       <div class="left_side col-6">
-        <label for="Vessel Name" class="">Vessel</label><br>
-        <nb-select class="w-100" placeholder="Vessel Name" size="small" status="primary" (selectedChange)="vesselName($event)">
-          <nb-option [value]="indexOfelement"  *ngFor="let vessel of newProjectMenu.Vessel; let indexOfelement=index;">{{vessel}}</nb-option>
+        <label for="Vessel Name" class="d-block">Vessel</label>
+        <nb-select class="w-100" placeholder="Vessel Name" size="small" status="primary" [(ngModel)]="newProjectData.vessel" #vessel name="vessel">
+          <nb-option [value]="indexOfelement"  *ngFor="let vessel of newProjectMenu.Vessel; let indexOfelement=index;">{{vessel.nama_kapal}}</nb-option>
         </nb-select>
         <label for="Year Project" class="d-block">Year Project</label>
-        <input nbInput class="w-100" fieldSize="small" name="yearProject" ngModel required #yearProject (ngModel)="yearProject" > <br>
-        <label for="Ship Management" class="">Ship Management</label> <br>
-        <input nbInput class="w-100" fieldSize="small" name="shipManagement" #shipManagement (ngModel)="shipManagement"> <br>
-        <label for="Vessel Name" class="">Responsible</label> <br>
-        <nb-select class="w-100" placeholder="Responsible" size="small" status="primary" (selectedChange)="responsible($event)">
+        <input nbInput class="w-100" fieldSize="small" name="yearProject" required #yearProject ngModel>
+        <label for="Ship Management" class="">Ship Management</label> 
+        <span class="my-2 d-block">{{newProjectData.shipManagement}}</span> 
+        <label for="Vessel Name" class="d-blocka">Responsible</label> 
+        <nb-select class="w-100" placeholder="Responsible" size="small" status="primary" #resps [(ngModel)]="newProjectData.responsible" name="responsible" >
           <nb-option [value]="indexOfelement" *ngFor="let status of newProjectMenu.responsible; let indexOfelement=index;">{{status}}</nb-option>
         </nb-select>
         <label for="Phase" class="d-block">Phase</label>
-        <nb-select class="w-100" placeholder="Phase" size="small" status="primary" (selectedChange)="responsible($event)">
+        <nb-select class="w-100" placeholder="Phase" size="small" status="primary" #phase [(ngModel)]="newProjectData.phase" name="phase">
           <nb-option [value]="indexOfelement" *ngFor="let status of newProjectMenu.Phase; let indexOfelement=index;">{{status}}</nb-option>
         </nb-select>
         <label for="Selected Yard" class="w-100">Selected Yard</label>
@@ -29,13 +29,13 @@
       </div>
 
       <div class="right_site col-6">
-        <label for="Base Currency" class="" fieldSize="small">Base Currency</label> <br>
-        <nb-select class="w-100" placeholder="Base Currency" size="small" status="primary" (selectedChange)="baseCurrency($event)"  >
+        <label for="Base Currency" class="" fieldSize="small">Base Currency</label>
+        <nb-select class="w-100" placeholder="Base Currency" size="small" status="primary" #currency [(ngModel)]="newProjectData.baseCurrency" name="baseCurrency">
           <nb-option [value]="indexOfelement" *ngFor="let status of newProjectMenu.BaseCurrency; let indexOfelement=index;">{{status}}</nb-option>
         </nb-select>
         <label for="Off Hire Period" class="d-block">Off Hire Period</label>
-        <nb-rangepicker #offHirePeriod [min]="min" ></nb-rangepicker>  
-          <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="offHirePeriod" #offHirePeriodDate>
+        <nb-rangepicker #offHirePeriodDate ></nb-rangepicker>  
+        <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="offHirePeriodDate" name="offHirePeriod" #repairPeriod [(ngModel)]="newProjectData.offHirePeriod">
         <label for="Deviation" class="d-block">- Deviation</label>
         <input type="text" class="w-100" nbInput fieldSize="small" name="deviation" #deviation (ngModel)="deviation">
         <label for="Charter Rate" class="d-block" >- Charter Rate</label>
@@ -43,11 +43,11 @@
         <label for="Bunker" class="d-block" >- Bunker</label>
         <input type="text" class="w-100" nbInput fieldSize="small" name="bunker" #bunker (ngModel)="bunker">
         <label for="Repari Period" class="d-block">Repair Period</label>
-        <nb-rangepicker #repairPeriod [min]="min"></nb-rangepicker>  
-          <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="repairPeriod" #repairPeriodDate>
+        <nb-rangepicker #repairPeriodDate ></nb-rangepicker>  
+        <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="repairPeriodDate" name="repairPeriod" #repairPeriod [(ngModel)]="newProjectData.repairPeriod">
         <label for="In Dock" class="d-block">- In Dock</label> 
-        <nb-rangepicker #inDockPicker [min]="min"></nb-rangepicker>  
-          <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="inDockPicker" #inDockDate>
+        <nb-rangepicker #inDockDate></nb-rangepicker>
+        <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="inDockDate" name="inDock" #inDock [(ngModel)]="newProjectData.repairInDockDate">
         <label for="Additional Day" class="d-block" >- Additional Day</label>
         <input type="text" class="w-100" nbInput fieldSize="small" name="additionalDay" #additionalDay (ngModel)="additionalDay" >
       </div>

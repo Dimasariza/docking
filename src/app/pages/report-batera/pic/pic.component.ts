@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ReportBateraService } from '../report-batera.service';
+
 
 interface TreeNode<T> {
   data: T;
@@ -17,7 +19,7 @@ interface FSEntry {
   selector: 'ngx-pic',
   templateUrl: './pic.component.html',
 })
-export class PicComponent {
+export class PicComponent implements OnInit{
   customColumn = 'Title';
   defaultColumns = [ 'Date', 'Last Change' ];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
@@ -31,7 +33,8 @@ export class PicComponent {
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     iconsLibrary: NbIconLibraries,
-    private reportService : ReportBateraService
+    private reportService : ReportBateraService,
+    public activatedRoute : ActivatedRoute   ,
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -106,7 +109,6 @@ export class PicComponent {
       "E": true,
     }
   ]
-
     
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -175,28 +177,19 @@ export class PicComponent {
       icon: 'checkmark-square',
       desc: 'Add Task'
     },
-    {
-      icon: 'arrow-right-outline',
-      desc: 'Add Microflow'
-    },
-    {
-      icon: 'external-link',
-      desc: 'Export to Excel'
-    },
-    {
-      icon: 'plus-square-outline',
-      desc: 'Expand'
-    },
-    {
-      icon: 'minus',
-      desc: 'Collapse'
-    }
   ]
-
+  
+  message : string = "this is ship id"
   ngOnInit(): void {
+
     this.reportService.getDataReport()
     .subscribe(res => {
       console.log(res)
+    })
+    
+    this.activatedRoute.params.subscribe(res => {
+      // this.id_kapal = res.id
+      // console.log(this.id_kapal)
     })
   }
 }

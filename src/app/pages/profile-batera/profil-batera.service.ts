@@ -6,7 +6,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 })
 export class ProfileBateraService {
   private userUrl = 'http://env-6573880.jh-beon.cloud/user';
-  private companyUrl = 'http://env-6573880.jh-beon.cloud/perusahaan';
+  private companyUrl = 'http://env-6573880.jh-beon.cloud/pengaturan/profile_perusahaan'
   private uploadUrl = 'http://env-6573880.jh-beon.cloud/file/upload';
 
   private testUrl = 'http://localhost:3002/testPutData'
@@ -25,16 +25,13 @@ export class ProfileBateraService {
   public updateUser(postData){
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    
-    let id = 5;
-    let endPoints = this.userUrl + "/" + id
+    let endPoints = this.userUrl + "/" + postData.id_user
     return this.httpClient.put(endPoints , postData, {headers : httpHeaders})
   }
 
   public addUser() {
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-
     const body = { 
       username : "K18_PD",
       nama_lengkap : "Kiseki Provider",
@@ -48,7 +45,6 @@ export class ProfileBateraService {
   }
 
   public deleteUser(id){
-    // let id: number = 1;
     let endPoints = "/" + id
     return this.httpClient.delete(this.userUrl + endPoints)
   }
@@ -63,17 +59,7 @@ export class ProfileBateraService {
   public updateCompanyProfile(body){
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    const bodyData = {
-      "nama_perusahaan": body.companyName,
-      "merk_perusahaan": body.companyBrand,
-      "alamat_perusahaan_1": body.companyAddress1,
-      "alamat_perusahaan_2": body.companyAddress2,
-      "telepon": body.mobileNo,
-      "fax": body.fax,
-      "npwp": body.npwp,
-      "email": body.email
-    }
-    return this.httpClient.put(this.companyUrl + '/' + 1, bodyData , {headers : httpHeaders})
+    return this.httpClient.put(this.companyUrl, body , {headers : httpHeaders})
   }
 
   public loadImage(body){

@@ -41,9 +41,11 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   @Input() shipName 
+  public id_proyek : any
   public workArea : TreeNode<FSEntry> []
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
+    this.id_proyek = id
     this.service.getSubProjectData(id)
       .subscribe(({data} : any) => {
         const {work_area} = data
@@ -106,6 +108,11 @@ export class SubMenuProjectComponent implements OnInit {
       icon: 'list-outline',
       text : 'List'
     },
+        {
+      position: 'top',
+      icon: 'list-outline',
+      text : 'List'
+    },
     {
       position: 'top',
       icon: 'calendar-outline',
@@ -124,6 +131,10 @@ export class SubMenuProjectComponent implements OnInit {
     {
       position: 'bottom',
       text : 'Add Job',
+    },
+    {
+      position: 'bottom',
+      text : 'Remarks'
     },
     {
       position: 'bottom',
@@ -159,8 +170,10 @@ export class SubMenuProjectComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, autoFocus:true, 
-    })
+      data : this.id_proyek
+    })      
   }
+
 
 }
 
@@ -177,7 +190,6 @@ export class SubMenuProjectComponent implements OnInit {
 })
 export class SubProjectDataComponent implements OnInit{
   @Input() dataProyek : any
-
   constructor(private route: ActivatedRoute, private service : ProjectBateraService ) {}
   ngOnInit(): void {
       const id = this.route.snapshot.paramMap.get('id')
@@ -186,13 +198,13 @@ export class SubProjectDataComponent implements OnInit{
         this.dataProyek = res
         this.reportData.Vessel.value = this.dataProyek.data.kapal.nama_kapal
         this.reportData["Base Currency"].value = this.dataProyek.data.mata_uang
-        this.reportData["-Bunker"].value = this.dataProyek.data.off_hire_bunker_per_day + ' / day'
-        this.reportData["-Rate"].value = this.dataProyek.data.off_hire_rate_per_day + ' / day'
-        this.reportData["-Deviation"].value = this.dataProyek.data.off_hire_deviasi + 'days'
+        this.reportData["- Bunker"].value = this.dataProyek.data.off_hire_bunker_per_day
+        this.reportData["- Rate"].value = this.dataProyek.data.off_hire_rate_per_day
+        this.reportData["- Deviation"].value = this.dataProyek.data.off_hire_deviasi
         this.reportData["Off Hire Period"].value = this.dataProyek.data.off_hire_period + ' days'
         this.reportData["Repair Period"].value = this.dataProyek.data.repair_period + ' days'
-        this.reportData["-In Dock"].value = this.dataProyek.data.repair_in_dock_period + ' days'
-        this.reportData["-Additional Days"].value = this.dataProyek.data.repair_additional_day + ' days'
+        this.reportData["- In Dock"].value = this.dataProyek.data.repair_in_dock_period + ' days'
+        this.reportData["- Additional Days"].value = this.dataProyek.data.repair_additional_day + ' days'
       })
   }
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
@@ -221,16 +233,16 @@ export class SubProjectDataComponent implements OnInit{
       type : 'text',
       value: ''
     },
-    "-Deviation": {
+    "- Deviation": {
       type : 'date',
-      value: '4 days'
+      value: '4'
     },
-    "-Rate": {
+    "- Rate": {
       type : 'price',
-      value: '71050000 / day.', 
+      value: '71050000', 
       subvalue : '1.421.000.000'
     } ,
-    "-Bunker": {
+    "- Bunker": {
       type : 'price',
       value : '',
       subvalue : '1.128.000.000'
@@ -239,11 +251,11 @@ export class SubProjectDataComponent implements OnInit{
       type: 'text',
       value : '', 
     },
-    "-In Dock": {
+    "- In Dock": {
       type : 'text',
       value : '' 
     },
-    "-Additional Days": {
+    "- Additional Days": {
       type : 'text',
       value : '',
     } 
@@ -271,7 +283,6 @@ export class SubPriceDataComponent implements OnInit {
       })
 
   }
-  
 
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0

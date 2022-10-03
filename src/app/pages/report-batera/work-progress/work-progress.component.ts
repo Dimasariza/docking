@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 
 
 interface TreeNode<T> {
@@ -34,8 +36,9 @@ export class WorkProgressComponent {
   evaIcons = [];
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    iconsLibrary: NbIconLibraries,
-    public dialog : MatDialog
+    private iconsLibrary: NbIconLibraries,
+    private dialog : MatDialog,
+    public activatedRoute: ActivatedRoute
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -104,6 +107,22 @@ export class WorkProgressComponent {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  onClick(desc){
+    switch (desc) {
+      case 'Add Job' :
+        this.addJobDial()
+        break;
+    }
+  }
+
+  addJobDial(){
+    const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
+      disableClose : true, autoFocus:true, 
+    })
+    console.log("open dialog")
   }
 
   useIcons = [

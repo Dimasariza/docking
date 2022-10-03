@@ -1,59 +1,84 @@
-import { Component, Inject, OnInit } from '@angular/core';  
-import { HttpEventType } from '@angular/common/http';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';  
+import { NgForm } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectBateraService } from '../project-batera.service';
 
 @Component({
   selector: 'ngx-work-area',
   templateUrl: './work-area.component.html',
-  styleUrls: ['./work-area.component.scss']
 })
-export class WorkAreaComponent implements OnInit {
-
-  ngOnInit(): void {
-    // console.log(this.userData)
-  }
+export class WorkAreaComponent {
   constructor(
     private service:ProjectBateraService,
     public dialog : MatDialog,
     private dialogRef: MatDialogRef<WorkAreaComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
-
-  updateUserForm = new FormGroup({
-    userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
-    // file: new FormControl('', [Validators.required]),
-    // fileSource: new FormControl('', [Validators.required])
-  });
-
-  public avatarUrlConds : boolean = false
-  public avatarUrl : any
-  private uploadLink : any
-
-  onImageLoad(){
-    const formData = new FormData();
-    formData.append('dokumen', this.updateUserForm.get('fileSource').value);
-    // this.service.loadImage(formData)
-    //   .subscribe(res => {
-    //     if (res.type === HttpEventType.UploadProgress) {
-    //       console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
-    //     } else if ( res.type === HttpEventType.Response){
-    //       console.log("final Response uploading image")
-    //       console.log(res)
-    //     }
-    //     this.uploadLink = res
-    //     this.uploadLink = this.uploadLink.body
-    // })
+  
+  workAreaData : any
+  numberOfPage = 1
+  subJob : boolean = false
+  
+  "work_area" = {
+    sfi : "1",
+    pekerjaan : "Pemindahan Kapal",
+    type : "pekerjaan",
+    start : "2022-09-15",
+    end : "2022-09-20",
+    departemen : "CM",
+    responsible : "shipyard",
+    volume : 2,
+    harga_satuan : 400000,
+    kontrak : 0,
+    additional : 0,
+    satuan : '',
+    kategori : '',
+    catatan : ''
   }
+  
 
-  public updateUserData : any
   onSubmit(data){
-    this.updateUserData = {
-      username: data.userName,
+    if (this.numberOfPage !== 1){
+      this.service.addProjectJob(this.workAreaData, this.data)
+      .subscribe(res => console.log(res))
     }
-    console.log(this.updateUserData)
+    if (this.numberOfPage === 1){
+      this.service.addProjectJob(data, this.data)
+      .subscribe(res => console.log(res))
+    }
+    console.log(data)
   }
   
   close(){ this.dialogRef.close();}
-  public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"yard cost", "yard cancelled jobs"]
+  public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"Yard cost", "Yard cancelled jobs"]
+  public rank = ["Critical", "High", "Medium", "Low"]
+  public unitType = [ ["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
+  public useUnit
+
+  ngOnInit(){
+    this.useUnit = this.unitType[0]
+  }
+
+  // addSubJob(data : NgForm){
+  //   this.numberOfPage === 4 ? this.numberOfPage = this.numberOfPage : this.numberOfPage++
+  //   this.numberOfPage === 1 ? this.useUnit = this.unitType[0] : this.useUnit = this.unitType[1]
+  //   if ( this.numberOfPage === 2 ) {
+  //     Object.assign(
+  //       this.work_area, {items : [data.value]
+  //     })
+  //   } else if ( this.numberOfPage === 3 ) {
+  //     Object.assign(
+  //       this.work_area[0]['items'], {items : [data.value]
+  //     })
+  //   } else if ( this.numberOfPage === 4 ) {
+  //     Object.assign(
+  //       this.work_area[0]['items'][0]['items'], {items : [data.value]
+  //     })
+  //   }
+
+  //   console.log(data.value)
+  //   console.log(this.work_area)
+  //   console.log(this.numberOfPage)
+  //   data.reset()
+  // }
 }

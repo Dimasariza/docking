@@ -34,7 +34,6 @@ import { WorkAreaComponent } from './work-area/work-area.component';
     MatFormFieldModule,
     MatOptionModule,
     NbTagModule,
-    
     FormsModule,
   ],
   entryComponents: [AddNewProjectComponent, WorkAreaComponent],

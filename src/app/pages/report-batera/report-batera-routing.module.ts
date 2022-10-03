@@ -9,10 +9,15 @@ import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.compon
 import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
 import { CloseOutComponent } from './close-out/close-out.component';
 
+
 const routes: Routes = [{
   path: '',
   component: ReportBateraComponent,
   children: [
+    {
+      path: ':id/pic',
+      component: PicComponent
+    },
     {
       path: 'pic',
       component: PicComponent

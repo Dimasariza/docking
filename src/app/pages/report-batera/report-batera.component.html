@@ -1,6 +1,6 @@
-<nb-card class="row">
-    <nb-card-header class="">
-        <h1 class="col-md-12 col-lg-5 float-left">Batera Ship 01</h1>
+<nb-card>
+    <nb-card-header>
+        <h5 class="col-md-12 col-lg-5 float-left">name{{project.name}}</h5>
         <div class="col-md-12 col-lg-7 float-right text-lg-right">
             <button nbButton status="primary" class="mx-1" outline size="tiny" *ngFor="let button of buttonKey">
                 <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
@@ -15,7 +15,7 @@
     </div>
 </nb-card>
 
-<nb-card class="row">
+<nb-card>
     <nb-route-tabset [tabs]="tabs"></nb-route-tabset>
 </nb-card>
 

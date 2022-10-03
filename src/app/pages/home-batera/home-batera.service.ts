@@ -8,10 +8,14 @@ export class HomeService {
   private url = 'http://env-6573880.jh-beon.cloud/home/kapal';
   private uploadImage = 'http://env-6573880.jh-beon.cloud/file/upload';
   private idPerusahaan = 'http://env-6573880.jh-beon.cloud/perusahaan';
-
+  private userLoginURL = 'http://env-6573880.jh-beon.cloud/auth/profile'
    
   constructor(private httpClient: HttpClient) { }
   
+  getUserLogin(){
+    return this.httpClient.get(this.userLoginURL)
+  }
+
   getPosts(){
     return this.httpClient.get(this.url);
   }

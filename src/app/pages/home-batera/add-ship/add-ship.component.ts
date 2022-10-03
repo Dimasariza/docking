@@ -5,19 +5,6 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { emit } from 'process';
 import { HomeService } from '../home-batera.service';
 
-interface userData {
-  id_user : any;
-  nama_kapal : any
-  foto : string
-  nama_perusahaan : string
-  merk_perusahaan : string
-  alamat_perusahaan_1 : string
-  alamat_perusahaan_2 : string
-  telepon : number
-  faximile : string
-  npwp : string
-  email : string
-}
 
 @Component({
   selector: 'ngx-add-ship',
@@ -36,13 +23,11 @@ export class AddShipComponent implements OnInit {
     ){ 
   }
 
-  public companyId : any
+  public userId : any
   ngOnInit(): void {
-    this.homeservice.getIdPerusahaan()
-      .subscribe(res => {
-        this.companyId = res
-        this.companyId = this.companyId.data[0].id_perusahaan
-        console.log(this.companyId)
+    this.homeservice.getUserLogin()
+    .subscribe(({data} : any) => {
+      this.userId = data.id_user
     })
   }
 
@@ -96,8 +81,8 @@ export class AddShipComponent implements OnInit {
 
   submit(data){
     const postBody = {
-      "id_user": 4,
-      "id_perusahaan": this.companyId,
+      "id_user": this.userId,
+      "id_perusahaan": 1,
       "nama_kapal": data.value.name,
       "foto": this.imageShipUrl,
     }

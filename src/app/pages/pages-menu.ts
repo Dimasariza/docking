@@ -25,11 +25,11 @@ export const MENU_ITEMS: NbMenuItem[] = [
     link: '/pages/tracking-batera',
     home: true,
   },
-  {
-    title: 'Report',
-    icon: 'book-outline',
-    link: '/pages/report-batera/pic',
-  },
+  // {
+  //   title: 'Report',
+  //   icon: 'book-outline',
+  //   link: '/pages/report-batera/pic',
+  // },
 
   /*
   {

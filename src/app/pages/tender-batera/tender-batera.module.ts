@@ -3,11 +3,11 @@ import { NgModule } from '@angular/core';
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TenderBateraRoutingModule } from './tender-batera-routing.module';
 import { NumberCardModule } from '@swimlane/ngx-charts';
-import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbPopoverModule, NbSearchModule, NbTreeGridModule } from '@nebular/theme';
+import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTreeGridModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { MatDialogModule } from '@angular/material/dialog';
-import { YardDetailComponent } from './tender-batera.component';
+import { AddYardComponent } from './add-yard/add-yard.component';
 
 
 @NgModule({
@@ -27,12 +27,14 @@ import { YardDetailComponent } from './tender-batera.component';
     TablesRoutingModule,
     NbAccordionModule,
     MatDialogModule,
-    NbInputModule
+    NbInputModule,
+    NbOptionModule,
+    NbSelectModule
   ],
-  entryComponents: [YardDetailComponent],
+  entryComponents: [AddYardComponent],
   declarations: [
     ...routedComponents,
-    YardDetailComponent
+    AddYardComponent
   ],
   providers: [
   ]

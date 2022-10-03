@@ -1,0 +1,40 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5 style="color:burlywood;">Add Contract</h5>
+        <button nbButton status="danger" size="small" (click)="close()">
+          <nb-icon icon="close-square-outline"></nb-icon>
+        </button>
+      </nb-card-header>
+    <nb-card-body>
+        <form action="">
+            <span class="d-block my-1">Project Name</span>
+            <nb-select placeholder="Project Name" size="small" class=" w-100">
+                <nb-option *ngFor="let value of addProjectBody.project ; let indexOfelement=index;" [value]="indexOfelement">{{value.name}}</nb-option>
+            </nb-select>
+            <span class="d-block my-1">Yard Name</span>
+            <input class="d-block w-100" type="text" placeholder="Yard Name" nbInput 
+            required (ngModel)="addProjectBody.yardName" name="name" fieldSize="small">
+            <span class="d-block my-1">Yard Loacation</span>
+            <textarea name="" nbInput id="" cols="70" rows="2"></textarea>
+            <span class="d-block my-1">Responsible</span>
+            <nb-select placeholder="Responsible" size="small" class=" w-100">
+                <nb-option *ngFor="let value of addProjectBody.responsible; let indexOfelement=index;" [value]="indexOfelement">{{value.name}}</nb-option>
+            </nb-select>
+            <span class="d-block my-1">Contract Number</span>
+            <input class="d-block w-100" type="text" placeholder="Contract Number" nbInput 
+            required (ngModel)="addProjectBody.contractNumber" name="name" fieldSize="small">
+            <span class="d-block my-1">Yard Quote</span>
+            <input class="d-block w-100" type="text" placeholder="Yard Quote" nbInput 
+            required (ngModel)="addProjectBody.contractNumber" name="name" fieldSize="small">
+            <span class="d-block my-1">Comment</span>
+            <textarea name="" nbInput id="" cols="50" rows="3"></textarea>
+            <div class="d-flex w-100 justify-content-center">
+                <button nbButton class="mx-2" shape="rectangle" status="primary" outline size="small" (click)="triggerSelectFile(uploadContract)">
+                    Upload Contract
+                    <input type="file" style="display: none;" #uploadContract>
+                </button>
+                <button nbButton status="success" (click)="onSubmit()">Submit</button>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>

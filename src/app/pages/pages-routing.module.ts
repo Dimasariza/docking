@@ -6,6 +6,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
 
+
+
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
@@ -29,6 +31,11 @@ const routes: Routes = [{
       path: 'tracking-batera',
       loadChildren: () => import('./tracking-batera/tracking-batera.module')
       .then(m => m.TrackingBateraModule),
+    },
+    {
+      path: 'report-batera/:id',
+      loadChildren: () => import('./report-batera/report-batera.module')
+      .then(m => m.ReportBateraModule),
     },
     {
       path: 'report-batera',

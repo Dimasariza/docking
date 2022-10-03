@@ -44,6 +44,7 @@ export class AddUserComponent {
   });
 
   public urlLink
+  public userRole = ["Super Intendent", "Ship Yard", "Ship Owner", "Super Admin", "Admin"]
   onFileChange(res){
     console.log(res)
     this.userData.avatar_url.exist = res.isTrusted
@@ -83,11 +84,11 @@ export class AddUserComponent {
 
   onSubmit(data){
     console.log(data)
-    // this.service.addUser()
-    //   .subscribe(res => {console.log(res)},
-    //   err => {console.log('HTTP Error', err)},
-    //   () => console.log('HTTP request completed.')
-    // )
+    this.service.addUser()
+      .subscribe(res => {console.log(res)},
+      err => {console.log('HTTP Error', err)},
+      () => console.log('HTTP request completed.')
+    )
 
     if(this.avatarUrl !== undefined) {
       console.log('avatar not available')

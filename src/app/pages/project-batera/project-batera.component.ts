@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
-import { WorkAreaComponent } from './work-area/work-area.component';
 
 interface TreeNode<T> {
   data: T;
@@ -41,7 +40,6 @@ export class ProjectBateraComponent {
   constructor(
     public dialog : MatDialog,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private route : Router,
     private service:ProjectBateraService,
     ) {
     this.dataSource = this.dataSourceBuilder.create(this.data);
@@ -49,18 +47,18 @@ export class ProjectBateraComponent {
 
   openDialog(){
     const dialogConfig = new MatDialogConfig();
-    this.dialog.open(AddNewProjectComponent, {disableClose : true})
+    this.dialog.open(AddNewProjectComponent, 
+      {disableClose : true,
+      data : this.allProjectDatas[0].id_user},
+      )
     dialogConfig.autoFocus = true;
   }
 
-  onSuccess : EventEmitter<any> = new EventEmitter<any>()
-
-
   ngOnInit() {
     this.service.getProjects()
-      .subscribe(response => {
-        this.allProjectDatas = response
-        this.allProjectDatas = this.allProjectDatas.data
+      .subscribe(({data} : any) => {
+        this.allProjectDatas = data
+        console.log(this.allProjectDatas)
     });
   }
 
@@ -79,12 +77,9 @@ export class ProjectBateraComponent {
   deleteProject(row){
     let id_proyek = this.allProjectDatas[row].id_proyek
     this.service.deleteProject(id_proyek)
-    .subscribe(res  => {
-      console.log(res)
-    })
-    this.onSuccess.asObservable().subscribe(()=>{
-      this.ngOnInit()
-    })
+    .subscribe(
+      res => console.log(res)
+    )
   }
 
   private data: TreeNode<FSEntry>[] = [
@@ -128,25 +123,6 @@ export class ProjectBateraComponent {
       },
       ],
     },
-    {
-      data: { Tasks: 'Coolling Water Supply', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-        children: [
-        {
-          data: { Tasks: 'Connection & Disconnection', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-        },
-        {
-          data: { Tasks: 'Per day connected and under pressure', 'Project/Asset': 'KM IBRAHIM ZAHIER', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-        },
-        ],
-    },
-    {
-      data: { Tasks: 'Shore Cranage', 'Project/Asset': 'KM JULIANTO MOELIODIHARDJO', Status: 'Preparation', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-        children: [
-        {
-          data: { Tasks: 'Cranage usage', 'Project/Asset': 'KM JULIANTO MOELIODIHARDJO', Status: 'Preparation', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-        }
-        ],
-    }, 
   ];
 
   getShowOn(index: number) {
@@ -185,14 +161,6 @@ export class ProjectBateraComponent {
   //     "E": true
   //   },
   // ]
-  
-  navToSubProject(projectId){
-    this.route.navigate(['/pages/project-batera/sub-menu-project'], {
-      queryParams:{data : this.allProjectDatas[projectId].id_proyek}
-    })
-  }
-
-
 
   testDropDown = [ 'repair', 'on dokc', 'done']
   chooseOption(id){
