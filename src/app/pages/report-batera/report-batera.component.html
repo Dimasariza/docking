@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-header>
-        <h5 class="col-md-12 col-lg-5 float-left">name{{project.name}}</h5>
+        <h3 class="col-md-12 col-lg-5">{{project.name}} DD {{project.year}}</h3>
         <div class="col-md-12 col-lg-7 float-right text-lg-right">
             <button nbButton status="primary" class="mx-1" outline size="tiny" *ngFor="let button of buttonKey">
                 <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
@@ -15,8 +15,25 @@
     </div>
 </nb-card>
 
+
 <nb-card>
-    <nb-route-tabset [tabs]="tabs"></nb-route-tabset>
+      <nb-tabset fullWidth>
+        <nb-tab tabTitle="PIC">
+            <ngx-pic></ngx-pic>
+        </nb-tab>
+        <nb-tab tabTitle="Work Progress">
+            <ngx-work-progress></ngx-work-progress>
+        </nb-tab>
+        <nb-tab tabTitle="BAST">
+            <ngx-bast></ngx-bast>
+        </nb-tab>
+        <nb-tab tabTitle="Surat Teguran">
+            <ngx-surat-teguran></ngx-surat-teguran>
+        </nb-tab>
+        <nb-tab tabTitle="Close Out Report (COR)">
+            <ngx-close-out></ngx-close-out>
+        </nb-tab>
+      </nb-tabset>
 </nb-card>
 
 

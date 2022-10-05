@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 
 @Component({
@@ -10,6 +11,7 @@ export class SuratTeguranComponent implements OnInit {
   evaIcons = [];
   constructor(
     iconsLibrary: NbIconLibraries,
+    public activatedRoute : ActivatedRoute
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
@@ -18,6 +20,7 @@ export class SuratTeguranComponent implements OnInit {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
   
+
   useIcons = [
     {
       icon: 'refresh',
@@ -96,6 +99,8 @@ export class SuratTeguranComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    console.log(id)
   }
 }
 

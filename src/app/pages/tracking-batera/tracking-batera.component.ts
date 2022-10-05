@@ -39,11 +39,14 @@ export class TrackingBateraComponent implements OnInit {
       },
     }
   }
+
   constructor(
     private trackingService : TrackingBateraService,
   ) { }
+
   public trackingData : any
   series: ApexAxisChartSeries
+
   ngOnInit(): void {
     this.trackingService.getDataTracking()
     .subscribe(({data} : any) => {
@@ -52,7 +55,6 @@ export class TrackingBateraComponent implements OnInit {
       this.trackingData = data.map(({nama_kapal, created_at, updated_at, id_kapal}) => ({
         "Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at: moment(updated_at).add(1, 'day'), id_kapal : id_kapal
       }))
-
       this.series = [{
         name : "rencana",
         data:  data.map(({nama_kapal, created_at, updated_at}) => ({
@@ -76,4 +78,11 @@ export class TrackingBateraComponent implements OnInit {
     ]
     })
   } 
+
+  exportToPDF(id){
+    this.trackingService.getPDF(id)
+    .subscribe(res =>{
+      console.log(res)
+    })
+  }
 }

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HomeBateraComponent } from '../home-batera.component';
 import { HomeService } from '../home-batera.service';
 import { UpdateShipComponent } from '../update-ship/update-ship.component';
 
@@ -11,7 +12,8 @@ export class HomeCardComponent {
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   constructor(
     private homeservice: HomeService,
-    public dialog : MatDialog
+    public dialog : MatDialog,
+    private homeComponent : HomeBateraComponent
   ){}
 
   @Input() image
@@ -21,14 +23,13 @@ export class HomeCardComponent {
     this.flipped = !this.flipped;
   }
 
-  public deleteStatus : any
   deleteShip(){
     let id_kapal = this.image.id_kapal
-    this.homeservice.deleteShip(id_kapal).subscribe(res => {
-      console.log(res)
-      this.deleteStatus = res
-      this.deleteStatus = this.deleteStatus.status
+    this.homeservice.deleteShip(id_kapal).subscribe( ({status} : any) => {
+      console.log(status)
     })
+
+    this.homeComponent.ngOnInit()
   }
 
   updateShip(){

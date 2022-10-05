@@ -5,7 +5,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
   providedIn: 'root'
 })
 export class ProjectBateraService {
-  private url = 'http://env-6573880.jh-beon.cloud/proyek';
+  private getProjectURL = 'http://env-6573880.jh-beon.cloud/proyek';
   private shipUrl = 'http://env-6573880.jh-beon.cloud/home/kapal'
   private profilePerusahaan = 'http://env-6573880.jh-beon.cloud/pengaturan/profile_perusahaan'
 
@@ -17,7 +17,7 @@ export class ProjectBateraService {
     let queryParams = new HttpParams();
     queryParams = queryParams.append("per_page", "")
                             .append("q", "")
-    return this.httpClient.get(this.url,  {params  : queryParams})
+    return this.httpClient.get(this.getProjectURL,  {params  : queryParams})
   }
 
   public getShip(){
@@ -31,28 +31,28 @@ export class ProjectBateraService {
   public addDataProject(body){
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    return this.httpClient.post(this.url, body, {headers : httpHeaders})
+    return this.httpClient.post(this.getProjectURL, body, {headers : httpHeaders})
   }
 
   public getSubProjectData(id){
-    const getSubUrl = this.url + "/" + id
-    return this.httpClient.get(getSubUrl)
+    const endPoint = this.getProjectURL + "/" + id
+    return this.httpClient.get(endPoint)
   }
 
   public deleteProject(id_proyek){
-    let endPoint = this.url + '/' + id_proyek
+    let endPoint = this.getProjectURL + '/' + id_proyek
     return this.httpClient.delete(endPoint)
   }
 
   addProjectJob(postbody, id_proyek){
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    const url = this.url + '/' + id_proyek + '/' + "work_area"
+    const url = this.getProjectURL + '/' + id_proyek + '/' + "work_area"
     return this.httpClient.put(url, postbody, {headers : httpHeaders})
   }
 
   updateWorkArea(body){
-    const endPoint = this.url + "/" + 1 + "/" + "work_area"
+    const endPoint = this.getProjectURL + "/" + 1 + "/" + "work_area"
     return this.httpClient.put(endPoint, body)
   }
 }

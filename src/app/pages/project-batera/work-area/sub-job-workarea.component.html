@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-header class="d-flex justify-content-between">
-        <h5>ADD JOB</h5> 
+        <span><strong>ADD SUBJOB : {{jobName}} </strong></span> 
         <button nbButton status="danger" size="small" (click)="close()">
             <nb-icon icon="close-outline" size="medium"></nb-icon>
         </button>   
@@ -42,7 +42,7 @@
                 <span class="p-2 d-block">Unit Price</span>
                 <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required (ngModel)="unitPrice" name="harga_satuan" #unitPrice>
                 <span class="p-2 d-block">Total Price Budget</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Budget" id="totalPriceBudget" readonly fieldSize="small" required >
+                <input type="text" nbInput fullWidth placeholder="Total Price Budget" id="totalPriceBudget" readonly fieldSize="small" required>
                 <span class="p-2 d-block">Category</span>
                 <nb-select placeholder="Category" class="w-100" size="small" name="kategori" ngModel>
                     <nb-option *ngFor="let value of category; let id=index;" [value]="category[id]">{{value}}</nb-option>

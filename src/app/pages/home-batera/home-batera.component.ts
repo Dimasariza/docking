@@ -1,9 +1,7 @@
-import { Component, Input, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { EventEmitter } from 'stream';
 import { AddShipComponent } from './add-ship/add-ship.component';
 import { HomeService } from './home-batera.service';
-import { UpdateShipComponent } from './update-ship/update-ship.component';
 
 @Component({
   selector: 'ngx-home-batera',
@@ -18,10 +16,9 @@ export class HomeBateraComponent implements OnInit {
   
   ngOnInit() {
     this.homeservice.getPosts()
-      .subscribe(response => {
-        this.shipData = response;
-        this.shipData = this.shipData.data
-    });
+      .subscribe(({data} : any) => {
+        this.shipData = data;
+    }); 
   }
 
   openDialog(){

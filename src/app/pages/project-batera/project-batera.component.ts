@@ -46,12 +46,11 @@ export class ProjectBateraComponent {
   }
 
   openDialog(){
-    const dialogConfig = new MatDialogConfig();
-    this.dialog.open(AddNewProjectComponent, 
-      {disableClose : true,
-      data : this.allProjectDatas[0].id_user},
-      )
-    dialogConfig.autoFocus = true;
+    const dialog = this.dialog.open(AddNewProjectComponent, { 
+      disableClose : true,
+      autoFocus : true,
+      data : this.allProjectDatas[0].id_user
+    })
   }
 
   ngOnInit() {
@@ -87,7 +86,12 @@ export class ProjectBateraComponent {
       data: { Tasks: 'Docking Preparation',  'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'dir', },
       children:[
         { data: {
-          Tasks: 'Preparation of Docking Block', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}},
+          Tasks: 'Preparation of Docking Block', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'},
+          children : [
+            { data: {
+              Tasks: 'Docking/Undocking plus First & Last Day', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}}
+          ]
+        },
         { data: {
           Tasks: 'Docking/Undocking plus First & Last Day', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}},
         { data: {

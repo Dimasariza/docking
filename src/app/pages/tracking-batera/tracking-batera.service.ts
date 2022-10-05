@@ -15,4 +15,8 @@ export class TrackingBateraService {
         return this.httpClient.get(this.dataTrackingURL,  {params  : queryParams})
     }
     
+    getPDF(id){
+        let endPoint = this.dataTrackingURL + '/proyek/' + id + '/export_pdf'
+        return this.httpClient.get(endPoint)
+    }
 }

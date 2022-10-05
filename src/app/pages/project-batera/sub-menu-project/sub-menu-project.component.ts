@@ -5,6 +5,7 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { ProjectBateraService } from '../project-batera.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
+import { SubJobWorkareaComponent } from '../work-area/sub-job-workarea.component';
 
 interface TreeNode<T> {
   data: T;
@@ -42,43 +43,44 @@ export class SubMenuProjectComponent implements OnInit {
 
   @Input() shipName 
   public id_proyek : any
-  public workArea : TreeNode<FSEntry> []
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
     this.id_proyek = id
     this.service.getSubProjectData(id)
-      .subscribe(({data} : any) => {
-        const {work_area} = data
-        const {kapal} = data
-        this.shipName = kapal.nama_kapal
-        const populateData = (work, kind) => {          
-          const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at } = work           
-          return {
-            data: {
-              "Job No": sfi,
-              "Job": pekerjaan,
-              "Dept": departemen,
-              "Start": start,
-              "Stop": end,
-              "Vol" : volume,
-              "Unit" : '',
-              "Unit Price": harga_satuan,
-              "Total Price Budget" : kontrak,
-              "Category" : type,
-              "Remarks" : updated_at,
-              kind
-            },
-            children: items?.length ? items.map(child => populateData(child, 'doc')) : []
-          }
+    .subscribe(({data} : any) => {
+      const {work_area, kapal} = data
+      this.shipName = kapal.nama_kapal
+      const populateData = (work, kind) => {          
+        const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+        return {
+          data: {
+            "Job No": sfi,
+            "Job": pekerjaan,
+            "Dept": departemen,
+            "Start": start,
+            "Stop": end,
+            "Vol" : volume,
+            "Unit" : '',
+            "Unit Price": harga_satuan,
+            "Total Price Budget" : kontrak,
+            "Category" : type,
+            "Remarks" : updated_at,
+            "index" : id,
+            kind
+          },
+          children: items?.length ? items.map(child => populateData(child, 'doc')) : []
         }
-        this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
-      })
+      }
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
+    })
   }
 
   customColumn = "Job No";
   defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
   editColumn = 'Edit'
-  allColumns = [ this.customColumn, ...this.defaultColumns, this.editColumn];
+  addJobColumn = 'add job'
+  allColumns = [ this.customColumn, ...this.defaultColumns, this.addJobColumn,this.editColumn];
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
@@ -167,14 +169,28 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   addWorkAreaDial(){
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(WorkAreaComponent, {
-      disableClose : true, autoFocus:true, 
+    const dialog = this.dialog.open(WorkAreaComponent, {
+      disableClose : true,
+      autoFocus:true, 
       data : this.id_proyek
-    })      
+    })    
+    
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
   }
 
+  subJobDial(row){
+    const dialog = this.dialog.open(SubJobWorkareaComponent, {
+      disableClose : true,
+      autoFocus: true,
+      data: {row, project_id : this.id_proyek}
+    })
 
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
+  }
 }
 
 

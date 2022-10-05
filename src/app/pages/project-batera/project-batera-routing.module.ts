@@ -4,6 +4,7 @@ import { FsIconComponent } from '../report-batera/work-progress/work-progress.co
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraComponent } from './project-batera.component';
 import { SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
+import { SubJobWorkareaComponent } from './work-area/sub-job-workarea.component';
 import { WorkAreaComponent } from './work-area/work-area.component';
 
 const routes: Routes = [{
@@ -28,6 +29,7 @@ export const routedComponents = [
   SubMenuProjectComponent,
   SubPriceDataComponent,
   AddNewProjectComponent,
+  SubJobWorkareaComponent,
   FsIconComponent,
   WorkAreaComponent,
 ];

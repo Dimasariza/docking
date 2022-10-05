@@ -19,29 +19,25 @@ const routes: Routes = [{
       component: PicComponent
     },
     {
-      path: 'pic',
-      component: PicComponent
-    },
-    {
-      path: 'work-progress',
+      path: ':id/work-progress',
       component: WorkProgressComponent
     },
     {
-      path: 'bast',
+      path: ':id/bast',
       component: BastComponent
     },
     {
-      path: 'surat-teguran',
+      path: ':id/surat-teguran',
       component: SuratTeguranComponent
     },
     {
-      path: 'close-out',
+      path: ':id/close-out',
       component: CloseOutComponent
     },
   ],
   },
   {
-    path: 'sub-menu-report',
+    path: ':id/sub-menu-report',
     component: SubMenuReportComponent
   }
 ];

@@ -53,6 +53,11 @@ export class WorkProgressComponent {
     console.log("open dialog")
   }
 
+  ngOnInit(){
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    console.log(id)
+  }
+
   customColumn = 'Title';
   defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   approvalColumns = ['Approv by owner' , 'Approv by Ship Yard'];

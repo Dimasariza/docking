@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { emit } from 'process';
 import { HomeService } from '../home-batera.service';
 
 
@@ -82,10 +81,12 @@ export class AddShipComponent implements OnInit {
   submit(data){
     const postBody = {
       "id_user": this.userId,
+      // "id_user": 4,
       "id_perusahaan": 1,
       "nama_kapal": data.value.name,
       "foto": this.imageShipUrl,
     }
+
     this.homeservice.addShipData(postBody)
     .subscribe(res => {
       this.uploadSuccess = !this.uploadSuccess

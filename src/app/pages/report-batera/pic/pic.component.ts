@@ -181,7 +181,8 @@ export class PicComponent implements OnInit{
   
   message : string = "this is ship id"
   ngOnInit(): void {
-
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    console.log(id)
     this.reportService.getDataReport()
     .subscribe(res => {
       console.log(res)

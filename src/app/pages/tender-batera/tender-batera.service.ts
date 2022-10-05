@@ -10,7 +10,7 @@ export class TenderBateraService {
     public dataProjectURL = 'http://env-6573880.jh-beon.cloud/proyek';
     public dataUserURL = 'http://env-6573880.jh-beon.cloud/user'
 
-    getDataTender(){
+    getDataTender(){    
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", "10")
                                 .append("status", "all")
@@ -34,7 +34,7 @@ export class TenderBateraService {
     }
 
     getProjectWorkArea(){
-        let endPoint = this.dataProjectURL + '/' + 1
+        let endPoint = this.dataProjectURL + '/' + 5
         return this.httpClient.get(endPoint)
     }
 }

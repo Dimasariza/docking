@@ -36,22 +36,28 @@
     <h6 class="mx-3" style="color: burlywood;">Work Area</h6>
 
     <div style="overflow: auto; width: 100%;">
-        <div style="width: 1224px;">
-            <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
+        <div style="width: 1424px;">
+            <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
                 <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
                 <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
             
                 <ng-container [nbTreeGridColumnDef]="customColumn">
-                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-                    {{customColumn}}
-                  </th>
-            
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>{{customColumn}}</th>
                   <td nbTreeGridCell *nbTreeGridCellDef="let row">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
                     {{row.data[customColumn]}}
                   </td>
                 </ng-container>
-        
+                
+                <ng-container [nbTreeGridColumnDef]="addJobColumn" width="400">
+                    <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(addJobColumn)" *nbTreeGridHeaderCellDef></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row; let id = index" class="text-center">
+                    <button nbButton size="small" outline status="primary" (click)="subJobDial(row, id)">
+                        Add Sub Job
+                    </button>
+                    </td>
+                </ng-container>
+
                 <ng-container [nbTreeGridColumnDef]="editColumn">
                     <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
@@ -62,11 +68,18 @@
                 </ng-container>
             
                 <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
-                  <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-                    {{column}}
-                  </th>
-                  <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                    <div *ngIf="!addSubJob">
+                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
+                        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                    </div>
+                    <!-- <div *ngIf="!addSubJob">
+                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
+                        <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                            <input type="text" nbInput fieldSize="small">
+                        </td>
+                    </div> -->
                 </ng-container>
+
             </table>
         </div>
     </div>

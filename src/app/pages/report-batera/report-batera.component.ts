@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -18,7 +18,7 @@ export class ReportBateraComponent {
   dataReport : any
 
   constructor(iconsLibrary: NbIconLibraries,
-    private tenderBateraService : ReportBateraService,
+    private reportBateraService : ReportBateraService,
     private dialog : MatDialog,
     public activatedRoute : ActivatedRoute,
     public pageService : PagesRoutingModule
@@ -31,62 +31,29 @@ export class ReportBateraComponent {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
 
-  ngOnInit(): void {
-    this.tenderBateraService.getDataReport().subscribe(res => {
-      this.dataReport = res
-      console.log(this.dataReport)
-    }) 
-
-    this.activatedRoute.params.subscribe((params) => {
-      this.project_id = params.id
-      this.tenderBateraService.getProjectData(this.project_id)
-      .subscribe(({data} : any) => {
-        console.log(data)
-        this.project.name = data.kapal.nama_kapal
-        this.project.year = data.tahun
-        console.log(this.project.name)
-      })
-
-      this.tabs.map(data => {
-        let route = data.route
-        console.log(route)
-        // return {
-        //   title : data.title,
-        //   route : data
-        // }
-      })
-    })
-  }
-
-  @Input() project_id : any
-
   project = {
-    name : 'name',
+    name : 'Ship Name',
     year : ''
   }
 
-  tabs: any[] = [
-    {
-      title: 'PIC',
-      route: '/pages/report-batera/4/pic' ,
-    },
-    {
-      title: 'Work Progress',
-      route: '/pages/report-batera/work-progress',
-    },
-    {
-      title: 'BAST*',
-      route: '/pages/report-batera/bast',
-    },
-    {
-      title: 'Surat Teguran*',
-      route: '/pages/report-batera/surat-teguran',
-    },
-    {
-      title: 'Close Out Report(COR)*',
-      route: '/pages/report-batera/close-out',
-    },
-  ];
+  ngOnInit(): void {
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    this.project_id = id
+    console.log(id)
+
+    this.reportBateraService.getProjectData(id)
+    .subscribe(({data} : any) => {
+      this.project.name = data.kapal.nama_kapal
+      this.project.year = data.tahun
+    })
+
+    this.reportBateraService.getDataReport().subscribe(res => {
+      this.dataReport = res
+    }) 
+
+  }
+
+  @Input() project_id : any
 
   buttonKey = [
     { icon : "menu-2-outline",
@@ -109,7 +76,6 @@ export class ReportBateraComponent {
       disableClose : true, autoFocus:true, 
     })
   }
-
 }
 
 @Component ({
@@ -192,10 +158,10 @@ export class reportData implements OnInit{
 
   updateStatus(){
     const newFormData = { status: "on Progress"}
-
     this.ReportBateraService.createStatus(newFormData).subscribe(data => {
     })
   }
+
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }

@@ -7,8 +7,6 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { ECommerceModule } from './e-commerce/e-commerce.module';
 import { PagesRoutingModule } from './pages-routing.module';
 import { MiscellaneousModule } from './miscellaneous/miscellaneous.module';
-import { UpdateUserComponent } from './profile-batera/update-user/update-user.component';
-import { WorkAreaComponent } from './project-batera/work-area/work-area.component';
 
 @NgModule({
   imports: [
