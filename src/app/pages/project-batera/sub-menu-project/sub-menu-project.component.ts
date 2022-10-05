@@ -43,6 +43,7 @@ export class SubMenuProjectComponent implements OnInit {
 
   @Input() shipName 
   public id_proyek : any
+  work_area: any
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
@@ -50,37 +51,15 @@ export class SubMenuProjectComponent implements OnInit {
     this.service.getSubProjectData(id)
     .subscribe(({data} : any) => {
       const {work_area, kapal} = data
+      this.work_area = work_area
       this.shipName = kapal.nama_kapal
-      const populateData = (work, kind) => {          
-        const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
-        return {
-          data: {
-            "Job No": sfi,
-            "Job": pekerjaan,
-            "Dept": departemen,
-            "Start": start,
-            "Stop": end,
-            "Vol" : volume,
-            "Unit" : '',
-            "Unit Price": harga_satuan,
-            "Total Price Budget" : kontrak,
-            "Category" : type,
-            "Remarks" : updated_at,
-            "index" : id,
-            kind
-          },
-          children: items?.length ? items.map(child => populateData(child, 'doc')) : []
-        }
-      }
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work, 'dir')) as TreeNode<FSEntry>[])
     })
   }
 
-  customColumn = "Job No";
-  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
-  editColumn = 'Edit'
-  addJobColumn = 'add job'
-  allColumns = [ this.customColumn, ...this.defaultColumns, this.addJobColumn,this.editColumn];
+  defaultColumns = ['Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks'];
+  allColumns = ['Job No', ...this.defaultColumns, 'add job', 'action']
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
@@ -102,6 +81,29 @@ export class SubMenuProjectComponent implements OnInit {
     const minWithForMultipleColumns = 400;
     const nextColumnStep = 100;
     return minWithForMultipleColumns + (nextColumnStep * index);
+  }
+
+  populateData = (work, kind) => {          
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+    return {
+      data: {
+        "Job No": sfi,
+        "Job": pekerjaan,
+        "Dept": departemen,
+        "Start": start,
+        "Stop": end,
+        "Vol" : volume,
+        "Unit" : '',
+        "Unit Price": harga_satuan,
+        "Total Price Budget" : kontrak,
+        "Category" : type,
+        "Remarks" : updated_at,
+        "index" : id,
+        // ...work,
+        kind: items?.length ? 'dir' : 'doc'
+      },
+      children: items?.length ? items.map(child => this.populateData(child, 'doc')) : []
+    }
   }
   
   menuButton = [
@@ -180,7 +182,9 @@ export class SubMenuProjectComponent implements OnInit {
     })
   }
 
-  subJobDial(row){
+  subJobDial(row){    
+    console.log(row);
+    
     const dialog = this.dialog.open(SubJobWorkareaComponent, {
       disableClose : true,
       autoFocus: true,
@@ -189,6 +193,30 @@ export class SubMenuProjectComponent implements OnInit {
 
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
+    })
+  }
+
+  delete(id: string) {
+    console.log(id);
+    
+    let parentIndex = id.toString().split('')
+
+    const reconstructData = (data) => {
+      return data.map((w, i) => {
+        if (parentIndex.length > 1 && i == parentIndex[0]) {
+          parentIndex = parentIndex.slice(1)
+          return {...w, items: reconstructData(w.items)}
+        } else if(i == parentIndex[0]) {
+          return null
+        }
+        return w
+      }).filter(f => f != null)
+    }
+
+    const work_area = reconstructData(this.work_area)
+    this.service.addProjectJob({work_area}, this.id_proyek)
+    .subscribe(res => {
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work, 'dir')) as TreeNode<FSEntry>[])
     })
   }
 }

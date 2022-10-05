@@ -38,7 +38,7 @@ export class SubJobWorkareaComponent implements OnInit {
   public workAreaContainer : any
   public jobName 
 
-  onSubmit(newData){
+  add(newData){
     let submitData = newData.value
     Object.assign(
       submitData, {
@@ -57,24 +57,28 @@ export class SubJobWorkareaComponent implements OnInit {
       delete this.workAreaContainer[index]['updated_at']
       delete this.workAreaContainer[index]['created_at']
     }
-
-    let postBody = { "work_area" : [
-      ...this.workAreaContainer
-    ]}
-
-    let postItem = postBody.work_area[index]
-    if( Object.keys(postItem).includes('items') ) {
-      postItem.items.push(submitData)
-      postItem.items[postItem.items.length - 1]["id"] =   (index).toString() + (postItem.items.length - 1).toString()
-    } else {
-      postItem.items  = [] 
-      postItem.items.push(submitData)
-      postItem.items[postItem.items.length - 1]["id"] =  (index).toString() + (postItem.items.length - 1).toString()
+    
+    let parentIndex = index.toString().split('')
+    
+    const reconstructData = (data, newData) => {
+      return data.map((w, i) => {
+        if (parentIndex.length > 1 && i == parentIndex[0]) {
+          parentIndex = parentIndex.slice(1)
+          return {...w, items: reconstructData(w.items, newData), type: 'kategori'}
+        } else if(i == parentIndex[0]) {
+          if (!w.items) w.items = []          
+          return {...w, items: [...w.items, {...newData, id: w.id.toString()+w.items.length.toString()}], type: 'kategori'}
+        }
+        return w
+      })
     }
-    console.log(postBody)
 
-    postBody.work_area[index].type = "kategori"
-    this.projectSerivce.addProjectJob(postBody, this.data.project_id)
+    const work_area = reconstructData(this.workAreaContainer, submitData)
+    this.submit(work_area)
+  }
+
+  submit(work_area) {
+    this.projectSerivce.addProjectJob({work_area}, this.data.project_id)
     .subscribe(res => {
       console.log(res)
       this.onSuccess.emit()
