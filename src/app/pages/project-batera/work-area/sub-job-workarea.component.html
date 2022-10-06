@@ -6,7 +6,7 @@
         </button>   
     </nb-card-header>
     <nb-card-body>
-    <form  (keyup.enter)="$event.target.value" #addWorkArea="ngForm" (ngSubmit)="onSubmit(addWorkArea)">
+    <form  (keyup.enter)="$event.target.value" #addWorkArea="ngForm" (ngSubmit)="add(addWorkArea)">
         <div class="row">
             <div class="col-6">
                 <span class="p-2 d-block"><strong>Job Number</strong></span>

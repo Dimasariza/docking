@@ -41,15 +41,15 @@
                 <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
                 <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
             
-                <ng-container [nbTreeGridColumnDef]="customColumn">
-                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>{{customColumn}}</th>
+                <ng-container [nbTreeGridColumnDef]="'Job No'">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Job No.</th>
                   <td nbTreeGridCell *nbTreeGridCellDef="let row">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                    {{row.data[customColumn]}}
+                    {{row.data['Job No']}}
                   </td>
                 </ng-container>
                 
-                <ng-container [nbTreeGridColumnDef]="addJobColumn" width="400">
+                <ng-container [nbTreeGridColumnDef]="'add job'" width="400">
                     <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(addJobColumn)" *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row; let id = index" class="text-center">
                     <button nbButton size="small" outline status="primary" (click)="subJobDial(row, id)">
@@ -58,12 +58,17 @@
                     </td>
                 </ng-container>
 
-                <ng-container [nbTreeGridColumnDef]="'Edit'">
-                    <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(Edit)" *nbTreeGridHeaderCellDef></th>
+                <ng-container [nbTreeGridColumnDef]="'action'">
+                    <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm text-center" ghost>
-                        <nb-icon icon="edit-outline" status="primary"></nb-icon>
-                    </button>
+                        <div class="d-flex">
+                            <button class="btn btn-light btn-sm text-center mr-2" ghost>
+                                <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                            </button>
+                            <button class="btn btn-light btn-sm text-center" ghost>
+                                <nb-icon icon="trash-outline" status="danger" (click)="delete(row.data.index)"></nb-icon>
+                            </button>
+                        </div>
                     </td>
                 </ng-container>
             
