@@ -4,7 +4,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HomeService } from '../home-batera.service';
 
-
 @Component({
   selector: 'ngx-add-ship',
   templateUrl: './add-ship.component.html',
@@ -80,11 +79,11 @@ export class AddShipComponent implements OnInit {
 
   submit(data){
     const postBody = {
-      "id_user": this.userId,
-      // "id_user": 4,
-      "id_perusahaan": 1,
-      "nama_kapal": data.value.name,
-      "foto": this.imageShipUrl,
+      id_user: this.userId,
+      // id_user: 4,
+      id_perusahaan: 1,
+      nama_kapal: data.value.name,
+      foto: this.imageShipUrl,
     }
 
     this.homeservice.addShipData(postBody)

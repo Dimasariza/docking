@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { HomeService } from '../home-batera/home-batera.service';
+import { TrackingBateraService } from '../tracking-batera/tracking-batera.service';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
 
@@ -29,7 +30,7 @@ export class ProjectBateraComponent {
   public allProjectDatas : any
 
   customColumn = 'Tasks';
-  defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due', 'Delete' ];
+  defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
@@ -41,54 +42,93 @@ export class ProjectBateraComponent {
     public dialog : MatDialog,
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private service:ProjectBateraService,
+    private trackingBatera : TrackingBateraService,
+    private homeService : HomeService
     ) {
-    this.dataSource = this.dataSourceBuilder.create(this.data);
   }
 
-  openDialog(){
+  addProjectDial(){
     const dialog = this.dialog.open(AddNewProjectComponent, { 
       disableClose : true,
       autoFocus : true,
-      data : this.allProjectDatas[0].id_user
+      data : this.id_user
+    })
+
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
     })
   }
 
+  phaseStatus(data){
+    if(data === "requisition"){
+      data = [true, false, false, false]
+    }
+    if(data === "progress"){
+      data = [true, true, false, false]
+    }
+    if(data === "evaluation"){
+      data = [true, true, true, false]
+    }
+    if(data === "finish"){
+      data = [true, true, true, true]
+    }
+    return data
+  }
+
+  public id_user
   ngOnInit() {
+    this.homeService.getUserLogin()
+    .subscribe(({data} : any) => {
+      this.id_user = data.id_user
+    })
+
     this.service.getProjects()
       .subscribe(({data} : any) => {
         this.allProjectDatas = data
-        console.log(this.allProjectDatas)
+        let phase = "requisition"
+        this.allProjectDatas.map((item, index) => {
+          this.allProjectDatas[index].phase = this.phaseStatus(phase)
+        })
     });
 
+    this.trackingBatera.getDataTracking()
+    .subscribe(({data} : any) => {
+      let itemDate = data
+      .map((item, value) => { 
+        return {
+          update: item.updated_at, 
+          id : value
+        }
+      })
+      .sort((date1, date2) => {
+        new Date(date1.update).getTime() - new Date(date2.update).getTime()
+      })
     
-    // this.service.getSubProjectData(id)
-    // .subscribe(({data} : any) => {
-    //   const {work_area, kapal} = data
-    //   const populateData = (work, kind) => {          
-    //     const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
-    //     return {
-    //       data: {
-    //         "Job No": sfi,
-    //         "Job": pekerjaan,
-    //         "Dept": departemen,
-    //         "Start": start,
-    //         "Stop": end,
-    //         "Vol" : volume,
-    //         "Unit" : '',
-    //         "Unit Price": harga_satuan,
-    //         "Total Price Budget" : kontrak,
-    //         "Category" : type,
-    //         "Remarks" : updated_at,
-    //         "id" : id,
-    //         kind
-    //       },
-    //       children: items?.length ? items.map(child => populateData(child, 'doc')) : []
-    //     } 
-    //   }
-    //   this.dataSource = this.dataSourceBuilder.create(work_area.map(work => 
-    //     populateData(work, 'dir')) as TreeNode<FSEntry>[]
-    //     )
-    //   })
+    let tasksData = data[itemDate[0].id]
+    const customer = tasksData.perusahaan.merk_perusahaan
+    const {nama_kapal, proyek} = tasksData
+
+    const populateData = (data) => {
+      const {end, items, pekerjaan, status, responsible} = data
+      return {
+        data : {
+          Tasks : pekerjaan,
+          "Project/Asset" : nama_kapal,
+          Customer : customer,
+          Status : status,
+          Responsible : responsible,
+          Due : end,
+        },
+        children : items?.length ? items.map(item => populateData(item)) : []
+      }
+    }
+
+    proyek.map(workProject => {
+      workProject.work_area ? 
+      this.dataSource = this.dataSourceBuilder.create(workProject.work_area.map(work => 
+          populateData(work)) as TreeNode<FSEntry>[]) : ""
+      })
+    })
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -106,59 +146,7 @@ export class ProjectBateraComponent {
   deleteProject(row){
     let id_proyek = this.allProjectDatas[row].id_proyek
     this.service.deleteProject(id_proyek)
-    .subscribe(
-      res => console.log(res)
-    )
   }
-
-  private data: TreeNode<FSEntry>[] =
-  [
-    {
-      data: { Tasks: 'Docking Preparation',  'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'dir', },
-      children:[
-        { data: {
-          Tasks: 'Preparation of Docking Block', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'},
-          children : [
-            { data: {
-              Tasks: 'Docking/Undocking plus First & Last Day', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}}
-          ]
-        },
-        { data: {
-          Tasks: 'Docking/Undocking plus First & Last Day', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}},
-        { data: {
-          Tasks: 'Keel Block Removal', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}},
-        { data: {
-          Tasks: 'Side Block Removal', 'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'doc'}},
-      ]
-    },
-    {
-      data: { Tasks: 'Mooring and Unmooring', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
-      children: [{
-        data: { Tasks: 'Riggers/line handlers assistance when Vessel arrival Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
-      },
-      {data: { Tasks: 'Riggers/line handlers assistance provide for enter to Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
-      },
-      {data: { Tasks: 'Riggers/line handlers assistance provide for undocking from Dry-dock area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
-      },
-      {data: { Tasks: 'Riggers/line handlers assistance when Vessel departure Shipyard area', 'Project/Asset':'KM Abusamah', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible:'SHY', Due: '28.08.2022'},
-      },
-      ],
-    },
-    {
-    data: { Tasks: 'Shore Power Supply', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'dir', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-      children: [
-      {
-      data: { Tasks: 'Connection and disconnection', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-      },
-      {
-        data: { Tasks: 'Per day', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-      },
-      {
-        data: { Tasks: 'Per kWh unit', 'Project/Asset': 'KM PUSRI INDONESIA I', Status: 'In-Progress', kind: 'doc', Customer: 'PILSM', Responsible: 'SHY', Due: '17.08.2022'},
-      },
-      ],
-    },
-  ]
 
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
@@ -166,40 +154,11 @@ export class ProjectBateraComponent {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-
-  // allProjectDatas = [
-  //   {
-  //     "vessel": "MT Salmon Mustava-DD-2019",w
-  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-  //     "customer": "PT PI Logistik",
-  //     "start": "15:09:19",
-  //     "R": true,
-  //     "P": true,
-  //     "E": true
-  //   },
-  //   {
-  //     "vessel": "KM-Fusri-Indonesia-I-DD-2019",
-  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-  //     "customer": "PT PI Logistik",
-  //     "start": "15:08:19",
-  //     "R": true,
-  //     "P": true,
-  //     "E": true
-  //   },
-  //   {
-  //     "vessel": "KM-Ibrahim Zahir-DD-2019",
-  //     "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-  //     "customer": "PT PI Logistik",
-  //     "start": "15:07:19",
-  //     "R": true,
-  //     "P": true,
-  //     "E": true
-  //   },
-  // ]
-
-  testDropDown = [ 'repair', 'on dokc', 'done']
-  chooseOption(id){
-    console.log("index number :", id)
+  publishProject(row){
+    this.service.publishProject(row)
+    .subscribe(res => {
+      console.log(res)
+    })
   }
 }
 

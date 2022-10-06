@@ -33,8 +33,8 @@ export class TenderBateraService {
         return this.httpClient.get(this.dataUserURL, {params : queryParams})
     }
 
-    getProjectWorkArea(){
-        let endPoint = this.dataProjectURL + '/' + 5
+    getProjectWorkArea(id=1){
+        let endPoint = this.dataProjectURL + '/' + id
         return this.httpClient.get(endPoint)
     }
 }

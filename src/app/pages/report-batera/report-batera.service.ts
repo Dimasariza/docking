@@ -10,17 +10,11 @@ export class ReportBateraService {
     ){}
 
     httpOptions : any
-    private url = 'http://env-6573880.jh-beon.cloud/home/kapal';
+    private homeURL = 'http://env-6573880.jh-beon.cloud/home/kapal';
     private projectUrl = 'http://env-6573880.jh-beon.cloud/proyek';
 
-    getDataReport(){
-        const httpHeaders = new HttpHeaders();
-        httpHeaders.append('content-type', 'application/json')
-        return this.httpClient.get(this.url, this.httpOptions)
-    }
-
     createStatus(createStat){
-        return this.httpClient.post(this.url, createStat )
+        return this.httpClient.post(this.homeURL, createStat )
     }
 
     getProjectData(id){

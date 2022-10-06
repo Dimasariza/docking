@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { ChangeDetectionStrategy, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -11,7 +11,6 @@ import { ReportBateraService } from './report-batera.service';
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReportBateraComponent {
   evaIcons = [];
@@ -25,35 +24,21 @@ export class ReportBateraComponent {
     ) {
     this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
       .filter(icon => icon.indexOf('outline') === -1);
-
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
 
-  project = {
-    name : 'Ship Name',
-    year : ''
-  }
-
+  projectData : any
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.project_id = id
-    console.log(id)
-
     this.reportBateraService.getProjectData(id)
     .subscribe(({data} : any) => {
-      this.project.name = data.kapal.nama_kapal
-      this.project.year = data.tahun
+      this.projectData = data
+      console.log(data)
     })
 
-    this.reportBateraService.getDataReport().subscribe(res => {
-      this.dataReport = res
-    }) 
-
   }
-
-  @Input() project_id : any
 
   buttonKey = [
     { icon : "menu-2-outline",

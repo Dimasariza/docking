@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { ProjectBateraService } from '../project-batera.service';
+import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 
 
 
@@ -15,7 +16,8 @@ export class SubJobWorkareaComponent implements OnInit {
     private dialogRef: MatDialogRef<SubJobWorkareaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public datepipe : DatePipe,
-    public projectSerivce : ProjectBateraService
+    public projectSerivce : ProjectBateraService,
+    public profileService : ProfileBateraService
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
@@ -28,15 +30,22 @@ export class SubJobWorkareaComponent implements OnInit {
       const {work_area} = data
       this.workAreaContainer = work_area
     })
+
+    this.profileService.getUserData()
+    .subscribe(({data} : any) => {
+      const resp = data.map(user => user.username)
+      this.responsible = resp
+    })
   }
 
   public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"Yard cost", "Yard cancelled jobs"]
   public rank = ["Critical", "High", "Medium", "Low"]
   public unitType = [ ["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
-  public responsible = ["Admin", "Shipowner", "Shipmanager", "Shipyard"]
+  public responsible = []
   public useUnit
   public workAreaContainer : any
-  public jobName 
+  public jobName
+  public totalPriceBudget = 0
 
   add(newData){
     let submitData = newData.value

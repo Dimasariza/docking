@@ -1,10 +1,10 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbDateService } from '@nebular/theme';
-import { id } from '@swimlane/ngx-charts';
 import { HomeService } from '../../home-batera/home-batera.service';
+import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera.service';
 
 @Component({
@@ -19,10 +19,14 @@ export class AddNewProjectComponent implements OnInit {
     private service:ProjectBateraService,
     private homeService : HomeService,
     public datepipe: DatePipe,
+    private profileService : ProfileBateraService,
     public activatedRoute : ActivatedRoute,
     @Inject( MAT_DIALOG_DATA ) public data ) { 
     this.min = this.dateService.addMonth(this.dateService.today(), -1);
   }
+
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+
 
   ngOnInit(): void {
     this.service.getShip()
@@ -41,13 +45,19 @@ export class AddNewProjectComponent implements OnInit {
     .subscribe(({data} : any) => {
       this.newProjectData.userId = data.id_user
     })
+
+    this.profileService.getUserData()
+    .subscribe(({data} : any) => {
+      const resp = data.map(user => user.username)
+      this.newProjectMenu.responsible = resp
+    })
   }
 
   newProjectMenu = {
     Vessel: [],
-    Phase: ['Requisition','In Progress','Finish', 'Evaluation'],
+    Phase: ['Requisition','In Progress', 'Evaluation','Finish'],
     BaseCurrency: ['IDR', 'EURO', 'US'],
-    responsible : ['SA', 'FB'],
+    responsible : [],
   } 
 
   public newProjectData = {
@@ -91,14 +101,19 @@ export class AddNewProjectComponent implements OnInit {
       repair_end : repair_end,
       repair_in_dock_start : repair_in_dock_start,
       repair_in_dock_end : repair_in_dock_end,
-      repair_additional_day : useData.additionalDay
+      repair_additional_day : useData.additionalDay,
+      responsible : useData.responsible.toLowerCase(),
+      phase : useData.phase.toLowerCase(),
+      selected_yard : useData.selectedYard
     }
 
+    console.log(postBody)
     this.service.addDataProject(postBody)
     .subscribe(res => {
       console.log(res)
     })
-    // this.close()
+    this.onSuccess.emit()
+    this.close()
   }
 
   close(){this.dialogRef.close();}

@@ -55,4 +55,9 @@ export class ProjectBateraService {
     const endPoint = this.getProjectURL + "/" + 1 + "/" + "work_area"
     return this.httpClient.put(endPoint, body)
   }
+
+  publishProject(id){
+    const endPoint = this.getProjectURL + "/" + id + "/publish"
+    return this.httpClient.put(endPoint, "")
+  }
 }

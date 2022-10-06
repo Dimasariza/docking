@@ -18,11 +18,11 @@
         <span class="my-2 d-block">{{newProjectData.shipManagement}}</span> 
         <label for="Vessel Name" class="d-blocka">Responsible</label> 
         <nb-select class="w-100" placeholder="Responsible" size="small" status="primary" #resps [(ngModel)]="newProjectData.responsible" name="responsible" >
-          <nb-option [value]="indexOfelement" *ngFor="let status of newProjectMenu.responsible; let indexOfelement=index;">{{status}}</nb-option>
+          <nb-option [value]="newProjectMenu.responsible[id]" *ngFor="let status of newProjectMenu.responsible; let id=index;">{{status}}</nb-option>
         </nb-select>
         <label for="Phase" class="d-block">Phase</label>
         <nb-select class="w-100" placeholder="Phase" size="small" status="primary" #phase [(ngModel)]="newProjectData.phase" name="phase">
-          <nb-option [value]="indexOfelement" *ngFor="let status of newProjectMenu.Phase; let indexOfelement=index;">{{status}}</nb-option>
+          <nb-option [value]="newProjectMenu.Phase[id]" *ngFor="let status of newProjectMenu.Phase; let id=index;">{{status}}</nb-option>
         </nb-select>
         <label for="Selected Yard" class="w-100">Selected Yard</label>
         <input nbInput class="w-100" fieldSize="small" name="selectedYard" #selectedYard (ngModel)="selectedYard">

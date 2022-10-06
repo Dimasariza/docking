@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject } from '@angular/core';  
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera.service';
 
 @Component({
@@ -13,13 +14,16 @@ export class WorkAreaComponent {
     public dialog : MatDialog,
     private dialogRef: MatDialogRef<WorkAreaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
-    public datepipe : DatePipe
+    public datepipe : DatePipe,
+    public profileService  : ProfileBateraService
   ) {}
   
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   
   onSubmit(data){
     let submitData = data.value
+    console.log(submitData)
+    console.log(submitData.volume * submitData.harga_satuan)
     Object.assign(
       submitData, {
         id : this.workAreaContainer.length,
@@ -49,17 +53,28 @@ export class WorkAreaComponent {
   public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"Yard cost", "Yard cancelled jobs"]
   public rank = ["Critical", "High", "Medium", "Low"]
   public unitType = [ ["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
-  public responsible = ["Admin", "Shipowner", "Shipmanager", "Shipyard"]
+  public responsible = []
   public useUnit
-  public workAreaContainer : any
+  public workAreaContainer : any = []
+  public totalPriceBudget = 0
 
   ngOnInit(){
     this.useUnit = this.unitType[0]
 
     this.projectSerivce.getSubProjectData(this.data)
     .subscribe(({data} : any) => {
+      console.log(data)
       const {work_area} = data
-      this.workAreaContainer = work_area
+      work_area === 'undefined' || 
+      work_area === null ? 
+      this.workAreaContainer = []
+      : this.workAreaContainer = work_area
+    })
+
+    this.profileService.getUserData()
+    .subscribe(({data} : any) => {
+      const resp = data.map(user => user.username)
+      this.responsible = resp
     })
   }
 }

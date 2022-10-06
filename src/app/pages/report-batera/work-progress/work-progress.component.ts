@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries } from '@nebular/theme';
@@ -29,7 +29,6 @@ interface FSEntry {
 @Component({
   selector: 'ngx-work-progress',
   templateUrl: './work-progress.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class WorkProgressComponent {
@@ -47,30 +46,46 @@ export class WorkProgressComponent {
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
     this.dataSource = this.dataSourceBuilder.create(this.data);
   }
+  
+  @Input() worksData = []
 
   openDialog(){
     this.dialog.open(ApprovalDetailComponent)
-    console.log("open dialog")
   }
 
   ngOnInit(){
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    console.log(id)
   }
 
-  customColumn = 'Title';
-  defaultColumns = [ 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
-  approvalColumns = ['Approv by owner' , 'Approv by Ship Yard'];
-  commentColumns = "Comment";
+  populateData = (work) => {          
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+      return {
+      data: {
+        "Job No": sfi,
+        "Job": pekerjaan,
+        "Dept": departemen,
+        "Start": start,
+        "Stop": end,
+        "Vol" : volume,
+        "Unit" : '',
+        "Unit Price": harga_satuan,
+        "Total Price Budget" : kontrak,
+        "Category" : type,
+        "Remarks" : updated_at,
+        "index" : id,
+        kind: items?.length ? 'dir' : 'doc'
+      },
+      children: items?.length ? items.map(child => this.populateData(child)) : []
+    }
+  }
 
-  
-  allColumns = [ this.customColumn, ...this.defaultColumns, ...this.approvalColumns, this.commentColumns ];
+  defaultColumns = ['Job', 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  allColumns = [...this.defaultColumns, 'Approved', "Comment" ];
 
   dataSource: NbTreeGridDataSource<FSEntry>;
 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
-
 
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -192,10 +207,8 @@ export class FsIconComponent {
     </ng-template>
   `,
 })
-
 export class approvalIconComponent {
   @Input() approval: boolean;
-
   isCheck(): boolean {
     return this.approval === true;
   }

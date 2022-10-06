@@ -1,5 +1,5 @@
 <nb-card>
-    <nb-card-body>
+    <nb-card-body *ngIf="picData">
         
         <div class="buttons my-1" >
             <button *ngFor="let icon of useIcons; let indexOfelement=index;"
@@ -9,43 +9,43 @@
                 {{icon.desc}}
             </button>
         </div>
+
         <ngx-datatable 
         [class]="'bootstrap'" 
-        [rows]="shipData" 
-        [count]="shipData.length"   
+        [rows]="picData" 
+        [count]="picData.length"   
         [scrollbarH]="true"
         [columnMode]="'force'"
         class="row"
         [rowHeight]="'auto'"
         default>
-
-            <ngx-datatable-column [name]="'No'" [width]="50">
+            <ngx-datatable-column [name]="'No'" width="10">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                     {{rowIndex+1}}
                 </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Nama Personil'" [width]="50">
+            <ngx-datatable-column [name]="'Nama Personil'" prop="nama_lengkap">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                    _
+                    {{row.nama_lengkap || '_'}}
                 </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Title/Jabatan'" [width]="50">
+            <ngx-datatable-column [name]="'Title/Jabatan'" [width]="50" prop="title"> 
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                    _
+                    {{row.title || '_'}}
                 </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Join Date'" prop="">
+            <ngx-datatable-column [name]="'Join Date'" prop="created_at">
             <ng-template let-row="row" ngx-datatable-cell-template>
-                _
+                {{row.created_at | date : 'medium' || '_'}}
             </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Last Change'" prop="">
+            <ngx-datatable-column [name]="'Last Change'" prop="updated_at">
             <ng-template let-row="row" ngx-datatable-cell-template>
-                _
+                {{row.updated_at | date : 'medium' || '_'}}
             </ng-template>  
             </ngx-datatable-column>
         </ngx-datatable>

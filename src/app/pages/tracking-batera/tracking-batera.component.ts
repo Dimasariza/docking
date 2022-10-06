@@ -3,8 +3,6 @@ import { ApexAxisChartSeries } from 'ng-apexcharts';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
 import * as moment from 'moment'
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 
 @Component({
   selector: 'ngx-tracking-batera',
@@ -51,7 +49,7 @@ export class TrackingBateraComponent implements OnInit {
     this.trackingService.getDataTracking()
     .subscribe(({data} : any) => {
       console.log(data)
-      this.chartOptions.chart.height = data.length * 93
+      this.chartOptions.chart.height = data.length * 156
       this.trackingData = data.map(({nama_kapal, created_at, updated_at, id_kapal}) => ({
         "Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at: moment(updated_at).add(1, 'day'), id_kapal : id_kapal
       }))

@@ -12,32 +12,20 @@
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-            <ng-container [nbTreeGridColumnDef]="customColumn">
-                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-                {{customColumn}}
-                </th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                {{row.data[customColumn]}}
-                </td>
-            </ng-container>
-
-            <ng-container  *ngFor="let column of approvalColumns; let index = index"
-            [nbTreeGridColumnDef]="column"
-            [showOn]="getShowOn(index)">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
+            <ng-container [nbTreeGridColumnDef]="'Approved'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                        <nb-icon icon="checkmark-square-2-outline"></nb-icon>
+                    </button>
                     <button class="btn btn-light btn-sm" (click)="openDialog()">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
                     </button>
                 </td>
             </ng-container>
             
-            
-            <ng-container [nbTreeGridColumnDef]="commentColumns">
-                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(commentColumns)" *nbTreeGridHeaderCellDef>
-                {{commentColumns}}
-                </th>
+            <ng-container [nbTreeGridColumnDef]="'Comment'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm">
                         <nb-icon icon="file-text-outline"></nb-icon>

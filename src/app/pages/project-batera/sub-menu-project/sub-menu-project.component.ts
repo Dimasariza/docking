@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
 import { SubJobWorkareaComponent } from '../work-area/sub-job-workarea.component';
 
@@ -41,7 +41,9 @@ export class SubMenuProjectComponent implements OnInit {
       this.work_area = work_area
       this.shipName = kapal.nama_kapal
       
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      work_area === null ||
+      work_area === 'undefinded' ? '' :
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[]) 
     })
   }
 
@@ -70,7 +72,7 @@ export class SubMenuProjectComponent implements OnInit {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  populateData = (work, kind) => {          
+  populateData = (work) => {          
     const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
     return {
       data: {
@@ -86,10 +88,9 @@ export class SubMenuProjectComponent implements OnInit {
         "Category" : type,
         "Remarks" : updated_at,
         "index" : id,
-        // ...work,
         kind: items?.length ? 'dir' : 'doc'
       },
-      children: items?.length ? items.map(child => this.populateData(child, 'doc')) : []
+      children: items?.length ? items.map(child => this.populateData(child)) : []
     }
   }
   
@@ -170,8 +171,6 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   subJobDial(row){    
-    console.log(row);
-    
     const dialog = this.dialog.open(SubJobWorkareaComponent, {
       disableClose : true,
       autoFocus: true,
@@ -184,8 +183,6 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   delete(id: string) {
-    console.log(id);
-    
     let parentIndex = id.toString().split('')
 
     const reconstructData = (data) => {
@@ -203,17 +200,10 @@ export class SubMenuProjectComponent implements OnInit {
     const work_area = reconstructData(this.work_area)
     this.service.addProjectJob({work_area}, this.id_proyek)
     .subscribe(res => {
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
     })
   }
 }
-
-
-
-
-
-
-
 
 @Component ({
   selector: 'ngx-sub-project-data',
