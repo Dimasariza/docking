@@ -13,20 +13,7 @@ interface TreeNode<T> {
   expanded?: boolean;
 }
 
-interface FSEntry {
-  "Job No": string;
-  Job? : string;
-  Dept?: string;
-  Resp? : string;
-  Start? : string;
-  Stop? : string;
-  "Unit Price Budget"?: string;
-  "Total Price Budget"? : string;
-  "Category"?: string;
-  Remarks?: string;
-  Edit?: boolean
-  kind: string;
-}
+interface FSEntry {}
 
 @Component({
   selector: 'ngx-sub-menu-project',
@@ -66,21 +53,22 @@ export class SubMenuProjectComponent implements OnInit {
             "Total Price Budget" : kontrak,
             "Category" : type,
             "Remarks" : updated_at,
-            "index" : id,
+            "id" : id,
             kind
           },
           children: items?.length ? items.map(child => populateData(child, 'doc')) : []
-        }
+        } 
       }
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => 
+        populateData(work, 'dir')) as TreeNode<FSEntry>[]
+        )
     })
   }
 
   customColumn = "Job No";
   defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks' ];
-  editColumn = 'Edit'
   addJobColumn = 'add job'
-  allColumns = [ this.customColumn, ...this.defaultColumns, this.addJobColumn,this.editColumn];
+  allColumns = [ this.customColumn, ...this.defaultColumns, this.addJobColumn];
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;

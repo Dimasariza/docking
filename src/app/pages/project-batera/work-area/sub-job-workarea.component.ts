@@ -65,11 +65,11 @@ export class SubJobWorkareaComponent implements OnInit {
     let postItem = postBody.work_area[index]
     if( Object.keys(postItem).includes('items') ) {
       postItem.items.push(submitData)
-      postItem.items[postItem.items.length - 1]["id"] =   (index).toString() + (postItem.items.length - 1).toString()
+      postItem.items[postItem.items.length - 1]["id"] = index.toString() + (postItem.items.length - 1).toString()
     } else {
       postItem.items  = [] 
       postItem.items.push(submitData)
-      postItem.items[postItem.items.length - 1]["id"] =  (index).toString() + (postItem.items.length - 1).toString()
+      postItem.items[postItem.items.length - 1]["id"] = index.toString() + (postItem.items.length - 1).toString()
     }
     console.log(postBody)
 

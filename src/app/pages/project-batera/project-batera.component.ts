@@ -59,6 +59,36 @@ export class ProjectBateraComponent {
         this.allProjectDatas = data
         console.log(this.allProjectDatas)
     });
+
+    
+    // this.service.getSubProjectData(id)
+    // .subscribe(({data} : any) => {
+    //   const {work_area, kapal} = data
+    //   const populateData = (work, kind) => {          
+    //     const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+    //     return {
+    //       data: {
+    //         "Job No": sfi,
+    //         "Job": pekerjaan,
+    //         "Dept": departemen,
+    //         "Start": start,
+    //         "Stop": end,
+    //         "Vol" : volume,
+    //         "Unit" : '',
+    //         "Unit Price": harga_satuan,
+    //         "Total Price Budget" : kontrak,
+    //         "Category" : type,
+    //         "Remarks" : updated_at,
+    //         "id" : id,
+    //         kind
+    //       },
+    //       children: items?.length ? items.map(child => populateData(child, 'doc')) : []
+    //     } 
+    //   }
+    //   this.dataSource = this.dataSourceBuilder.create(work_area.map(work => 
+    //     populateData(work, 'dir')) as TreeNode<FSEntry>[]
+    //     )
+    //   })
   }
 
   updateSort(sortRequest: NbSortRequest): void {
@@ -81,7 +111,8 @@ export class ProjectBateraComponent {
     )
   }
 
-  private data: TreeNode<FSEntry>[] = [
+  private data: TreeNode<FSEntry>[] =
+  [
     {
       data: { Tasks: 'Docking Preparation',  'Project/Asset': 'MT Salmon Mustafa', Status: 'Preparation', Customer: 'PILSM', Responsible: 'FDM', Due: '06.08.2022', kind: 'dir', },
       children:[
@@ -127,7 +158,7 @@ export class ProjectBateraComponent {
       },
       ],
     },
-  ];
+  ]
 
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
