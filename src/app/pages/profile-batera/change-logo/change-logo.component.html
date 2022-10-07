@@ -9,7 +9,17 @@
         <form #addShipForm="ngForm" (ngSubmit)="testData(addShipForm)" class="row" >
             <section class="col-12">
                 <label class="col-3" for="ship image file">Company Logo</label>
-                <input class="col-6" nbInput class="my-2" type="file" name="shipimage" (change)="getImage($event)" placeholder="Ship Image" (ngModel)="shipimage" #shipimage>
+                <!-- <input class="col-6" nbInput class="my-2" type="file" name="shipimage" (change)="getImage($event)" placeholder="Ship Image" (ngModel)="shipimage" #shipimage> -->
+                <div class="d-flex justify-content-center">
+                    <picture class="add_image">
+                        <nb-icon icon="plus-outline" class="text-secondary add_icon"></nb-icon>
+                        <input type="file" >
+                    </picture>
+                    <picture class="avatar_image">
+                        <img [src]=""   crossorigin="anonymous">
+                        <input type="file"  class="change_image" >
+                    </picture>
+                </div>
             </section>
             
             <!-- <div class="d-flex justify-content-center">

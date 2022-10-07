@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddShipComponent } from './add-ship/add-ship.component';
-import { HomeService } from './home-batera.service';
+import { HomeBateraService } from './home-batera.service';
 
 @Component({
   selector: 'ngx-home-batera',
@@ -10,12 +10,12 @@ import { HomeService } from './home-batera.service';
 export class HomeBateraComponent implements OnInit {
   public shipData: any;
   constructor(
-    private homeservice:HomeService,
+    private homeservice:HomeBateraService,
     public dialog : MatDialog
   ) {}
   
   ngOnInit() {
-    this.homeservice.getPosts()
+    this.homeservice.getAllShip()
       .subscribe(({data} : any) => {
         this.shipData = data;
     }); 
@@ -33,3 +33,22 @@ export class HomeBateraComponent implements OnInit {
   }
 }
 
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
+}

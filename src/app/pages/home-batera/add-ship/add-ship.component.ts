@@ -2,7 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { HomeService } from '../home-batera.service';
+import { HomeBateraService } from '../home-batera.service';
 
 @Component({
   selector: 'ngx-add-ship',
@@ -10,13 +10,12 @@ import { HomeService } from '../home-batera.service';
   styleUrls : ['./add-ship.component.scss']
 })
 export class AddShipComponent implements OnInit {
-  file : File = null;
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  
-  public formIsValid : boolean = true
+  file : File = null;
   public uploadSuccess = false
+  
   constructor(
-    private homeservice: HomeService,
+    private homeservice: HomeBateraService,
     private dialogRef: MatDialogRef<AddShipComponent>
     ){ 
   }
@@ -35,6 +34,7 @@ export class AddShipComponent implements OnInit {
     fileSource: new FormControl('', [Validators.required])
   });
       
+  public formIsValid : boolean = true
   get f(){
     let validators = this.addShipForm.controls
     if ( validators.name.status === "VALID" &&  validators.file.status === "VALID") {
@@ -45,7 +45,7 @@ export class AddShipComponent implements OnInit {
     return this.addShipForm.controls;
   }
      
-  public urlLink : any
+  public viewImageLink : any
   onFileChange(res) {
     const file = res.target.files[0];
     if (res.target.files.length > 0) {
@@ -54,25 +54,23 @@ export class AddShipComponent implements OnInit {
       });
       var reader = new FileReader()
       reader.readAsDataURL(file)
-      reader.onload = (event ) => {
-        this.urlLink = event.target.result
+      reader.onload = (event) => {
+        this.viewImageLink = event.target.result
       }
     }
   }
 
-  private imageShipUrl
+  private uploadImageUrl
   onImageLoad(event){
     const formData = new FormData();
     formData.append('dokumen', this.addShipForm.get('fileSource').value);
-    this.homeservice.uploadShipimg(formData)
-      .subscribe(res => {
-      console.log(res);
+    this.homeservice.uploadFile(formData)
+      .subscribe(({res} : any) => {
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
-        this.imageShipUrl = res
-        this.imageShipUrl = this.imageShipUrl.body.data.file
+        this.uploadImageUrl = res.body.data.file
       }
     })
   }
@@ -83,11 +81,11 @@ export class AddShipComponent implements OnInit {
       id_user: 4,
       id_perusahaan: 1,
       nama_kapal: data.value.name,
-      foto: this.imageShipUrl,
+      foto: this.uploadImageUrl,
     }
 
     this.homeservice.addShipData(postBody)
-    .subscribe(res => {
+    .subscribe(() => {
       this.uploadSuccess = !this.uploadSuccess
       this.onSuccess.emit()
       this.close()

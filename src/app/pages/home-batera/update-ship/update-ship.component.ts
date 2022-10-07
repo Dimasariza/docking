@@ -2,7 +2,7 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
-import { HomeService } from '../home-batera.service';
+import { HomeBateraService } from '../home-batera.service';
 
 @Component({
   selector: 'ngx-update-ship',
@@ -10,15 +10,13 @@ import { HomeService } from '../home-batera.service';
   styleUrls: ['./update-ship.component.scss']
 })
 export class UpdateShipComponent implements OnInit {
-
-  ngOnInit(): void {
-    
-  }
+  ngOnInit(): void {}
+  
   file : File = null;
   public formIsValid : boolean = true
   public uploadSuccess = false
   constructor(
-     private homeservice: HomeService,
+     private homeservice: HomeBateraService,
      private dialogRef: MatDialogRef<UpdateShipComponent>
      ) { }
 
@@ -34,7 +32,7 @@ export class UpdateShipComponent implements OnInit {
   onUpload(){
     const dataFile : FormData = new FormData()
     dataFile.append('image', this.file, this.file.name )
-    this.homeservice.uploadShipimg(dataFile).subscribe((res) => {
+    this.homeservice.uploadFile(dataFile).subscribe((res) => {
       console.log(res)
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
@@ -47,7 +45,7 @@ export class UpdateShipComponent implements OnInit {
   submit(){
     const formData = new FormData();
     formData.append('dokumen', this.addShipForm.get('fileSource').value);
-    this.homeservice.uploadShipimg(formData)
+    this.homeservice.uploadFile(formData)
       .subscribe(res => {
         console.log(res);
         if (res.type === HttpEventType.UploadProgress) {
@@ -110,7 +108,7 @@ export class UpdateShipComponent implements OnInit {
       "email":"bs@gmail.com"
     }
     this.dialogRef.close(); 
-    this.homeservice.uploadShipimg(postBody).subscribe( (res) => {
+    this.homeservice.uploadFile(postBody).subscribe( (res) => {
       console.log(res)
     })
   }

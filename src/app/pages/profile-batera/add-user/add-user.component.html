@@ -20,44 +20,51 @@
         <div class="row">
             <div class="col-6">
                 <label class="p-2">User name</label> 
-                <input type="text" nbInput fullWidth placeholder="User Name" class="form-control" id="user_name" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="User Name" class="" id="user_name" fieldSize="small"
                 required (ngModel)="userName" name="userName" #userName="ngModel" >
                 <label class="p-2">Full Name</label>
-                <input type="text" nbInput fullWidth placeholder="Full Name" id="full_name" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Full Name" id="full_name" fieldSize="small"
                 required (ngModel)="fullName" name="fullName" #fullName="ngModel">
                 <label class="p-2">Vessel Name</label>
-                <input type="text" nbInput fullWidth placeholder="Vessel Name" id="ship_name" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Vessel Name" id="ship_name" fieldSize="small"
                 required (ngModel)="shipName" name="shipName" #shipName="ngModel">
                 <label class="p-2">Title</label>
-                <input type="text" nbInput fullWidth placeholder="Title" id="title" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Title" id="title" fieldSize="small"
                 required (ngModel)="title" name="title" #title="ngModel">
                 <label class="p-2">Department</label>
-                <input type="text" nbInput fullWidth placeholder="Department" id="department" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Department" id="department" fieldSize="small"
                 required (ngModel)="department" name="department" #department="ngModel">
             </div>
             <div class="col-6">
                 <label class="p-2">Position</label>
-                <input type="text" nbInput fullWidth placeholder="Position" id="position" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Position" id="position" fieldSize="small"
                 required (ngModel)="position" name="position" #position="ngModel">
                 <label class="p-2">Mobile Number</label>
-                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobile_no" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="Mobile Number" id="mobile_no" fieldSize="small"
                 required (ngModel)="mobileNo" name="mobileNo" #mobileNo="ngModel">
                 <label class="p-2">E-mail</label>
-                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="email" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="E-mail Address" id="email" fieldSize="small"
                 required (ngModel)="email" name="email" #email="ngModel">
                 <label class="p-2">Password</label>
-                <input [type]="passwordFieldType ? 'password' : 'text'" nbInput fullWidth placeholder="Password" id="password" fieldSize="small"
-                required (ngModel)="password" name="password" #password  >
-                <label class="p-2 d-block">Role</label>
-                <nb-select class="w-100" placeholder="Role" size="small" status="primary" #role (ngModel)="role" name="role">
+
+                <input fullWidth [type]="passwordFieldType ? 'password' : 'text'"  placeholder="Password" id="password" fieldSize="small"
+                required (ngModel)="password" name="password" #password nbInput fullWidth>
+                <div class="button_wrapper">
+                    <button nbButton size="tiny" ghost class="input-group-text">
+                        <i class="fa fa-eye-slash"></i>
+                    </button>
+                </div>
+
+                <label class="p-2">Role</label>
+                <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="primary" #role (ngModel)="role" name="role">
                     <nb-option [value]="id" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
                 </nb-select>
-                <!-- <input type="text" nbInput fullWidth placeholder="Role" id="role" fieldSize="small"
-                required (ngModel)="role" name="role" #role="ngModel"> -->
+
+
             </div>
         </div>
 
-        <button type="submit" nbButton status="success" [disabled]="!addUserForm.form.valid" class="my-2" fullWidth>Submit</button>
+        <button type="submit" nbButton status="success" [disabled]="!addUserForm.form.valid" class="my-2" >Submit</button>
     </form>
     </nb-card-body>
 </nb-card>

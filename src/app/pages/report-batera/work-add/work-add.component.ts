@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
-
+import { ApprovalDetailComponent } from '../work-progress/work-progress.component';
 
 interface TreeNode<T> {
   data: T;
@@ -25,16 +26,24 @@ interface FSEntry {
 }
 
 @Component({
-  selector: 'ngx-work-progress',
-  templateUrl: './work-progress.component.html',
+  selector: 'ngx-work-add',
+  templateUrl: './work-add.component.html',
+  styles: [
+  ]
 })
+export class WorkAddComponent implements OnInit {
+  title = "unit price add on"
 
-export class WorkProgressComponent {
+  ngOnInit(): void {
+  }
+  evaIcons = [];
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private dialog : MatDialog,
+    public activatedRoute: ActivatedRoute
     ) {
   }
+  
   @Input() worksData : any = ""
   
   openDialog(){
@@ -74,7 +83,7 @@ export class WorkProgressComponent {
     }
   }
 
-  defaultColumns = ['Job', 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = ['Job', 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
   allColumns = [...this.defaultColumns, 'Approved', "Comment" ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -143,77 +152,5 @@ export class WorkProgressComponent {
       desc: 'Send Notification'
     }
   ]
-}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-}
-
-@Component({
-  selector: 'ngx-approval-icon',
-  template: `
-    <nb-tree-grid-row-toggle [approval]="expanded" *ngIf="isCheck(); else fileIcon"></nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="check"></nb-icon>
-    </ng-template>
-  `,
-})
-export class approvalIconComponent {
-  @Input() approval: boolean;
-  isCheck(): boolean {
-    return this.approval === true;
-  }
-}
-
-@Component({
-  selector: 'ngx-approval-detail',
-  template: `
-    <nb-card>
-      <nb-card-header>
-        <h5>Approval Detail</h5>
-      </nb-card-header>
-      <nb-card-body>
-        Lorem Ipusm Dolor Sitamet
-      </nb-card-body>
-    </nb-card>
-  `,
-})
-export class ApprovalDetailComponent implements OnInit {
-  constructor() { }
-  ngOnInit(): void {
-  }
 }

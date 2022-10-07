@@ -1,9 +1,9 @@
-import { KeyValue } from '@angular/common';
-import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbDateService, NbIconLibraries, } from '@nebular/theme';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { PagesRoutingModule } from '../pages-routing.module';
 import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ReportBateraService } from './report-batera.service';
@@ -65,7 +65,7 @@ export class ReportBateraComponent {
   selector: 'ngx-report-data',
   template: `
   <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6">
-    <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+    <div *ngFor = "let item of objectKeys(reportData)">
       <div class="mt-2 row" *ngIf="reportData[item.value].type === 'date';" > 
         <div class="col-6"><strong>{{item.value}}</strong></div>
         <input class="col-3" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
@@ -83,7 +83,7 @@ export class ReportBateraComponent {
   </div>
 
   <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6" >
-    <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+    <div *ngFor = "let item of objectKeys(reportData)">
       <div class="mt-2 row" *ngIf="reportData[item.value].type === 'edit';">
         <div class="col-6"><strong>{{item.value}}</strong></div>
         <div class="col-4">{{reportData[item.value].value}}</div>
@@ -112,7 +112,8 @@ export class reportData implements OnInit{
   myform : FormGroup;
 
   constructor(
-    public ReportBateraService: ReportBateraService,
+    public homeService : HomeBateraService,
+    public reportService: ReportBateraService,
     protected dateService: NbDateService<Date>,
   )
   {
@@ -126,7 +127,6 @@ export class reportData implements OnInit{
     console.log(item.type)
   }
 
-
   onSubmit(data){
     console.log(data)
     if (this.myform.valid) {
@@ -139,15 +139,6 @@ export class reportData implements OnInit{
     console.log("done")
   }
 
-  updateStatus(){
-    const newFormData = { status: "on Progress"}
-    this.ReportBateraService.createStatus(newFormData).subscribe(data => {
-    })
-  }
-
-  orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
-    return 0
-  }
   objectKeys = Object.keys;
   
   reportData = {
@@ -200,24 +191,6 @@ export class reportData implements OnInit{
   }
 }
 
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-}
 
 
 

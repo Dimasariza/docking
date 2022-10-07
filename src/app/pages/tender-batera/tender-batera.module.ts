@@ -8,6 +8,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddYardComponent } from './add-yard/add-yard.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -29,7 +30,8 @@ import { AddYardComponent } from './add-yard/add-yard.component';
     MatDialogModule,
     NbInputModule,
     NbOptionModule,
-    NbSelectModule
+    NbSelectModule,
+    FormsModule,
   ],
   entryComponents: [AddYardComponent],
   declarations: [

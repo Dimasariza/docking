@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { AddYardComponent } from './add-yard/add-yard.component';
 import { TenderBateraService } from './tender-batera.service'
 
@@ -20,7 +21,7 @@ interface FSEntry {
   templateUrl: './tender-batera.component.html',
 })
 
-export class TenderBateraComponent implements OnInit {
+export class TenderBateraComponent  {
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()
   }
@@ -54,44 +55,45 @@ export class TenderBateraComponent implements OnInit {
 
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private tenderBateraService : TenderBateraService,
+    private projectService : ProjectBateraService,
+    private tenderService : TenderBateraService,
     public dialog : MatDialog
     ) {
   }
 
-  ngOnInit(): void {
-    this.tenderBateraService.getDataTender()
-      .subscribe(({data} : any) => {
-    })
+  // ngOnInit(): void {
+  //   this.tenderService.getDataTender()
+  //     .subscribe(({data} : any) => {
+  //   })
 
-    this.tenderBateraService.getProjectWorkArea()
-    .subscribe(({data} : any) => {
-      const {work_area} = data
-      const populateData = (work) => {          
-        const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks} = work           
-        return {
-          data: {
-            "Job No": sfi,
-            "Job": pekerjaan,
-            "Dept": departemen,
-            "Start": start,
-            "Stop": end,
-            "Vol" : volume,
-            "Unit" : '',
-            "Unit Price": harga_satuan,
-            "Total Price Budget" : kontrak,
-            "Category" : type,
-            "Remarks" : remarks,
-            kind: items?.length ? 'dir' : 'doc'
-          },
-          children: items?.length ? items.map(child => populateData(child)) : []
-        }
-      }
-      work_area === null ||
-      work_area === "undefined" ? "" :
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work)) as TreeNode<FSEntry>[])
-    })
-  }
+  //   this.projectService.getSubProjectData()
+  //   .subscribe(({data} : any) => {
+  //     const {work_area} = data
+  //     const populateData = (work) => {          
+  //       const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks} = work           
+  //       return {
+  //         data: {
+  //           "Job No": sfi,
+  //           "Job": pekerjaan,
+  //           "Dept": departemen,
+  //           "Start": start,
+  //           "Stop": end,
+  //           "Vol" : volume,
+  //           "Unit" : '',
+  //           "Unit Price": harga_satuan,
+  //           "Total Price Budget" : kontrak,
+  //           "Category" : type,
+  //           "Remarks" : remarks,
+  //           kind: items?.length ? 'dir' : 'doc'
+  //         },
+  //         children: items?.length ? items.map(child => populateData(child)) : []
+  //       }
+  //     }
+  //     work_area === null ||
+  //     work_area === "undefined" ? "" :
+  //     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work)) as TreeNode<FSEntry>[])
+  //   })
+  // }
 
   addYard(){
     const dialogConfig = new MatDialogConfig();

@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { ProfileBateraService } from '../profil-batera.service';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { HomeBateraService } from '../../home-batera/home-batera.service';
 
 
 @Component({      
@@ -17,7 +18,8 @@ export class UpdateUserComponent implements OnInit {
   }
 
   constructor(
-    private service:ProfileBateraService,
+    private profileService : ProfileBateraService,
+    private homeService : HomeBateraService,
     public dialog : MatDialog,
     private dialogRef: MatDialogRef<UpdateUserComponent>,
     @Inject(MAT_DIALOG_DATA) public userData: any
@@ -51,7 +53,7 @@ export class UpdateUserComponent implements OnInit {
   onImageLoad(){
     const formData = new FormData();
     formData.append('dokumen', this.updateUserForm.get('fileSource').value);
-    this.service.loadImage(formData)
+    this.homeService.uploadFile(formData)
       .subscribe(({res} : any) => {
         if (res.type === HttpEventType.UploadProgress) {
           console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
@@ -76,7 +78,7 @@ export class UpdateUserComponent implements OnInit {
     this.addElement(data.value , {avatar_url : this.uploadLink})
     this.addElement(data.value , {id_user : this.userData.id_user })
     console.log(data.value)
-    this.service.updateUser(data.value)
+    this.profileService.updateUser(data.value)
       .subscribe(res =>console.log(res),
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.')

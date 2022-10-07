@@ -1,47 +1,54 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from "../../../environments/environment"
   
 @Injectable({
   providedIn: 'root'
 })
-export class HomeService {
-  private url = 'http://env-6573880.jh-beon.cloud/home/kapal';
-  private uploadImage = 'http://env-6573880.jh-beon.cloud/file/upload';
-  private idPerusahaan = 'http://env-6573880.jh-beon.cloud/perusahaan';
-  private userLoginURL = 'http://env-6573880.jh-beon.cloud/auth/profile'
-   
+export class HomeBateraService {
   constructor(private httpClient: HttpClient) { }
+  private apiUrl = environment.apiUrl
   
   getUserLogin(){
-    return this.httpClient.get(this.userLoginURL)
+    const url = this.apiUrl + "/auth/profile"
+    return this.httpClient.get(url)
   }
 
-  getPosts(){
-    return this.httpClient.get(this.url);
+  getAllShip(){
+    const url = this.apiUrl + "/home/kapal"
+    return this.httpClient.get(url);
   }
 
   getIdPerusahaan(){
+    const url = this.apiUrl + "/perusahaan"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", 1)
+    queryParams = queryParams.append("per_page", 10)
                             .append("q", "")
-    return this.httpClient.get(this.idPerusahaan,  {headers : httpHeaders, params  : queryParams})
+    return this.httpClient.get(url,  {
+      headers : httpHeaders, params  : queryParams
+    })
   }
   
-  uploadShipimg(postBody){
-    return this.httpClient.post(this.uploadImage, postBody, {reportProgress : true, observe : 'events'})
+  uploadFile(postBody){
+    const url = this.apiUrl + "/file/upload"
+    return this.httpClient.post(url, postBody, {
+      reportProgress : true, observe : 'events'
+    })
   }
 
   addShipData(postBody){
+    const url = this.apiUrl + "/home/kapal"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    return this.httpClient.post(this.url, postBody, {headers : httpHeaders})
+    return this.httpClient.post(url, postBody, {
+      headers : httpHeaders
+    })
   }
 
   deleteShip(id){
-    const deleteUrl = this.url + "/" + id
-    return this.httpClient.delete(deleteUrl)
+    const url = this.apiUrl + "/home/kapal/" + id
+    return this.httpClient.delete(url)
   }
-
 }

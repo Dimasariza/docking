@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HomeBateraComponent } from '../home-batera.component';
-import { HomeService } from '../home-batera.service';
+import { HomeBateraService } from '../home-batera.service';
 import { UpdateShipComponent } from '../update-ship/update-ship.component';
 
 @Component({
@@ -11,7 +11,7 @@ import { UpdateShipComponent } from '../update-ship/update-ship.component';
 export class HomeCardComponent {
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   constructor(
-    private homeservice: HomeService,
+    private homeservice: HomeBateraService,
     public dialog : MatDialog,
     private homeComponent : HomeBateraComponent
   ){}

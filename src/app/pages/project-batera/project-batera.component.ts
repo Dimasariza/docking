@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { HomeService } from '../home-batera/home-batera.service';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { TrackingBateraService } from '../tracking-batera/tracking-batera.service';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
@@ -43,7 +43,7 @@ export class ProjectBateraComponent {
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private service:ProjectBateraService,
     private trackingBatera : TrackingBateraService,
-    private homeService : HomeService
+    private homeService : HomeBateraService
     ) {
   }
 
@@ -82,7 +82,7 @@ export class ProjectBateraComponent {
       this.id_user = data.id_user
     })
 
-    this.service.getProjects()
+    this.service.getDataProjects()
       .subscribe(({data} : any) => {
         this.allProjectDatas = data
         let phase = "requisition"

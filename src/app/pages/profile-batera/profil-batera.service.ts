@@ -1,35 +1,37 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from "../../../environments/environment"
   
 @Injectable({
   providedIn: 'root'
 })
 export class ProfileBateraService {
-  private userUrl = 'http://env-6573880.jh-beon.cloud/user';
-  private companyUrl = 'http://env-6573880.jh-beon.cloud/pengaturan/profile_perusahaan'
-  private uploadUrl = 'http://env-6573880.jh-beon.cloud/file/upload';
-
-  private testUrl = 'http://localhost:3002/testPutData'
-
   constructor(private httpClient: HttpClient) { }
+  private apiUrl = environment.apiUrl
 
-  public getUserData() {
+  getUserData() {
+    const url = this.apiUrl + "/user"
     let queryParams = new HttpParams();
     queryParams = queryParams.append("per_page", 10)
                             .append("q", "")
                             .append("role", "all")
                             .append("status", "all")
-    return this.httpClient.get(this.userUrl,  {params  : queryParams})
+    return this.httpClient.get(url,  {
+      params  : queryParams
+    })
   }
 
-  public updateUser(postData){
+  updateUser(postData){
+    const url = this.apiUrl + "/user/" + postData.id_user
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    let endPoints = this.userUrl + "/" + postData.id_user
-    return this.httpClient.put(endPoints , postData, {headers : httpHeaders})
+    return this.httpClient.put(url , postData, {
+      headers : httpHeaders
+    })
   }
 
-  public addUser() {
+  addUser() {
+    const url = this.apiUrl + "/user"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
     const body = { 
@@ -41,30 +43,28 @@ export class ProfileBateraService {
       password : "kiseki",
       role : "admin"
     };
-    return this.httpClient.post(this.userUrl, body, {headers : httpHeaders})
+    return this.httpClient.post(url, body, {
+      headers : httpHeaders
+    })
   }
 
-  public deleteUser(id){
-    let endPoints = "/" + id
-    return this.httpClient.delete(this.userUrl + endPoints)
+  deleteUser(id){
+    const url = this.apiUrl + "/user/" + id
+    return this.httpClient.delete(url)
   }
 
-  public getCompanyProfile(){
+  getCompanyProfile(){
+    const url = environment.apiUrl + '/pengaturan/profile_perusahaan'
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", 1)
+    queryParams = queryParams.append("per_page", 10)
                             .append("q", "")
-    return this.httpClient.get(this.companyUrl, {params  : queryParams})
+    return this.httpClient.get(url, {params  : queryParams})
   }
 
-  public updateCompanyProfile(body){
+  updateCompanyProfile(body){
+    const url = environment.apiUrl + '/pengaturan/profile_perusahaan'
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    return this.httpClient.put(this.companyUrl, body , {headers : httpHeaders})
-  }
-
-  public loadImage(body){
-    return this.httpClient.post(this.uploadUrl, body, {
-      reportProgress : true, observe : 'events'
-    })
+    return this.httpClient.put(url, body , {headers : httpHeaders})
   }
 }

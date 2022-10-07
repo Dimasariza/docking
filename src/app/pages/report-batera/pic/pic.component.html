@@ -25,13 +25,13 @@
                 </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Nama Personil'" prop="nama_lengkap">
+            <ngx-datatable-column [name]="'Name'" prop="nama_lengkap">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                     {{row.nama_lengkap || '_'}}
                 </ng-template>
             </ngx-datatable-column>
 
-            <ngx-datatable-column [name]="'Title/Jabatan'" [width]="50" prop="title"> 
+            <ngx-datatable-column [name]="'Title'" [width]="50" prop="title"> 
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
                     {{row.title || '_'}}
                 </ng-template>

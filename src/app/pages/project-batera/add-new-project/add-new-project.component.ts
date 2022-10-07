@@ -3,7 +3,7 @@ import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbDateService } from '@nebular/theme';
-import { HomeService } from '../../home-batera/home-batera.service';
+import { HomeBateraService } from '../../home-batera/home-batera.service';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera.service';
 
@@ -16,10 +16,10 @@ export class AddNewProjectComponent implements OnInit {
   constructor(
     protected dateService: NbDateService<Date>,
     private dialogRef: MatDialogRef<AddNewProjectComponent>,
-    private service:ProjectBateraService,
-    private homeService : HomeService,
-    public datepipe: DatePipe,
+    private projectService:ProjectBateraService,
+    private homeService : HomeBateraService,
     private profileService : ProfileBateraService,
+    public datepipe: DatePipe,
     public activatedRoute : ActivatedRoute,
     @Inject( MAT_DIALOG_DATA ) public data ) { 
     this.min = this.dateService.addMonth(this.dateService.today(), -1);
@@ -29,14 +29,14 @@ export class AddNewProjectComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.service.getShip()
+    this.homeService.getAllShip()
     .subscribe(({data} : any) => {
       data.forEach(ship => {
         this.newProjectMenu.Vessel.push({nama_kapal : ship.nama_kapal, id_kapal : ship.id_kapal}) 
       });
     })
 
-    this.service.getProfilePerusahaan()
+    this.profileService.getCompanyProfile()
     .subscribe(({data}: any) => {
       this.newProjectData.shipManagement = data.profile_merk_perusahaan
     })
@@ -107,7 +107,7 @@ export class AddNewProjectComponent implements OnInit {
       selected_yard : useData.selectedYard
     }
 
-    this.service.addDataProject(postBody)
+    this.projectService.addDataProject(postBody)
     .subscribe(res => {
       console.log(res)
       this.onSuccess.emit()

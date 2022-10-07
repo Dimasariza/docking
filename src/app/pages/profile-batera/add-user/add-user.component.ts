@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { HomeBateraService } from '../../home-batera/home-batera.service';
 import { ProfileBateraService } from '../profil-batera.service';
 
 @Component({
@@ -12,7 +13,8 @@ import { ProfileBateraService } from '../profil-batera.service';
 })
 export class AddUserComponent {
   constructor(
-    private service:ProfileBateraService,
+    private profileService:ProfileBateraService,
+    private homeService : HomeBateraService,
     public dialog : MatDialog,
     public route : Router,
     private dialogRef: MatDialogRef<AddUserComponent>
@@ -36,7 +38,7 @@ export class AddUserComponent {
     },
   }
 
-  passwordFieldType: boolean = false;
+  passwordFieldType: boolean = true;
   addUserForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     file: new FormControl('', [Validators.required]),
@@ -44,9 +46,8 @@ export class AddUserComponent {
   });
 
   public urlLink
-  public userRole = ["Super Intendent", "Ship Yard", "Ship Owner", "Super Admin", "Admin"]
+  public userRole = ["Super Intendent", "Director", "Fleet Manager", "Yard Manager", "Ship Yard", "Super Admin"]
   onFileChange(res){
-    console.log(res)
     this.userData.avatar_url.exist = res.isTrusted
     const file = res.target.files[0];
     if (res.target.files.length > 0) {
@@ -64,12 +65,10 @@ export class AddUserComponent {
 
   private avatarUrl
   onImageLoad(event){
-    console.log(event, "load image")
     this.userData.avatar_url.exist = event.isTrusted
-
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
-    this.service.loadImage(formData)
+    this.homeService.uploadFile(formData)
       .subscribe(res => {
         console.log(res);
         if (res.type === HttpEventType.UploadProgress) {
@@ -84,7 +83,7 @@ export class AddUserComponent {
 
   onSubmit(data){
     console.log(data)
-    this.service.addUser()
+    this.profileService.addUser()
       .subscribe(res => {console.log(res)},
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.')

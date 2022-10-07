@@ -1,63 +1,52 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { environment } from "../../../environments/environment.prod"
   
 @Injectable({
   providedIn: 'root'
 })
 export class ProjectBateraService {
-  private getProjectURL = 'http://env-6573880.jh-beon.cloud/proyek';
-  private shipUrl = 'http://env-6573880.jh-beon.cloud/home/kapal'
-  private profilePerusahaan = 'http://env-6573880.jh-beon.cloud/pengaturan/profile_perusahaan'
-
-  private testUrl = 'http://localhost:3002/testPutData'
-
   constructor(private httpClient: HttpClient) { }
+  private apiUrl = environment.apiUrl
   
-  public getProjects() {
+  public getDataProjects(){
+    const url = this.apiUrl + "/proyek"
     let queryParams = new HttpParams();
     queryParams = queryParams.append("per_page", "")
                             .append("q", "")
-    return this.httpClient.get(this.getProjectURL,  {params  : queryParams})
+    return this.httpClient.get(url,  {
+      params  : queryParams
+    })
   }
 
-  public getShip(){
-    return this.httpClient.get(this.shipUrl)
-  }
-
-  public getProfilePerusahaan () {
-    return this.httpClient.get(this.profilePerusahaan)
-  }
-
-  public addDataProject(body){
+  addDataProject(body){
+    const url = this.apiUrl + "/proyek"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    return this.httpClient.post(this.getProjectURL, body, {headers : httpHeaders})
+    return this.httpClient.post(url, body, {
+      headers : httpHeaders
+    })
   }
 
-  public getSubProjectData(id){
-    const endPoint = this.getProjectURL + "/" + id
-    return this.httpClient.get(endPoint)
+  getSubProjectData(id : any = 1){
+    const url = this.apiUrl + "/proyek/" + id
+    return this.httpClient.get(url)
   }
 
-  public deleteProject(id_proyek){
-    let endPoint = this.getProjectURL + '/' + id_proyek
-    return this.httpClient.delete(endPoint)
+  deleteProject(id){
+    const url = this.apiUrl + "/proyek/" + id
+    return this.httpClient.delete(url)
   }
 
-  addProjectJob(postbody, id_proyek){
+  addProjectJob(postbody, id){
+    const url = this.apiUrl + "/proyek/" + id + "/work_area"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    const url = this.getProjectURL + '/' + id_proyek + '/' + "work_area"
     return this.httpClient.put(url, postbody, {headers : httpHeaders})
   }
 
-  updateWorkArea(body){
-    const endPoint = this.getProjectURL + "/" + 1 + "/" + "work_area"
-    return this.httpClient.put(endPoint, body)
-  }
-
   publishProject(id){
-    const endPoint = this.getProjectURL + "/" + id + "/publish"
-    return this.httpClient.put(endPoint, "")
+    const url = this.apiUrl + "/proyek/" + id + "/publish"
+    return this.httpClient.put(url, "")
   }
 }

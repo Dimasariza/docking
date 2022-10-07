@@ -1,0 +1,46 @@
+<div class="buttons my-1" >
+    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClick(icon.desc)">
+        <nb-icon [icon]="icon.icon" pack="eva">
+        </nb-icon>
+        {{icon.desc}}
+    </button>
+</div>
+<div style="overflow: auto; width: 100%;">
+    <div style="width: 2000px;">
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+            <ng-container [nbTreeGridColumnDef]="'Approved'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                        <nb-icon icon="checkmark-square-2-outline"></nb-icon>
+                    </button>
+                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                        <nb-icon icon="checkmark-square-2-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+            
+            <ng-container [nbTreeGridColumnDef]="'Comment'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm">
+                        <nb-icon icon="file-text-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of defaultColumns; let index = index"
+                            [nbTreeGridColumnDef]="column"
+                            [showOn]="getShowOn(index)">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                {{column}}
+                </th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+            </ng-container>
+        </table>    
+    </div>
+</div>

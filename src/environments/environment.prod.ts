@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  apiUrl: "https://env-6573880.jh-beon.cloud"
+  apiUrl: "https://equable-flavor-production.up.railway.app/"
 };
