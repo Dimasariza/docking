@@ -107,12 +107,11 @@ export class AddNewProjectComponent implements OnInit {
       selected_yard : useData.selectedYard
     }
 
-    console.log(postBody)
     this.service.addDataProject(postBody)
     .subscribe(res => {
       console.log(res)
+      this.onSuccess.emit()
     })
-    this.onSuccess.emit()
     this.close()
   }
 

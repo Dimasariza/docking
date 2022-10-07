@@ -99,8 +99,6 @@ export class SuratTeguranComponent implements OnInit {
   ]
 
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
-    console.log(id)
   }
 }
 

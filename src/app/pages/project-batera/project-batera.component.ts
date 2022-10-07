@@ -118,6 +118,7 @@ export class ProjectBateraComponent {
           Status : status,
           Responsible : responsible,
           Due : end,
+          kind: items?.length ? 'dir' : 'doc'
         },
         children : items?.length ? items.map(item => populateData(item)) : []
       }

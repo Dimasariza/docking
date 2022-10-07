@@ -79,8 +79,8 @@ export class AddShipComponent implements OnInit {
 
   submit(data){
     const postBody = {
-      id_user: this.userId,
-      // id_user: 4,
+      // id_user: this.userId,
+      id_user: 4,
       id_perusahaan: 1,
       nama_kapal: data.value.name,
       foto: this.imageShipUrl,

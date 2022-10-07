@@ -66,9 +66,8 @@ export class TenderBateraComponent implements OnInit {
 
     this.tenderBateraService.getProjectWorkArea()
     .subscribe(({data} : any) => {
-      console.log(data)
       const {work_area} = data
-      const populateData = (work, kind) => {          
+      const populateData = (work) => {          
         const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks} = work           
         return {
           data: {
@@ -83,12 +82,14 @@ export class TenderBateraComponent implements OnInit {
             "Total Price Budget" : kontrak,
             "Category" : type,
             "Remarks" : remarks,
-            kind
+            kind: items?.length ? 'dir' : 'doc'
           },
-          children: items?.length ? items.map(child => populateData(child, 'doc')) : []
+          children: items?.length ? items.map(child => populateData(child)) : []
         }
       }
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work, 'dir')) as TreeNode<FSEntry>[])
+      work_area === null ||
+      work_area === "undefined" ? "" :
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work)) as TreeNode<FSEntry>[])
     })
   }
 

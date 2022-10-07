@@ -35,9 +35,7 @@ export class ReportBateraComponent {
     this.reportBateraService.getProjectData(id)
     .subscribe(({data} : any) => {
       this.projectData = data
-      console.log(data)
     })
-
   }
 
   buttonKey = [

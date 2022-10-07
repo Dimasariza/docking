@@ -52,8 +52,8 @@
                 <ng-container [nbTreeGridColumnDef]="'add job'" width="400">
                     <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(addJobColumn)" *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row; let id = index" class="text-center">
-                    <button nbButton size="small" outline status="primary" (click)="subJobDial(row, id)">
-                        Add Sub Job
+                    <button nbButton size="small" outline status="primary" (click)="subJobDial(row, id)" [disabled]="row.data.published">  
+                        Add Sub Job 
                     </button>
                     </td>
                 </ng-container>
@@ -77,12 +77,6 @@
                         <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
                         <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
                     </div>
-                    <!-- <div *ngIf="!addSubJob">
-                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
-                        <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                            <input type="text" nbInput fieldSize="small">
-                        </td>
-                    </div> -->
                 </ng-container>
 
             </table>

@@ -34,16 +34,19 @@ export class SubMenuProjectComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
+    const published = this.route.snapshot.paramMap.get('p')
     this.id_proyek = id
     this.service.getSubProjectData(id)
     .subscribe(({data} : any) => {
       const {work_area, kapal} = data
       this.work_area = work_area
       this.shipName = kapal.nama_kapal
-      
+      work_area[0].published = published
+
       work_area === null ||
       work_area === 'undefinded' ? '' :
       this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[]) 
+      console.log(this.work_area)
     })
   }
 
@@ -73,7 +76,7 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   populateData = (work) => {          
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id, published } = work           
     return {
       data: {
         "Job No": sfi,
@@ -88,6 +91,7 @@ export class SubMenuProjectComponent implements OnInit {
         "Category" : type,
         "Remarks" : updated_at,
         "index" : id,
+        "published" : published,
         kind: items?.length ? 'dir' : 'doc'
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
@@ -217,6 +221,7 @@ export class SubProjectDataComponent implements OnInit{
       this.service.getSubProjectData(id )
       .subscribe((res) => {
         this.dataProyek = res
+        console.log(res)
         this.reportData.Vessel.value = this.dataProyek.data.kapal.nama_kapal
         this.reportData["Base Currency"].value = this.dataProyek.data.mata_uang
         this.reportData["- Bunker"].value = this.dataProyek.data.off_hire_bunker_per_day
@@ -282,8 +287,6 @@ export class SubProjectDataComponent implements OnInit{
     } 
   }
 }
-
-
 
 
 @Component({

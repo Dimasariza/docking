@@ -44,21 +44,23 @@ export class WorkProgressComponent {
     iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
     iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
-    this.dataSource = this.dataSourceBuilder.create(this.data);
   }
   
-  @Input() worksData = []
-
+  @Input() worksData : any = ""
+  
   openDialog(){
     this.dialog.open(ApprovalDetailComponent)
   }
 
-  ngOnInit(){
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
+  ngOnChanges(){
+    console.log(this.worksData)
+    this.worksData?
+    this.dataSource = this.dataSourceBuilder.create(this.worksData.work_area.map(work => 
+    this.populateData(work)) as TreeNode<FSEntry>[]): ""
   }
 
   populateData = (work) => {          
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id } = work           
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, updated_at, id } = work           
       return {
       data: {
         "Job No": sfi,
@@ -73,7 +75,7 @@ export class WorkProgressComponent {
         "Category" : type,
         "Remarks" : updated_at,
         "index" : id,
-        kind: items?.length ? 'dir' : 'doc'
+        "kind" : items?.length ? 'dir' : 'doc'
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -81,9 +83,7 @@ export class WorkProgressComponent {
 
   defaultColumns = ['Job', 'Type', 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   allColumns = [...this.defaultColumns, 'Approved', "Comment" ];
-
   dataSource: NbTreeGridDataSource<FSEntry>;
-
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
@@ -98,30 +98,6 @@ export class WorkProgressComponent {
     }
     return NbSortDirection.NONE;
   }
-
-  private data: TreeNode<FSEntry>[] = [
-    {
-      data: { Title: 'Plan Docking', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:'15-12-2018' , Responsible:'', 'Last Change': '22-11-18 22:07 SS' , Approval: true ,kind: 'dir' },
-    },
-    {
-      data: { Title: 'Spesifications', Type: 'Phase', Status: '', '%':'', Start: '15-09-2018', Stop:"15-12-2018" , Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', },
-      children: [
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',kind: 'doc'} },
-        { data: { Title: 'D-10 1st inspection', Type: 'Activity', Status: '',  Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc' } },
-        { data: { Title: 'D-9 to D-6 Draft docking spec', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'doc'} },
-        { data: { Title: 'D-9 to D-6 Produce Spares stores and services', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS' , kind: 'doc'} },
-        { data: { Title: 'D-5 Prepare docking spec', Type: 'Activity', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc'} },
-        { data: { Title: 'D-5 Spesification approved', Type: 'Milestone', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'doc'} },
-      ],
-    },
-    {
-    data: { Title: 'Quote', Type: 'Phase', Status: '', Start: '15-09-2018',  Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS', kind: 'dir', Approval: true},
-      children: [
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
-        { data: { Title: 'D-12 Registration dock jobs', Type: 'Active', Status: '', Start: '15-09-2018', Stop:"15-12-2018", Responsible:'', 'Last Change': '22-11-18 22:07 SS',  kind: 'doc' } },
-      ],
-    },
-  ];
 
   getShowOn(index: number) {
     const minWithForMultipleColumns = 400;
@@ -142,7 +118,6 @@ export class WorkProgressComponent {
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, autoFocus:true, 
     })
-    console.log("open dialog")
   }
 
   useIcons = [
@@ -176,6 +151,23 @@ export class WorkProgressComponent {
     }
   ]
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @Component({
@@ -229,7 +221,6 @@ export class approvalIconComponent {
 })
 export class ApprovalDetailComponent implements OnInit {
   constructor() { }
-
   ngOnInit(): void {
   }
 }
