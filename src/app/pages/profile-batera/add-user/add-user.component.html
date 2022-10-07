@@ -22,6 +22,12 @@
                 <label class="p-2">User name</label> 
                 <input fullWidth type="text" nbInput  placeholder="User Name" class="" id="user_name" fieldSize="small"
                 required (ngModel)="userName" name="userName" #userName="ngModel" >
+                <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
+                class="danger text-danger">
+                    <div *ngIf="userName.errors?.['required']">
+                    Name is required.
+                    </div>
+                </div>
                 <label class="p-2">Full Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Full Name" id="full_name" fieldSize="small"
                 required (ngModel)="fullName" name="fullName" #fullName="ngModel">
@@ -43,28 +49,25 @@
                 <input fullWidth type="text" nbInput  placeholder="Mobile Number" id="mobile_no" fieldSize="small"
                 required (ngModel)="mobileNo" name="mobileNo" #mobileNo="ngModel">
                 <label class="p-2">E-mail</label>
-                <input fullWidth type="text" nbInput  placeholder="E-mail Address" id="email" fieldSize="small"
+                <input fullWidth type="text" nbInput  placeholder="E-mail Address" id="useremail" fieldSize="small"
                 required (ngModel)="email" name="email" #email="ngModel">
                 <label class="p-2">Password</label>
 
+                <div class="d-flex border rounded">
                 <input fullWidth [type]="passwordFieldType ? 'password' : 'text'"  placeholder="Password" id="password" fieldSize="small"
                 required (ngModel)="password" name="password" #password nbInput fullWidth>
-                <div class="button_wrapper">
-                    <button nbButton size="tiny" ghost class="input-group-text">
-                        <i class="fa fa-eye-slash"></i>
-                    </button>
+                <button nbButton size="small" status="basic" class="input-group-text" type="button" (click)="passwordField()">
+                    <nb-icon [icon]="passwordFieldType ? 'eye-outline' : 'eye-off-outline'"></nb-icon>
+                </button>
                 </div>
 
                 <label class="p-2">Role</label>
-                <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="primary" #role (ngModel)="role" name="role">
+                <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="basic" #role (ngModel)="role" name="role">
                     <nb-option [value]="id" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
                 </nb-select>
-
-
             </div>
         </div>
-
-        <button type="submit" nbButton status="success" [disabled]="!addUserForm.form.valid" class="my-2" >Submit</button>
+        <button type="submit" nbButton status="success" fullWidth [disabled]="!addUserForm.form.valid" class="my-2" >Submit</button>
     </form>
     </nb-card-body>
 </nb-card>

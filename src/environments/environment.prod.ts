@@ -5,5 +5,5 @@
  */
 export const environment = {
   production: true,
-  apiUrl: "https://equable-flavor-production.up.railway.app/"
+  apiUrl: "https://equable-flavor-production.up.railway.app"
 };

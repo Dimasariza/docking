@@ -69,25 +69,27 @@ export class AddUserComponent {
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
     this.homeService.uploadFile(formData)
-      .subscribe(res => {
-        console.log(res);
+      .subscribe(({res} : any) => {
         if (res.type === HttpEventType.UploadProgress) {
           console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
         } else if ( res.type === HttpEventType.Response){
           console.log("final Response uploading image")
         }
-        this.avatarUrl = res
-        this.avatarUrl = this.avatarUrl.body
+        this.avatarUrl = res.body
     })
+  }
+
+  passwordField(){
+    this.passwordFieldType = !this.passwordFieldType
   }
 
   onSubmit(data){
     console.log(data)
-    this.profileService.addUser()
-      .subscribe(res => {console.log(res)},
-      err => {console.log('HTTP Error', err)},
-      () => console.log('HTTP request completed.')
-    )
+    // this.profileService.addUser()
+    //   .subscribe(res => {console.log(res)},
+    //   err => {console.log('HTTP Error', err)},
+    //   () => console.log('HTTP request completed.')
+    // )
 
     if(this.avatarUrl !== undefined) {
       console.log('avatar not available')

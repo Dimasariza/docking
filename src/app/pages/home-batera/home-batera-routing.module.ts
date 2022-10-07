@@ -21,5 +21,4 @@ export const routedComponents = [
   AddShipComponent,
   UpdateShipComponent,
   HomeCardComponent,
-  // FsIconComponent
 ];
