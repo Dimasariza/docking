@@ -1,8 +1,9 @@
-import { Component, EventEmitter, Input } from '@angular/core';
+import { Component, EventEmitter, Injectable, Input, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HomeBateraComponent } from '../home-batera.component';
 import { HomeBateraService } from '../home-batera.service';
 import { UpdateShipComponent } from '../update-ship/update-ship.component';
+import { environment } from "../../../../environments/environment"
 
 @Component({
   selector: 'ngx-home-card',
@@ -13,9 +14,8 @@ export class HomeCardComponent {
   constructor(
     private homeservice: HomeBateraService,
     public dialog : MatDialog,
-    private homeComponent : HomeBateraComponent
   ){}
-
+  @Input() apiUrl = environment.apiUrl
   @Input() image
   @Input() imgIndex
   flipped = false;
@@ -25,11 +25,10 @@ export class HomeCardComponent {
 
   deleteShip(){
     let id_kapal = this.image.id_kapal
-    this.homeservice.deleteShip(id_kapal).subscribe( ({status} : any) => {
-      console.log(status)
+    this.homeservice.deleteShip(id_kapal)
+    .subscribe( ({status} : any) => {
+      this.onSuccess.emit(null)
     })
-
-    this.homeComponent.ngOnInit()
   }
 
   updateShip(){

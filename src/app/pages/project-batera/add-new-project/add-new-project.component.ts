@@ -16,98 +16,64 @@ export class AddNewProjectComponent implements OnInit {
   constructor(
     protected dateService: NbDateService<Date>,
     private dialogRef: MatDialogRef<AddNewProjectComponent>,
-    private projectService:ProjectBateraService,
     private homeService : HomeBateraService,
     private profileService : ProfileBateraService,
+    private projectService : ProjectBateraService,
     public datepipe: DatePipe,
     public activatedRoute : ActivatedRoute,
     @Inject( MAT_DIALOG_DATA ) public data ) { 
     this.min = this.dateService.addMonth(this.dateService.today(), -1);
   }
-
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-
 
   ngOnInit(): void {
     this.homeService.getAllShip()
     .subscribe(({data} : any) => {
       data.forEach(ship => {
-        this.newProjectMenu.Vessel.push({nama_kapal : ship.nama_kapal, id_kapal : ship.id_kapal}) 
+        this.newProjectMenu.Vessel.push({
+          nama_kapal : ship.nama_kapal, id_kapal : ship.id_kapal
+        }) 
       });
-    })
-
-    this.profileService.getCompanyProfile()
-    .subscribe(({data}: any) => {
-      this.newProjectData.shipManagement = data.profile_merk_perusahaan
     })
 
     this.homeService.getUserLogin()
     .subscribe(({data} : any) => {
-      this.newProjectData.userId = data.id_user
+      this.newProjectMenu.userId = data.id_user
     })
 
-    this.profileService.getUserData()
+    this.profileService.getUserData(10, '', "shipyard", '')
     .subscribe(({data} : any) => {
-      const resp = data.map(user => user.username)
-      this.newProjectMenu.responsible = resp
+      this.newProjectMenu.responsible = data
+      .map(user => {
+        return {
+          name : user.username, 
+          id : user.id_user
+        }
+      })
     })
+    console.log(this.newProjectMenu)
   }
 
   newProjectMenu = {
     Vessel: [],
-    Phase: ['Requisition','In Progress', 'Evaluation','Finish'],
+    Phase: ['Requisition','In_Progress', 'Evaluasi','Finish'],
     BaseCurrency: ['IDR', 'EURO', 'US'],
     responsible : [],
+    userId : null,
+    shipManagement : null
   } 
-
-  public newProjectData = {
-    offHirePeriod : "",
-    repairPeriod :"",
-    repairInDockDate : "",
-    vessel : '',
-    responsible : '',
-    phase : '',
-    baseCurrency : '',
-    userId : '',
-    shipManagement : ''
-  }
 
   addNewProject(data){
     let useData = data.value
-    console.log(data)
-    const {offHirePeriod, repairPeriod, repairInDockDate} = this.newProjectData
-
-    const off_hire_start  = this.datepipe.transform(offHirePeriod['start'] , 'yyyy-MM-dd');
-    const off_hire_end  = this.datepipe.transform(offHirePeriod['end'] , 'yyyy-MM-dd');
-    
-    const repair_start = this.datepipe.transform(repairPeriod['start'] , 'yyyy-MM-dd');
-    const repair_end  = this.datepipe.transform(repairPeriod['end'] , 'yyyy-MM-dd');
-
-    const repair_in_dock_start = this.datepipe.transform(repairInDockDate['start'] , 'yyyy-MM-dd');
-    const repair_in_dock_end  = this.datepipe.transform(repairInDockDate['end'] , 'yyyy-MM-dd');
-
-    const postBody = {
-      id_kapal : this.newProjectMenu.Vessel[useData.vessel].id_kapal,
-      // id_user : this.newProjectData.userId,
-      id_user : 3,
-      tahun : useData.yearProject,
-      mata_uang : this.newProjectMenu.BaseCurrency[useData.baseCurrency],
-      off_hire_start : off_hire_start,
-      off_hire_end : off_hire_end,
-      off_hire_deviasi : useData.deviation,
-      off_hire_rate_per_day : useData.charterRate,
-      off_hire_bunker_per_day : useData.bunker,
-      repair_start : repair_start,
-      repair_end : repair_end,
-      repair_in_dock_start : repair_in_dock_start,
-      repair_in_dock_end : repair_in_dock_end,
-      repair_additional_day : useData.additionalDay,
-      responsible : useData.responsible.toLowerCase(),
-      phase : useData.phase.toLowerCase(),
-      selected_yard : useData.selectedYard
-    }
-
-    this.projectService.addDataProject(postBody)
+    const {offHirePeriod, repairPeriod, repairInDock} = useData
+    useData['off_hire_start'] = this.datepipe.transform(offHirePeriod['start'] , 'yyyy-MM-dd');
+    useData['off_hire_end'] = this.datepipe.transform(offHirePeriod['end'] , 'yyyy-MM-dd');
+    useData['repair_start'] = this.datepipe.transform(repairPeriod['start'] , 'yyyy-MM-dd');
+    useData['repair_end'] = this.datepipe.transform(repairPeriod['end'] , 'yyyy-MM-dd');
+    useData['repair_in_dock_start'] = this.datepipe.transform(repairInDock['start'] , 'yyyy-MM-dd');
+    useData['repair_in_dock_end']  = this.datepipe.transform(repairInDock['end'] , 'yyyy-MM-dd');
+    console.log(useData)
+    this.projectService.addDataProject(useData)
     .subscribe(res => {
       console.log(res)
       this.onSuccess.emit()

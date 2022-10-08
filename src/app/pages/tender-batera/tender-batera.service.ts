@@ -9,8 +9,6 @@ export class TenderBateraService {
     constructor (private httpClient : HttpClient,){}
     public apiUrl = environment.apiUrl
     
-    public dataProjectURL = 'http://env-6573880.jh-beon.cloud/proyek';
-
     getDataTender(){    
         const url = this.apiUrl + "/tender"
         let queryParams = new HttpParams();

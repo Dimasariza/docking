@@ -61,39 +61,41 @@ export class TenderBateraComponent  {
     ) {
   }
 
-  // ngOnInit(): void {
-  //   this.tenderService.getDataTender()
-  //     .subscribe(({data} : any) => {
-  //   })
+  ngOnInit(): void {
+    this.tenderService.getDataTender()
+      .subscribe(({data} : any) => {
+        console.log(data)
+    })
 
-  //   this.projectService.getSubProjectData()
-  //   .subscribe(({data} : any) => {
-  //     const {work_area} = data
-  //     const populateData = (work) => {          
-  //       const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks} = work           
-  //       return {
-  //         data: {
-  //           "Job No": sfi,
-  //           "Job": pekerjaan,
-  //           "Dept": departemen,
-  //           "Start": start,
-  //           "Stop": end,
-  //           "Vol" : volume,
-  //           "Unit" : '',
-  //           "Unit Price": harga_satuan,
-  //           "Total Price Budget" : kontrak,
-  //           "Category" : type,
-  //           "Remarks" : remarks,
-  //           kind: items?.length ? 'dir' : 'doc'
-  //         },
-  //         children: items?.length ? items.map(child => populateData(child)) : []
-  //       }
-  //     }
-  //     work_area === null ||
-  //     work_area === "undefined" ? "" :
-  //     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work)) as TreeNode<FSEntry>[])
-  //   })
-  // }
+    this.projectService.getSubProjectData()
+    .subscribe(({data} : any) => {
+      const {work_area} = data
+      const populateData = (work) => {          
+        const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, satuan, responsible} = work           
+        return {
+          data: {
+            "Job No": sfi,
+            "Job": pekerjaan,
+            "Dept": departemen,
+            "Resp" : responsible,
+            "Start": start,
+            "Stop": end,
+            "Vol" : volume,
+            "Unit" : satuan,
+            "Unit Price": harga_satuan,
+            "Total Price Budget" : kontrak,
+            "Category" : type,
+            "Remarks" : remarks,
+            kind: items?.length ? 'dir' : 'doc'
+          },
+          children: items?.length ? items.map(child => populateData(child)) : []
+        }
+      }
+      work_area === null ||
+      work_area === "undefined" ? "" :
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => populateData(work)) as TreeNode<FSEntry>[])
+    })
+  }
 
   addYard(){
     const dialogConfig = new MatDialogConfig();

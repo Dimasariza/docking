@@ -3,7 +3,7 @@
       <nb-card size="">
         <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView()"></nb-icon>
         <div class="card bg-transparent h-100 ">
-          <img src="http://env-6573880.jh-beon.cloud/file/show/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
+          <img src="{{apiUrl}}/file/show/{{image.foto}}" crossorigin="anonymous" alt="{{image.nama_kapal}}" class="h-100">
           <div class="d-flex align-items-center">
             <span class="m-1 col-9 text-uppercase font-weight-bold h6">{{image.nama_kapal}}</span> 
               <div class="col m-3 ">

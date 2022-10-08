@@ -9,27 +9,27 @@
         
         <form #addYardForm="ngForm" (ngSubmit)="onSubmit(addYardForm)" >
             <span class="d-block my-1">Project Name</span>
-            <nb-select placeholder="Project Name" size="small" class="w-100" #projectName ngModel="project_Name" name="projectNames">
-                <nb-option *ngFor="let value of addProjectBody.project ; let indexOfelement=index;" [value]="indexOfelement">{{value.name}}</nb-option>
+            <nb-select placeholder="Project Name" size="small" class="w-100" #projectName (ngModel)="projectName" name="id_proyek">
+                <nb-option *ngFor="let value of addProjectBody.project; let id=index;" [value]="addProjectBody.project[id]">{{value.name}}</nb-option>
             </nb-select>
             <span class="d-block my-1">Yard Name</span>
-            <input class="d-block w-100" type="text" placeholder="Yard Name" nbInput #yardName ngModel="yardName" name="yardName" fieldSize="small">
+            <input class="d-block w-100" type="text" placeholder="Yard Name" nbInput #yardName (ngModel)="yardName" name="nama_galangan" fieldSize="small">
             <span class="d-block my-1">Yard Loacation</span>
-            <textarea name="" nbInput cols="70" rows="2" ngModel="yardLocation" #yardLocation name="yardLocation"></textarea>
+            <textarea name="" nbInput cols="70" rows="2" placeholder="Yard Location" (ngModel)="yardLocation" #yardLocation name="lokasi_galangan"></textarea>
             <span class="d-block my-1">Responsible</span>
-            <nb-select placeholder="Responsible" size="small" class=" w-100" #responsible name="responsible" ngModel="responsible">
-                <nb-option *ngFor="let value of addProjectBody.responsible; let indexOfelement=index;" [value]="indexOfelement">{{value.name}}</nb-option>
+            <nb-select placeholder="Responsible" size="small" class=" w-100" #responsible name="id_user" (ngModel)="responsible">
+                <nb-option *ngFor="let value of addProjectBody.responsible; let id=index;" [value]="addProjectBody.responsible[id]">{{value.name}}</nb-option>
             </nb-select>
             <span class="d-block my-1">Contract Number</span>
-            <input class="d-block w-100" type="text" placeholder="Contract Number" nbInput ngModel="contract_Number" #contractNumber name="contractNumber" fieldSize="small">
+            <input class="d-block w-100" type="text" placeholder="Contract Number" nbInput (ngModel)="contractNumber" #contractNumber name="no_kontrak" fieldSize="small">
             <span class="d-block my-1">Yard Quote</span>
-            <input class="d-block w-100" type="text" placeholder="Yard Quote" nbInput ngModel="yardQuote" name="yardQuote" #yardQuote fieldSize="small">
+            <input class="d-block w-100" type="text" placeholder="Yard Quote" nbInput (ngModel)="yardQuote" name="yard_total_quote" #yardQuote fieldSize="small">
             <span class="d-block my-1">Comment</span>
-            <textarea name="" nbInput id="" cols="50" rows="3" ngModel="comment" name="comment" #comment></textarea>
+            <textarea name="" nbInput id="" cols="50" placeholder="Internal Comment" rows="3" (ngModel)="comment" name="komentar" #comment></textarea>
             <div class="d-flex w-100 justify-content-center">
                 <button nbButton class="mx-2" shape="rectangle" status="primary" type="button" outline size="small" (click)="triggerSelectFile(uploadContract)">
                     Upload Contract
-                <input type="file" style="display: none;" #uploadContract>
+                <input type="file" style="display: none;" #uploadContract name="dokumen" #document (ngModel)="document">
                 </button>
                 <button nbButton status="success" type="submit">Submit</button>
             </div>

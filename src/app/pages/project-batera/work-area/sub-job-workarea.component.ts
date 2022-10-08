@@ -31,7 +31,7 @@ export class SubJobWorkareaComponent implements OnInit {
       this.workAreaContainer = work_area
     })
 
-    this.profileService.getUserData()
+    this.profileService.getUserData(10, '', '','')
     .subscribe(({data} : any) => {
       const resp = data.map(user => user.username)
       this.responsible = resp

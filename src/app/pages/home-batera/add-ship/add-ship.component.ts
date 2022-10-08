@@ -11,20 +11,15 @@ import { HomeBateraService } from '../home-batera.service';
 })
 export class AddShipComponent implements OnInit {
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  file : File = null;
-  public uploadSuccess = false
-  
   constructor(
     private homeservice: HomeBateraService,
     private dialogRef: MatDialogRef<AddShipComponent>
     ){ 
   }
 
-  public userId : any
   ngOnInit(): void {
     this.homeservice.getUserLogin()
     .subscribe(({data} : any) => {
-      this.userId = data.id_user
     })
   }
 
@@ -65,21 +60,20 @@ export class AddShipComponent implements OnInit {
     const formData = new FormData();
     formData.append('dokumen', this.addShipForm.get('fileSource').value);
     this.homeservice.uploadFile(formData)
-      .subscribe(({res} : any) => {
+      .subscribe((res) => {
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
-        this.uploadImageUrl = res.body.data.file
+        this.uploadImageUrl = res
+        this.uploadImageUrl = this.uploadImageUrl.body.data.file
       }
     })
   }
 
+  public uploadSuccess = false
   submit(data){
     const postBody = {
-      // id_user: this.userId,
-      id_user: 4,
-      id_perusahaan: 1,
       nama_kapal: data.value.name,
       foto: this.uploadImageUrl,
     }

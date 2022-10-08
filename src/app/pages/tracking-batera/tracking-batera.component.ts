@@ -42,16 +42,28 @@ export class TrackingBateraComponent implements OnInit {
     private trackingService : TrackingBateraService,
   ) { }
 
-  public trackingData : any
+  public trackingData : any 
   series: ApexAxisChartSeries
 
   ngOnInit(): void {
     this.trackingService.getDataTracking()
     .subscribe(({data} : any) => {
-      this.chartOptions.chart.height = data.length * 156
-      this.trackingData = data.map(({nama_kapal, created_at, updated_at, id_kapal}) => ({
-        "Ship Name": nama_kapal, phases: [true, true, false], periode: created_at, updated_at: moment(updated_at).add(1, 'day'), id_kapal : id_kapal
-      }))
+      let dataContainer = new Array
+      this.chartOptions.chart.height = 2 * 115
+      data.map(({nama_kapal, created_at, updated_at, id_kapal, proyek}) => (
+        proyek.map(({id_proyek}) => (
+          dataContainer.push({
+            "Ship Name": nama_kapal, 
+            phases: [true, true, false], 
+            periode: created_at, 
+            updated_at: moment(updated_at).add(1, 'day'), 
+            id_kapal : id_kapal, 
+            id_proyek : id_proyek
+          })
+        ))
+      ))
+      
+      this.trackingData = dataContainer
       this.series = [{
         name : "rencana",
         data:  data.map(({nama_kapal, created_at, updated_at}) => ({
@@ -79,7 +91,6 @@ export class TrackingBateraComponent implements OnInit {
   exportToPDF(id){
     this.trackingService.getPDF(id)
     .subscribe(res =>{
-      console.log(res)
     })
   }
 }

@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { switchMap } from 'rxjs-compat/operator/switchMap';
 import { AddShipComponent } from './add-ship/add-ship.component';
 import { HomeBateraService } from './home-batera.service';
 
@@ -11,13 +12,13 @@ export class HomeBateraComponent implements OnInit {
   public shipData: any;
   constructor(
     private homeservice:HomeBateraService,
-    public dialog : MatDialog
+    public dialog : MatDialog,
   ) {}
   
   ngOnInit() {
     this.homeservice.getAllShip()
-      .subscribe(({data} : any) => {
-        this.shipData = data;
+    .subscribe(({data} : any) => {
+      data.length? this.shipData = data : null
     }); 
   }
 
@@ -33,6 +34,18 @@ export class HomeBateraComponent implements OnInit {
   }
 }
 
+
+@Component({
+  selector: 'ngx-require',
+  template : `
+  <div>test</div>
+  `
+})
+export class RequireComponent {
+  @Input() name : string
+}
+
+
 @Component({
   selector: 'ngx-fs-icon',
   template: `
@@ -47,7 +60,6 @@ export class HomeBateraComponent implements OnInit {
 export class FsIconComponent {
   @Input() kind: string;
   @Input() expanded: boolean;
-
   isDir(): boolean {
     return this.kind === 'dir';
   }

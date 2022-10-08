@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { HomeBateraService } from '../home-batera/home-batera.service';
+import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { TrackingBateraService } from '../tracking-batera/tracking-batera.service';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
@@ -43,7 +44,8 @@ export class ProjectBateraComponent {
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private service:ProjectBateraService,
     private trackingBatera : TrackingBateraService,
-    private homeService : HomeBateraService
+    private homeService : HomeBateraService,
+    private profileService : ProfileBateraService
     ) {
   }
 
@@ -63,10 +65,10 @@ export class ProjectBateraComponent {
     if(data === "requisition"){
       data = [true, false, false, false]
     }
-    if(data === "progress"){
+    if(data === "in_progress"){
       data = [true, true, false, false]
     }
-    if(data === "evaluation"){
+    if(data === "evaluasi"){
       data = [true, true, true, false]
     }
     if(data === "finish"){
@@ -77,6 +79,15 @@ export class ProjectBateraComponent {
 
   public id_user
   ngOnInit() {
+    this.profileService.getCompanyProfile()
+    .subscribe(({data}: any) => {
+      let companyData = data.profile_merk_perusahaan
+      this.allProjectDatas.map((data, value) => {
+        this.allProjectDatas[value].shipManagement = companyData
+      })
+      console.log(this.allProjectDatas)
+    })
+
     this.homeService.getUserLogin()
     .subscribe(({data} : any) => {
       this.id_user = data.id_user
@@ -85,10 +96,11 @@ export class ProjectBateraComponent {
     this.service.getDataProjects()
       .subscribe(({data} : any) => {
         this.allProjectDatas = data
-        let phase = "requisition"
         this.allProjectDatas.map((item, index) => {
-          this.allProjectDatas[index].phase = this.phaseStatus(phase)
+          this.allProjectDatas[index].phase = 
+          this.phaseStatus(this.allProjectDatas[index].phase)
         })
+        console.log(this.allProjectDatas)
     });
 
     this.trackingBatera.getDataTracking()

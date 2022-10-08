@@ -32,7 +32,7 @@ export class AddYardComponent  {
       this.addProjectBody.project = projectData
     })
 
-    this.profileService.getUserData()
+    this.profileService.getUserData(10, '', '', '')
     .subscribe(({data} : any) => {
       console.log(data)
       let user =

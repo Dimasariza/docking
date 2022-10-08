@@ -16,7 +16,15 @@ export class HomeBateraService {
 
   getAllShip(){
     const url = this.apiUrl + "/home/kapal"
-    return this.httpClient.get(url);
+    const httpHeaders = new HttpHeaders();
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append("page", 1)
+                            .append("per_page", "10")
+                            .append("q", "")
+    return this.httpClient.get(url, {
+      headers : httpHeaders, 
+      params  : queryParams
+    });
   }
 
   getIdPerusahaan(){

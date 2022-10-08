@@ -35,23 +35,21 @@ export class WorkProgressComponent {
     private dialog : MatDialog,
     ) {
   }
+
   @Input() worksData : any = ""
-  
   openDialog(){
     this.dialog.open(ApprovalDetailComponent)
   }
 
   ngOnChanges(){
     console.log(this.worksData)
-    this.worksData?
+    this.worksData ?
     this.dataSource = this.dataSourceBuilder.create(this.worksData.work_area.map(work => 
-    this.populateData(work)) as TreeNode<FSEntry>[]): ""
+    this.populateData(work)) as TreeNode<FSEntry>[]) : null
   }
 
   populateData = (work) => {          
     const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, updated_at, id , responsible, satuan} = work  
-    console.log(work)
-    console.log(responsible)         
       return {
       data: {
         "Job No": sfi,
