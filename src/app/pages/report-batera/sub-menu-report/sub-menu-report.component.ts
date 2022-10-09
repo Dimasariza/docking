@@ -12,10 +12,13 @@ export class SubMenuReportComponent implements OnInit  {
     public activatedRoute : ActivatedRoute,
     public location : Location
     ) {  }
-
+  
   public subMenuData
+  public work_area 
   ngOnInit(): void {
     this.subMenuData = this.location.getState()
+    this.work_area = this.subMenuData.work_area.work_area[this.subMenuData.data]
+    console.log(this.subMenuData)
   }
 
   ngDestroy(){

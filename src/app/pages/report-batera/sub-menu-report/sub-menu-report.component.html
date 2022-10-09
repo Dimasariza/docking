@@ -1,10 +1,9 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-lg-6 col-xl-8">
-
         <nb-card>
             <nb-card-header>
                 <div class="d-flex">
-                    <h5 >D-10 1st Inspection</h5>
+                    <h5>{{work_area.sfi}}.{{work_area.pekerjaan}}</h5>
                     <div class="ml-lg-auto">
                         <button nbButton status="primary" class="m-2" outline size="tiny">
                             <nb-icon icon="close-outline" pack="eva"></nb-icon>
@@ -23,14 +22,58 @@
             </nb-card-header>
 
             <nb-card-body>
-            
-            <h5>Attachments</h5>
-            <button nbButton class="m-2" shape="rectangle" >
-                Add file from computer
-            </button> 
-        </nb-card-body>
-    </nb-card>
+                <div class="row">
+                    <div class="col-3">
+                        <span class="d-block">Start</span>
+                        <span class="d-block">Done</span>
+                        <span class="d-block">Responsible</span>
+                        <span class="d-block">Project</span>
+                        <span class="d-block">Last change data</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="d-block text-info">{{work_area.start}}</span>
+                        <span class="d-block text-info">{{work_area.end}}</span>
+                        <span class="d-block text-info">{{work_area.responsible}}</span>
+                        <span class="d-block text-info">{{subMenuData.work_area.kapal.nama_kapal}}-DD-{{subMenuData.work_area.tahun}}</span>
+                        <span class="d-block text-info">{{subMenuData.work_area.updated_at}}</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="d-block">Type</span>
+                        <span class="d-block">Status</span>
+                        <span class="d-block">Progress</span>
+                    </div>
+                    <div class="col-3">
+                        <span class="d-block text-info">activity</span>
+                        <span class="d-block text-info">status</span>
+                        <span class="d-block text-info">
+                            <nb-progress-bar [value]="80" status="primary" [displayValue]="true"></nb-progress-bar>
+                        </span>
+                    </div>
+                </div>
 
+            </nb-card-body>
+
+            <nb-card-body class="row"> 
+                <h5 class="col-6">Description</h5>
+                <div class="col-6">
+                    <button nbButton outline status="primary" size="small">
+                        <nb-icon icon="settings-2-outline"></nb-icon>
+                    </button>
+                </div>
+                <textarea name="" nbInput id="" cols="90" class="col-12" rows="7"></textarea>
+            </nb-card-body>
+            <button nbButton status="primary" class="w-100" size="small">
+                Submit
+            </button>
+            
+            <nb-card-body>
+                <h5>Attachments</h5>
+                <button nbButton class="m-2 w-100" shape="rectangle" >
+                    Add file from computer
+                </button> 
+
+            </nb-card-body>
+        </nb-card>
     </div>
 
     <div class="col-md-12 col-sm-12 col-lg-6 col-xl-4">
@@ -42,31 +85,27 @@
                 Add update
             </button> 
             <div class="p-3">
-                <span><strong>1ST INSPECTION DURING BERTHING 9TH OCT 2018</strong></span>
+                <span><strong>1ST INSPECTION DURING BERTHING 9TH OCT 2018</strong></span> <br>
+                <div class="d-flex w-100 text-right justify-content-end">
+                    <span>10.10.2022  </span>
+                    <span style="color:  rgb(12, 162, 255);">  (Slamet Saputro)</span>
+                </div>
+
                 <ol class="my-1">
                     <li>Found deformation on hull before accomodation</li>
                     <li>The container hull found broken</li>
                     <li>Plan for wasting on Oct 2018</li>
                     <li>Hatch Cover</li>
                 </ol>
-                <span style="color:  rgb(12, 162, 255);">Slamet Saputro</span>
-                <h6>Support</h6>
-                <span><strong>Supporting Documents</strong></span> <br>
-                <ul class="list-group">
-                    <li class="list-group-item justify-content-between d-flex my-2 align-items-center">
-                        <span>
-                            <nb-icon status="primary" icon="book-outline"></nb-icon>
-                            Inspection Template
-                        </span>
-                        <button nbButton ghost size = 'small'>
-                            <nb-icon status="primary" icon="settings-outline"></nb-icon>
-                        </button>
-                    </li>
-                </ul>
-                <h6>Support</h6>
+                <h6>Supplier/Vendor</h6>
+                <button nbButton class="m-2" shape="rectangle" status="info" hero>
+                    Create Supplier
+                </button> 
+                <h6>1.1. CV Barokah Teknik Sejahtera, Jakarta</h6>
             </div>
+            Add Remarks
             <button nbButton class="m-2" shape="rectangle" status="info" hero>
-                Create
+                Add Remarks
             </button> 
         </nb-card>
     </div>

@@ -92,14 +92,14 @@ export class ProjectBateraComponent {
       this.id_user = data.id_user
     })
 
-    // this.service.getDataProjects()
-    //   .subscribe(({data} : any) => {
-    //     this.allProjectDatas = data
-    //     this.allProjectDatas.map((item, index) => {
-    //       this.allProjectDatas[index].phase = 
-    //       this.phaseStatus(this.allProjectDatas[index].phase)
-    //     })
-    // });
+    this.service.getDataProjects()
+      .subscribe(({data} : any) => {
+        this.allProjectDatas = data
+        this.allProjectDatas.map((item, index) => {
+          this.allProjectDatas[index].phase = 
+          this.phaseStatus(this.allProjectDatas[index].phase)
+        })
+    });
 
     this.trackingBatera.getDataTracking()
     .subscribe(({data} : any) => {
@@ -135,6 +135,8 @@ export class ProjectBateraComponent {
         children : items?.length ? items.map(item => populateData(item)) : []
       }
     }
+
+
 
     proyek.map(workProject => {
       workProject.work_area === null ||
