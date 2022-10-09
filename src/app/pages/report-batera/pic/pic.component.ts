@@ -13,7 +13,7 @@ export class PicComponent implements OnInit{
   }
   picData : any
   ngOnInit(): void {
-    this.profileService.getUserData(10, '', '', '')
+    this.profileService.getUserData(1, 10, '', '', '')
     .subscribe(({data} : any) => {
       this.picData = data
     })

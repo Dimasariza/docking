@@ -24,7 +24,7 @@ export class TrackingBateraComponent implements OnInit {
       type: 'datetime'
     },
     yaxis: {
-      show: false
+      show: false  
     },
     dataLabels: {
       enabled: true,
@@ -45,47 +45,65 @@ export class TrackingBateraComponent implements OnInit {
   public trackingData : any 
   series: ApexAxisChartSeries
 
+  phasesStatus(status){
+    if(status === 'requisition'){
+      status = [true, false, false, false]
+    }
+    if(status === 'in_progress'){
+      status = [true, true, false, false]
+    } 
+    if(status === 'evaluasi'){
+      status = [true, true, true, false]
+    }
+    if(status === 'finish'){
+      status = [true, true, true, true]
+    }
+    return status
+  }
+
   ngOnInit(): void {
     this.trackingService.getDataTracking()
     .subscribe(({data} : any) => {
       let dataContainer = new Array
-      this.chartOptions.chart.height = 2 * 115
-      data.map(({nama_kapal, created_at, updated_at, id_kapal, proyek}) => (
-        proyek.map(({id_proyek}) => (
+      data.map(({nama_kapal, id_kapal, proyek}) => (
+        proyek.map(({id_proyek, phase, repair_start, repair_end}) => (
           dataContainer.push({
-            "Ship Name": nama_kapal, 
-            phases: [true, true, false], 
-            periode: created_at, 
-            updated_at: moment(updated_at).add(1, 'day'), 
+            nama_kapal: nama_kapal, 
+            phases: this.phasesStatus(phase), 
+            periode: repair_start, 
+            updated_at: repair_end, 
             id_kapal : id_kapal, 
             id_proyek : id_proyek
           })
         ))
       ))
+      this.chartOptions.chart.height = dataContainer.length * 80
       
       this.trackingData = dataContainer
       this.series = [{
         name : "rencana",
-        data:  data.map(({nama_kapal, created_at, updated_at}) => ({
+        data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
           x: nama_kapal,
           y: [
-            new Date(created_at).getTime(),
+            new Date(periode).getTime(),
             new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
           ]
         }))
       },
       {
         name : "actual",
-        data:  data.map(({nama_kapal, created_at, updated_at}) => ({
+        data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
           x: nama_kapal,
           y: [
-            new Date(created_at).getTime(),
+            new Date(periode).getTime(),
             new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
           ]
         }))
       }
     ]
-    })
+    console.log(this.series)
+    }
+    )
   } 
 
   exportToPDF(id){

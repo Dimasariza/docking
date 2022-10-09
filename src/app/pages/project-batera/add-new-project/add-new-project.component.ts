@@ -41,7 +41,7 @@ export class AddNewProjectComponent implements OnInit {
       this.newProjectMenu.userId = data.id_user
     })
 
-    this.profileService.getUserData(10, '', "shipyard", '')
+    this.profileService.getUserData(1, 10, '', "shipyard", '')
     .subscribe(({data} : any) => {
       this.newProjectMenu.responsible = data
       .map(user => {
@@ -72,7 +72,6 @@ export class AddNewProjectComponent implements OnInit {
     useData['repair_end'] = this.datepipe.transform(repairPeriod['end'] , 'yyyy-MM-dd');
     useData['repair_in_dock_start'] = this.datepipe.transform(repairInDock['start'] , 'yyyy-MM-dd');
     useData['repair_in_dock_end']  = this.datepipe.transform(repairInDock['end'] , 'yyyy-MM-dd');
-    console.log(useData)
     this.projectService.addDataProject(useData)
     .subscribe(res => {
       console.log(res)

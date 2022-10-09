@@ -9,10 +9,11 @@ export class ProfileBateraService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl
 
-  getUserData(page, q, role, status) {
+  getUserData(page, per_page, q, role, status) {
     const url = this.apiUrl + "/user"
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", page)
+    queryParams = queryParams.append("page", page)
+                            .append("per_page", per_page)
                             .append("q", q)
                             .append("role", role)
                             .append("status", status)
@@ -30,20 +31,11 @@ export class ProfileBateraService {
     })
   }
 
-  addUser() {
+  addUser(postBody) {
     const url = this.apiUrl + "/user"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
-    const body = { 
-      username : "K18_PD",
-      nama_lengkap : "Kiseki Provider",
-      jabatan : "provider",
-      no_hp : "",
-      email : "kzenkipasdflk25@gmail.com",
-      password : "kiseki",
-      role : "admin"
-    };
-    return this.httpClient.post(url, body, {
+    return this.httpClient.post(url, postBody, {
       headers : httpHeaders
     })
   }

@@ -21,14 +21,14 @@
 <form (ngSubmit)="login()" #form="ngForm" aria-labelledby="title">
 
   <div class="form-control-group">
-    <label class="label" for="input-email">Email address:</label>
+    <label class="label" for="input-email">Username:</label>
     <input nbInput
            fullWidth
            [(ngModel)]="user.email"
            #email="ngModel"
            name="email"
            id="input-email"
-           placeholder="Email address"
+           placeholder="Username"
            autofocus
            [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : ''"
            [required]="getConfigValue('forms.validation.email.required')"

@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { AddShipComponent } from './add-ship/add-ship.component';
 import { HomeCardComponent } from './card-component/home-card.component';
-import { FsIconComponent, HomeBateraComponent, RequireComponent } from './home-batera.component';
+import { HomeBateraComponent } from './home-batera.component';
 import { UpdateShipComponent } from './update-ship/update-ship.component';
 
 const routes: Routes = [{

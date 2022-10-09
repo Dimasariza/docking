@@ -5,6 +5,7 @@ import { AddNewProjectComponent } from './add-new-project/add-new-project.compon
 import { ProjectBateraComponent } from './project-batera.component';
 import { SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
 import { SubJobWorkareaComponent } from './work-area/sub-job-workarea.component';
+import { UpdateWorkareaComponent } from './work-area/update-workarea.component';
 import { WorkAreaComponent } from './work-area/work-area.component';
 
 const routes: Routes = [{
@@ -32,4 +33,5 @@ export const routedComponents = [
   SubJobWorkareaComponent,
   FsIconComponent,
   WorkAreaComponent,
+  UpdateWorkareaComponent
 ];

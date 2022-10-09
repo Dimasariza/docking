@@ -1,83 +1,36 @@
 <div class="row">
     <div class="col-md-12 col-sm-12 col-lg-6 col-xl-8">
+
         <nb-card>
-            <nb-card-header >
-                <h5 >D-10 1st Inspection</h5>
-                <div class="ml-lg-auto">
-                    <button nbButton status="primary" class="m-2" outline size="small">
-                        <nb-icon icon="close-outline" pack="eva"></nb-icon>
-                        Close
-                    </button>
-                    <button nbButton status="primary" class="m-2" outline size="small">
-                        <nb-icon icon="checkmark-square-outline" pack="eva"></nb-icon>
-                        New Task
-                    </button>
-                    <button nbButton status="primary" class="m-2" outline size="small">
-                        <nb-icon icon="people-outline" pack="eva"></nb-icon>
-                        New Contact
-                    </button>
+            <nb-card-header>
+                <div class="d-flex">
+                    <h5 >D-10 1st Inspection</h5>
+                    <div class="ml-lg-auto">
+                        <button nbButton status="primary" class="m-2" outline size="tiny">
+                            <nb-icon icon="close-outline" pack="eva"></nb-icon>
+                            Close
+                        </button>
+                        <button nbButton status="primary" class="m-2" outline size="tiny">
+                            <nb-icon icon="checkmark-square-outline" pack="eva"></nb-icon>
+                            New Task
+                        </button>
+                        <button nbButton status="primary" class="m-2" outline size="tiny">
+                            <nb-icon icon="people-outline" pack="eva"></nb-icon>
+                            New Contact
+                        </button>
+                    </div>
                 </div>
             </nb-card-header>
 
             <nb-card-body>
-                <ngx-inspection-menu></ngx-inspection-menu>
-            </nb-card-body>
-
-            <nb-card-body>
-                <h5>Description</h5>
-                <div class="font-row my-2">
-                    <span><strong>Purpose</strong></span>
-                    <ul class="list-group">
-                        <li>Identify Scope of Work</li>
-                    </ul>
-                </div>
-                <div class="font-row my-2">
-                    <span><strong>Responsible</strong></span>
-                    <ul class="list-group">
-                        <li>SUP, HSP</li>
-                    </ul>
-                </div>
-                <div class="font-row my-2">
-                    <span><strong>Input</strong></span>
-                    <ul class="list-group">
-                        <li>Last Docking Report</li>
-                        <li>Vessel Condition Report</li>
-                        <li>Ship's Repair List</li>
-                        <li>Specialist's Reports</li>
-                        <li>Own Inspection</li>
-                    </ul>
-                </div>
-                <h5>Delivery</h5>
-                <div class="font-row my-2">
-                    <span><strong>Deliverable</strong></span>
-                    <ul class="list-group">
-                        <li>Allocated scope of work : Yard, crew, subcontractors</li>
-                    </ul>
-                </div>
-                <div class="font-row my-2">
-                    <span><strong>Template</strong></span>
-                    <ul class="list-group">
-                        <li>HSP Inspection Template</li>
-                        <li>Dock Repair List</li>
-                    </ul>
-                </div>
-                <div class="font-row my-2">
-                    <span><strong>Recipent</strong></span>
-                    <ul class="list-group">
-                        <li>DPIC, SM</li>
-                    </ul>
-                </div>
-            </nb-card-body>
             
-            <nb-card-body>
-                <h5>Attachments</h5>
-                <nb-card>
-                    <button nbButton class="m-2" shape="rectangle" >
-                        Add file from computer
-                    </button> 
-                </nb-card>
-            </nb-card-body>
-        </nb-card>
+            <h5>Attachments</h5>
+            <button nbButton class="m-2" shape="rectangle" >
+                Add file from computer
+            </button> 
+        </nb-card-body>
+    </nb-card>
+
     </div>
 
     <div class="col-md-12 col-sm-12 col-lg-6 col-xl-4">

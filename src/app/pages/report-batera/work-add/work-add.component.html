@@ -10,7 +10,7 @@
     <div style="width: 2000px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
             <ng-container [nbTreeGridColumnDef]="'Approved'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
@@ -23,12 +23,30 @@
                     </button>
                 </td>
             </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'Job'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Job</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                      {{row.data['Job'] || '-'}}
+                </td>
+            </ng-container>
             
             <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm">
                         <nb-icon icon="file-text-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+                        
+            <ng-container [nbTreeGridColumnDef]="'edit'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm">
+                        <nb-icon icon="edit-outline"></nb-icon>
                     </button>
                 </td>
             </ng-container>

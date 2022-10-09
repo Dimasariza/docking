@@ -85,7 +85,6 @@ export class ProjectBateraComponent {
       this.allProjectDatas.map((data, value) => {
         this.allProjectDatas[value].shipManagement = companyData
       })
-      console.log(this.allProjectDatas)
     })
 
     this.homeService.getUserLogin()
@@ -93,19 +92,20 @@ export class ProjectBateraComponent {
       this.id_user = data.id_user
     })
 
-    this.service.getDataProjects()
-      .subscribe(({data} : any) => {
-        this.allProjectDatas = data
-        this.allProjectDatas.map((item, index) => {
-          this.allProjectDatas[index].phase = 
-          this.phaseStatus(this.allProjectDatas[index].phase)
-        })
-        console.log(this.allProjectDatas)
-    });
+    // this.service.getDataProjects()
+    //   .subscribe(({data} : any) => {
+    //     this.allProjectDatas = data
+    //     this.allProjectDatas.map((item, index) => {
+    //       this.allProjectDatas[index].phase = 
+    //       this.phaseStatus(this.allProjectDatas[index].phase)
+    //     })
+    // });
 
     this.trackingBatera.getDataTracking()
     .subscribe(({data} : any) => {
-      let itemDate = data
+      let itemDate
+      data.length == 0 ? null :
+      itemDate = data
       .map((item, value) => { 
         return {
           update: item.updated_at, 
@@ -137,9 +137,10 @@ export class ProjectBateraComponent {
     }
 
     proyek.map(workProject => {
-      workProject.work_area ? 
+      workProject.work_area === null ||
+      workProject.work_area === 'undefined' ? null :
       this.dataSource = this.dataSourceBuilder.create(workProject.work_area.map(work => 
-          populateData(work)) as TreeNode<FSEntry>[]) : ""
+          populateData(work)) as TreeNode<FSEntry>[]) 
       })
     })
   }

@@ -1,5 +1,5 @@
 <div class="buttons my-1" >
-    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    <button *ngFor="let icon of useButtons; let indexOfelement=index;"
     nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClick(icon.desc)">
         <nb-icon [icon]="icon.icon" pack="eva">
         </nb-icon>
@@ -10,7 +10,7 @@
     <div style="width: 2000px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
             <ng-container [nbTreeGridColumnDef]="'Approved'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
@@ -23,6 +23,31 @@
                     </button>
                 </td>
             </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'Job'">
+                <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:150px;">Job</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                  <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                  <span class="text-primary btn" style="cursor: pointer;" (click)="navToSubReport(row.data['id'])">
+                      {{row.data['Job']}}
+                  </span>
+                </td>
+              </ng-container>
+
+              
+            <ng-container [nbTreeGridColumnDef]="'rank'">
+                <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:80px"></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center h-100">
+                  <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data['rank'])}"></nb-icon>
+                </td>
+              </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'%'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-progress-bar [value]="60" status="primary">{{value}}60%</nb-progress-bar>
+                </td>
+            </ng-container>
             
             <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
@@ -33,13 +58,25 @@
                 </td>
             </ng-container>
 
+            <ng-container [nbTreeGridColumnDef]="'edit'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm" (click)="updateWorkProgress()">
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
             <ng-container *ngFor="let column of defaultColumns; let index = index"
                             [nbTreeGridColumnDef]="column"
                             [showOn]="getShowOn(index)">
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                 {{column}}
                 </th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    {{row.data[column] || '-'}}
+                </td>
             </ng-container>
         </table>    
     </div>

@@ -6,6 +6,9 @@ import { ProjectBateraService } from '../project-batera.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
 import { SubJobWorkareaComponent } from '../work-area/sub-job-workarea.component';
+import { UpdateWorkareaComponent } from '../work-area/update-workarea.component';
+import { AddNewProjectComponent } from '../add-new-project/add-new-project.component';
+import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 
 interface TreeNode<T> {
   data: T;
@@ -15,17 +18,75 @@ interface TreeNode<T> {
 
 interface FSEntry {}
 
+const menuButton = [
+  {
+    position: 'top',
+    icon: 'list-outline',
+    text : 'List'
+  },
+      {
+    position: 'top',
+    icon: 'list-outline',
+    text : 'List'
+  },
+  {
+    position: 'top',
+    icon: 'calendar-outline',
+    text: 'Schedule'
+  },
+  {
+    position: 'top',
+    icon: 'file-add-outline',
+    text: 'Extract Data File'
+  },
+  {
+    position: 'top',
+    icon: 'clipboard-outline',
+    text: 'Gant'
+  },
+  {
+    position: 'bottom',
+    text : 'Add Job',
+  },
+  {
+    position: 'bottom',
+    text : 'Remarks'
+  },
+  {
+    position: 'bottom',
+    text : 'Export To PDF'
+  },
+  {
+    position: 'bottom',
+    text : 'Expand All'
+  },
+  {
+    position: 'bottom',
+    text : 'Refresh'
+  },
+  {
+    position: 'bottom',
+    text : 'Show Budget'
+  },
+  {
+    position: 'bottom',
+    text: 'Show Contract'
+  }
+]
+
 @Component({
   selector: 'ngx-sub-menu-project',
   templateUrl: './sub-menu-project.component.html',
 })
 
 export class SubMenuProjectComponent implements OnInit {
+  public menuButton = menuButton
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+    private profileService : ProfileBateraService,
     private route: ActivatedRoute,
     public dialog : MatDialog,
-    private service : ProjectBateraService){
+    private projectService : ProjectBateraService){
   }
 
   @Input() shipName 
@@ -34,23 +95,50 @@ export class SubMenuProjectComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
-    const published = this.route.snapshot.paramMap.get('p')
     this.id_proyek = id
-    this.service.getSubProjectData(id)
+    this.projectService.getSubProjectData(id)
     .subscribe(({data} : any) => {
       const {work_area, kapal} = data
       this.work_area = work_area
       this.shipName = kapal.nama_kapal
-      // work_area[0].published = published
-
       work_area === null ||
       work_area === undefined ? null :
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[]) 
+      this.dataSource = this.dataSourceBuilder.create(work_area.map(work =>
+        work === null ? null : 
+        this.populateData(work)
+      ) as TreeNode<FSEntry>[]) 
+    })
+
+    this.profileService.getUserData(1, 10, '', '', '')
+    .subscribe(({data} : any) => {
+      const resp = data.map(user => user.username)
     })
   }
 
+  rankColor(rank){
+    let rankStatus 
+    switch (rank){
+      case "Critical" :
+        rankStatus = "maroon"
+      break
+      case "High" :
+        rankStatus = "red"
+      break
+      case "Medium" :
+        rankStatus = "yellow"
+      break
+      case "Low":
+        rankStatus = "green"
+      break
+      default :
+        rankStatus = "grey"
+      break
+    }
+    return rankStatus
+  }
+
   defaultColumns = ['Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks'];
-  allColumns = ['Job No', ...this.defaultColumns, 'add job', 'action']
+  allColumns = [ 'Job No', ...this.defaultColumns, 'action']
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -74,8 +162,7 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   populateData = (work) => {          
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, remarks, updated_at, id, published, satuan, responsible } = work  
-    console.log(work)         
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan , remarks, id, satuan, responsible, kategori, rank } = work  
     return {
       data: {
         "Job No": sfi,
@@ -87,11 +174,11 @@ export class SubMenuProjectComponent implements OnInit {
         "Vol" : volume,
         "Unit" : satuan,
         "Unit Price": harga_satuan,
-        "Total Price Budget" : kontrak,
-        "Category" : type,
-        "Remarks" : updated_at,
-        "index" : id,
-        "published" : published,
+        "Total Price Budget" : volume * harga_satuan,
+        "Category" : kategori,
+        "Remarks" : remarks,
+        "id" : id,
+        rank : rank,
         kind: items?.length ? 'dir' : 'doc'
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
@@ -118,6 +205,18 @@ export class SubMenuProjectComponent implements OnInit {
     })
   }
 
+  updateProjectDial(){
+    const dialog = this.dialog.open(AddNewProjectComponent, {
+      disableClose : true,
+      autoFocus:true, 
+      data : this.id_proyek
+    })    
+    
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
+  }
+
   subJobDial(row){    
     const dialog = this.dialog.open(SubJobWorkareaComponent, {
       disableClose : true,
@@ -130,82 +229,47 @@ export class SubMenuProjectComponent implements OnInit {
     })
   }
 
+  updateWorkArea(row){
+    console.log(row)
+    const dialog = this.dialog.open(UpdateWorkareaComponent, {
+      disableClose : true,
+      autoFocus: true,
+      data : {
+        current : row,
+        all : this.work_area,
+        id_proyek : this.id_proyek
+      }
+    })
+
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
+  }
+
+
+
+  reconstructData = (data, parentIndex) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        console.log(parentIndex)
+        return {...w, items: this.reconstructData(w.items, parentIndex)}
+      } else if(i == parentIndex[0]) {
+        return null
+      }
+      return w
+    })
+    .filter(f => f != null)
+  }
+
   delete(id: string) {
     let parentIndex = id.toString().split('')
-    const reconstructData = (data) => {
-      return data.map((w, i) => {
-        if (parentIndex.length > 1 && i == parentIndex[0]) {
-          parentIndex = parentIndex.slice(1)
-          return {...w, items: reconstructData(w.items)}
-        } else if(i == parentIndex[0]) {
-          return null
-        }
-        return w
-      }).filter(f => f != null)
-    }
-
-    const work_area = reconstructData(this.work_area)
-    this.service.addProjectJob({work_area}, this.id_proyek)
-    .subscribe(res => {
+    const work_area = this.reconstructData(this.work_area, parentIndex)
+    this.projectService.addProjectJob({work_area}, this.id_proyek)
+    .subscribe(() => {
       this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
     })
   }
-    
-  menuButton = [
-    {
-      position: 'top',
-      icon: 'list-outline',
-      text : 'List'
-    },
-        {
-      position: 'top',
-      icon: 'list-outline',
-      text : 'List'
-    },
-    {
-      position: 'top',
-      icon: 'calendar-outline',
-      text: 'Schedule'
-    },
-    {
-      position: 'top',
-      icon: 'file-add-outline',
-      text: 'Extract Data File'
-    },
-    {
-      position: 'top',
-      icon: 'clipboard-outline',
-      text: 'Gant'
-    },
-    {
-      position: 'bottom',
-      text : 'Add Job',
-    },
-    {
-      position: 'bottom',
-      text : 'Remarks'
-    },
-    {
-      position: 'bottom',
-      text : 'Export To PDF'
-    },
-    {
-      position: 'bottom',
-      text : 'Expand All'
-    },
-    {
-      position: 'bottom',
-      text : 'Refresh'
-    },
-    {
-      position: 'bottom',
-      text : 'Show Budget'
-    },
-    {
-      position: 'bottom',
-      text: 'Show Contract'
-    }
-  ]
 }
 
 
@@ -225,11 +289,13 @@ export class SubProjectDataComponent implements OnInit{
       const id = this.route.snapshot.paramMap.get('id')
       this.service.getSubProjectData(id )
       .subscribe((res) => {
+        console.log(res)
         this.dataProyek = res
         this.reportData.Vessel.value = this.dataProyek.data.kapal.nama_kapal
+        this.reportData.Phase.value = this.dataProyek.data.phase
         this.reportData["Base Currency"].value = this.dataProyek.data.mata_uang
         this.reportData["- Bunker"].value = this.dataProyek.data.off_hire_bunker_per_day
-        this.reportData["- Rate"].value = this.dataProyek.data.off_hire_rate_per_day
+        this.reportData["- Charter Rate"].value = this.dataProyek.data.off_hire_rate_per_day
         this.reportData["- Deviation"].value = this.dataProyek.data.off_hire_deviasi
         this.reportData["Off Hire Period"].value = this.dataProyek.data.off_hire_period + ' days'
         this.reportData["Repair Period"].value = this.dataProyek.data.repair_period + ' days'
@@ -248,8 +314,8 @@ export class SubProjectDataComponent implements OnInit{
       value : ''
     },
     "Phase": {
-      type : 'drop-down',
-      value: ['Requisition','In Progress', 'Evaluation', 'Finish']
+      type : 'text',
+      value: ''
     },
     "Selected Yard": {
       type : 'text',
@@ -267,7 +333,7 @@ export class SubProjectDataComponent implements OnInit{
       type : 'date',
       value: '4'
     },
-    "- Rate": {
+    "- Charter Rate": {
       type : 'price',
       value: '71050000', 
       subvalue : '1.421.000.000'

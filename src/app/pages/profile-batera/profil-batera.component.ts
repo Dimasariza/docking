@@ -33,7 +33,7 @@ export class ProfilBateraComponent implements OnInit {
   formCondition = true
 
   ngOnInit(){
-    this.pofileService.getUserData(10, '', '', '')
+    this.pofileService.getUserData(1, 10, '', '', '')
       .subscribe(({data} : any) => {
         this.userData = data
     }); 

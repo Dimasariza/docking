@@ -1,30 +1,55 @@
-  <nb-card class="p-3">  
-    <div class="row">
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-          <div class="d-flex justify-content-between">
-            <h5>Selected Yard : <Span>{{selectedYard}}</Span></h5>
-            <button nbButton size="tiny" status="primary" hero (click)="addYard()">Add Contract</button>
+<nb-card class="p-3">  
+  <div class="row">
+    <div *ngIf="allDataTender" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <div class="d-flex justify-content-between">
+        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable['Yard']}}</Span></h5>
+        <button nbButton size="tiny" status="primary"  (click)="addContractDial()" [disabled]="!id_proyek">Add Contract</button>
+      </div>
+          <div>
+            <span class="d-block label">Project Name</span>  
+            <nb-select *ngIf="allDataTender" placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+              <nb-option *ngFor="let value of allDataTender['project']; let id=index;" [value]="allDataTender['project'][id]" (click)="getProject(id)">{{value.name}}</nb-option>
+            </nb-select>
+            <span class="d-block label">Yard Name</span>
+            <span class="d-block text-capitalize">{{dataTable.Yard || 'Data Not Available'}}</span>
+            <span class="d-block label">Yard Location</span> 
+            <span class="d-block text-capitalize">{{dataTable['Yard Location'] || 'Data Not Available'}}</span>
+            <span class="d-block label">Responsible</span>
+            <span class="d-block text-capitalize">{{dataTable['Responsible'] || 'Data Not Available'}}</span>
+            <span class="d-block label">Contract Number</span> 
+            <span class="d-block text-capitalize">{{dataTable['Contract'] || 'Data Not Available'}}</span>
+            <span class="d-block label">Yard Quote</span> 
+            <span class="d-block text-capitalize">{{dataTable['Yard Quote'] || 'Data Not Available'}}</span>
+            <span class="d-block label">Comment</span>
+            <p class="d-block">{{dataTable['comment'] || 'Data Not Available'}}</p>
           </div>
-            <span class="d-block">Project Name</span>  
-            <span class="d-block"></span>
-            <span class="d-block w-100">Yard Name</span>
-            <span class="d-block"></span>
-            <span class="d-block">Yard Location</span> 
-            <span class="d-block"></span>
-            <span class="d-block">Responsible</span>
-            <span class="d-block"></span>
-            <span class="d-block">Contract Number</span> 
-            <span class="d-block"></span>
-            <span class="d-block">Yard Quote</span> 
-            <span class="d-block"></span>
-            <span class="d-block">Comment</span>
-            <p class="d-block">commentar comeentar comment </p>
+
         </div>
-        <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-          <ngx-card></ngx-card>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <nb-card class="p-3">
+        <div *ngFor="let item of objectKeys(dataTable)">
+            <div *ngIf="item !== 'General Discount'" class="row">
+                <div class="col-6"><strong>{{item}}</strong></div>
+                <div class="">:</div>
+                <div class="col text-capitalize text-right">{{dataTable[item]}}</div>
+            </div>
+            <div *ngIf="item === 'General Discount'" class="row">
+                <strong class="col-6">{{item}} </strong>
+                <div class="">:</div>
+                <div class="col text-right">{{dataTable[item].discount}} ( {{dataTable[item]['After Discount']}} % )</div>
+            </div>
         </div>
+        <div class="text-center mt-3">
+            <button nbButton class="mx-1" status="primary" outline size="small">
+                <nb-icon icon="cloud-upload-outline"></nb-icon>
+                Publish
+            </button>
+            <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
+        </div>
+      </nb-card>
     </div>
-  </nb-card>
+  </div>
+</nb-card>
 
 <nb-accordion>
   <nb-accordion-item>
@@ -36,40 +61,52 @@
       </button>
       <div style="overflow: auto; width: 100%;">
         <div style="width: 1524px;">
-        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
-          <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-          <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-      
-          <ng-container [nbTreeGridColumnDef]="customColumn">
-            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-              {{customColumn}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <ngx-sub-menu-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-sub-menu-icon>
-              {{row.data[customColumn]}}
-            </td>
-          </ng-container>
-    
-          <ng-container [nbTreeGridColumnDef]="editColumn">
-              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(editColumn)" *nbTreeGridHeaderCellDef></th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-              <button class="btn btn-light btn-sm text-center" ghost>
-                  <nb-icon icon="edit-outline" status="primary"></nb-icon>
-              </button>
+          <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" [clickToToggle]="false"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+            <ng-container [nbTreeGridColumnDef]="'Job No'">
+              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px">Job No.</th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="d-flex justify-content-between h-100 w-100">
+                <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                {{row.data['Job No']}}
+                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data['rank'])}"></nb-icon>
               </td>
-          </ng-container>
-      
-          <ng-container *ngFor="let column of defaultColumns; let index = index"
-                        [nbTreeGridColumnDef]="column"
-                        [showOn]="getShowOn(index)">
-            <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-              {{column}}
-            </th>
-            <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-          </ng-container>
-        </table>
+            </ng-container>
+            <ng-container [nbTreeGridColumnDef]="'Approve'">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
+                <div class="text-center">
+                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+                    <nb-option *ngFor="let value of approvalStatus; let id=index;" [value]="approvalStatus[id]" (click)="approveStatus(id)">{{value}}</nb-option>
+                  </nb-select>
+                </div>
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                <button class="text-center" nbButton ghost >
+                  <nb-icon [icon]="approvalStatus ?  'checkmark-square-2-outline' :  'square-outline'" status="primary"></nb-icon>
+                </button>
+              </td>
+            </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'Edit'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px"></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editWorkArea(row)">
+                      <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                  </button>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of defaultColumns; let index = index"
+                          [nbTreeGridColumnDef]="column"
+                          [showOn]="getShowOn(index)">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
+                {{column}}
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+            </ng-container>
+          </table>
+        </div>
       </div>
-    </div>
     </nb-accordion-item-body>
   </nb-accordion-item>
 </nb-accordion>

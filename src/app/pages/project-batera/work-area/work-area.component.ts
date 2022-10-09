@@ -15,8 +15,8 @@ export class WorkAreaComponent {
     private dialogRef: MatDialogRef<WorkAreaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public datepipe : DatePipe,
-    public profileService  : ProfileBateraService
   ) {}
+  
   
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   
@@ -60,7 +60,6 @@ export class WorkAreaComponent {
 
   ngOnInit(){
     this.useUnit = this.unitType[0]
-
     this.projectSerivce.getSubProjectData(this.data)
     .subscribe(({data} : any) => {
       console.log(data)
@@ -69,12 +68,6 @@ export class WorkAreaComponent {
       work_area === null ? 
       this.workAreaContainer = []
       : this.workAreaContainer = work_area
-    })
-
-    this.profileService.getUserData(10, '', '', '')
-    .subscribe(({data} : any) => {
-      const resp = data.map(user => user.username)
-      this.responsible = resp
     })
   }
 }

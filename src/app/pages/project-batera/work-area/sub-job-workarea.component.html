@@ -23,7 +23,7 @@
                 <input type="text" nbInput fullWidth placeholder="Departement" id="departement" fieldSize="small" required (ngModel)="departement" name="departemen" #departement>
                 <span class="p-2 d-block">Responsible</span>
                 <nb-select placeholder="Responsible" class="w-100" size="small" ngModel name="responsible">
-                    <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id]">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id].toLowerCase()">{{value}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Start</span>
                 <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" placeholder="Start Date" (ngModel)="startDate" name="start" #startDate>
@@ -45,7 +45,7 @@
                 <input type="text" nbInput fullWidth placeholder="Total Price Budget" id="totalPriceBudget" readonly fieldSize="small" required [(ngModel)]="totalPriceBudget" name="totalPrice">
                 <span class="p-2 d-block">Category</span>
                 <nb-select placeholder="Category" class="w-100" size="small" name="kategori" ngModel>
-                    <nb-option *ngFor="let value of category; let id=index;" [value]="category[id]">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of category; let id=index;" [value]="category[id].toLowerCase()">{{value}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Rank</span>
                 <nb-select placeholder="Rank" class="w-100" size="small" name="rank" ngModel >

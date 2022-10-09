@@ -13,20 +13,14 @@ import { ReportBateraService } from './report-batera.service';
   templateUrl: './report-batera.component.html',
 })
 export class ReportBateraComponent {
-  evaIcons = [];
   dataReport : any
 
-  constructor(iconsLibrary: NbIconLibraries,
+  constructor(
     private reportBateraService : ReportBateraService,
     private dialog : MatDialog,
     public activatedRoute : ActivatedRoute,
     public pageService : PagesRoutingModule
     ) {
-    this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
-      .filter(icon => icon.indexOf('outline') === -1);
-    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
-    iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
-    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
 
   projectData : any
@@ -196,3 +190,21 @@ export class reportData implements OnInit{
 
 
 
+@Component({
+  selector: 'ngx-fs-icon',
+  template: `
+    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
+    </nb-tree-grid-row-toggle>
+    <ng-template #fileIcon>
+      <nb-icon icon="file-text-outline"></nb-icon>
+    </ng-template>
+  `,
+})
+
+export class FsIconComponent {
+  @Input() kind: string;
+  @Input() expanded: boolean;
+  isDir(): boolean {
+    return this.kind === 'dir';
+  }
+}

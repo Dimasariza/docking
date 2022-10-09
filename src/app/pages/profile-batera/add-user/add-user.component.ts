@@ -47,6 +47,7 @@ export class AddUserComponent {
 
   public urlLink
   public userRole = ["Super Intendent", "Director", "Fleet Manager", "Yard Manager", "Ship Yard", "Super Admin"]
+  public dataRole = ["superintendent", "director", "shipmanager", "yardmanager", "shipyard", "admin"]
   onFileChange(res){
     this.userData.avatar_url.exist = res.isTrusted
     const file = res.target.files[0];
@@ -69,13 +70,14 @@ export class AddUserComponent {
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
     this.homeService.uploadFile(formData)
-      .subscribe(({res} : any) => {
+      .subscribe((res) => {
         if (res.type === HttpEventType.UploadProgress) {
           console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
         } else if ( res.type === HttpEventType.Response){
           console.log("final Response uploading image")
         }
-        this.avatarUrl = res.body
+        this.avatarUrl = res
+        this.avatarUrl = this.avatarUrl.body
     })
   }
 
@@ -85,11 +87,15 @@ export class AddUserComponent {
 
   onSubmit(data){
     console.log(data)
-    // this.profileService.addUser()
-    //   .subscribe(res => {console.log(res)},
-    //   err => {console.log('HTTP Error', err)},
-    //   () => console.log('HTTP request completed.')
-    // )
+    let postBody = data.value
+    postBody.avatar_url = ""
+
+    postBody['departemen_id'] = "SM"
+    this.profileService.addUser(postBody)
+      .subscribe(res => {console.log(res)},
+      err => {console.log('HTTP Error', err)},
+      () => console.log('HTTP request completed.')
+    )
 
     if(this.avatarUrl !== undefined) {
       console.log('avatar not available')

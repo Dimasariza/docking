@@ -21,7 +21,7 @@
             <div class="col-6">
                 <label class="p-2">User name</label> 
                 <input fullWidth type="text" nbInput  placeholder="User Name" class="" id="user_name" fieldSize="small"
-                required (ngModel)="userName" name="userName" #userName="ngModel" >
+                required (ngModel)="userName" name="username" #userName="ngModel" >
                 <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
                 class="danger text-danger">
                     <div *ngIf="userName.errors?.['required']">
@@ -30,25 +30,28 @@
                 </div>
                 <label class="p-2">Full Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Full Name" id="full_name" fieldSize="small"
-                required (ngModel)="fullName" name="fullName" #fullName="ngModel">
-                <ngx-require></ngx-require>
+                required (ngModel)="fullName" name="nama_lengkap" #fullName="ngModel">
+                <label class="p-2">User Id</label>
+                <input fullWidth type="text" nbInput  placeholder="User Id" id="full_name" fieldSize="small"
+                required (ngModel)="fullName" name="departemen_id" #fullName="ngModel">
                 <label class="p-2">Vessel Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Vessel Name" id="ship_name" fieldSize="small"
-                required (ngModel)="shipName" name="shipName" #shipName="ngModel">
+                required (ngModel)="shipName" name="nama_kapal" #shipName="ngModel">
+                <label class="p-2">Company Name</label>
+                <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"
+                required (ngModel)="department" name="departemen" #department="ngModel">
+                <label class="p-2">Status</label>
+                <nb-select fullWidth class="w-100" placeholder="Status" size="small" status="basic" #status (ngModel)="status" name="status">
+                    <nb-option [value]="status" *ngFor="let status of ['active', 'suspend']; let id=index;" class="text-capitalize">{{status}}</nb-option>
+                </nb-select>
+            </div>
+            <div class="col-6">
                 <label class="p-2">Title</label>
                 <input fullWidth type="text" nbInput  placeholder="Title" id="title" fieldSize="small"
                 required (ngModel)="title" name="title" #title="ngModel">
-                <label class="p-2">Department</label>
-                <input fullWidth type="text" nbInput  placeholder="Department" id="department" fieldSize="small"
-                required (ngModel)="department" name="department" #department="ngModel">
-            </div>
-            <div class="col-6">
-                <label class="p-2">Position</label>
-                <input fullWidth type="text" nbInput  placeholder="Position" id="position" fieldSize="small"
-                required (ngModel)="position" name="position" #position="ngModel">
                 <label class="p-2">Mobile Number</label>
                 <input fullWidth type="text" nbInput  placeholder="Mobile Number" id="mobile_no" fieldSize="small"
-                required (ngModel)="mobileNo" name="mobileNo" #mobileNo="ngModel">
+                required (ngModel)="mobileNo" name="no_hp" #mobileNo="ngModel">
                 <label class="p-2">E-mail</label>
                 <input fullWidth type="text" nbInput  placeholder="E-mail Address" id="useremail" fieldSize="small"
                 required (ngModel)="email" name="email" #email="ngModel">
@@ -64,7 +67,7 @@
 
                 <label class="p-2">Role</label>
                 <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="basic" #role (ngModel)="role" name="role">
-                    <nb-option [value]="id" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
+                    <nb-option [value]="dataRole[id]" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
                 </nb-select>
             </div>
         </div>

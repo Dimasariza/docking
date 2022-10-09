@@ -12,9 +12,12 @@
     </nb-card-header>
 
     <nb-card-body>
-        <h6 style="color: burlywood;">Summary</h6>
         <div class="row">
             <div class="col-lg-5 col-md-12 col-sm-12">
+                <div class="d-flex justify-content-between">
+                    <h6 style="color: burlywood;">Summary</h6>
+                    <button nbButton status="primary" size="small" (click)="updateProjectDial()">Update</button>
+                </div>
                 <ngx-sub-project-data></ngx-sub-project-data>
             </div>
             <div class="col-lg-7 col-md-12 col-sm-12">
@@ -39,34 +42,29 @@
         <div style="width: 1424px;">
             <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
                 <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-                <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-            
+                <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+
                 <ng-container [nbTreeGridColumnDef]="'Job No'">
-                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Job No.</th>
-                  <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px">Job No.</th>
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row" class="d-flex justify-content-between h-100">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
                     {{row.data['Job No']}}
+                    <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : rankColor(row.data['rank'])}"></nb-icon>
                   </td>
                 </ng-container>
                 
-                <ng-container [nbTreeGridColumnDef]="'add job'" width="400">
-                    <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(addJobColumn)" *nbTreeGridHeaderCellDef></th>
-                    <td nbTreeGridCell *nbTreeGridCellDef="let row; let id = index" class="text-center">
-                    <button nbButton size="small" outline status="primary" (click)="subJobDial(row, id)" [disabled]="row.data.published">  
-                        Add Sub Job 
-                    </button>
-                    </td>
-                </ng-container>
-
                 <ng-container [nbTreeGridColumnDef]="'action'">
                     <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                         <div class="d-flex">
-                            <button class="btn btn-light btn-sm text-center mr-2" ghost>
+                            <button nbButton size="small" class="btn-sm text-center" outline (click)="subJobDial(row, id)">  
+                                <nb-icon icon="plus-outline" status="primary"></nb-icon>
+                            </button>
+                            <button nbButton size="small" class="text-center mx-4" outline (click)="updateWorkArea(row)">
                                 <nb-icon icon="edit-outline" status="primary"></nb-icon>
                             </button>
-                            <button class="btn btn-light btn-sm text-center" ghost>
-                                <nb-icon icon="trash-outline" status="danger" (click)="delete(row.data.index)"></nb-icon>
+                            <button nbButton size="small" class="btn-sm text-center" outline (click)="delete(row.data.id)">
+                                <nb-icon icon="trash-outline" status="danger"></nb-icon>
                             </button>
                         </div>
                     </td>
