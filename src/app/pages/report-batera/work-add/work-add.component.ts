@@ -99,14 +99,6 @@ export class WorkAddComponent implements OnInit {
     desc: 'Refresh'
     },
     {
-      icon: 'plus',
-      desc: 'Add Phase'
-    },
-    {
-      icon: 'list',
-      desc: 'Add Activity'
-    },
-    {
       icon: 'flag-outline',
       desc: 'Add Job'
     },

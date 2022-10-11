@@ -34,12 +34,7 @@ export class AddNewProjectComponent implements OnInit {
           nama_kapal : ship.nama_kapal, id_kapal : ship.id_kapal
         }) 
       });
-    })
-
-    this.homeService.getUserLogin()
-    .subscribe(({data} : any) => {
-      this.newProjectMenu.userId = data.id_user
-    })
+    });
 
     this.profileService.getUserData(1, 10, '', "shipyard", '')
     .subscribe(({data} : any) => {
@@ -48,10 +43,10 @@ export class AddNewProjectComponent implements OnInit {
         return {
           name : user.username, 
           id : user.id_user
-        }
-      })
-    })
-    console.log(this.newProjectMenu)
+        }});
+    });
+
+    this.newProjectMenu.shipManagement = this.data
   }
 
   newProjectMenu = {
@@ -59,7 +54,6 @@ export class AddNewProjectComponent implements OnInit {
     Phase: ['Requisition','In_Progress', 'Evaluasi','Finish'],
     BaseCurrency: ['IDR', 'EURO', 'US'],
     responsible : [],
-    userId : null,
     shipManagement : null
   } 
 
@@ -74,7 +68,6 @@ export class AddNewProjectComponent implements OnInit {
     useData['repair_in_dock_end']  = this.datepipe.transform(repairInDock['end'] , 'yyyy-MM-dd');
     this.projectService.addDataProject(useData)
     .subscribe(res => {
-      console.log(res)
       this.onSuccess.emit()
     })
     this.close()

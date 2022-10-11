@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NbDateService, NbIconLibraries, } from '@nebular/theme';
 import { HomeBateraService } from '../home-batera/home-batera.service';
 import { PagesRoutingModule } from '../pages-routing.module';
+import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ReportBateraService } from './report-batera.service';
 
@@ -18,6 +19,7 @@ export class ReportBateraComponent {
   constructor(
     private reportBateraService : ReportBateraService,
     private dialog : MatDialog,
+    private projectService : ProjectBateraService,
     public activatedRoute : ActivatedRoute,
     public pageService : PagesRoutingModule
     ) {
@@ -26,9 +28,10 @@ export class ReportBateraComponent {
   projectData : any
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.reportBateraService.getProjectData(id)
+    this.projectService.getDataProjects()
     .subscribe(({data} : any) => {
-      this.projectData = data
+      console.log(data)
+      this.projectData = data[0]
     })
   }
 

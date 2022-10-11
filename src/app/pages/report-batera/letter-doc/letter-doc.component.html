@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <h5>Add Document</h5>
+            <button nbButton status="danger" size="small" (click)="close()">
+                <nb-icon icon="close-square-outline"></nb-icon>
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form action="">
+            <span class="d-block">Title</span>
+            <input fullWidth placeholder="Title" class="d-block" type="text" nbInput name="perihal">
+            <span class="d-block">Sender</span>
+            <input fullWidth placeholder="Sender name" class="d-block" type="text" nbInput name="nama_pengirim">
+            <span class="d-block">Remarks</span>
+            <textarea class="d-block" name="" id="" cols="30" rows="10" nbInput name="keterangan"></textarea>
+            <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="triggerSelectFile(addFromFile)">
+                Add File
+                <input  type="file" style="display: none;" #addFromFile>
+            </button>
+            <button fullWidth type="submit" nbButton status="success" size="small" class="my-2">Submit</button>
+        </form>
+    </nb-card-body>
+</nb-card>

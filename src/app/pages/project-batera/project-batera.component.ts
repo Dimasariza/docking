@@ -6,6 +6,7 @@ import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { TrackingBateraService } from '../tracking-batera/tracking-batera.service';
 import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraService } from './project-batera.service';
+import { SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
 
 interface TreeNode<T> {
   data: T;
@@ -24,18 +25,16 @@ interface FSEntry {
 }
 
 @Component({
+  providers : [SubMenuProjectComponent],
   selector: 'ngx-project-batera',
   templateUrl: './project-batera.component.html',
 })
 export class ProjectBateraComponent {
   public allProjectDatas : any
-
   customColumn = 'Tasks';
   defaultColumns = [ 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
   allColumns = [ this.customColumn, ...this.defaultColumns ];
-
   dataSource: NbTreeGridDataSource<FSEntry>;
-
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
@@ -44,16 +43,17 @@ export class ProjectBateraComponent {
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private service:ProjectBateraService,
     private trackingBatera : TrackingBateraService,
-    private homeService : HomeBateraService,
-    private profileService : ProfileBateraService
+    private profileService : ProfileBateraService,
+    private subMenuProject : SubMenuProjectComponent
     ) {
   }
 
+  shipManagement : string
   addProjectDial(){
     const dialog = this.dialog.open(AddNewProjectComponent, { 
       disableClose : true,
       autoFocus : true,
-      data : this.id_user
+      data : this.shipManagement
     })
 
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -77,28 +77,25 @@ export class ProjectBateraComponent {
     return data
   }
 
-  public id_user
   ngOnInit() {
-    this.profileService.getCompanyProfile()
-    .subscribe(({data}: any) => {
-      let companyData = data.profile_merk_perusahaan
-      this.allProjectDatas.map((data, value) => {
-        this.allProjectDatas[value].shipManagement = companyData
-      })
-    })
-
-    this.homeService.getUserLogin()
-    .subscribe(({data} : any) => {
-      this.id_user = data.id_user
-    })
-
     this.service.getDataProjects()
       .subscribe(({data} : any) => {
         this.allProjectDatas = data
+        this.allProjectDatas.length ? 
         this.allProjectDatas.map((item, index) => {
           this.allProjectDatas[index].phase = 
           this.phaseStatus(this.allProjectDatas[index].phase)
-        })
+        }) : null
+    });
+
+    this.profileService.getCompanyProfile()
+    .subscribe(({data}: any) => {
+      let companyData = data.profile_merk_perusahaan
+      this.shipManagement = companyData
+      this.allProjectDatas === null ? 
+      this.allProjectDatas.map((data, value) => {
+        this.allProjectDatas[value].shipManagement = companyData
+      }) : null
     });
 
     this.trackingBatera.getDataTracking()
@@ -114,7 +111,7 @@ export class ProjectBateraComponent {
       })
       .sort((date1, date2) => {
         new Date(date1.update).getTime() - new Date(date2.update).getTime()
-      })
+      });
     
     let tasksData = data[itemDate[0].id]
     const customer = tasksData.perusahaan.merk_perusahaan
@@ -136,8 +133,6 @@ export class ProjectBateraComponent {
       }
     }
 
-
-
     proyek.map(workProject => {
       workProject.work_area === null ||
       workProject.work_area === 'undefined' ? null :
@@ -147,16 +142,13 @@ export class ProjectBateraComponent {
     })
   }
 
+
   updateSort(sortRequest: NbSortRequest): void {
-    this.sortColumn = sortRequest.column;
-    this.sortDirection = sortRequest.direction;
+    return this.subMenuProject.updateSort(sortRequest)
   }
 
   getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
-      return this.sortDirection;
-    }
-    return NbSortDirection.NONE;
+    return this.subMenuProject.getSortDirection(column)
   }
 
   deleteProject(row){

@@ -5,6 +5,8 @@ import { Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
+import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
+import { JobSuplierComponent } from './job-suplier.component';
 import { UpdateWorkprogressComponent } from './update-workprogress.component';
 
 
@@ -41,8 +43,11 @@ export class WorkProgressComponent {
     this.populateData(work)) as TreeNode<FSEntry>[]) : null
   }
 
+  public testRank = 1
+
   populateData = (work) => {          
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, updated_at, id , responsible, satuan, rank, kategori} = work  
+    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, updated_at, id , responsible, satuan, rank, kategori, progress} = work  
+    console.log(work)
       return {
       data: {
         "Job No": sfi,
@@ -60,14 +65,15 @@ export class WorkProgressComponent {
         "Responsible" : responsible,
         "rank": rank,
         "id" : id,
+        "progress" : this.testRank = this.testRank + 3,
         "kind" : items?.length ? 'dir' : 'doc'
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
   }
 
-  defaultColumns = [ 'Type', 'Status', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
-  allColumns = ['Job' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
+  defaultColumns = ['Status', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  allColumns = ['Job' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', "Comment", 'suplier', 'Add Remarks', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -90,14 +96,26 @@ export class WorkProgressComponent {
         this.addJobDial()
         break;
       case 'Add Phase' :
-        this.navToSubReport(1)
+        // this.navToSubReport(1)
+        
         break;
     }
   }
 
-  navToSubReport(index){
-    const id = this.worksData.id_proyek
-    this.router.navigateByUrl( '/pages/report-batera/' + id + '/sub-menu-report', {state : {data : index, work_area : this.worksData}})
+  addJobSuplier(data){
+    const dialogRef = this.dialog.open(JobSuplierComponent, {
+      autoFocus : true,
+      data : data,
+      // maxHeight : '90vh'
+    })
+  }
+
+  jobMenuDial(row){
+    const dialogRef = this.dialog.open(SubMenuReportComponent, {
+      autoFocus : true,
+      data : row,
+      // maxHeight : '90vh'
+    })
   }
 
   addJobDial(){
@@ -107,10 +125,12 @@ export class WorkProgressComponent {
     })
   }
 
-  updateWorkProgress(){
+  updateWorkProgress(row){
     const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(UpdateWorkprogressComponent, {
-      disableClose : true, autoFocus:true, 
+      disableClose : true, 
+      autoFocus:true,
+      data : row
     })
   }
 }
@@ -119,14 +139,6 @@ const useButtons = [
   {
   icon: 'refresh',
   desc: 'Refresh'
-  },
-  {
-    icon: 'plus',
-    desc: 'Add Phase'
-  },
-  {
-    icon: 'list',
-    desc: 'Add Activity'
   },
   {
     icon: 'flag-outline',

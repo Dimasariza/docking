@@ -16,4 +16,17 @@ export class ReportBateraService {
                                 .append("q", "")
         return this.httpClient.get(url)
     }
+
+    addDocument(body){
+        const url = this.apiUrl + "/report/detail"
+        return this.httpClient.post(url, body)
+    }
+
+    getDocument(id, page, type){
+        const url = this.apiUrl + "/report/proyek/" + id + "/detail"
+        let queryParams = new HttpParams();
+        queryParams = queryParams.append("per_page", page)
+                                .append("type", type)
+        return this.httpClient.get(url, {params : queryParams})
+    }
 }

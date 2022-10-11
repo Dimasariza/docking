@@ -6,6 +6,7 @@ import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-
 import { UpdateWorkareaComponent } from '../project-batera/work-area/update-workarea.component';
 import { AddYardComponent } from './add-yard/add-yard.component';
 import { TenderBateraService } from './tender-batera.service'
+import { UpdateLoadDetailsComponent } from './update-load-details/update-load-details.component';
 
 interface TreeNode<T> {
   data: T;
@@ -30,7 +31,7 @@ export class TenderBateraComponent  {
   ) {}
 
   defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract','Total Price Contract', 'Category', 'Remarks' ];
-  allColumns = [ "Job No", ...this.defaultColumns, "Approve", "Edit"];
+  allColumns = [ "Job No", 'rank', ...this.defaultColumns, "Approve", "Edit"];
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -51,7 +52,7 @@ export class TenderBateraComponent  {
     fileInput.click()
   }
 
-  public dataTable = {
+  public dataTable = [{
     'Yard' : "yard Batera",
     'Currency': '',
     'Offhire Repair Period (In Dock)': '',
@@ -68,13 +69,14 @@ export class TenderBateraComponent  {
       discount : '',
       'After Discount' : 15 
     },
-
-    'comment': '',
+  },
+  {
+    'comment': '', // from here
     'Yard Location' : '',
     'Responsible' : '',
     'Yard Quote' : '',
     'Contract' : '',
-  }
+  }]
 
   allDataTender : object = {}
   public id_proyek
@@ -114,8 +116,8 @@ export class TenderBateraComponent  {
         }
       })
   
-      this.dataTable = {
-        ...this.dataTable,
+      this.dataTable[0] = {
+        ...this.dataTable[0],
         ...item[0]
       } 
     }
@@ -149,16 +151,19 @@ export class TenderBateraComponent  {
     }
   }
 
-  editWorkArea(row){
-    // return this.subMenuProject.updateWorkArea(row)
-    // const dialog = this.dialog.open(UpdateWorkareaComponent, {
-    //   disableClose : true,
-    //   autoFocus:true, 
-    //   data : this.allDataTender['project']['id']
-    // })    
-    // dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
-    //   this.ngOnInit()
-    // })
+  editLoadDetails(row){
+    let {data} = row
+    const dialog = this.dialog.open(UpdateLoadDetailsComponent, {
+      // disableClose : true,
+      autoFocus:true, 
+      data : {
+        project : this.id_proyek,
+        job : data
+      }
+    })    
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
   }
 
   approvalStatus = [
@@ -168,6 +173,7 @@ export class TenderBateraComponent  {
     "Medium",
     "Low"
   ]
+
   approveStatus(){
     // this.approvalStatus = !this.approvalStatus
   }
@@ -178,9 +184,8 @@ export class TenderBateraComponent  {
       autoFocus : true,
       data : this.id_proyek
     })
-
-    
   }
+
 }
 
 @Component({

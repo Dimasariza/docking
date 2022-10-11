@@ -1,0 +1,25 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <h5 style="color:burlywood;">Suplier</h5>
+        <button nbButton status="danger" size="small" (click)="close()">
+          <nb-icon icon="close-square-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form action="" #suplierForm="ngForm" (ngSubmit)="onSubmit(suplierForm)">
+            <div class="">
+                <span class="d-block">Suplier Name</span>
+                <input type="text" nbInput ngModel placeholder="Name" name="suplier_name" #name>
+                <span class="d-block">Suplier Address</span>
+                <input type="text" nbInput ngModel placeholder="Address" name="address" #address>
+                <span class="d-block">Suplier Email</span>
+                <input type="text" nbInput ngModel placeholder="Email" name="email" #email>
+                <span class="d-block">Suplier Mobile Number</span>
+                <input type="text" nbInput ngModel placeholder="Mobile Number" name="mobile_no" #mobile_no>
+            </div>
+            <button nbButton status="success" class="my-2" type="submit" fullWidth>
+                Submit
+            </button>
+        </form>
+    </nb-card-body>
+</nb-card>

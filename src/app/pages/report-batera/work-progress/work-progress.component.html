@@ -12,23 +12,23 @@
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
-            <ng-container [nbTreeGridColumnDef]="'Approved'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
+            <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
                     </button>
-                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
                     </button>
                 </td>
             </ng-container>
 
             <ng-container [nbTreeGridColumnDef]="'Job'">
-                <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:150px;">Job</th>
+                <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:250px;">Job</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
                   <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                  <span class="text-primary btn" style="cursor: pointer;" (click)="navToSubReport(row.data['id'])">
+                  <span class="text-primary btn" style="cursor: pointer;" (click)="jobMenuDial(row)">
                       {{row.data['Job']}}
                   </span>
                 </td>
@@ -45,7 +45,7 @@
             <ng-container [nbTreeGridColumnDef]="'%'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                    <nb-progress-bar [value]="60" status="primary">{{value}}60%</nb-progress-bar>
+                    <nb-progress-bar [value]="row.data.progress" [displayValue]="true" status="primary"></nb-progress-bar>
                 </td>
             </ng-container>
             
@@ -58,10 +58,28 @@
                 </td>
             </ng-container>
 
+            <ng-container [nbTreeGridColumnDef]="'suplier'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm" (click)="addJobSuplier(row)">
+                        <nb-icon icon="person-add-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'Add Remarks'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-light btn-sm" (click)="updateWorkProgress(row)">
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
             <ng-container [nbTreeGridColumnDef]="'edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm" (click)="updateWorkProgress()">
+                    <button class="btn btn-light btn-sm" (click)="updateWorkProgress(row)">
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
                 </td>

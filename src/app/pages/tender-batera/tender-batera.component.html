@@ -27,7 +27,7 @@
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
       <nb-card class="p-3">
-        <div *ngFor="let item of objectKeys(dataTable)">
+        <div *ngFor="let item of objectKeys(dataTable[1])">
             <div *ngIf="item !== 'General Discount'" class="row">
                 <div class="col-6"><strong>{{item}}</strong></div>
                 <div class="">:</div>
@@ -65,10 +65,15 @@
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" [clickToToggle]="false"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
             <ng-container [nbTreeGridColumnDef]="'Job No'">
-              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px">Job No.</th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="d-flex justify-content-between h-100 w-100">
+              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 90px">Job No.</th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" >
                 <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
                 {{row.data['Job No']}}
+              </td>
+            </ng-container>
+            <ng-container [nbTreeGridColumnDef]="'rank'">
+              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 50px"></th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" >
                 <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data['rank'])}"></nb-icon>
               </td>
             </ng-container>
@@ -90,7 +95,7 @@
             <ng-container [nbTreeGridColumnDef]="'Edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px"></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editWorkArea(row)">
+                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editLoadDetails(row)">
                       <nb-icon icon="edit-outline" status="primary"></nb-icon>
                   </button>
                 </td>

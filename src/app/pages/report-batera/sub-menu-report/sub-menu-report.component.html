@@ -1,113 +1,112 @@
-<div class="row">
-    <div class="col-md-12 col-sm-12 col-lg-6 col-xl-8">
-        <nb-card>
-            <nb-card-header>
-                <div class="d-flex">
-                    <h5>{{work_area.sfi}}.{{work_area.pekerjaan}}</h5>
-                    <div class="ml-lg-auto">
-                        <button nbButton status="primary" class="m-2" outline size="tiny">
-                            <nb-icon icon="close-outline" pack="eva"></nb-icon>
-                            Close
-                        </button>
-                        <button nbButton status="primary" class="m-2" outline size="tiny">
-                            <nb-icon icon="checkmark-square-outline" pack="eva"></nb-icon>
-                            New Task
-                        </button>
-                        <button nbButton status="primary" class="m-2" outline size="tiny">
-                            <nb-icon icon="people-outline" pack="eva"></nb-icon>
-                            New Contact
-                        </button>
-                    </div>
+<nb-card fullWidth>
+    <nb-card-header class="d-flex justify-content-between">
+        <span><strong>1. General Service </strong></span> 
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+
+
+
+
+    <nb-card-body class="row">
+        <div class="col-6">
+
+            <strong>Description</strong>
+
+            <div class="row">
+
+                <div class="col-3">
+                    <span class="d-block">Start</span>
+                    <span class="d-block">Done</span>
+                    <span class="d-block">Responsible</span>
+                    <span class="d-block">Project</span>
                 </div>
-            </nb-card-header>
-
-            <nb-card-body>
-                <div class="row">
-                    <div class="col-3">
-                        <span class="d-block">Start</span>
-                        <span class="d-block">Done</span>
-                        <span class="d-block">Responsible</span>
-                        <span class="d-block">Project</span>
-                        <span class="d-block">Last change data</span>
-                    </div>
-                    <div class="col-3">
-                        <span class="d-block text-info">{{work_area.start}}</span>
-                        <span class="d-block text-info">{{work_area.end}}</span>
-                        <span class="d-block text-info">{{work_area.responsible}}</span>
-                        <span class="d-block text-info">{{subMenuData.work_area.kapal.nama_kapal}}-DD-{{subMenuData.work_area.tahun}}</span>
-                        <span class="d-block text-info">{{subMenuData.work_area.updated_at}}</span>
-                    </div>
-                    <div class="col-3">
-                        <span class="d-block">Type</span>
-                        <span class="d-block">Status</span>
-                        <span class="d-block">Progress</span>
-                    </div>
-                    <div class="col-3">
-                        <span class="d-block text-info">activity</span>
-                        <span class="d-block text-info">status</span>
-                        <span class="d-block text-info">
-                            <nb-progress-bar [value]="80" status="primary" [displayValue]="true"></nb-progress-bar>
-                        </span>
-                    </div>
+                <div class="col-3">
+                    <span class="d-block text-info">{{data.data.Start}}</span>
+                    <span class="d-block text-info">{{data.data.Stop}}</span>
+                    <span class="d-block text-info">{{data.data.Responsible}}</span>
+                    <span class="d-block text-info">KM Abusamah</span>
                 </div>
-
-            </nb-card-body>
-
-            <nb-card-body class="row"> 
-                <h5 class="col-6">Description</h5>
-                <div class="col-6">
-                    <button nbButton outline status="primary" size="small">
-                        <nb-icon icon="settings-2-outline"></nb-icon>
-                    </button>
+                <div class="col-3">
+                    <span class="d-block">Type</span>
+                    <span class="d-block">Status</span>
+                    <span class="d-block">Progress</span>
+                    <span class="d-block">Last change data</span>
                 </div>
-                <textarea name="" nbInput id="" cols="90" class="col-12" rows="7"></textarea>
-            </nb-card-body>
-            <button nbButton status="primary" class="w-100" size="small">
-                Submit
-            </button>
-            
-            <nb-card-body>
-                <h5>Attachments</h5>
-                <button nbButton class="m-2 w-100" shape="rectangle" >
-                    Add file from computer
-                </button> 
-
-            </nb-card-body>
-        </nb-card>
-    </div>
-
-    <div class="col-md-12 col-sm-12 col-lg-6 col-xl-4">
-        <nb-card>
-            <nb-card-header>
-                <h6>Updates</h6>
-            </nb-card-header>
-            <button nbButton class="m-2" shape="rectangle" status="info" hero>
-                Add update
-            </button> 
-            <div class="p-3">
-                <span><strong>1ST INSPECTION DURING BERTHING 9TH OCT 2018</strong></span> <br>
-                <div class="d-flex w-100 text-right justify-content-end">
-                    <span>10.10.2022  </span>
-                    <span style="color:  rgb(12, 162, 255);">  (Slamet Saputro)</span>
+                <div class="col-3">
+                    <span class="d-block text-info">activity</span>
+                    <span class="d-block text-info">status</span>
+                    <span class="d-block text-info">
+                        <nb-progress-bar [value]="data.data.progress" status="primary" [displayValue]="true"></nb-progress-bar>
+                    </span>
+                    <span class="d-block text-info">Work area</span>
                 </div>
-
-                <ol class="my-1">
-                    <li>Found deformation on hull before accomodation</li>
-                    <li>The container hull found broken</li>
-                    <li>Plan for wasting on Oct 2018</li>
-                    <li>Hatch Cover</li>
-                </ol>
-                <h6>Supplier/Vendor</h6>
-                <button nbButton class="m-2" shape="rectangle" status="info" hero>
-                    Create Supplier
-                </button> 
-                <h6>1.1. CV Barokah Teknik Sejahtera, Jakarta</h6>
             </div>
-            Add Remarks
-            <button nbButton class="m-2" shape="rectangle" status="info" hero>
-                Add Remarks
-            </button> 
-        </nb-card>
-    </div>
-</div>
+            <textarea name="" id="" fullWidth rows="7" readonly nbInput ngModel name="description"></textarea>
 
+            <div class="w-100 text-right">
+                <button nbButton size="tiny" ghost>
+                    Add Remarks
+                    <nb-icon icon="arrowhead-right-outline"></nb-icon>
+                </button>
+            </div>
+        </div>
+    
+
+        <div class="col-6">
+            <strong>Remarks</strong>
+            <textarea name="" id="" fullWidth rows="2" nbInput ngModel name="description"></textarea>
+            <form action="" #spesification="ngForm" (ngSubmit)="submitSpesification(spesification)">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Add Attachment</span>
+                    </div>
+                    <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" ngModel name="fileName">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                </div>
+                <button nbButton status="success" size="small" fullWidth>
+                    Submit
+                </button>
+            </form>
+            <ngx-datatable 
+                [class]="'bootstrap'" 
+                [rows]="logActivity" 
+                [count]="logActivity.length"
+                [scrollbarH]="true"
+                [columnMode]="'force'"
+                class="row"
+                [rowHeight]="'auto'"
+                default>
+                    <ngx-datatable-column [name]="'Description'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{rowIndex+1}}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [name]="'File'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{row.tgl || '_'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [name]="'Date'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{row.perihal || '_'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </nb-card-body>
+
+
+
+
+
+
+
+
+
+</nb-card>

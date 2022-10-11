@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbLayoutModule, NbProgressBarModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
+import { NbAccordionModule, NbButtonModule, NbCardModule, NbCheckboxModule, NbDatepickerModule, NbIconModule, NbInputModule, NbLayoutModule, NbPopoverModule, NbProgressBarModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbTabsetModule, NbTreeGridModule } from '@nebular/theme';
 import { FsIconComponent, ReportBateraComponent, reportData } from './report-batera.component';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
 import { CloseOutComponent } from './close-out/close-out.component';
@@ -16,6 +16,8 @@ import { WorkAddComponent } from './work-add/work-add.component';
 import { UpdateWorkprogressComponent } from './work-progress/update-workprogress.component';
 import { UpdateWorkareaComponent } from '../project-batera/work-area/update-workarea.component';
 import { FormsModule } from '@angular/forms';
+import { LetterDocComponent } from './letter-doc/letter-doc.component';
+import { JobSuplierComponent } from './work-progress/job-suplier.component';
 
 
 @NgModule({
@@ -32,9 +34,11 @@ import { FormsModule } from '@angular/forms';
     CloseOutComponent,
     WorkAddComponent,
     FsIconComponent,
-    UpdateWorkprogressComponent
+    UpdateWorkprogressComponent,
+    LetterDocComponent,
+    JobSuplierComponent
   ],
-  entryComponents: [UpdateWorkareaComponent, UpdateWorkprogressComponent],
+  entryComponents: [UpdateWorkareaComponent, UpdateWorkprogressComponent, LetterDocComponent],
   imports: [
     CommonModule,
     NgxDatatableModule,
@@ -54,7 +58,8 @@ import { FormsModule } from '@angular/forms';
     MatDialogModule,
     NbProgressBarModule,
     FormsModule,
-    FormsModule
+    NbPopoverModule,
+    NbAccordionModule
   ]
 })
 export class ReportBateraModule {

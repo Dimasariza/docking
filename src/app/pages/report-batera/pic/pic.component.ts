@@ -21,31 +21,5 @@ export class PicComponent implements OnInit{
   
   @Input() worksData : any = ""
 
-  useIcons = [
-    {
-    icon: 'refresh',
-    desc: 'Refresh'
-    },
-    {
-      icon: 'plus',
-      desc: 'Add Phase'
-    },
-    {
-      icon: 'list',
-      desc: 'Add Activity'
-    },
-    {
-      icon: 'flag-outline',
-      desc: 'Add Milestone'
-    },
-    {
-      icon: 'clock-outline',
-      desc: 'Add Meeting'
-    },
-    {
-      icon: 'checkmark-square',
-      desc: 'Add Task'
-    },
-  ]
 }
 

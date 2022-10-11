@@ -15,6 +15,7 @@ export class WorkAreaComponent {
     private dialogRef: MatDialogRef<WorkAreaComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     public datepipe : DatePipe,
+    public profileService : ProfileBateraService
   ) {}
   
   
@@ -22,25 +23,19 @@ export class WorkAreaComponent {
   
   onSubmit(data){
     let submitData = data.value
-    console.log(submitData)
-    console.log(submitData.volume * submitData.harga_satuan)
-    Object.assign(
-      submitData, {
-        id : this.workAreaContainer.length,
-        catatan : '',
-        type : "pekerjaan"
-      }
-    )
-    submitData.start = this.datepipe.transform(submitData.start, 'yyyy-MM-dd')
-    submitData.end = this.datepipe.transform(submitData.end, 'yyyy-MM-dd')
-    submitData.kategori = submitData.kategori.toLowerCase()
-    submitData.responsible = submitData.responsible.toLowerCase()
-    let postBody = { "work_area" : [
+    submitData = {...submitData , 
+      start : this.datepipe.transform(submitData.start, 'yyyy-MM-dd'),
+      end : this.datepipe.transform(submitData.end, 'yyyy-MM-dd'),
+      kategori : submitData.kategori.toLowerCase(),
+      responsible : submitData.responsible.name.toLowerCase(),
+      id: this.workAreaContainer.length, 
+      catatan : "", type : "pekerjaan"
+    }
+    
+    this.projectSerivce.addProjectJob({ "work_area" : [
       ...this.workAreaContainer,
       submitData
-    ]}
-    
-    this.projectSerivce.addProjectJob(postBody, this.data)
+    ]}, this.data)
     .subscribe(res => {
       console.log(res)
       this.onSuccess.emit()
@@ -60,6 +55,17 @@ export class WorkAreaComponent {
 
   ngOnInit(){
     this.useUnit = this.unitType[0]
+    this.profileService.getUserData(1, 10, '', "shipyard", '')
+    .subscribe(({data} : any) => {
+      console.log(data)
+      this.responsible = data
+      .map(user => {
+        return {
+          name : user.username, 
+          id : user.id_user
+      }});
+    });
+
     this.projectSerivce.getSubProjectData(this.data)
     .subscribe(({data} : any) => {
       console.log(data)

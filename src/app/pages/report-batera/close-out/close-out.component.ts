@@ -1,106 +1,63 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ReportBateraService } from '../report-batera.service';
 
 @Component({
   selector: 'ngx-close-out',
   templateUrl: './close-out.component.html',
 })
 export class CloseOutComponent implements OnInit {
-
-
-  ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
-  }
-  
-  evaIcons = [];
   constructor(
-    iconsLibrary: NbIconLibraries,
-    public activatedRoute : ActivatedRoute
+    public activatedRoute : ActivatedRoute,
+    private reportService : ReportBateraService
     ) {
-    this.evaIcons = Array.from(iconsLibrary.getPack('eva').icons.keys())
-      .filter(icon => icon.indexOf('outline') === -1);
-    iconsLibrary.registerFontPack('fa', { packClass: 'fa', iconClassPrefix: 'fa' });
-    iconsLibrary.registerFontPack('far', { packClass: 'far', iconClassPrefix: 'fa' });
-    iconsLibrary.registerFontPack('ion', { iconClassPrefix: 'ion' });
   }
-  
-  shipData = [
-    {
-      "vessel": "Batera Batam-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:09:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Project3-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:08:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Kapuas-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:07:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Medan-1-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:06:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Express-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:05:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Relance-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:04:19",
-      "R": true,
-      "P": true,
-      "E": true
-    },
-    {
-      "vessel": "Batera Gorontalo-DD-2019",
-      "shortcuts": ['plus-square-outline', 'trash-2-outline', 'book-outline', 'checkmark-square', 'archive-outline'],
-      "customer": "Batera Line",
-      "start": "15:03:19",
-      "R": true,
-      "P": true,
-      "E": true,
-    }
-  ]
 
-  
-  useIcons = [
+  corData : any = []
+  ngOnInit(){
+    const id = this.activatedRoute.snapshot.paramMap.get('id')
+    this.reportService.getDocument(id, "", "close_out_report")
+    .subscribe(({data} : any) => {
+      data.length ? 
+      this.corData = data.map(data => {
+        console.log(data)
+        const {perihal, tgl, nama_pengirim, created_by, keterangan} = data
+        return {
+          perihal : perihal,
+          tgl : tgl,
+          nama_pengirim : nama_pengirim,
+          created_by : created_by,
+          keterangan : keterangan
+        }
+      }) : null
+    })
+  }
+
+  onClickBtn(desc, data){
+    switch(desc){
+      case 'Add Document':
+        this.triggerSelectFile(data)
+        break
+      case 'Refresh' :
+        break
+    }
+  }
+
+  triggerSelectFile(fileInput: HTMLInputElement) {
+    fileInput.click()
+  }
+
+
+  buttons = [
     {
       icon: 'refresh',
       desc: 'Refresh'
     },
     {
-      icon: 'file-text-outline',
-      desc: 'Add Document'
-    },
+      icon : 'file-text-outline',
+      desc : 'Add Document'
+    }
   ]
 }
 

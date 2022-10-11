@@ -8,7 +8,7 @@
     <nb-card-body>
     <form  (keyup.enter)="$event.target.value" #addWorkArea="ngForm" (ngSubmit)="onSubmit(addWorkArea)">
         <div class="row">
-            <div class="col-6">
+            <div class="col-4">
                 <span class="p-2 d-block"><strong>Job Number</strong></span>
                 <input type="text" nbInput fullWidth placeholder="Job Number" id="jobNumber" fieldSize="small" required #sfi name="sfi" (ngModel)="sfi">
                 <div *ngIf="sfi.invalid && (sfi.dirty || sfi.touched)"
@@ -23,22 +23,24 @@
                 <input type="text" nbInput fullWidth placeholder="Departement" id="departement" fieldSize="small" required (ngModel)="departement" name="departemen" #departement>
                 <span class="p-2 d-block">Responsible</span>
                 <nb-select placeholder="Responsible" class="w-100" size="small" ngModel name="responsible">
-                    <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id]">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id]">{{value.name}}</nb-option>
                 </nb-select>
+            </div>
+            <div class="col-4">
                 <span class="p-2 d-block">Start</span>
                 <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" placeholder="Start Date" (ngModel)="startDate" name="start" #startDate>
                 <nb-datepicker #startdatepicker></nb-datepicker>
                 <span class="p-2 d-block">End</span>
                 <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small" placeholder="End Date" (ngModel)="endDate" name="end" #endDate>
                 <nb-datepicker #enddatepicker></nb-datepicker>
-            </div>
-            <div class="col-6">
                 <span class="p-2 d-block">Volume</span>
                 <input type="text" nbInput fullWidth placeholder="Volume" id="volume" fieldSize="small" required (ngModel)="volume" name="volume" #volume (change)="totalPriceBudget = volume.value * unitPrice.value">
                 <span class="p-2 d-block">Unit</span>
                 <nb-select placeholder="Unit" class="w-100" size="small" name="satuan" ngModel >
                     <nb-option *ngFor="let value of useUnit; let id=index;" [value]="useUnit[id]">{{value}}</nb-option>
                 </nb-select>
+            </div>
+            <div class="col-4">
                 <span class="p-2 d-block">Unit Price</span>
                 <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required (ngModel)="unitPrice" name="harga_satuan" #unitPrice (change)="totalPriceBudget = volume.value * unitPrice.value">
                 <span class="p-2 d-block">Total Price Budget</span>
@@ -53,6 +55,8 @@
                 </nb-select>
             </div>
         </div>
+        <span class="d-block my-1">Remarks</span>
+        <textarea name="" id="" rows="3" nbInput fullWidth></textarea>
         <button type="submit" nbButton status="success" class="m-2" fullWidth>Submit</button>
     </form>
     </nb-card-body>

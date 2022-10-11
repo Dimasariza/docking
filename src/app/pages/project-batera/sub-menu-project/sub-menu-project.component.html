@@ -3,7 +3,7 @@
     <h5 style="color:burlywood;">{{shipName}}</h5>
     <div class="d-flex">
         <div class="my-3" *ngFor = "let button of menuButton">
-            <button *ngIf = "button.position === 'top'" nbButton status="primary" class="mx-1" outline size="small">
+            <button *ngIf = "button.position === 'top'" (click)="btnAct(button.text)" nbButton status="primary" class="mx-1" outline size="small">
                 <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
                 {{button.text}}
             </button>
@@ -45,25 +45,37 @@
                 <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
                 <ng-container [nbTreeGridColumnDef]="'Job No'">
-                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px">Job No.</th>
-                  <td nbTreeGridCell *nbTreeGridCellDef="let row" class="d-flex justify-content-between h-100">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 100px">Job No.</th>
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
                     {{row.data['Job No']}}
-                    <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : rankColor(row.data['rank'])}"></nb-icon>
                   </td>
                 </ng-container>
+
+                <ng-container [nbTreeGridColumnDef]="'rank'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                      <nb-icon icon="alert-circle-outline" [nbPopover]="row.data.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : rankColor(row.data['rank'])}"></nb-icon>
+                    </td>
+                  </ng-container>
                 
                 <ng-container [nbTreeGridColumnDef]="'action'">
                     <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                         <div class="d-flex">
-                            <button nbButton size="small" class="btn-sm text-center" outline (click)="subJobDial(row, id)">  
+                            <button nbButton size="small" class="btn-sm text-center" outline (click)="subJobDial(row, id)"
+                            nbPopover="Add Sub Job" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                            >  
                                 <nb-icon icon="plus-outline" status="primary"></nb-icon>
                             </button>
-                            <button nbButton size="small" class="text-center mx-4" outline (click)="updateWorkArea(row)">
+                            <button nbButton size="small" class="text-center mx-4" outline (click)="updateWorkArea(row)"
+                            nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                            >
                                 <nb-icon icon="edit-outline" status="primary"></nb-icon>
                             </button>
-                            <button nbButton size="small" class="btn-sm text-center" outline (click)="delete(row.data.id)">
+                            <button nbButton size="small" class="btn-sm text-center" outline (click)="delete(row.data.id)"
+                            nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                            >
                                 <nb-icon icon="trash-outline" status="danger"></nb-icon>
                             </button>
                         </div>
