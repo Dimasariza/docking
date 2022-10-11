@@ -21,7 +21,8 @@ import {
   NbWindowModule,
 } from '@nebular/theme';
 import { AuthInterceptor } from './http-interceptors/auth-interceptor';
-
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+ 
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -43,6 +44,8 @@ import { AuthInterceptor } from './http-interceptors/auth-interceptor';
     NbDatepickerModule.forRoot()  
   ],
   providers: [
+
+    { provide : LocationStrategy, useClass : HashLocationStrategy},
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ],
   bootstrap: [AppComponent],
