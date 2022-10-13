@@ -15,11 +15,11 @@
             <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
-                        <nb-icon icon="checkmark-square-2-outline"></nb-icon>
+                    <button class="btn btn-light btn-sm mx-2" (click)="onClick('shipYard')" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                        <nb-icon [icon]=" shipYard ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
                     </button>
-                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
-                        <nb-icon icon="checkmark-square-2-outline"></nb-icon>
+                    <button class="btn btn-light btn-sm mx-2" (click)="onClick('shipOwner')" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
+                        <nb-icon [icon]=" shipOwner ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
                     </button>
                 </td>
             </ng-container>
@@ -45,9 +45,25 @@
             <ng-container [nbTreeGridColumnDef]="'edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <div class="d-flex">
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="addSubVariantDial(row)"
+                        nbPopover="Add Sub Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">  
+                            <nb-icon icon="plus-outline" status="primary"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="text-center mx-4" outline (click)="updateVariantDial(row)"
+                        nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="deleteVariant(row.data.id)"
+                        nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="trash-outline" status="danger"></nb-icon>
+                        </button>
+                    </div>
+
                     <button class="btn btn-light btn-sm" (click)="onClick(row)">
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
+
                 </td>
             </ng-container>
 

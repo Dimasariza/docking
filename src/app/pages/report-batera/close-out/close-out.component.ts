@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { LetterDocComponent } from '../letter-doc/letter-doc.component';
 import { ReportBateraService } from '../report-batera.service';
 
 @Component({
@@ -8,9 +10,9 @@ import { ReportBateraService } from '../report-batera.service';
   templateUrl: './close-out.component.html',
 })
 export class CloseOutComponent implements OnInit {
-  constructor(
-    public activatedRoute : ActivatedRoute,
-    private reportService : ReportBateraService
+  constructor(private activatedRoute : ActivatedRoute,
+              private reportService : ReportBateraService,
+              private dialog : MatDialog,
     ) {
   }
 
@@ -37,11 +39,22 @@ export class CloseOutComponent implements OnInit {
   onClickBtn(desc, data){
     switch(desc){
       case 'Add Document':
-        this.triggerSelectFile(data)
+        this.addLetterDial()
         break
       case 'Refresh' :
         break
     }
+  }
+
+  addLetterDial(){
+    const dialog = this.dialog.open(LetterDocComponent, { 
+      // disableClose : true,
+      autoFocus : true,
+    })
+
+    // dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+    //   this.ngOnInit()
+    // })
   }
 
   triggerSelectFile(fileInput: HTMLInputElement) {

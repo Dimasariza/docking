@@ -48,6 +48,9 @@ export class VariantWorkComponent implements OnChanges {
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+  shipYard : boolean = false
+  shipOwner : boolean = false
+
   updateSort(sortRequest: NbSortRequest): void {
     return  this.subMenuProject.updateSort(sortRequest)
   }
@@ -98,8 +101,12 @@ export class VariantWorkComponent implements OnChanges {
       case 'Add Job' :
         this.addVariantDial()
       break;
-      case desc :
-        this.editVariantDial(desc)
+      case 'shipYard':
+        this.shipYard = !this.shipYard
+      break;
+      case 'shipOwner':
+        this.shipOwner =! this.shipOwner
+      break;
     }
   }
 
@@ -114,7 +121,23 @@ export class VariantWorkComponent implements OnChanges {
     })
   }
 
-  editVariantDial(data){
+  addSubVariantDial(data){
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
+      disableClose : true, 
+      autoFocus:true,
+      data : {
+        dial : "Edit Variant",
+        data : this.variantWorkData,
+        subData : data
+      }
+    })
+  }
+
+  deleteVariantDial(id){
+
+  }
+  
+  updateVariantDial(data){
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
