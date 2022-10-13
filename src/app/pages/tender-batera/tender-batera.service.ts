@@ -17,6 +17,16 @@ export class TenderBateraService {
         return this.httpClient.get(url, {params  : queryParams})
     }
 
+    getTenderBasedProject(id){
+        const url = this.apiUrl + "/tender/proyek/" + id
+        return this.httpClient.get(url)
+    }
+
+    updateWorkArea(body, id){
+        const url = this.apiUrl + "/tender/" + id + "/work_area"
+        return this.httpClient.put(url, body)
+    }
+
     addDataTender(body){
         const url = this.apiUrl + "/tender"
         return this.httpClient.post(url, body)

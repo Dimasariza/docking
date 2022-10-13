@@ -1,9 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Component, Input } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-menu-project.component';
-import { UpdateWorkareaComponent } from '../project-batera/work-area/update-workarea.component';
 import { AddYardComponent } from './add-yard/add-yard.component';
 import { TenderBateraService } from './tender-batera.service'
 import { UpdateLoadDetailsComponent } from './update-load-details/update-load-details.component';
@@ -30,8 +29,8 @@ export class TenderBateraComponent  {
     private subMenuProject : SubMenuProjectComponent
   ) {}
 
-  defaultColumns = [ 'Job', 'Dept', 'Resp', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract','Total Price Contract', 'Category', 'Remarks' ];
-  allColumns = [ "Job No", 'rank', ...this.defaultColumns, "Approve", "Edit"];
+  defaultColumns = [ 'Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract','Total Price Contract', 'Category', 'Remarks' ];
+  allColumns = [ "Job No", 'rank', 'Resp', ...this.defaultColumns, "Approve", "Edit"];
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -91,6 +90,10 @@ export class TenderBateraComponent  {
       }))
     })
 
+    this.tenderService.getTenderBasedProject(this.id_proyek)
+    .subscribe(res => console.log(res))
+
+    
     this.tenderService.getDataTender(10, "all")
     .subscribe(({data} : any) => {
       this.allDataTender['tender'] = data
@@ -123,29 +126,31 @@ export class TenderBateraComponent  {
     }
     
     work_area === null ||
-    work_area === "undefined" ? this.dataSource = null :
+    work_area === undefined ? this.dataSource = null :
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
   }
 
   populateData = (work) => { 
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak, remarks, satuan, responsible, rank, id, kategori} = work           
+    const {items, jobNumber, jobName, start, end, departement, volume, unitPrice, totalPriceBudget, remarks, unit, responsible, rank, id, category, type} = work   
+    console.log(work)        
     return {
       data: {
-        "Job No": sfi,
-        "Job": pekerjaan,
-        "Dept": departemen,
+        "Job No": jobNumber,
+        "Job": jobName,
+        "Dept": departement,
         "Resp" : responsible,
         "Start": start,
         "Stop": end,
         "Vol" : volume,
-        "Unit" : satuan,
-        "Unit Price": harga_satuan,
-        "Total Price Budget" : kontrak,
-        "Category" : kategori,
+        "Unit" : unit,
+        "Category" : category,
         "Remarks" : remarks,
-        "rank" : rank,
-        "id" : id,
-        "kind": items?.length ? 'dir' : 'doc'
+        "kind": items?.length ? 'dir' : 'doc',
+        rank,
+        id,
+        unitPrice,
+        totalPriceBudget,
+        type
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }

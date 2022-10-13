@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { RequireComponent } from '../home-batera/home-batera.component';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfilBateraComponent } from './profil-batera.component';
@@ -23,5 +22,4 @@ export const routedComponents = [
   ChangeLogoComponent,
   AddUserComponent,
   UpdateUserComponent,
-  RequireComponent
 ];

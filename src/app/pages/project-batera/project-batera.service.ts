@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from "../../../environments/environment"
+import { id } from '@swimlane/ngx-charts';
   
 @Injectable({
   providedIn: 'root'
@@ -33,6 +34,11 @@ export class ProjectBateraService {
     return this.httpClient.get(url)
   }
 
+  updateProject(postBody){
+    const url = this.apiUrl + "/proyek/" + postBody.id_proyek
+    return this.httpClient.put(url, postBody)
+  }
+  
   deleteProject(id){
     const url = this.apiUrl + "/proyek/" + id
     return this.httpClient.delete(url)
@@ -45,8 +51,4 @@ export class ProjectBateraService {
     return this.httpClient.put(url, postbody, {headers : httpHeaders})
   }
 
-  publishProject(id){
-    const url = this.apiUrl + "/proyek/" + id + "/publish"
-    return this.httpClient.put(url, "")
-  }
 }

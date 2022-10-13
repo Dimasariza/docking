@@ -26,7 +26,11 @@ export class NgxLoginComponent extends NbLoginComponent {
     this.errors = [];
     this.messages = [];
     this.submitted = true;
-    this.service.authenticate(this.strategy, {user_email: this.user.email, password: this.user.password, remember: this.rememberMe}).subscribe((result: NbAuthResult) => {
+    this.service.authenticate(this.strategy, {
+      user_email: this.user.email, 
+      password: this.user.password, 
+      remember: this.rememberMe
+    }).subscribe((result: NbAuthResult) => {
       console.log(result);
       
       this.submitted = false;
@@ -40,9 +44,7 @@ export class NgxLoginComponent extends NbLoginComponent {
       const redirect = result.getRedirect();
       
       if (redirect) {
-        setTimeout(() => {
-          return this.router.navigateByUrl(redirect);
-        }, this.redirectDelay);
+          this.router.navigateByUrl(redirect);
       }
       this.cd.detectChanges();
     });

@@ -7,10 +7,8 @@ import { NbAlertModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbIcon
 import { NumberCardModule } from '@swimlane/ngx-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
-import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraRoutingModule, routedComponents } from './project-batera-routing.module';
-import { SubJobWorkareaComponent } from './work-area/sub-job-workarea.component';
-import { UpdateWorkareaComponent } from './work-area/update-workarea.component';
+import { ProjectDataComponent } from './project-data/project-data.component';
 import { WorkAreaComponent } from './work-area/work-area.component';
 
 @NgModule({
@@ -39,10 +37,8 @@ import { WorkAreaComponent } from './work-area/work-area.component';
     FormsModule,
   ],
   entryComponents: [
-    AddNewProjectComponent, 
+    ProjectDataComponent,
     WorkAreaComponent,
-    SubJobWorkareaComponent,
-    UpdateWorkareaComponent
   ],
   declarations: [
     ...routedComponents,

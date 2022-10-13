@@ -1,48 +1,78 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { switchMap } from 'rxjs-compat/operator/switchMap';
-import { AddShipComponent } from './add-ship/add-ship.component';
+import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraService } from './home-batera.service';
+import { environment } from "../../../environments/environment"
+import { UpdateShipComponent } from './update-ship/update-ship.component';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
 })
 export class HomeBateraComponent implements OnInit {
-  public shipData: any;
   constructor(
     private homeservice:HomeBateraService,
-    public dialog : MatDialog,
-  ) {}
+    private dialog : MatDialog,
+  ){}
+    
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+  public shipData: any;
+  public flipped : boolean = false;
+  toggleView() {
+    this.flipped = !this.flipped;
+  }
   
   ngOnInit() {
     this.homeservice.getAllShip()
     .subscribe(({data} : any) => {
-      data.length? this.shipData = data : null
-    }); 
+      data.length? this.shipData = data.map(item => ({
+        apiUrl : environment.apiUrl,
+        ...item
+      })) : null;
+    });
+
+    this.homeservice.getUserLogin()
+    .subscribe(({data} : any) => {
+    });
   }
 
-  openDialog(){
-    const dialog = this.dialog.open(AddShipComponent ,{
+  addShipDial(){
+    const dialog = this.dialog.open(ShipActionComponent ,{
       disableClose : true,
-      autoFocus : true
-    })
+      autoFocus : true,
+      data : {
+        dial : "Add"
+      }
+    });
 
     dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
       this.ngOnInit()
-    })
+    });
   }
+
+  updateShipDial(id){
+    const dialog = this.dialog.open(ShipActionComponent ,{
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        id : id,
+        dial : "Update"
+      }
+    });
+
+    dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+    });
+  };
+
+  deleteShip(id){
+    this.homeservice.deleteShip(id)
+    .subscribe( ({status} : any) => {
+      this.ngOnInit();
+    });
+  };
+
 }
 
-
-@Component({
-  selector: 'ngx-require',
-  template : `
-  <div>test</div>
-  `
-})
-export class RequireComponent {
-  @Input() name : string
-}
 
 

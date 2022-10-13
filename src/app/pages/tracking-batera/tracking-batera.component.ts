@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { ApexAxisChartSeries } from 'ng-apexcharts';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
-import * as moment from 'moment'
 
 @Component({
   selector: 'ngx-tracking-batera',
@@ -101,7 +100,6 @@ export class TrackingBateraComponent implements OnInit {
         }))
       }
     ]
-    console.log(this.series)
     }
     )
   } 

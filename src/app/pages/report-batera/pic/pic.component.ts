@@ -18,8 +18,5 @@ export class PicComponent implements OnInit{
       this.picData = data
     })
   }
-  
-  @Input() worksData : any = ""
-
 }
 

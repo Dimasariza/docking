@@ -1,12 +1,12 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { HomeBateraService } from '../../home-batera/home-batera.service';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
+import { ProjectDataComponent } from '../../project-batera/project-data/project-data.component';
 import { TenderBateraService } from '../tender-batera.service';
 
 @Component({
+  providers : [ProjectDataComponent],
   selector: 'ngx-add-yard',
   templateUrl: './add-yard.component.html',
 })
@@ -15,6 +15,7 @@ export class AddYardComponent  {
     private dialogRef: MatDialogRef<AddYardComponent>,
     private tenderService : TenderBateraService,
     private profileService : ProfileBateraService,
+    private projectComp : ProjectDataComponent,
     @Inject( MAT_DIALOG_DATA ) public data
   ) { }
 
@@ -30,7 +31,6 @@ export class AddYardComponent  {
     })
   }
 
-  close(){this.dialogRef.close();}
 
   addProjectBody = {
     project : [],
@@ -42,19 +42,14 @@ export class AddYardComponent  {
   }
 
   onSubmit(data){
-    let body = data.value
-    body['id_proyek'] = this.data
-    Object.keys(body).filter((k)=> {
-      if (body[k] === "" || body[k]===undefined || body[k]===null) {
-        return k;
-      }
-    }).map(item => {
-      body[item] = ""
-    })
-    this.tenderService.addDataTender(body)
+    let body = this.projectComp.checkPostBody(data.value)
+    this.tenderService.addDataTender({...body, id_proyek : this.data})
     .subscribe(res => {
       console.log(res)
     })
     this.close()
-  }
+  };
+
+  close(){this.dialogRef.close()};
+
 }

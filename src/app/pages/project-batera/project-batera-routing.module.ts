@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { FsIconComponent } from '../report-batera/work-progress/work-progress.component';
-import { AddNewProjectComponent } from './add-new-project/add-new-project.component';
 import { ProjectBateraComponent } from './project-batera.component';
-import { SubMenuProjectComponent, SubPriceDataComponent, SubProjectDataComponent } from './sub-menu-project/sub-menu-project.component';
-import { SubJobWorkareaComponent } from './work-area/sub-job-workarea.component';
-import { UpdateWorkareaComponent } from './work-area/update-workarea.component';
+import { ProjectDataComponent } from './project-data/project-data.component';
+import { SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from './work-area/work-area.component';
 
 const routes: Routes = [{
@@ -26,12 +24,8 @@ export class ProjectBateraRoutingModule { }
 
 export const routedComponents = [
   ProjectBateraComponent,
-  SubProjectDataComponent,
   SubMenuProjectComponent,
-  SubPriceDataComponent,
-  AddNewProjectComponent,
-  SubJobWorkareaComponent,
   FsIconComponent,
   WorkAreaComponent,
-  UpdateWorkareaComponent
+  ProjectDataComponent
 ];

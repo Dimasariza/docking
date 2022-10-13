@@ -14,19 +14,19 @@
                     <label class="d-block" for="">Job</label>
                     <span class="text-primary">{{data.job['Job No']}}.{{data.job.Job}}</span>
                     <label class="d-block" for="">Departement</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Departement" id="" [ngModel]="data.job.Dept" name="departemen" #departemen>
+                    <input type="text" fieldSize="small" nbInput placeholder="Departement" [ngModel]="data.job.Dept" name="departemen" #departemen>
                     <label class="d-block" for="">Responsible</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Responsible" id="" [ngModel]="data.job.Resp" name="responsible" #responsible class="text-uppercase">
+                    <input type="text" fieldSize="small" nbInput placeholder="Responsible" [ngModel]="data.job.Resp.name" name="responsible" #responsible class="text-uppercase">
                     <label class="d-block" for="">Start</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Start" id="" [nbDatepicker]="startDatePicker" [ngModel]="data.job.Start" name="start" #start>
+                    <input type="text" fieldSize="small" nbInput placeholder="Start" [nbDatepicker]="startDatePicker" [ngModel]="data.job.Start" name="start" #start>
                     <nb-datepicker #startDatePicker></nb-datepicker>
                     <label class="d-block" for="">Stop</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Stop" id="" [nbDatepicker]="stopDatePicker" [ngModel]="data.job.Stop" name="end" #end>
+                    <input type="text" fieldSize="small" nbInput placeholder="Stop" [nbDatepicker]="stopDatePicker" [ngModel]="data.job.Stop" name="end" #end>
                     <nb-datepicker #stopDatePicker></nb-datepicker>
                     <label class="d-block" for="">Volume</label>
                     <input type="text" fieldSize="small" nbInput placeholder="Volume" name="volume" [ngModel]="data.job.Vol" #volume>
                     <label class="d-block" for="">Unit</label>
-                    <nb-select [placeholder]="data.job.Unit" class="" size="small" name="satuan" >
+                    <nb-select [placeholder]="data.job.Unit" class="" size="small" name="satuan" fullWidth>
                         <nb-option *ngFor="let value of unitType ; let id=index;" [value]="unitType[id]">{{value}}</nb-option>
                     </nb-select>    
                     <label class="d-block" for="">Unit Price Contract</label>

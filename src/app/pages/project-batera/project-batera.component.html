@@ -23,17 +23,7 @@
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
       
-          <ng-container [nbTreeGridColumnDef]="customColumn">
-              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(customColumn)" *nbTreeGridHeaderCellDef>
-              {{customColumn}}
-              </th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-              {{row.data[customColumn]}}
-              </td>
-          </ng-container>
-      
-          <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
+          <ng-container *ngFor="let column of allColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
               <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
               {{column}}
               </th>
@@ -58,7 +48,7 @@
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <a class="text-primary text-decoration-none" 
               style="cursor: pointer;" 
-              [routerLink]="['./sub-menu-project', row.id_proyek]" 
+              [routerLink]="['./sub-menu-project', row.id_proyek]"
               [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}}</a>
            </ng-template>
           </ngx-datatable-column>
@@ -75,7 +65,7 @@
 
           <ngx-datatable-column [name]="'Ship Management'" prop="shipManagement">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              {{row.shipManagement}}
+              {{shipManagement}}
             </ng-template>
           </ngx-datatable-column>
           
@@ -121,18 +111,9 @@
 
           <ngx-datatable-column [name]="''" width="50">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <button nbButton size="small" ghost (click)="deleteProject(rowIndex)"
+              <button nbButton size="small" ghost (click)="deleteProject(row)"
               nbPopover="Delete Project" nbPopoverTrigger="hover" nbPopoverPlacement="top">
                 <nb-icon icon="trash-2-outline" status="danger"></nb-icon>
-              </button>
-            </ng-template>
-          </ngx-datatable-column>
-
-          <ngx-datatable-column [name]="''" width="50" prop="id_proyek">
-            <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <button nbButton size="small" ghost (click)="publishProject(row.id_proyek)"
-              nbPopover="Publish Project" nbPopoverTrigger="hover" nbPopoverPlacement="top">
-                <nb-icon icon="cloud-upload-outline" status="success"></nb-icon>
               </button>
             </ng-template>
           </ngx-datatable-column>

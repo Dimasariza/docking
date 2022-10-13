@@ -4,19 +4,20 @@
 
 <nb-card>
     <nb-card-header class="d-flex justify-content-between">
-        <h5>Add Ship</h5>
+        <h5>{{shipData.dial}} Ship</h5>
         <button nbButton status="danger" size="small" (click)="close()">
             <nb-icon icon="close-outline" size="medium"></nb-icon>
         </button>
     </nb-card-header>
     <nb-card-body>
-        <form [formGroup]="addShipForm" (ngSubmit)="submit(addShipForm)" >
+        <form [formGroup]="addShipForm" (ngSubmit)="submit(addShipForm, shipData.dial)" >
             <div class="form-group">
                 <label for="name">Name</label>
-                <input formControlName="name" id="name" type="text" class="form-control">
-                <div *ngIf="f.name.touched && f.name.invalid" class="alert alert-danger ">
-                    <div *ngIf="f.name.errors.required">Name is required.</div>
-                    <div *ngIf="f.name.errors.minlength">Name should be 3 character.</div>
+                <input formControlName="name" id="name" type="text" class="form-control" #name (ngModel)="name"  required>
+                <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert">
+                    <div *ngIf="name.errors?.['required']">
+                        Name is required.
+                    </div>
                 </div>
             </div>
             

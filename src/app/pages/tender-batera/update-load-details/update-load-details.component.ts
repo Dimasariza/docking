@@ -33,7 +33,7 @@ export class UpdateLoadDetailsComponent implements OnInit {
       let {work_area} = data
       console.log(work_area)
       work_area === null ||
-      work_area === "undefined" ? 
+      work_area === undefined ? 
       null : this.work_area = work_area
       console.log(this.work_area)
     })

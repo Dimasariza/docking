@@ -8,10 +8,10 @@
     <nb-card-body>
         <form #updateUserFrom="ngForm" (ngSubmit)="updateUserProfile(updateUserFrom)" (keyup.enter)="$event.target.value">
             <div class="d-flex justify-content-center">
-                <!-- <picture *ngIf="true" class="add_image">
+                <picture *ngIf="true" class="add_image">
                     <nb-icon icon="plus-outline" class="text-secondary add_icon"></nb-icon>
                     <input type="file" (change)="onFileChange($event)">
-                </picture> -->
+                </picture>
                 <picture *ngIf="true" class="avatar_image">
                     <img [src]="userData.avatar_url.url" (load)="onImageLoad($event)"  crossorigin="anonymous">
                     <input type="file"  class="change_image" (change)="onFileChange($event)">
@@ -21,46 +21,44 @@
                 <div class="col-6">
                     <span class="p-2 d-block">User Name</span>
                     <input type="text" nbInput fullWidth placeholder="Username" class="form-control" id="name" required 
-                    [(ngModel)]="userData.username" name="username" #username="ngModel" fieldSize="small" >
+                    [(ngModel)]="userData.username" name="username" #username fieldSize="small" >
                     <span class="p-2 d-block">Full Name</span>
                     <input type="text" nbInput fullWidth placeholder="Full Name" id="fullName" fieldSize="small"
-                    required [(ngModel)]="userData.nama_lengkap" name="nama_lengkap" #nama_lengkap="ngModel">
+                    required [(ngModel)]="userData.nama_lengkap" name="nama_lengkap" #nama_lengkap>
                     <span class="p-2 d-block">Ship Name</span>
                     <input type="text" nbInput fullWidth placeholder="Ship Name" id="shipName" fieldSize="small"
                     required [(ngModel)]="userData.nama_kapal" name="nama_kapal" #nama_kapal="ngModel">
                     <span class="p-2 d-block">Title</span>
                     <input type="text" nbInput fullWidth placeholder="Title" id="title" fieldSize="small"
-                    required [(ngModel)]="userData.title" name="title" #title="ngModel">
+                    required [(ngModel)]="userData.title" name="title" #title>
                     <span class="p-2 d-block">Department</span>
                     <input type="text" nbInput fullWidth placeholder="Department" id="department" fieldSize="small"
-                    required [(ngModel)]="userData.departemen" name="departemen" #departemen="ngModel">
+                    required [(ngModel)]="userData.departemen" name="departemen" #departemen>
                     <span class="p-2 d-block">User ID</span>
                     <input type="text" nbInput fullWidth placeholder="User ID" id="User ID" fieldSize="small"
-                    required [(ngModel)]="userData.user_id" name="user_id" #user_id="ngModel">
+                    required [(ngModel)]="userData.user_id" name="user_id" #user_id>
                 </div>
                 <div class="col-6">
                     <span class="p-2 d-block">Position</span>
                     <input type="text" nbInput fullWidth placeholder="Position" id="position" fieldSize="small"
-                    required [(ngModel)]="userData.jabatan" name="jabatan" #jabatan="ngModel">
+                    required [(ngModel)]="userData.jabatan" name="jabatan" #jabatan>
                     <span class="p-2 d-block">Mobile Number</span>
                     <input type="text" nbInput fullWidth placeholder="Mobile Number" id="mobileNo" fieldSize="small"
-                    required [(ngModel)]="userData.no_hp" name="no_hp" #no_hp="ngModel">
+                    required [(ngModel)]="userData.no_hp" name="no_hp" #no_hp>
                     <span class="p-2 d-block">E-mail</span>
                     <input type="text" nbInput fullWidth placeholder="Emial" id="email" fieldSize="small"
-                    required [(ngModel)]="userData.email" name="email" #email="ngModel">
+                    required [(ngModel)]="userData.email" name="email" #email>
                     <span class="p-2 d-block">Password</span>
                     <input type="text" nbInput fullWidth placeholder="Password" id="email" fieldSize="small"
-                    required [(ngModel)]="userData.password" name="password" #password="ngModel">
+                    required [(ngModel)]="userData.password" name="password" #password>
                     <span class="p-2 d-block">Status</span>
                     <input type="text" nbInput fullWidth placeholder="Status" id="email" fieldSize="small"   
-                    required [(ngModel)]="userData.status" name="status" #status="ngModel">
+                    required [(ngModel)]="userData.status" name="status" #status>
                 </div>
             </div>
     
             <button type="submit" nbButton status="success" class="m-2" fullWidth>Submit</button>
-            <!-- <button type="button" nbButton status="basic" (click)="updateUserFrom.reset()">Reset</button> -->
+            <button type="button" nbButton status="basic" (click)="updateUserFrom.reset()">Reset</button>
         </form>
     </nb-card-body>
 </nb-card>
-
-<!-- [disabled]="updateUserFrom.form.valid" -->

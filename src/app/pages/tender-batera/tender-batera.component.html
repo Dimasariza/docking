@@ -101,13 +101,17 @@
                 </td>
             </ng-container>
 
+            <ng-container [nbTreeGridColumnDef]="'Resp'">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px">Resp</th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">{{row.data.Resp.name}}
+              </td>
+          </ng-container>
+
             <ng-container *ngFor="let column of defaultColumns; let index = index"
                           [nbTreeGridColumnDef]="column"
                           [showOn]="getShowOn(index)">
-              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
-                {{column}}
-              </th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">{{column}}</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
             </ng-container>
           </table>
         </div>

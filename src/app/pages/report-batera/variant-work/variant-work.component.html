@@ -1,5 +1,5 @@
 <div class="buttons my-1" >
-    <button *ngFor="let icon of useIcons; let indexOfelement=index;"
+    <button *ngFor="let icon of useButtons; let indexOfelement=index;"
     nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClick(icon.desc)">
         <nb-icon [icon]="icon.icon" pack="eva">
         </nb-icon>
@@ -11,14 +11,14 @@
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
-
-            <ng-container [nbTreeGridColumnDef]="'Approved'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Approved</th>
+            
+            <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
                     </button>
-                    <button class="btn btn-light btn-sm" (click)="openDialog()">
+                    <button class="btn btn-light btn-sm mx-2" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
                         <nb-icon icon="checkmark-square-2-outline"></nb-icon>
                     </button>
                 </td>
@@ -45,7 +45,7 @@
             <ng-container [nbTreeGridColumnDef]="'edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm">
+                    <button class="btn btn-light btn-sm" (click)="onClick(row)">
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
                 </td>
@@ -62,3 +62,4 @@
         </table>    
     </div>
 </div>
+

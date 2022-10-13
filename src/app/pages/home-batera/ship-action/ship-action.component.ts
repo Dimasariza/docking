@@ -1,26 +1,24 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HomeBateraService } from '../home-batera.service';
 
 @Component({
-  selector: 'ngx-add-ship',
-  templateUrl: './add-ship.component.html',
-  styleUrls : ['./add-ship.component.scss']
+  selector: 'ngx-ship-action',
+  templateUrl: './ship-action.component.html',
+  styleUrls : ['./ship-action.component.scss']
 })
-export class AddShipComponent implements OnInit {
+export class ShipActionComponent implements OnInit {
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   constructor(
     private homeservice: HomeBateraService,
-    private dialogRef: MatDialogRef<AddShipComponent>
+    private dialogRef: MatDialogRef<ShipActionComponent>,
+    @Inject(MAT_DIALOG_DATA) public shipData: any
     ){ 
   }
 
   ngOnInit(): void {
-    this.homeservice.getUserLogin()
-    .subscribe(({data} : any) => {
-    })
   }
 
   addShipForm = new FormGroup({
@@ -32,11 +30,11 @@ export class AddShipComponent implements OnInit {
   public formIsValid : boolean = true
   get f(){
     let validators = this.addShipForm.controls
-    if ( validators.name.status === "VALID" &&  validators.file.status === "VALID") {
-      this.formIsValid = false
-    } else {
-      this.formIsValid = true
-    }
+    // if ( validators.name.status === "VALID" &&  validators.file.status === "VALID") {
+    //   this.formIsValid = false
+    // } else {
+    //   this.formIsValid = true
+    // }
     return this.addShipForm.controls;
   }
      
@@ -65,6 +63,7 @@ export class AddShipComponent implements OnInit {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
+        this.formIsValid = false
         this.uploadImageUrl = res
         this.uploadImageUrl = this.uploadImageUrl.body.data.file
       }
@@ -72,18 +71,25 @@ export class AddShipComponent implements OnInit {
   }
 
   public uploadSuccess = false
-  submit(data){
-    const postBody = {
+  submit(data, dial){
+    let postBody = {
       nama_kapal: data.value.name,
       foto: this.uploadImageUrl,
     }
-
-    this.homeservice.addShipData(postBody)
-    .subscribe(() => {
-      this.uploadSuccess = !this.uploadSuccess
-      this.onSuccess.emit()
-      this.close()
-    })
+    if(dial == "Add"){
+      this.homeservice.addShipData(postBody)
+      .subscribe(() => {
+        this.uploadSuccess = !this.uploadSuccess
+        this.onSuccess.emit()
+        this.close()
+      })
+    } else if (dial == "Update") {
+      this.homeservice.updateShip(this.shipData.id, postBody)
+      .subscribe( (res) => {
+        this.onSuccess.emit()
+        this.close()
+      })
+    }
   }
 
   close(){this.dialogRef.close(); }

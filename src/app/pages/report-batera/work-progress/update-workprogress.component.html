@@ -1,57 +1,33 @@
 <nb-card>
     <nb-card-header>
         <div class="d-flex justify-content-between">
-            <span><strong>UPDATE WORK PROGRESS :  </strong></span> 
-            <button nbButton status="danger" size="small" (click)="close()">
+            <span><strong>UPDATE WORK PROGRESS  </strong></span> 
+            <button nbButton status="danger" size="small" class="ml-3" (click)="close()">
                 <nb-icon icon="close-outline" size="medium"></nb-icon>
             </button>   
         </div>
-        <span>{{data.data['Job No']}}.{{data.data.Job}}</span>
+        <span>{{modelData?.jobNumber}}.{{modelData.Job}}</span>
     </nb-card-header>
     <nb-card-body>
     <form  (keyup.enter)="$event.target.value" #updateWork="ngForm" (ngSubmit)="updateWorkProgress(updateWork)">
-        <div class="row">
-            <div class="col-6">
-                <span class="p-2 d-block">Departement</span>    
-                <input type="text" nbInput fullWidth placeholder="Departement" id="departement" fieldSize="small" required [ngModel]="data.data.Dept" name="departemen" #departement>
-                <span class="p-2 d-block">Responsible</span>
-                <nb-select [placeholder]="data.data.Responsible" class="w-100 text-capitalize" size="small" #responsible name="responsible" [ngModel]="data.data['Responsible']">
-                    <!-- <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id]">{{value}}</nb-option> -->
-                </nb-select>
-                <span class="p-2 d-block">Start</span>
-                <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" placeholder="Start Date" [ngModel]="data.data.Start" name="start" #start>
-                <nb-datepicker #startdatepicker></nb-datepicker>
-                <span class="p-2 d-block">End</span>
-                <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small" placeholder="End Date" [ngModel]="data.data.Stop" name="end" #end>
-                <nb-datepicker #enddatepicker></nb-datepicker>
-                <span class="p-2 d-block">Volume</span>
-                <input type="text" nbInput fullWidth placeholder="Volume" id="volume" fieldSize="small" required name="volume" #volume [ngModel]="data.data.Vol" (change)="totalPriceBudget = volume.value * unitPriceActual.value">
-                <span class="p-2 d-block">Unit</span>
-                <nb-select [placeholder]="data.data['Unit']" class="w-100" size="small" name="satuan" #unit ngModel>
-                    <!-- <nb-option *ngFor="let value of useUnit; let id=index;" [value]="useUnit[id]">{{value}}</nb-option> -->
-                </nb-select>
-            </div>
-            <div class="col-6">
-                <span class="p-2 d-block">Unit Price Actual</span>
-                <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required name="unit_price_actual" (change)="totalPriceBudget = volume.value * unitPriceActual    .value" #unitPriceActual ngModel>
-                <span class="p-2 d-block">Total Price Actual</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Actual" id="totalPriceActual" readonly fieldSize="small" required name="total_price_actual" #totalPriceActual ngModel>
-                <span class="p-2 d-block">Category</span>
-                <nb-select [placeholder]="data.data.Category" class="w-100 text-capitalize" size="small" name="kategori" #category [ngModel]="data.data.Category">
-                    <!-- <nb-option *ngFor="let value of category; let id=index;" class="text-capitalize" [value]="category[id]">{{value}}</nb-option> -->
-                </nb-select>
-                <span class="p-2 d-block">Progress (%)</span>
-                <input type="number" nbInput fullWidth placeholder="Progress" id="volume" fieldSize="small" required name="progress" #progress ngModel> 
-                <span class="p-2 d-block">Priority</span>
-                <nb-select [placeholder]="data.data.rank" class="w-100" size="small" name="rank"  #rank [ngModel]="data.data.rank">
-                    <nb-option *ngFor="let value of ['Critical', 'High', 'Medium', 'Low']; let id=index;" [value]="rank[id]">{{value}}</nb-option>
-                </nb-select>
-                <span class="p-2 d-block">Status</span>
-                <nb-select placeholder="Status" class="w-100" size="small" name="status"  #status ngModel>
-                    <nb-option *ngFor="let value of ['Not Started','In Progress', 'Done', 'Canceled']; let id=index;" [value]="value">{{value}}</nb-option>
-                </nb-select>
-            </div>
-        </div>
+            <span class="p-2 d-block">Volume</span>
+            <input type="text" nbInput fullWidth placeholder="Volume" fieldSize="small" required readonly name="volume" #volume [ngModel]="modelData.Vol" (change)="totalPriceBudget = volume.value * unitPriceActual.value">
+            <span class="p-2 d-block">Unit Price Actual</span>
+            <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required name="unit_price_actual" (change)="totalPriceBudget = volume.value * unitPriceActual    .value" #unitPriceActual ngModel>
+            <span class="p-2 d-block">Total Price Actual</span>
+            <input type="text" nbInput fullWidth placeholder="Total Price Actual" readonly fieldSize="small" required name="total_price_actual" #totalPriceActual [ngModel]="totalPriceBudget">
+            <span class="p-2 d-block">Progress (%)</span>
+            <input type="number" nbInput fullWidth placeholder="Progress" maxlength = "3" min="1" max="100" fieldSize="small" required name="progress" #progress ngModel> 
+            <!-- <span class="p-2 d-block">Priority</span>
+            <nb-select [placeholder]="modelData.rank" class="w-100" size="small" name="rank"  #rank [ngModel]="modelData.rank">
+                <nb-option *ngFor="let value of ['Critical', 'High', 'Medium', 'Low']; let id=index;" [value]="rank[id]">{{value}}</nb-option>
+            </nb-select> -->
+            <span class="p-2 d-block">Status</span>
+            <nb-select placeholder="Status" class="w-100" size="small" name="status"  #status ngModel>
+                <nb-option *ngFor="let value of ['Not Started','In Progress', 'Done', 'Canceled']; let id=index;" [value]="value">{{value}}</nb-option>
+            </nb-select>
+            <span class="p-2 d-block">Remarks</span>
+            <textarea name="workProggressRemarks" rows="5" fullWidth nbInput></textarea>
         <button type="submit" nbButton status="success" class="m-2" fullWidth>Submit</button>
     </form>
     </nb-card-body>

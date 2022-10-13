@@ -1,192 +1,59 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { NbDateService, NbIconLibraries, } from '@nebular/theme';
-import { HomeBateraService } from '../home-batera/home-batera.service';
-import { PagesRoutingModule } from '../pages-routing.module';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
+import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
+
+const buttonKey = [
+  { icon : "info-outline",
+    menu : "Project Status"
+  },
+];
 
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
 })
 export class ReportBateraComponent {
-  dataReport : any
-
   constructor(
     private reportBateraService : ReportBateraService,
     private dialog : MatDialog,
-    private projectService : ProjectBateraService,
-    public activatedRoute : ActivatedRoute,
-    public pageService : PagesRoutingModule
+    private activatedRoute : ActivatedRoute,
     ) {
   }
 
+  buttonKey = buttonKey
   projectData : any
+  
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.projectService.getDataProjects()
+    this.reportBateraService.getWorkPerProject(id)
     .subscribe(({data} : any) => {
-      console.log(data)
-      this.projectData = data[0]
+      this.projectData = data
     })
   }
 
-  buttonKey = [
-    { icon : "menu-2-outline",
-      menu : "New Log"
-    },
-    { icon : "checkmark-square-outline",
-      menu : "New Task"
-    },
-    { icon : "people-outline",
-      menu : "New Meeting"
-    },
-    { icon : "plus-circle-outline",
-      menu : "New Project Status"
-    },
-  ];
-
-  addJobDial(){
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(WorkAreaComponent, {
-      disableClose : true, autoFocus:true, 
+  projectStatusDial(){
+    const dialogRef = this.dialog.open(ProjectStatusComponent, {
+      // disableClose : true, 
+      autoFocus:true, 
     })
   }
-}
 
-@Component ({
-  selector: 'ngx-report-data',
-  template: `
-  <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6">
-    <div *ngFor = "let item of objectKeys(reportData)">
-      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'date';" > 
-        <div class="col-6"><strong>{{item.value}}</strong></div>
-        <input class="col-3" type="text" fieldSize="small" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="datepicker">
-        <nb-datepicker #datepicker [min]="min"></nb-datepicker>  
-      </div>
-
-      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'drop-down';">
-        <div class="col-6"><strong>{{item.value}}</strong></div>
-        <nb-select selected="1" class="" size="tiny" status="primary">
-          <nb-option value="1" *ngFor = "let value of reportData[item.value].value">{{value}}</nb-option>
-        </nb-select>
-      </div>
-
-    </div>
-  </div>
-
-  <div class="d-flex flex-column col-xl-6 col-lg-6 col-md-6" >
-    <div *ngFor = "let item of objectKeys(reportData)">
-      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'edit';">
-        <div class="col-6"><strong>{{item.value}}</strong></div>
-        <div class="col-4">{{reportData[item.value].value}}</div>
-        <button nbButton status="primary" class="mx-1 col-auto" outline size="small" ghost (click)="onEdit(reportData[item.value])">
-          <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-        </button>
-      </div>
-
-      <div class="mt-2 row" *ngIf="reportData[item.value].type === 'onEdit';">
-        <div class="col-6"><strong>{{item.value}}</strong></div>
-          <form #dataForms (ngSubmit)="onSubmit(dataForms)" [formGroup]="myform">
-            <input class="col-4" type="text" nbInput placeholder="{{reportData[item.value].value}}" fieldSize="tiny" [(ngModel)]="inputData" (keydown.enter)="handleKeyEnter($event)">
-            <button nbButton type="submit" status="primary" class="mx-1 col-auto" outline size="small" ghost (click)="onEdit(reportData[item.value])">
-            <nb-icon icon="checkmark-square-2-outline" pack="eva"></nb-icon>
-            </button>
-        </form> 
-      </div>
-
-    </div>
-  </div>
-
-      `,
-})
-export class reportData implements OnInit{
-  min: Date;
-  myform : FormGroup;
-
-  constructor(
-    public homeService : HomeBateraService,
-    public reportService: ReportBateraService,
-    protected dateService: NbDateService<Date>,
-  )
-  {
-    this.min = this.dateService.addMonth(this.dateService.today(), 0);
-  }
-
-  ngOnInit(): void {  }
-
-  onEdit(item : any){
-    item.type === "edit" ? item.type = "onEdit" : item.type = "edit"
-    console.log(item.type)
-  }
-
-  onSubmit(data){
-    console.log(data)
-    if (this.myform.valid) {
-      console.log("Form Submitted!");
+  buttonAct(desc){
+    switch (desc){
+      case "Project Status" :
+        this.projectStatusDial()
+        break; 
     }
   }
-
-  handleKeyEnter(event) {
-    event.preventDefault();
-    console.log("done")
-  }
-
-  objectKeys = Object.keys;
-  
-  reportData = {
-    "Start": {
-      type : 'date',
-    },
-    "End": {
-      type: 'date',
-    },
-    "Master Plan": {
-      type : 'drop-down',
-      value: ['Dry Docking',]
-    },
-    "Status": {
-      type : 'drop-down',
-      value : ['In Progress', 'Done']
-    },
-    "State": {
-      type : 'drop-down',
-      value: ['Reposition', 'Plan','Evaluation']
-    },
-    "Project Type": {
-      type : 'drop-down',
-      value : ['Dry-Docking']
-    },
-    "Priority": {
-      type : 'drop-down',
-      value: ['2 Medium', '1 Hard']
-    },
-    "Company": {
-      type : 'edit',
-      value: 'Meratus Line', 
-    } ,
-    "Vessel/Asset": {
-      type : 'edit',
-      value : 'Meratus Batam',
-    }, 
-    "Responsible": {
-      type: 'edit',
-      value : 'Slamet Saputro', 
-    },
-    "Partner": {
-      type : 'edit',
-      value : 'pertamana' 
-    },
-    "Estimate Cost": {
-      type : 'edit',
-      value : 'Rp 1.400.000.000',
-    } 
-  }
 }
+
+
+
+
 
 
 
@@ -203,7 +70,6 @@ export class reportData implements OnInit{
     </ng-template>
   `,
 })
-
 export class FsIconComponent {
   @Input() kind: string;
   @Input() expanded: boolean;

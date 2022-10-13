@@ -1,0 +1,107 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <div>
+            <strong>Project Status</strong>
+        </div>
+        <button nbButton status="danger" size="small" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+
+    <nb-card-body>
+        <span class="text-info">Progress Status</span>
+        <table mat-table [dataSource]="progressData" class="mat-elevation-z8 w-100">
+            <tr mat-header-row *matHeaderRowDef="statusColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: statusColumn;"></tr>
+
+            <ng-container matColumnDef="prior">
+              <th mat-header-cell *matHeaderCellDef> Priority </th>
+              <td mat-cell *matCellDef="let element; let i = index"> {{element.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="not_start">
+                <th mat-header-cell *matHeaderCellDef> Not Started </th>
+                <td mat-cell *matCellDef="let element ;let i = index"> {{i}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="in_progress">
+                <th mat-header-cell *matHeaderCellDef> In Progress </th>
+                <td mat-cell *matCellDef="let element"> </td>
+            </ng-container>
+
+            <ng-container matColumnDef="done">
+                <th mat-header-cell *matHeaderCellDef> Done </th>
+                <td mat-cell *matCellDef="let element">  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="canceled">
+                <th mat-header-cell *matHeaderCellDef> Canceled </th>
+                <td mat-cell *matCellDef="let element">  </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="delay">
+                <th mat-header-cell *matHeaderCellDef> Delay </th>
+                <td mat-cell *matCellDef="let element">  </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="all">
+                <th mat-header-cell *matHeaderCellDef> All </th>
+                <td mat-cell *matCellDef="let element"> </td>
+            </ng-container>
+
+        </table>
+
+          <br>
+          <span class="text-info">Completion Work</span>
+          <table mat-table [dataSource]="completionData" class="mat-elevation-z8 w-100">
+            <tr mat-header-row *matHeaderRowDef="completionColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: completionColumn;"></tr>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Expense </th>
+              <td mat-cell *matCellDef="let element"> {{element.name || ''}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="percentage">
+              <th mat-header-cell *matHeaderCellDef> Percentage </th>
+              <td mat-cell *matCellDef="let element"> {{element.percentage || ''}} </td>
+            </ng-container>
+
+                      
+            <ng-container matColumnDef="complete">
+                <th mat-header-cell *matHeaderCellDef> Complete Work </th>
+                <td mat-cell *matCellDef="let element"> {{element.complete || ''}} </td>
+            </ng-container>
+
+                      
+            <ng-container matColumnDef="progress">
+                <th mat-header-cell *matHeaderCellDef> Progress </th>
+                <td mat-cell *matCellDef="let element"> {{element.progress || ''}} </td>
+              </ng-container>
+
+                        
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.total || ''}} </td>
+              </ng-container>
+
+          </table>
+    </nb-card-body>
+</nb-card>
+
+
+<!-- <ngx-datatable 
+[class]="'bootstrap'" 
+[rows]="projectStatus" 
+[count]="projectStatus.length"   
+[scrollbarH]="true"
+[columnMode]="'force'"
+default >
+    <ngx-datatable-column [name]="'No'">
+        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            {{rowIndex+1}}
+        </ng-template>
+    </ngx-datatable-column>
+</ngx-datatable> -->

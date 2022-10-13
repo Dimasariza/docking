@@ -72,7 +72,7 @@ export class UpdateUserComponent implements OnInit {
   }
 
   updateUserProfile(data){
-    this.uploadLink === 'undefined' ? 
+    this.uploadLink === undefined ? 
     this.userData.avatar_url = this.uploadLink.data.file :
     this.uploadLink = " "
     this.addElement(data.value , {avatar_url : this.uploadLink})

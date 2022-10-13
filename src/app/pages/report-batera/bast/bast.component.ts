@@ -23,7 +23,6 @@ export class BastComponent  {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     this.reportService.getDocument(id, "", "bast")
     .subscribe(({data} : any) => {
-      console.log(data)
       data.length ? 
       this.bastData = data.map(data => {
         console.log(data)

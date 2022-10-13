@@ -1,7 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
-import { ProjectBateraService } from '../../project-batera/project-batera.service';
+import { ReportBateraService } from '../report-batera.service';
 
 @Component({
   selector: 'ngx-update-workprogress',
@@ -10,21 +9,19 @@ import { ProjectBateraService } from '../../project-batera/project-batera.servic
   ]
 })
 export class UpdateWorkprogressComponent implements OnInit {
-
-  constructor(
-    private dialogRef: MatDialogRef<UpdateWorkprogressComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any,
-    private projectSerivce : ProjectBateraService,
-    public activatedRoute : ActivatedRoute,
+  constructor(private dialogRef: MatDialogRef<UpdateWorkprogressComponent>,
+              private reportService : ReportBateraService,
+              @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
   totalPriceBudget = 0
+  projectId : any
+  modelData : any
+  workProgressData
 
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.projectSerivce.getDataProjects()
-    .subscribe(res => console.log(res))
-    console.log(this.data)
+    this.modelData = this.data.job.data
   }
 
   updateWorkAreaData = (data, parentIndex, newData) => {
@@ -44,21 +41,20 @@ export class UpdateWorkprogressComponent implements OnInit {
   }
 
   updateWorkProgress(newData){
-    let currentData = newData.data.id
-    let parentIndex = currentData.id.toString().split('')
-    // let postBody = this.updateWorkAreaData(this.allData, parentIndex, newData.value)
-    // this.submit(postBody)
+    const {work_area} = this.data.work
+    newData.value.last_update = new Date
+    let parentIndex = this.modelData.id.toString().split('')
+    let postBody = this.updateWorkAreaData(work_area, parentIndex, newData.value)
+    console.log(postBody)
+    this.submit({...postBody, })
   }
 
   submit(work_area) {
-    this.projectSerivce.addProjectJob({work_area}, this.data.id_proyek)
-    .subscribe(() => {
-      // this.onSuccess.emit()
-      this.close()
-    })
+    this.reportService.updateWorkProgress({work_area}, this.data.id)
+    .subscribe(res => console.log(res))
+    this.onSuccess.emit()
+    this.close()
   }
 
   close(){ this.dialogRef.close();}
-
-
 }

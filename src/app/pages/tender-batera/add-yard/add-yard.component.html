@@ -13,7 +13,7 @@
                     <span class="d-block my-1">Yard Name</span>
                     <input class="d-block w-100" type="text" placeholder="Yard Name" nbInput #yardName (ngModel)="yardName" name="nama_galangan" fieldSize="small">
                     <span class="d-block my-1">Yard Location</span>
-                    <textarea name="" nbInput cols="70" rows="2" placeholder="Yard Location" (ngModel)="yardLocation" #yardLocation name="lokasi_galangan"></textarea>
+                    <textarea nbInput rows="2" placeholder="Yard Location" fullWidth (ngModel)="yardLocation" #yardLocation name="lokasi_galangan"></textarea>
                     <span class="d-block my-1">Responsible</span>
                     <nb-select placeholder="Responsible" size="small" class=" w-100" #responsible name="id_user" (ngModel)="responsible">
                         <nb-option *ngFor="let value of addProjectBody.responsible; let id=index;" [value]="addProjectBody.responsible[id].id">{{value.name}}</nb-option>
@@ -21,17 +21,17 @@
                     <span class="d-block my-1">Contract Number</span>
                     <input class="d-block w-100" type="text" placeholder="Contract Number" nbInput (ngModel)="contractNumber" #contractNumber name="no_kontrak" fieldSize="small">
                     <span class="d-block my-1">Yard Quote</span>
-                    <input class="d-block w-100" type="text" placeholder="Yard Quote" nbInput (ngModel)="yardQuote" name="yard_total_quote" #yardQuote fieldSize="small">
+                    <input class="d-block w-100" type="number" placeholder="Yard Quote" nbInput (ngModel)="yardQuote" name="yard_total_quote" #yardQuote fieldSize="small">
                 </div>
                 <div class="col-6">
                     <span class="d-block my-1">General Discount</span>
-                    <input class="d-block w-100" type="text" placeholder="General Discount" nbInput (ngModel)="generalDiscount" name="general_diskon_persen" #generalDiscount fieldSize="small">
+                    <input class="d-block w-100" type="number" placeholder="General Discount" nbInput (ngModel)="generalDiscount" name="general_diskon_persen" #generalDiscount fieldSize="small">
                     <span class="d-block my-1">Additional Discount</span>
-                    <input class="d-block w-100" type="text" placeholder="Additional Discount" nbInput (ngModel)="additionalDiscount" name="additional_diskon" #additionalDiscount fieldSize="small">
+                    <input class="d-block w-100" type="number" placeholder="Additional Discount" nbInput (ngModel)="additionalDiscount" name="additional_diskon" #additionalDiscount fieldSize="small">
                     <span class="d-block my-1">Sum Internal Adjusment</span>
-                    <input class="d-block w-100" type="text" placeholder="Sum Internal Adjusment" nbInput (ngModel)="sumInternal" name="sum_internal_adjusment" #sumInternal fieldSize="small">
+                    <input class="d-block w-100" type="number" placeholder="Sum Internal Adjusment" nbInput (ngModel)="sumInternal" name="sum_internal_adjusment" #sumInternal fieldSize="small">
                     <span class="d-block my-1">Comment</span>
-                    <textarea name="" nbInput id="" cols="50" placeholder="Internal Comment" rows="3" (ngModel)="comment" name="komentar" #comment></textarea>
+                    <textarea nbInput placeholder="Internal Comment" rows="5" fullWidth (ngModel)="comment" name="komentar" #comment></textarea>
                 </div>
             </div>
 

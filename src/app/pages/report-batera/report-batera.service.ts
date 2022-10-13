@@ -9,12 +9,26 @@ export class ReportBateraService {
     constructor(private httpClient : HttpClient){}
     private apiUrl = environment.apiUrl
 
-    getProjectData(id){
-        const url = this.apiUrl + "/proyek/" + id
-        let queryParams = new HttpParams();
-        queryParams = queryParams.append("per_page", "10")
-                                .append("q", "")
+    getWorkPerProject(id){
+        const url = this.apiUrl + "/report/proyek/" + id
         return this.httpClient.get(url)
+    }
+
+    updateWorkProgress(postBody, id){
+        const url = this.apiUrl + "/report/proyek/" + id + "/work_area"
+        return this.httpClient.put(url, postBody)
+    }
+
+    updateVarianWork(postBody, id){
+        const url = this.apiUrl + "/report/proyek/" + id + "/variant_work"
+        const httpHeaders = new HttpHeaders();
+        httpHeaders.append('content-type', 'application/json')
+        return this.httpClient.put(url, postBody, {headers : httpHeaders})
+    }
+
+    addSuplier(body){
+        const url = this.apiUrl + "/supplier"
+        return this.httpClient.post(url, body)
     }
 
     addDocument(body){

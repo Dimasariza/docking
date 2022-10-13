@@ -54,7 +54,7 @@
         </div>
     
 
-        <div class="col-6">
+        <div ngClass="false ? 'col-6' : 'col-12'">
             <strong>Remarks</strong>
             <textarea name="" id="" fullWidth rows="2" nbInput ngModel name="description"></textarea>
             <form action="" #spesification="ngForm" (ngSubmit)="submitSpesification(spesification)">
@@ -100,13 +100,4 @@
             </ngx-datatable>
         </div>
     </nb-card-body>
-
-
-
-
-
-
-
-
-
 </nb-card>

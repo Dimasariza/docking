@@ -27,18 +27,6 @@ export class HomeBateraService {
     });
   }
 
-  getIdPerusahaan(){
-    const url = this.apiUrl + "/perusahaan"
-    const httpHeaders = new HttpHeaders();
-    httpHeaders.append('content-type', 'application/json')
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", 10)
-                            .append("q", "")
-    return this.httpClient.get(url,  {
-      headers : httpHeaders, params  : queryParams
-    })
-  }
-  
   uploadFile(postBody){
     const url = this.apiUrl + "/file/upload"
     return this.httpClient.post(url, postBody, {
@@ -51,6 +39,15 @@ export class HomeBateraService {
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
     return this.httpClient.post(url, postBody, {
+      headers : httpHeaders
+    })
+  }
+
+  updateShip(id, postBody){
+    const url = this.apiUrl + "/home/kapal/" + id
+    const httpHeaders = new HttpHeaders();
+    httpHeaders.append('content-type', 'application/json')
+    return this.httpClient.put(url, postBody, {
       headers : httpHeaders
     })
   }

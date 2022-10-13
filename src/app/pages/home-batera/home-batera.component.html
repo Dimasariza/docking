@@ -1,10 +1,42 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let item of shipData; let id=index;">
-    <ngx-home-card [image] = "item" [imgIndex]="id"></ngx-home-card>
+    <nb-flip-card [showToggleButton]="false" [flipped]="flipped">
+      <nb-card-front>
+        <nb-card size="">
+          <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView()"></nb-icon>
+          <div class="card bg-transparent h-100 ">
+            <img src="{{item.apiUrl}}/file/show/{{item.foto}}" crossorigin="anonymous" alt="{{item.nama_kapal}}" class="h-100">
+            <div class="d-flex align-items-center">
+              <span class="m-1 col-9 text-uppercase font-weight-bold h6">{{item.nama_kapal}}</span> 
+                <div class="col">
+                  <div class="d-flex">
+                    <nb-icon class="m-1" icon="edit-outline" (click)="updateShipDial(item.id_kapal)" nbPopover="Update Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button" size="medium" [options]="{ animation: {type: 'zoom'}}" style="font-size: 1.2rem" status="primary"></nb-icon>
+                    <nb-icon class="m-1" icon="trash-2-outline" (click)="deleteShip(item.id_kapal)" nbPopover="Delete Ship" nbPopoverTrigger="hover" nbPopoverPlacement="bottom" type="button" size="medium" [options]="{ animation: {type:'zoom'}}" style="font-size: 1.2rem" status="primary"></nb-icon>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </nb-card>
+      </nb-card-front>
+      <nb-card-back>
+        <nb-card size="" class="bg-secondary">
+          <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
+          <div class="p-5">
+            <h6 style="color: rgb(0, 208, 208);">{{item.nama_kapal}}</h6>
+            <div class="back-card--desc mt-5">
+              <h2>35%</h2>
+              <span class="font-weight-bold">Status : </span>
+              <span class="font-weight-bolder"> in-progress</span> <br>
+              <span class="font-weight-bolder">{{item.nama_kapal}}-dd-2022</span>
+            </div>
+          </div>
+        </nb-card>      
+      </nb-card-back>
+    </nb-flip-card>
   </div>
 
   <div class="col-xl-4 col-lg-4 col-md-6" >
-    <nb-card class="h-75" style="cursor: pointer;" (click)="openDialog()" >
+    <nb-card class="h-75" style="cursor: pointer;" (click)="addShipDial()" >
         <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
           <nb-icon icon="plus-square-outline" pack="eva" style="font-size: 5rem;" class="align-self-center" [options]="{ animation: { type: 'zoom' }}"></nb-icon>
           <h5>Add Ship</h5> 
