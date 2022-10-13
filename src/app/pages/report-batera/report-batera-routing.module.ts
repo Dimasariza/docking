@@ -8,10 +8,6 @@ const routes: Routes = [{
   path: '',
   component: ReportBateraComponent,
   },
-  {
-    path: ':id/sub-menu-report',
-    component: SubMenuReportComponent
-  }
 ]
 
 @NgModule({

@@ -8,16 +8,19 @@
         </div>
     </nb-card-header>
     <nb-card-body>
-        <form action="">
+        <form #submitLetter="ngForm" (ngSubmit)="addLetter(submitLetter)">
             <span class="d-block">Title</span>
-            <input fullWidth placeholder="Title" class="d-block" type="text" nbInput name="perihal">
+            <input fullWidth placeholder="Title" class="d-block" type="text" nbInput name="perihal" ngModel #title>
             <span class="d-block">Sender</span>
-            <input fullWidth placeholder="Sender name" class="d-block" type="text" nbInput name="nama_pengirim">
+            <input fullWidth placeholder="Sender name" class="d-block" type="text" nbInput name="nama_pengirim" ngModel #sender>
+            <span class="d-block">Date</span>
+            <input [nbDatepicker]="datePicker" nbInput fullWidth fieldSize="small" placeholder="Pick Date" ngModel name="tgl" #date>
+            <nb-datepicker #datePicker></nb-datepicker>
             <span class="d-block">Remarks</span>
-            <textarea class="d-block" name="" id="" cols="30" rows="10" nbInput name="keterangan"></textarea>
+            <textarea class="d-block" rows="4" fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
             <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="triggerSelectFile(addFromFile)">
                 Add File
-                <input  type="file" style="display: none;" #addFromFile>
+                <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen">
             </button>
             <button fullWidth type="submit" nbButton status="success" size="small" class="my-2">Submit</button>
         </form>

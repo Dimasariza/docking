@@ -11,23 +11,19 @@
     <nb-card-body>
     <form  (keyup.enter)="$event.target.value" #updateWork="ngForm" (ngSubmit)="updateWorkProgress(updateWork)">
             <span class="p-2 d-block">Volume</span>
-            <input type="text" nbInput fullWidth placeholder="Volume" fieldSize="small" required readonly name="volume" #volume [ngModel]="modelData.Vol" (change)="totalPriceBudget = volume.value * unitPriceActual.value">
+            <input type="text" nbInput fullWidth placeholder="Volume" fieldSize="small" required readonly name="volume" #volume [ngModel]="modelData.Vol" (change)="totalPrice = volume.value * unitPriceActual.value">
             <span class="p-2 d-block">Unit Price Actual</span>
-            <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required name="unit_price_actual" (change)="totalPriceBudget = volume.value * unitPriceActual    .value" #unitPriceActual ngModel>
+            <input type="text" nbInput fullWidth placeholder="Unit Price" id="unitPrice" fieldSize="small" required name="unit_price_actual" (change)="totalPrice = volume.value * unitPriceActual.value" #unitPriceActual [ngModel]="modelData.unit_price_actual">
             <span class="p-2 d-block">Total Price Actual</span>
-            <input type="text" nbInput fullWidth placeholder="Total Price Actual" readonly fieldSize="small" required name="total_price_actual" #totalPriceActual [ngModel]="totalPriceBudget">
+            <input type="text" nbInput fullWidth placeholder="Total Price Actual" readonly fieldSize="small" required name="total_price_actual" #totalPriceActual [ngModel]="totalPrice">
             <span class="p-2 d-block">Progress (%)</span>
-            <input type="number" nbInput fullWidth placeholder="Progress" maxlength = "3" min="1" max="100" fieldSize="small" required name="progress" #progress ngModel> 
-            <!-- <span class="p-2 d-block">Priority</span>
-            <nb-select [placeholder]="modelData.rank" class="w-100" size="small" name="rank"  #rank [ngModel]="modelData.rank">
-                <nb-option *ngFor="let value of ['Critical', 'High', 'Medium', 'Low']; let id=index;" [value]="rank[id]">{{value}}</nb-option>
-            </nb-select> -->
+            <input type="number" nbInput fullWidth placeholder="Progress" maxlength = "3" min="1" max="100" fieldSize="small" required name="progress" #progress [ngModel]="modelData.progress"> 
             <span class="p-2 d-block">Status</span>
-            <nb-select placeholder="Status" class="w-100" size="small" name="status"  #status ngModel>
+            <nb-select placeholder="Status" class="w-100" size="small" name="status"  #status [ngModel]="modelData.Status">
                 <nb-option *ngFor="let value of ['Not Started','In Progress', 'Done', 'Canceled']; let id=index;" [value]="value">{{value}}</nb-option>
             </nb-select>
             <span class="p-2 d-block">Remarks</span>
-            <textarea name="workProggressRemarks" rows="5" fullWidth nbInput></textarea>
+            <textarea name="workProggressRemarks" rows="5" fullWidth nbInput [ngModel]="modelData.workProggressRemarks"></textarea>
         <button type="submit" nbButton status="success" class="m-2" fullWidth>Submit</button>
     </form>
     </nb-card-body>

@@ -16,11 +16,8 @@ import { NbAccordionModule,
   NbTabsetModule, 
   NbTreeGridModule } from '@nebular/theme';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
-import { CloseOutComponent } from './close-out/close-out.component';
 import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
 import { WorkProgressComponent } from './work-progress/work-progress.component';
-import { BastComponent } from './bast/bast.component';
-import { SuratTeguranComponent } from './surat-teguran/surat-teguran.component';
 import { PicComponent } from './pic/pic.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UpdateWorkprogressComponent } from './work-progress/update-workprogress.component';
@@ -32,17 +29,14 @@ import { FsIconComponent, ReportBateraComponent } from './report-batera.componen
 import { MatTableModule } from '@angular/material/table';
 import { WorkAreaComponent } from './work-area/work-area.component'
 import { VariantWorkComponent } from './variant-work/variant-work.component';
+import { LetterMenuComponent } from './letter-menu/letter-menu.component';
 
 
 @NgModule({
   declarations: [
     SubMenuReportComponent,
     WorkProgressComponent,
-    BastComponent,
-    SuratTeguranComponent,
-    CloseOutComponent,
     PicComponent,
-    CloseOutComponent,
     UpdateWorkprogressComponent,
     LetterDocComponent,
     JobSuplierComponent,
@@ -50,7 +44,8 @@ import { VariantWorkComponent } from './variant-work/variant-work.component';
     ProjectStatusComponent,
     FsIconComponent,
     WorkAreaComponent,
-    VariantWorkComponent
+    VariantWorkComponent,
+    LetterMenuComponent
   ],
   entryComponents: [UpdateWorkprogressComponent, LetterDocComponent, ProjectStatusComponent],
   imports: [

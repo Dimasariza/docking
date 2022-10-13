@@ -3,7 +3,6 @@ import { MatDialog } from '@angular/material/dialog';
 import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraService } from './home-batera.service';
 import { environment } from "../../../environments/environment"
-import { UpdateShipComponent } from './update-ship/update-ship.component';
 
 @Component({
   selector: 'ngx-home-batera',
@@ -17,18 +16,22 @@ export class HomeBateraComponent implements OnInit {
     
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   public shipData: any;
-  public flipped : boolean = false;
-  toggleView() {
-    this.flipped = !this.flipped;
+  public flipped : any = []
+
+  toggleView(id) {
+    this.flipped[id] = !this.flipped[id]
   }
-  
+
   ngOnInit() {
     this.homeservice.getAllShip()
     .subscribe(({data} : any) => {
-      data.length? this.shipData = data.map(item => ({
-        apiUrl : environment.apiUrl,
-        ...item
-      })) : null;
+      data.length? this.shipData = data.map(item => {
+        this.flipped.push(false)
+        return {
+          apiUrl : environment.apiUrl,
+          ...item
+        }
+      }) : null;
     });
 
     this.homeservice.getUserLogin()

@@ -59,12 +59,14 @@ export class SubMenuProjectComponent implements OnInit {
   work_area: any
   id_proyek : any
   projectData : any
+  reportData : any
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
     this.id_proyek = id
     this.projectService.getSubProjectData(id)
     .subscribe(({data} : any) => {
+      this.reportData = this.reportDataDestruction(data)
       this.projectData = data
       const {work_area, kapal} = data
       this.work_area = work_area
@@ -83,14 +85,65 @@ export class SubMenuProjectComponent implements OnInit {
     })
   }
 
+  reportDataDestruction(data){
+    const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_period, repair_in_dock_period, repair_additional_day } = data
+    return {
+        "Vessel": {
+          type : 'text',
+          value : kapal.nama_kapal
+        },
+        "Phase": {
+          type : 'text',
+          value: phase
+        },
+        "Selected Yard": {
+          type : 'text',
+          value : selected_yard
+        },
+        "Base Currency": {
+          type : 'text',
+          value : mata_uang
+        },
+        "Off Hire Period": {
+          type : 'text',
+          value: off_hire_period
+        },
+        "- Deviation": {
+          type : 'date',
+          value: off_hire_deviasi
+        },
+        "- Charter Rate": {
+          type : 'text',
+          value: off_hire_rate_per_day
+        } ,
+        "- Bunker": {
+          type : 'text',
+          value : off_hire_bunker_per_day
+        }, 
+        "Repair Period": {
+          type: 'text',
+          value : off_hire_period
+        },
+        "- In Dock": {
+          type : 'text',
+          value : repair_in_dock_period
+        },
+        "- Additional Days": {
+          type : 'date',
+          value : repair_additional_day 
+        } 
+    }
+  }
+
   
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
     return 0
   }
   objectKeys = Object.keys;
   priceHeadData = [
-    'Totals', 'Budget', 'Contract', 'Actual'
+    'Totals', 'Budget', 'Contract', 'Actual'  
   ]
+
   priceData = {
     'Offhire Days' : {
       type : 'title',
@@ -155,55 +208,6 @@ export class SubMenuProjectComponent implements OnInit {
   } 
 
   
-  reportData = {
-    "Vessel": {
-      type : 'text',
-      value : ''
-    },
-    "Phase": {
-      type : 'text',
-      value: ''
-    },
-    "Selected Yard": {
-      type : 'text',
-      value : 'Batera Yard 01'
-    },
-    "Base Currency": {
-      type : 'text',
-      value : '*IDR'
-    },
-    "Off Hire Period": {
-      type : 'text',
-      value: ''
-    },
-    "- Deviation": {
-      type : 'date',
-      value: '4'
-    },
-    "- Charter Rate": {
-      type : 'price',
-      value: '71050000', 
-      subvalue : '1.421.000.000'
-    } ,
-    "- Bunker": {
-      type : 'price',
-      value : '',
-      subvalue : '1.128.000.000'
-    }, 
-    "Repair Period": {
-      type: 'text',
-      value : '', 
-    },
-    "- In Dock": {
-      type : 'text',
-      value : '' 
-    },
-    "- Additional Days": {
-      type : 'text',
-      value : '',
-    } 
-  }
-
   rankColor(rank){
     let rankStatus 
     switch (rank){

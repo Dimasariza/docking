@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
-import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
 
@@ -17,18 +16,27 @@ const buttonKey = [
   templateUrl: './report-batera.component.html',
 })
 export class ReportBateraComponent {
-  constructor(
-    private reportBateraService : ReportBateraService,
-    private dialog : MatDialog,
-    private activatedRoute : ActivatedRoute,
+  constructor(private reportBateraService : ReportBateraService,
+              private dialog : MatDialog,
+              private activatedRoute : ActivatedRoute,
+              private projectService : ProjectBateraService
     ) {
   }
 
   buttonKey = buttonKey
   projectData : any
+  subProjectData : any
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
+
+    this.projectService.getSubProjectData(id) 
+    .subscribe(({data} : any) => {
+      this.subProjectData = data
+      console.log(data)
+      this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
+    })
+
     this.reportBateraService.getWorkPerProject(id)
     .subscribe(({data} : any) => {
       this.projectData = data
@@ -37,7 +45,7 @@ export class ReportBateraComponent {
 
   projectStatusDial(){
     const dialogRef = this.dialog.open(ProjectStatusComponent, {
-      // disableClose : true, 
+      disableClose : true, 
       autoFocus:true, 
     })
   }

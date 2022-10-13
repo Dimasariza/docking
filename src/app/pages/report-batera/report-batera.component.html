@@ -1,6 +1,6 @@
 <nb-card>
     <nb-card-header>
-        <h3>{{projectData?.kapal?.nama_kapal}}-DD-{{projectData?.tahun}}</h3>
+        <h3>{{subProjectData?.head}}</h3>
         <button nbButton status="primary" class="my-2" outline size="tiny" (click)="buttonAct(button.menu)" *ngFor="let button of buttonKey">
             <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
             {{button.menu}}
@@ -19,19 +19,19 @@
             <ngx-pic></ngx-pic>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress [workProgressData]="projectData"></ngx-work-progress>
+            <ngx-work-progress (reloadReport)="ngOnInit()" [workProgressData]="projectData"></ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
             <ngx-variant-work [variantWorkData]="projectData"></ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
-            <ngx-bast></ngx-bast>
+            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Surat Teguran">
-            <ngx-surat-teguran></ngx-surat-teguran>
+            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'surat_teguran'"></ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Close Out Report (COR)">
-            <ngx-close-out></ngx-close-out>
+            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'close_out_report'"></ngx-bast>
         </nb-tab>
       </nb-tabset>
 </nb-card>

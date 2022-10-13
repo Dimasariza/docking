@@ -13,7 +13,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { UpdateShipComponent } from './update-ship/update-ship.component';
 import { ShipActionComponent } from './ship-action/ship-action.component';
 
 
@@ -35,7 +34,7 @@ import { ShipActionComponent } from './ship-action/ship-action.component';
     NbPopoverModule,
     NbAlertModule,
   ],
-  entryComponents: [ShipActionComponent, UpdateShipComponent],
+  entryComponents: [ShipActionComponent],
   exports: [],
   declarations: [
     ...routedComponents,

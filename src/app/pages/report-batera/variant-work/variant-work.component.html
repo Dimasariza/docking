@@ -7,7 +7,7 @@
     </button>
 </div>
 <div style="overflow: auto; width: 100%;">
-    <div style="width: 2000px;">
+    <div style="width: 2600px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
@@ -59,11 +59,6 @@
                             <nb-icon icon="trash-outline" status="danger"></nb-icon>
                         </button>
                     </div>
-
-                    <button class="btn btn-light btn-sm" (click)="onClick(row)">
-                        <nb-icon icon="edit-outline"></nb-icon>
-                    </button>
-
                 </td>
             </ng-container>
 

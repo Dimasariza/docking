@@ -2,7 +2,7 @@
     <nb-card-body>
         <div class="buttons m-2" >
             <button *ngFor="let icon of buttons; let indexOfelement=index;"
-            nbButton outline size = "tiny"  status = "primary" class="mx-1" routerLink="/pages/report-batera/sub-menu-report" (click)="onClickBtn(icon.desc, addFromFile)">
+            nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClickBtn(icon.desc, addFromFile)">
                 <nb-icon [icon]="icon.icon" pack="eva">
                 </nb-icon>
                 {{icon.desc}}
@@ -11,8 +11,8 @@
         </div>
         <ngx-datatable 
         [class]="'bootstrap'" 
-        [rows]="bastData" 
-        [count]="bastData.length"
+        [rows]="menuData" 
+        [count]="menuData.length"
         [scrollbarH]="true"
         [columnMode]="'force'"
         class="row"

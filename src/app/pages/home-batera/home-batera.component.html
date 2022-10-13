@@ -1,9 +1,9 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let item of shipData; let id=index;">
-    <nb-flip-card [showToggleButton]="false" [flipped]="flipped">
+    <nb-flip-card [showToggleButton]="false" [flipped]="flipped[id]">
       <nb-card-front>
         <nb-card size="">
-          <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView()"></nb-icon>
+          <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView(id)" style="cursor: pointer;"></nb-icon>
           <div class="card bg-transparent h-100 ">
             <img src="{{item.apiUrl}}/file/show/{{item.foto}}" crossorigin="anonymous" alt="{{item.nama_kapal}}" class="h-100">
             <div class="d-flex align-items-center">
@@ -20,7 +20,7 @@
       </nb-card-front>
       <nb-card-back>
         <nb-card size="" class="bg-secondary">
-          <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView()"></nb-icon>
+          <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView(id)" style="cursor: pointer;"></nb-icon>
           <div class="p-5">
             <h6 style="color: rgb(0, 208, 208);">{{item.nama_kapal}}</h6>
             <div class="back-card--desc mt-5">

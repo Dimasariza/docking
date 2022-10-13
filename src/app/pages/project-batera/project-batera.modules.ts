@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table';
 import { NbAlertModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbLayoutModule, NbListModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTagModule, NbTreeGridModule } from '@nebular/theme';
 import { NumberCardModule } from '@swimlane/ngx-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -35,6 +36,8 @@ import { WorkAreaComponent } from './work-area/work-area.component';
     MatOptionModule,
     NbTagModule,
     FormsModule,
+    MatTableModule,
+
   ],
   entryComponents: [
     ProjectDataComponent,

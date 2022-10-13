@@ -1,29 +1,44 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { NbIconLibraries, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { LetterDocComponent } from '../letter-doc/letter-doc.component';
 import { ReportBateraService } from '../report-batera.service';
 
+const buttons = [
+  {
+    icon: 'refresh',
+    desc: 'Refresh'
+  },
+  {
+    icon : 'file-text-outline',
+    desc : 'Add Document'
+  }
+]
+
 @Component({
-  selector: 'ngx-close-out',
-  templateUrl: './close-out.component.html',
+  selector: 'ngx-bast',
+  templateUrl: './letter-menu.component.html',
 })
-export class CloseOutComponent implements OnInit {
+export class LetterMenuComponent  {
   constructor(private activatedRoute : ActivatedRoute,
               private reportService : ReportBateraService,
               private dialog : MatDialog,
-    ) {
-  }
+  ) { }
 
-  corData : any = []
+  @Input() typeMenu : any
+  buttons = buttons
+  menuData : any = []
+  pojectId : any
+  // @Output() reloadReport = new EventEmitter<string>();
+
   ngOnInit(){
+    // this.reloadReport.emit()
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.reportService.getDocument(id, "", "close_out_report")
+    this.pojectId = id
+    this.reportService.getDocument(id, "", this.typeMenu)
     .subscribe(({data} : any) => {
       data.length ? 
-      this.corData = data.map(data => {
-        console.log(data)
+      this.menuData = data.map(data => {
         const {perihal, tgl, nama_pengirim, created_by, keterangan} = data
         return {
           perihal : perihal,
@@ -46,31 +61,24 @@ export class CloseOutComponent implements OnInit {
     }
   }
 
-  addLetterDial(){
-    const dialog = this.dialog.open(LetterDocComponent, { 
-      // disableClose : true,
-      autoFocus : true,
-    })
-
-    // dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
-    //   this.ngOnInit()
-    // })
-  }
-
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()
   }
 
+  addLetterDial(){
+    const dialog = this.dialog.open(LetterDocComponent, { 
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        dial : this.typeMenu,
+        id : this.pojectId
+      }
+    })
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    })
+  }
 
-  buttons = [
-    {
-      icon: 'refresh',
-      desc: 'Refresh'
-    },
-    {
-      icon : 'file-text-outline',
-      desc : 'Add Document'
-    }
-  ]
 }
+
 

@@ -90,8 +90,8 @@ export class TenderBateraComponent  {
       }))
     })
 
-    this.tenderService.getTenderBasedProject(this.id_proyek)
-    .subscribe(res => console.log(res))
+    // this.tenderService.getTenderBasedProject(this.id_proyek)
+    // .subscribe(res => console.log(res))
 
     
     this.tenderService.getDataTender(10, "all")

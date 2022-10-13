@@ -9,7 +9,13 @@ table {
     width: 100%;
 }
 
-// .mat-column-name {
-//     flex: none;
-//     width: 200px;
-// }
+.mat-column-name, 
+.mat-column-c_1, 
+.mat-column-c_2,
+.mat-column-c_3,
+.mat-column-c_4,
+.mat-column-c_5,
+.mat-column-c_6 {
+    flex: none;
+    width: 200px;
+}

@@ -1,8 +1,9 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
+import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
 import { JobSuplierComponent } from './job-suplier.component';
 import { UpdateWorkprogressComponent } from './update-workprogress.component';
@@ -44,6 +45,7 @@ export class WorkProgressComponent {
               private dialog : MatDialog,
               private subMenuProject : SubMenuProjectComponent,
               private activatedRoute : ActivatedRoute,
+              private reportService : ReportBateraService
     ) {
   }
   defaultColumns = ['Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
@@ -76,7 +78,7 @@ export class WorkProgressComponent {
 
   populateData = (work) => {          
     const {items, jobNumber, jobName, start, end, departement, volume, unitPrice, kontrak , type, remarks, id , responsible, unit, rank, kategori, progress, 
-      status, unit_price_actual, total_price_actual, last_update} = work  
+      status, unit_price_actual, total_price_actual, last_update, yardApproval, ownerApproval, workProggressRemarks} = work  
       return {
       data: {
         "Job": jobName,
@@ -96,10 +98,15 @@ export class WorkProgressComponent {
         "Unit Price Actual" : unit_price_actual,
         "Total Price Actual" : total_price_actual,
         "Last Change" : last_update,
+        yardApproval,
+        ownerApproval,
         rank,
         unitPrice,
         type,
+        workProggressRemarks,
         jobNumber,
+        unit_price_actual,
+        total_price_actual
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -111,13 +118,46 @@ export class WorkProgressComponent {
         break;
       case 'Refresh' :
         break;
-      case 'shipYard' :
-        this.shipYard = !this.shipYard
-        break;
-      case 'shipOwner' :
-        this.shipOwner = !this.shipOwner
-        break;
     }
+  }
+
+  updateWorkAreaData = (data, parentIndex, newData) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
+      } else if(i == parentIndex[0]) {
+        let item
+        w?.items ? item = w.items : item = null
+        return {...w, ...newData, items : item}
+      }
+      return w
+    })
+  }
+
+  approvedByYard(newData){
+    this.shipYard = true
+    let postData = { ...newData.data, yardApproval : this.shipYard}
+    const parentIndex = postData.id.toString().split('')
+    const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+    this.updateWorkApproval(approveData)
+  }
+  
+  approvedByOwner(newData){
+    this.shipOwner = true
+    let postData = { ...newData.data, ownerApproval : this.shipOwner}
+    const parentIndex = postData.id.toString().split('')
+    const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+    this.updateWorkApproval(approveData)
+  }
+
+  @Output() reloadReport = new EventEmitter<string>();
+  updateWorkApproval(work_area){
+    console.log(work_area)
+    this.reportService.updateWorkProgress({work_area}, this.projectId)
+    .subscribe(() =>
+    this.reloadReport.emit('complete')
+    )
   }
 
   addJobSuplier(data){
@@ -145,7 +185,7 @@ export class WorkProgressComponent {
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.ngOnChanges()
+      this.reloadReport.emit('complete')
     });
   }
 }

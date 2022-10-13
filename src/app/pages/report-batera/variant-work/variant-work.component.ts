@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
+import { ReportBateraService } from '../report-batera.service';
 import { WorkAreaComponent } from '../work-area/work-area.component';
 
 interface TreeNode<T> {}
@@ -35,12 +36,11 @@ const useButtons = [
   templateUrl: './variant-work.component.html',
 })
 export class VariantWorkComponent implements OnChanges {
-  constructor(
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private dialog : MatDialog,
-    private subMenuProject : SubMenuProjectComponent,
-    ) {
-  }
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+              private dialog : MatDialog,
+              private subMenuProject : SubMenuProjectComponent,
+              private reportService : ReportBateraService
+  ) { }
 
   useButtons = useButtons
   defaultColumns = [ 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
@@ -54,11 +54,9 @@ export class VariantWorkComponent implements OnChanges {
   updateSort(sortRequest: NbSortRequest): void {
     return  this.subMenuProject.updateSort(sortRequest)
   }
-
   getSortDirection(column: string): NbSortDirection {
     return this.subMenuProject.getSortDirection(column)
   }
-
   getShowOn(index: number) {
     return this.subMenuProject.getShowOn(index)
   }
@@ -69,27 +67,26 @@ export class VariantWorkComponent implements OnChanges {
     this.variantWorkData === null ||
     this.variantWorkData === undefined ? null :
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData.variant_work.map(work => 
-    this.populateData(work)) as TreeNode<FSEntry>[])
+    this.populateData(work)))
   }
 
   populateData = (work) => {          
-    const {items, sfi, pekerjaan, start, end, departemen, volume, harga_satuan, kontrak , type, updated_at, id , responsible, satuan} = work  
+    const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, id , responsible, unit} = work  
       return {
       data: {
-        "Job No": sfi,
-        "Job": pekerjaan,
-        "Dept": departemen,
-        "Type" : type,
+        "Job No": jobNumber,
+        "Job": jobName,
+        "Dept": departement,
         "Start": start,
         "Stop": end,
         "Vol" : volume,
-        "Unit" : satuan,
-        "Unit Price": harga_satuan,
-        "Total Price Budget" : kontrak,
-        "Category" : type,
-        "Remarks" : updated_at,
+        "Unit" : unit,
+        "Unit Price Add On": unitPriceAddOn,
+        "Total Price Add On" : totalPriceAddOn,
+        "Category" : category,
+        "Remarks" : variantRemarks,
         "Responsible" : responsible,
-        "index" : id,
+        id,
         "kind" : items?.length ? 'dir' : 'doc'
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
@@ -126,17 +123,30 @@ export class VariantWorkComponent implements OnChanges {
       disableClose : true, 
       autoFocus:true,
       data : {
-        dial : "Edit Variant",
+        dial : "Add Sub Variant",
         data : this.variantWorkData,
         subData : data
       }
     })
   }
 
-  deleteVariantDial(id){
+  deleteVariant(id){
+    let parentIndex = id.toString().split('')
+    let postBody
+    const deleteData = this.subMenuProject.reconstructData(this.variantWorkData.variant_work, parentIndex)
+    deleteData.length === 0 ||
+    deleteData === undefined ? 
+    postBody = {variant_work : [null]} : postBody = {work_area : deleteData}
+    console.log(postBody)
+    const {id_proyek} = this.variantWorkData
+    this.reportService.updateVarianWork(postBody, id_proyek)
+    .subscribe(res => {
 
+      console.log(res)
+      // this.dataSource = this.dataSourceBuilder.create(postBody)
+    })
   }
-  
+
   updateVariantDial(data){
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 

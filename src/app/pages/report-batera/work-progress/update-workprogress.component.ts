@@ -15,13 +15,14 @@ export class UpdateWorkprogressComponent implements OnInit {
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
-  totalPriceBudget = 0
+  totalPrice = 0
   projectId : any
   modelData : any
   workProgressData
 
   ngOnInit(): void {
     this.modelData = this.data.job.data
+    this.totalPrice = this.modelData.Vol * this.modelData.unit_price_actual
   }
 
   updateWorkAreaData = (data, parentIndex, newData) => {
@@ -45,7 +46,6 @@ export class UpdateWorkprogressComponent implements OnInit {
     newData.value.last_update = new Date
     let parentIndex = this.modelData.id.toString().split('')
     let postBody = this.updateWorkAreaData(work_area, parentIndex, newData.value)
-    console.log(postBody)
     this.submit({...postBody, })
   }
 

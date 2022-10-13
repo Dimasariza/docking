@@ -34,8 +34,8 @@ export class ProjectStatusComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
 
-  statusColumn: string[] = ['prior', 'not_start', 'in_progress', 'done', 'canceled', 'delay' ,'all'];
-  completionColumn : string[] = ['name', 'percentage', 'complete', 'progress', 'total'];
+  statusColumn: string[] = ['name', 'c_1', 'c_2', 'c_3', 'c_4', 'c_5' ,'c_6'];
+  completionColumn : string[] = ['name', 'c_1', 'c_2', 'c_3', 'c_4'];
 
   progressData = PROGRESS_DATA
   completionData = COMPLETION_DATA
