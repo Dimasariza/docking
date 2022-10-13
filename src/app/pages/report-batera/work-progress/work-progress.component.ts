@@ -111,6 +111,12 @@ export class WorkProgressComponent {
         break;
       case 'Refresh' :
         break;
+      case 'shipYard' :
+        this.shipYard = !this.shipYard
+        break;
+      case 'shipOwner' :
+        this.shipOwner = !this.shipOwner
+        break;
     }
   }
 
