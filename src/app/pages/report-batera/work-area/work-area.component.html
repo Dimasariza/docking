@@ -2,7 +2,7 @@
     <nb-card-header class="d-flex justify-content-between">
         <div>
             <strong>{{data.dial}} Job </strong>
-            <span *ngIf="data.dial !== 'Add Variant'" class="text-primary">: {{modelData?.head}}</span>
+            <span *ngIf="data.dial !== 'Add Variant'" class="text-primary">: {{modelData?.head || 'Sub Variant Job'}}</span>
         </div>
         <button nbButton status="danger" size="small" (click)="close()">
             <nb-icon icon="close-outline" size="medium"></nb-icon>

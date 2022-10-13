@@ -26,7 +26,8 @@ export class WorkAreaComponent implements OnInit {
   ngOnInit(): void {
     const {variant_work} = this.data.data
     this.variantWorkContainer = variant_work
-    console.log(this.data)
+    this.modelData = this.data.subData.data
+    this.modelData.head = `${this.modelData.jobNumber}.${this.modelData.jobName}` 
   }
 
   workAreaBtn(newData){

@@ -64,6 +64,8 @@ export class WorkProgressComponent {
   @Input() workProgressData : any = ""
   useButtons = useButtons
   projectId : any
+  shipYard : boolean = false
+  shipOwner : boolean = false
 
   ngOnChanges(){
     this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
