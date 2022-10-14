@@ -124,8 +124,11 @@ export class WorkAreaComponent {
   updateWorkArea(newData){
     let parentIndex = this.data.parentId.toString().split('')
     const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, newData.value)
-    this.reportService.updateWorkProgress({work_area}, this.data.id)
+    console.log({work_area})
+    this.reportService.updateWorkProgress({work_area}, this.data.id)  
+    .subscribe(res => console.log(res))
     this.tenderService.updateWorkArea({work_area}, this.data.id)
+    .subscribe(res => console.log(res))
     this.projectSerivce.addProjectJob({work_area}, this.data.id)
     .subscribe(() => {
       this.onSuccess.emit()

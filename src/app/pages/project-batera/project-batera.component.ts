@@ -1,15 +1,12 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { HomeBateraService } from '../home-batera/home-batera.service';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource } from '@nebular/theme';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
-import { TrackingBateraService } from '../tracking-batera/tracking-batera.service';
 import { ProjectBateraService } from './project-batera.service';
 import { ProjectDataComponent } from './project-data/project-data.component';
 import { SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
 
 interface TreeNode<T> {}
-
 interface FSEntry {}
 
 @Component({
@@ -18,11 +15,10 @@ interface FSEntry {}
   templateUrl: './project-batera.component.html',
 })
 export class ProjectBateraComponent {
-  constructor(
-    private dialog : MatDialog,
-    private projectService:ProjectBateraService,
-    private subMenuProject : SubMenuProjectComponent,
-    private profileService : ProfileBateraService
+  constructor(private dialog : MatDialog,
+              private projectService:ProjectBateraService,
+              private subMenuProject : SubMenuProjectComponent,
+              private profileService : ProfileBateraService
     ) {
   }
 
@@ -110,13 +106,12 @@ export class ProjectBateraComponent {
     }
   }
 
-
-
   deleteProject(row){
     console.log(row)
     // let id_proyek = this.allProjectDatas[row].id_proyek
     // this.service.deleteProject(id_proyek)
   }
+
 }
 
 

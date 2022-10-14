@@ -13,10 +13,6 @@ const useButtons = [
   desc: 'Refresh'
   },
   {
-    icon: 'flag-outline',
-    desc: 'Add Job'
-  },
-  {
     icon: 'external-link',
     desc: 'Export to Excel'
   },
@@ -25,9 +21,13 @@ const useButtons = [
     desc: 'Expand'
   },
   {
-    icon: 'minus',
+    icon: 'paper-plane-outline',
     desc: 'Send Notification'
-  }
+  },
+  {
+    icon: 'briefcase-outline',
+    desc: 'Add Job'
+  },
 ]
 
 @Component({
@@ -62,10 +62,11 @@ export class VariantWorkComponent implements OnChanges {
   @Input() variantWorkData : any = ""
   shipYard : boolean = false
   shipOwner : boolean = false
+  expandAll : boolean = false
+  expandText : string
   
 
   ngOnChanges(){
-    console.log(this.variantWorkData)
     this.variantWorkData === null ||
     this.variantWorkData === undefined ||
     this.variantWorkData?.variant_work[0] === null ? null :
@@ -75,10 +76,11 @@ export class VariantWorkComponent implements OnChanges {
 
   populateData = (work) => {          
     const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, id ,yardApproval, ownerApproval,
-      responsible, unit, status, progress} = work  
+      responsible, unit, status, progress, updated_at} = work  
       console.log(work)
       return {
       data: {
+        ...work,
         "Job No": jobNumber,
         "Job": jobName,
         "Dept": departement,
@@ -90,13 +92,10 @@ export class VariantWorkComponent implements OnChanges {
         "Total Price Add On" : totalPriceAddOn,
         "Category" : category,
         "Remarks" : variantRemarks,
-        "Responsible" : responsible,
+        "Responsible" : responsible?.name,
         "kind" : items?.length ? 'dir' : 'doc',
         "Status" : status,
-        progress,
-        id,
-        yardApproval,
-        ownerApproval,
+        "Last Change" : updated_at,
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -107,11 +106,16 @@ export class VariantWorkComponent implements OnChanges {
       case 'Add Job' :
         this.addVariantDial()
       break;
-      case 'Refresh':
+      case 'Refresh' :
         this.reloadPage.emit('complete')
+      break;
+      case 'Expand' :
+        this.expandAll = !this.expandAll
+        this.expandText = "unexpand"
       break;
     }
   }
+
 
   addVariantDial(){
     const dialogRef = this.dialog.open(WorkAreaComponent, {
@@ -143,6 +147,7 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   updateVariantDial(data){
+    console.log(data)
     const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,

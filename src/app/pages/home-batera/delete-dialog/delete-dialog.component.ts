@@ -20,7 +20,7 @@ export class DeleteDialogComponent implements OnInit {
 
   acceptDeletion(){
     switch (this.deleteData.dial) {
-      case 'Delete Ship':
+      case 'ship':
         this.homeService.deleteShip(this.deleteData.id)
         .subscribe( ({} : any) => {
           this.onSuccess.emit()

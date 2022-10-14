@@ -19,18 +19,21 @@ export class SubMenuReportComponent implements OnInit  {
   
   public subMenuData
   public work_area 
+  public showActivity : boolean = false
+  public expandText : string = 'Expand'
+  logActivity : any = []
+
   ngOnInit(): void {
     console.log(this.data)
     this.subMenuData = this.location.getState()
-    // this.work_area = this.subMenuData.work_area.work_area[this.subMenuData.data]
-    // console.log(this.subMenuData)
   }
 
-  logActivity : any = []
-
+  extendPanel(){
+    this.showActivity = !this.showActivity
+    this.showActivity ? this.expandText = 'Hide' : this.expandText = 'Expand'
+  }
 
   ngDestroy(){
-    this.subMenuData
   }
 
   submitSpesification(data){

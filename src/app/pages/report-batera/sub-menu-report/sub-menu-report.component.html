@@ -1,21 +1,14 @@
 <nb-card fullWidth>
     <nb-card-header class="d-flex justify-content-between">
-        <span><strong>1. General Service </strong></span> 
-        <button nbButton status="danger" size="small" (click)="close()">
-            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        <span><strong>{{data.data.jobNumber}} . {{data.data.Job}} </strong></span> 
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline"></nb-icon>
         </button>   
     </nb-card-header>
-
-
-
-
     <nb-card-body class="row">
-        <div class="col-6">
-
+        <div [ngClass]="showActivity ? 'col-6' : 'col-12'">
             <strong>Description</strong>
-
             <div class="row">
-
                 <div class="col-3">
                     <span class="d-block">Start</span>
                     <span class="d-block">Done</span>
@@ -25,36 +18,31 @@
                 <div class="col-3">
                     <span class="d-block text-info">{{data.data.Start}}</span>
                     <span class="d-block text-info">{{data.data.Stop}}</span>
-                    <span class="d-block text-info">{{data.data.Responsible}}</span>
+                    <span class="d-block text-info">{{data.data.Responsible.name}}</span>
                     <span class="d-block text-info">KM Abusamah</span>
                 </div>
                 <div class="col-3">
-                    <span class="d-block">Type</span>
-                    <span class="d-block">Status</span>
                     <span class="d-block">Progress</span>
                     <span class="d-block">Last change data</span>
                 </div>
                 <div class="col-3">
-                    <span class="d-block text-info">activity</span>
-                    <span class="d-block text-info">status</span>
+                    <span class="d-block text-info">{{data.data.status || ''}}</span>
                     <span class="d-block text-info">
                         <nb-progress-bar [value]="data.data.progress" status="primary" [displayValue]="true"></nb-progress-bar>
                     </span>
-                    <span class="d-block text-info">Work area</span>
+                    <span class="d-block text-info">{{data.data?.['Last Change'] | date : 'medium'}}</span>
                 </div>
             </div>
-            <textarea name="" id="" fullWidth rows="7" readonly nbInput ngModel name="description"></textarea>
-
+            <textarea fullWidth rows="7" readonly nbInput [placeholder]="data.data.Remarks" name="description" class="my-2"></textarea>
             <div class="w-100 text-right">
-                <button nbButton size="tiny" ghost>
-                    Add Remarks
-                    <nb-icon icon="arrowhead-right-outline"></nb-icon>
+                <button nbButton size="tiny" ghost (click)="extendPanel()">
+                    {{expandText}}
+                    <nb-icon [icon]="showActivity ? 'arrowhead-left-outline' : 'arrowhead-right-outline' "></nb-icon>
                 </button>
             </div>
         </div>
-    
 
-        <div ngClass="false ? 'col-6' : 'col-12'">
+        <div *ngIf="showActivity" [ngClass]="showActivity ? 'col-6' : 'col-12'">
             <strong>Remarks</strong>
             <textarea name="" id="" fullWidth rows="2" nbInput ngModel name="description"></textarea>
             <form action="" #spesification="ngForm" (ngSubmit)="submitSpesification(spesification)">

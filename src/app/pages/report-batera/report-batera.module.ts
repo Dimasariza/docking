@@ -20,16 +20,15 @@ import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.compon
 import { WorkProgressComponent } from './work-progress/work-progress.component';
 import { PicComponent } from './pic/pic.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { UpdateWorkprogressComponent } from './work-progress/update-workprogress.component';
 import { FormsModule } from '@angular/forms';
 import { LetterDocComponent } from './letter-doc/letter-doc.component';
-import { JobSuplierComponent } from './work-progress/job-suplier.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { FsIconComponent, ReportBateraComponent } from './report-batera.component';
 import { MatTableModule } from '@angular/material/table';
 import { WorkAreaComponent } from './work-area/work-area.component'
 import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
+import { JobSuplierComponent } from './job-suplier/job-suplier.component';
 
 
 @NgModule({
@@ -37,7 +36,6 @@ import { LetterMenuComponent } from './letter-menu/letter-menu.component';
     SubMenuReportComponent,
     WorkProgressComponent,
     PicComponent,
-    UpdateWorkprogressComponent,
     LetterDocComponent,
     JobSuplierComponent,
     ReportBateraComponent,
@@ -47,7 +45,7 @@ import { LetterMenuComponent } from './letter-menu/letter-menu.component';
     VariantWorkComponent,
     LetterMenuComponent
   ],
-  entryComponents: [UpdateWorkprogressComponent, LetterDocComponent, ProjectStatusComponent],
+  entryComponents: [ LetterDocComponent, ProjectStatusComponent],
   imports: [
     CommonModule,
     NgxDatatableModule,

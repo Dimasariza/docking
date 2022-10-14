@@ -36,8 +36,7 @@ export class HomeBateraComponent implements OnInit {
     });
 
     this.homeservice.getUserLogin()
-    .subscribe(({data} : any) => {
-    });
+    .subscribe(({data} : any) => {});
   }
 
   addShipDial(){
@@ -75,7 +74,7 @@ export class HomeBateraComponent implements OnInit {
       autoFocus : true,
       data : {
         id : id,
-        dial : "Delete Ship",
+        dial : "ship",
       }
     });
 

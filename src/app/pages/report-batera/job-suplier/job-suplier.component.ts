@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { ReportBateraService } from '../report-batera.service';
 
@@ -13,6 +13,7 @@ export class JobSuplierComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<JobSuplierComponent>,
               private reportService : ReportBateraService
   ) { }
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
   ngOnInit(): void {
   }
@@ -21,6 +22,7 @@ export class JobSuplierComponent implements OnInit {
     console.log(data)
     this.reportService.addSuplier(data.value)
     .subscribe(res => console.log(res))
+    this.onSuccess.emit()
     this.close()
   }
 

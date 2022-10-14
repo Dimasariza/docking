@@ -296,7 +296,7 @@ export class SubMenuProjectComponent implements OnInit {
         
       break;
       case 'Refresh' :
-        this.reloadPage.emit('complete')
+        this.ngOnInit()
       break;
     }
   }

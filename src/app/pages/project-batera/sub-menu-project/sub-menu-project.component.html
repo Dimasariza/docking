@@ -46,20 +46,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 <nb-card>
     <div class="d-flex" >
         <div *ngFor = "let button of menuButton" class="mx-1 my-3">
@@ -129,23 +115,3 @@
         </div>
     </div>
 </nb-card>
-
-
-<!-- <nb-card-body>
-    <div class="row">
-        <div *ngFor = 'let head of priceHeadData' class="col-3">
-            <strong>{{head}}</strong>
-        </div>
-    </div>
-    
-    <div *ngFor = 'let item of objectKeys(priceData) | keyvalue: orderOriginal' class="row">
-        <div class="col-3 my-1" *ngIf = "priceData[item.value].type === 'title';" >{{item.value}}</div>
-        <div class="col-3 col-lg-3 my-1" *ngIf = "priceData[item.value].type === 'subTitle';" >- {{item.value}}</div>
-        <div class="col-3 col-lg-3 my-1" *ngIf = "priceData[item.value].type === 'highlight';"  style="color: burlywood;">
-            <strong>{{item.value}}</strong> 
-        </div>
-        <div class="col-3 col-lg-3 my-1">{{priceData[item.value].Budget}}</div>
-        <div class="col-3 col-lg-3 my-1">{{priceData[item.value].Contract}}</div>
-        <div class="col-3 col-lg-3 my-1">{{priceData[item.value].Actual}}</div>
-    </div>
-</nb-card-body> -->

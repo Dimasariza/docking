@@ -27,11 +27,13 @@ export class WorkAreaComponent implements OnInit {
   variantWorkContainer : any = []
   project_id : any
   modelData : any = {}
+  disabledEdit : boolean = false
 
   ngOnInit(): void {
     this.variantWorkContainer = this.data.data.variant_work
     this.project_id = this.data.data.id_proyek
     const data = this.data.subData?.data
+    const parentId = data?.id.toString().split('')
       switch (this.data.dial) {
         case 'Add':
           this.unitType = this.unitType.filter((v, i) => i == 0)
@@ -42,12 +44,20 @@ export class WorkAreaComponent implements OnInit {
           this.modelData.id = data.id
         break;
         case 'Edit Variant' :
-          const parentId = data?.id.toString().split('')
           parentId.length === 1 ?
           this.unitType = this.unitType.filter((v, i) => i == 0) :
           this.unitType = this.unitType.filter((v, i) => i == 1)
           this.modelData = data
           this.modelData['head'] = `${data['Job No']}. ${data.Job}`
+          this.disabledEdit = true
+        break;
+        case 'Work Progress' :
+          parentId.length === 1 ?
+          this.unitType = this.unitType.filter((v, i) => i == 0) :
+          this.unitType = this.unitType.filter((v, i) => i == 1)
+          this.modelData = data
+          this.modelData['head'] = `${data['Job No']}. ${data.Job}`
+          this.disabledEdit = true
         break;
     }
 
@@ -59,6 +69,7 @@ export class WorkAreaComponent implements OnInit {
           id: user.id_user
         }))
     })
+
   }
 
   workAreaBtn(newData){
@@ -74,7 +85,22 @@ export class WorkAreaComponent implements OnInit {
       case 'Add Sub Variant' :
         this.addSubVariantData(newData)
         break;
+      case 'Work Progress':
+        this.updateWorkProgress(newData)
+        break;
     }
+  }
+
+  updateWorkProgress(newData){
+    const parentIndex = this.modelData.id.toString().split('')
+    console.log(newData)
+    // const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+    // console.log(newData)
+    // this.reportService.updateWorkProgress({work_area}, this.projectId)
+    // .subscribe((res) =>{
+    //   console.log(res)
+    //   this.onSuccess.emit()
+    // })
   }
 
   addVariantWorkaData(newData){

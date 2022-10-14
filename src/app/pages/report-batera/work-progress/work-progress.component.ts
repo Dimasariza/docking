@@ -1,12 +1,13 @@
+import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
+import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
 import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
-import { JobSuplierComponent } from './job-suplier.component';
-import { UpdateWorkprogressComponent } from './update-workprogress.component';
+import { WorkAreaComponent } from '../work-area/work-area.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -25,9 +26,13 @@ const useButtons = [
     desc: 'Expand'
   },
   {
-    icon: 'minus',
+    icon: 'paper-plane-outline',
     desc: 'Send Notification'
-  }
+  },
+  {
+    icon: 'person-add-outline',
+    desc: 'Add Suplier'
+  },
 ]
 
 @Component({
@@ -39,13 +44,14 @@ const useButtons = [
 export class WorkProgressComponent {
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private dialog : MatDialog,
+              private datepipe : DatePipe,
               private subMenuProject : SubMenuProjectComponent,
               private activatedRoute : ActivatedRoute,
               private reportService : ReportBateraService
     ) {
   }
   defaultColumns = ['Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
-  allColumns = ['Job' ,'rank' ,'%' , 'Responsible' , ...this.defaultColumns, 'Approved', "Comment", 'suplier', 'edit' ];
+  allColumns = ['Job' ,'rank' ,'%' , 'Responsible' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -64,6 +70,7 @@ export class WorkProgressComponent {
   projectId : any
   shipYard : boolean = false
   shipOwner : boolean = false
+  
 
   ngOnChanges(){
     this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
@@ -73,10 +80,12 @@ export class WorkProgressComponent {
   }
 
   populateData = (work) => {          
-    const {items, jobNumber, jobName, start, end, departement, volume, unitPrice, kontrak , type, remarks, id , responsible, unit, rank, kategori, progress, 
-      status, unit_price_actual, total_price_actual, last_update, yardApproval, ownerApproval, workProggressRemarks} = work  
+    const {items, jobNumber, jobName, start, end, departement, volume, kontrak , remarks, responsible, unit, category, 
+      status, unit_price_actual, total_price_actual, last_update} = work  
+      console.log(work)
       return {
       data: {
+        ...work,
         "Job": jobName,
         "Dept": departement,
         "Start": start,
@@ -84,34 +93,28 @@ export class WorkProgressComponent {
         "Vol" : volume,
         "Unit" : unit,
         "Total Price Budget" : kontrak,
-        "Category" : kategori,
+        "Category" : category,
         "Remarks" : remarks,
         "Responsible" : responsible,
-        "id" : id,
-        "progress" : progress,
         "kind" : items?.length ? 'dir' : 'doc',
         "Status" : status,
         "Unit Price Actual" : unit_price_actual,
         "Total Price Actual" : total_price_actual,
-        "Last Change" : last_update,
-        yardApproval,
-        ownerApproval,
-        rank,
-        unitPrice,
-        type,
-        workProggressRemarks,
-        jobNumber,
-        unit_price_actual,
-        total_price_actual
+        "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
+        "Job No":jobNumber,
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
   }
 
+
   onClick(desc){
     switch (desc) {
       case 'Refresh' :
         this.reloadPage.emit('complete')
+        break;
+      case 'Add Suplier' :
+        this.addJobSuplier()
         break;
     }
   }
@@ -135,7 +138,8 @@ export class WorkProgressComponent {
     let postData = { ...newData.data, yardApproval : this.shipYard}
     const parentIndex = postData.id.toString().split('')
     const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    this.updateWorkApproval(approveData)
+    console.log(newData)
+    // this.updateWorkApproval(approveData)
   }
   
   approvedByOwner(newData){
@@ -143,22 +147,28 @@ export class WorkProgressComponent {
     let postData = { ...newData.data, ownerApproval : this.shipOwner}
     const parentIndex = postData.id.toString().split('')
     const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    this.updateWorkApproval(approveData)
+    console.log(newData)
+    // this.updateWorkApproval(approveData)
   }
 
   @Output() reloadPage = new EventEmitter<string>();
   updateWorkApproval(work_area){
     this.reportService.updateWorkProgress({work_area}, this.projectId)
-    .subscribe(() =>
-    this.reloadPage.emit('complete')
-    )
+    .subscribe((res) =>{
+      console.log(res)
+      this.reloadPage.emit('complete')
+    })
   }
 
-  addJobSuplier(data){
+  addJobSuplier(){
     const dialogRef = this.dialog.open(JobSuplierComponent, {
       autoFocus : true,
-      data : data,
+      disableClose : true,
+      // data : data,
     })
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.reloadPage.emit('complete')
+    });
   }
 
   jobMenuDial(row){
@@ -169,13 +179,15 @@ export class WorkProgressComponent {
   }
 
   updateWorkProgress(row){
-    const dialogRef = this.dialog.open(UpdateWorkprogressComponent, {
+    console.log(row)
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
-        job : row,
+        dial : "Work Progress",
+        subData : row,
+        data : this.workProgressData,
         id : this.projectId,
-        work : this.workProgressData
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
