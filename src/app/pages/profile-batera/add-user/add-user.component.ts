@@ -63,7 +63,7 @@ export class AddUserComponent {
       }
     }
   }
-
+  
   private avatarUrl
   onImageLoad(event){
     this.userData.avatar_url.exist = event.isTrusted

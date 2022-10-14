@@ -76,7 +76,9 @@ export class ProjectBateraComponent {
     this.projectService.getDataProjects()
       .subscribe(({data} : any) => {
         this.allProjectDatas = data
-        this.allProjectDatas.length ? 
+        this.allProjectDatas.length ||
+        this.allProjectDatas === null ||
+        this.allProjectDatas[0] === null ? 
         this.allProjectDatas.map((item, index) => {
           this.allProjectDatas[index].phase = 
           this.phaseStatus(this.allProjectDatas[index].phase)
@@ -111,7 +113,6 @@ export class ProjectBateraComponent {
     // let id_proyek = this.allProjectDatas[row].id_proyek
     // this.service.deleteProject(id_proyek)
   }
-
 }
 
 

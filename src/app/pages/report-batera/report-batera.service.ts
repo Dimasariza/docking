@@ -36,6 +36,13 @@ export class ReportBateraService {
         return this.httpClient.post(url, body)
     }
 
+    addAttachment(body){
+        const url = this.apiUrl + "/file/attachment"
+        return this.httpClient.post(url, body, {
+            reportProgress : true, observe : 'events'
+        })
+    }
+
     getDocument(id, page, type){
         const url = this.apiUrl + "/report/proyek/" + id + "/detail"
         let queryParams = new HttpParams();

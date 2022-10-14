@@ -76,7 +76,7 @@ export class SubMenuProjectComponent implements OnInit {
       work_area === undefined ||
       work_area.length === 0 ? null : 
       this.dataSource = this.dataSourceBuilder.create(work_area.map(work =>
-        this.populateData(work)) as TreeNode<FSEntry>[]) 
+      this.populateData(work)) as TreeNode<FSEntry>[]) 
     })
 
     this.profileService.getUserData(1, 10, '', '', '')

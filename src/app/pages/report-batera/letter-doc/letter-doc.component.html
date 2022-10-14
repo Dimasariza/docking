@@ -8,7 +8,7 @@
         </div>
     </nb-card-header>
     <nb-card-body>
-        <form #submitLetter="ngForm" (ngSubmit)="addLetter(submitLetter)">
+        <form #submitLetterForm="ngForm" (ngSubmit)="addLetter(submitLetterForm)">
             <span class="d-block">Title</span>
             <input fullWidth placeholder="Title" class="d-block" type="text" nbInput name="perihal" ngModel #title>
             <span class="d-block">Sender</span>
@@ -20,7 +20,7 @@
             <textarea class="d-block" rows="4" fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
             <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="triggerSelectFile(addFromFile)">
                 Add File
-                <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen">
+                <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen" (change)="onFileChange($event)">
             </button>
             <button fullWidth type="submit" nbButton status="success" size="small" class="my-2">Submit</button>
         </form>

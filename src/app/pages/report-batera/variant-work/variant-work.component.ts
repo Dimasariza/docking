@@ -75,9 +75,8 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   populateData = (work) => {          
-    const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, id ,yardApproval, ownerApproval,
-      responsible, unit, status, progress, updated_at} = work  
-      console.log(work)
+    const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, 
+      responsible, unit, status, updated_at} = work  
       return {
       data: {
         ...work,

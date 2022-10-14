@@ -1,7 +1,10 @@
 import { DatePipe } from '@angular/common';
+import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReportBateraService } from '../report-batera.service';
+import { Upload } from "../../../shared/base/upload"
 
 @Component({
   selector: 'ngx-letter-doc',
@@ -17,13 +20,11 @@ export class LetterDocComponent implements OnInit {
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
-
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()
   }
 
   ngOnInit(): void {
-    console.log(this.data.dial)
   }
 
   addLetter(data){
@@ -40,14 +41,35 @@ export class LetterDocComponent implements OnInit {
     }
   }
 
+  public fileName : any;
+  public uploadFile : any
+  onFileChange(res){
+    const file = res.target?.files[0];
+    file?.name ? (() => {
+      this.fileName = file.name
+      this.uploadFile = file
+    })() : null
+    const formData = new FormData();
+    formData.append('dokumen', file);
+    this.reportService.addAttachment(formData)
+    .subscribe((res) => {
+      console.log(res)
+      if (res.type === HttpEventType.UploadProgress) {
+        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+      } else if ( res.type === HttpEventType.Response){
+        console.log("final Response uploading image")
+      }
+    })
+  }
+
   addBastDoc(data){
     const postBody = {
       ...data.value,
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
-      id_proyek : this.data.id
+      id_proyek : this.data.id,
+      dokumen : this.fileName
     }
-    console.log(postBody)
     this.submitLetter(postBody)
   }
 
@@ -57,6 +79,7 @@ export class LetterDocComponent implements OnInit {
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
       id_proyek : this.data.id,
+      dokumen : this.fileName
     }
     this.submitLetter(postBody)
   }
@@ -67,6 +90,7 @@ export class LetterDocComponent implements OnInit {
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
       id_proyek : this.data.id,
+      dokumen : this.fileName
     }
     this.submitLetter(postBody)
   }

@@ -46,7 +46,7 @@
             <ng-container [nbTreeGridColumnDef]="'%'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                    <nb-progress-bar [value]="row.data.progress" [displayValue]="true" status="primary"></nb-progress-bar>
+                    <nb-progress-bar [value]="row.data.progress || 0" [displayValue]="true" status="primary"></nb-progress-bar>
                 </td>
             </ng-container>
 

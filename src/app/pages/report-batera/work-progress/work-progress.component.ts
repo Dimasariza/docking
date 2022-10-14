@@ -50,7 +50,7 @@ export class WorkProgressComponent {
               private reportService : ReportBateraService
     ) {
   }
-  defaultColumns = ['Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = [ 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   allColumns = ['Job' ,'rank' ,'%' , 'Responsible' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -81,8 +81,7 @@ export class WorkProgressComponent {
 
   populateData = (work) => {          
     const {items, jobNumber, jobName, start, end, departement, volume, kontrak , remarks, responsible, unit, category, 
-      status, unit_price_actual, total_price_actual, last_update} = work  
-      console.log(work)
+      status, unitPrice, last_update} = work  
       return {
       data: {
         ...work,
@@ -98,8 +97,8 @@ export class WorkProgressComponent {
         "Responsible" : responsible,
         "kind" : items?.length ? 'dir' : 'doc',
         "Status" : status,
-        "Unit Price Actual" : unit_price_actual,
-        "Total Price Actual" : total_price_actual,
+        "Unit Price Actual" : unitPrice,
+        "Total Price Actual" : volume * unitPrice,
         "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
         "Job No":jobNumber,
       },
@@ -138,8 +137,7 @@ export class WorkProgressComponent {
     let postData = { ...newData.data, yardApproval : this.shipYard}
     const parentIndex = postData.id.toString().split('')
     const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    console.log(newData)
-    // this.updateWorkApproval(approveData)
+    this.updateWorkApproval(approveData)
   }
   
   approvedByOwner(newData){
@@ -147,8 +145,7 @@ export class WorkProgressComponent {
     let postData = { ...newData.data, ownerApproval : this.shipOwner}
     const parentIndex = postData.id.toString().split('')
     const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    console.log(newData)
-    // this.updateWorkApproval(approveData)
+    this.updateWorkApproval(approveData)
   }
 
   @Output() reloadPage = new EventEmitter<string>();

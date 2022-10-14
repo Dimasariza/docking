@@ -85,19 +85,21 @@ export class WorkAreaComponent {
   }
 
   addWorkArea(data){
-    let submitData = data.value
+    const submitData = data.value
     this.workAreaContainer === null ||
     this.workAreaContainer === undefined ||
     this.workAreaContainer[0] === null ? this.workAreaContainer = [] : null
-    submitData = {...submitData , 
+    const work_area = [{
+      ...this.workAreaContainer,
+      ...submitData , 
       start : this.datepipe.transform(submitData.start, 'yyyy-MM-dd'),
       end : this.datepipe.transform(submitData.end, 'yyyy-MM-dd'),
       category : submitData.category.toLowerCase(),
       responsible : submitData.responsible,
       id: this.workAreaContainer.length, 
       type : "pekerjaan"
-    }
-    const work_area = {...this.workAreaContainer,submitData}
+    }]
+    console.log({work_area})
     this.reportService.updateWorkProgress({work_area}, this.data.id)
     this.tenderService.updateWorkArea({work_area}, this.data.id)
     this.projectSerivce.addProjectJob({work_area}, this.data.id)

@@ -25,6 +25,7 @@ export class WorkAreaComponent implements OnInit {
   unitType = [["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
   responsible = []
   variantWorkContainer : any = []
+  workProgressContainer : any = []
   project_id : any
   modelData : any = {}
   disabledEdit : boolean = false
@@ -52,6 +53,8 @@ export class WorkAreaComponent implements OnInit {
           this.disabledEdit = true
         break;
         case 'Work Progress' :
+          this.reportService.getWorkPerProject(this.project_id)
+          .subscribe(({data} : any) => this.workProgressContainer = data.work_area)
           parentId.length === 1 ?
           this.unitType = this.unitType.filter((v, i) => i == 0) :
           this.unitType = this.unitType.filter((v, i) => i == 1)
@@ -93,14 +96,12 @@ export class WorkAreaComponent implements OnInit {
 
   updateWorkProgress(newData){
     const parentIndex = this.modelData.id.toString().split('')
-    console.log(newData)
-    // const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    // console.log(newData)
-    // this.reportService.updateWorkProgress({work_area}, this.projectId)
-    // .subscribe((res) =>{
-    //   console.log(res)
-    //   this.onSuccess.emit()
-    // })
+    const work_area = this.updateWorkAreaData(this.workProgressContainer, parentIndex, newData.value)
+    this.reportService.updateWorkProgress({work_area}, this.project_id)
+    .subscribe((res) =>{
+      this.onSuccess.emit()
+      this.close()
+    })
   }
 
   addVariantWorkaData(newData){
