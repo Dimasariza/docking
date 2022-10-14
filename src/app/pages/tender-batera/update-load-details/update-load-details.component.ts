@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
+import { TenderBateraService } from '../tender-batera.service';
 
 @Component({
   providers: [WorkAreaComponent],
@@ -14,6 +15,7 @@ export class UpdateLoadDetailsComponent implements OnInit {
     private dialogRef: MatDialogRef<UpdateLoadDetailsComponent>,
     private addNewProject : WorkAreaComponent,
     private projectService : ProjectBateraService,
+    private tenderService : TenderBateraService,
     @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
@@ -21,7 +23,6 @@ export class UpdateLoadDetailsComponent implements OnInit {
   public unitType : any
   public work_area : any
   ngOnInit(): void {
-    console.log(this.data)
     let jobId = this.data.job.id.toString().split("")
     let projectId = this.data.project
     jobId.length > 1 ? 
@@ -63,6 +64,30 @@ export class UpdateLoadDetailsComponent implements OnInit {
     }
   }
 
+  updateLoadDetailsData = (data, parentIndex, newData) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.updateLoadDetailsData(w.items, parentIndex, newData)}
+      } else if(i == parentIndex[0]) {
+        let item
+        w?.items ? item = w.items : item = null
+        return {...w, ...newData, items : item}
+      }
+      return w
+    })
+  }
+
+  updateVariantWorkData(newData){
+    // let parentIndex = this.modelData?.id.toString().split('')
+    // const variant_work = this.updateLoadDetailsData(this.variantWorkContainer, parentIndex, newData.value)
+    this.tenderService.updateWorkArea({}, this.data.id)
+    .subscribe(() => {
+      this.onSuccess.emit()
+      this.close()
+    })
+  }
+  
   close(){this.dialogRef.close();}
 
 

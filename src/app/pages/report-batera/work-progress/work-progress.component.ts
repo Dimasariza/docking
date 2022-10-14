@@ -153,7 +153,6 @@ export class WorkProgressComponent {
 
   @Output() reloadReport = new EventEmitter<string>();
   updateWorkApproval(work_area){
-    console.log(work_area)
     this.reportService.updateWorkProgress({work_area}, this.projectId)
     .subscribe(() =>
     this.reloadReport.emit('complete')

@@ -1,13 +1,13 @@
 <nb-card>
     <nb-card-header class="d-flex justify-content-between">
-        <h5 style="color:burlywood;">Add Contract</h5>
-        <button nbButton status="danger" size="small" (click)="close()">
-          <nb-icon icon="close-square-outline"></nb-icon>
+        <strong>Add Contract</strong>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+          <nb-icon icon="close-outline"></nb-icon>
         </button>
       </nb-card-header>
     <nb-card-body>
         
-        <form #addYardForm="ngForm" (ngSubmit)="onSubmit(addYardForm)" >
+        <form #addYardForm="ngForm" (ngSubmit)="onSubmit(addYardForm)">
             <div class="row">
                 <div class="col-6">
                     <span class="d-block my-1">Yard Name</span>

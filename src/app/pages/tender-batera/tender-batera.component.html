@@ -8,10 +8,13 @@
           <div>
             <span class="d-block label">Project Name</span>  
             <nb-select *ngIf="allDataTender" placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
-              <nb-option *ngFor="let value of allDataTender['project']; let id=index;" [value]="allDataTender['project'][id]" (click)="getProject(id)">{{value.name}}</nb-option>
+              <nb-option *ngFor="let value of allDataTender['project']; let id=index;" [value]="allDataTender['project'][id]" (click)="getProject(id)" #projectNameVal>{{value.name}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Name</span>
-            <span class="d-block text-capitalize">{{dataTable.Yard || 'Data Not Available'}}</span>
+            <nb-select *ngIf="allDataTender" [placeholder]="allDataTender.yard || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="enableSelectYard" #selectedYard class="m-1">
+              <nb-option *ngFor="let value of allDataTender?.['yard']; let id=index;" [value]="allDataTender?.['yard'][id]" (click)="getYard(projectNameVal)">{{value.name}}</nb-option>
+            </nb-select>
+            <!-- <span class="d-block text-capitalize">{{dataTable.Yard || 'Data Not Available'}}</span> -->
             <span class="d-block label">Yard Location</span> 
             <span class="d-block text-capitalize">{{dataTable['Yard Location'] || 'Data Not Available'}}</span>
             <span class="d-block label">Responsible</span>
@@ -27,17 +30,19 @@
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
       <nb-card class="p-3">
-        <div *ngFor="let item of objectKeys(dataTable[1])">
-            <div *ngIf="item !== 'General Discount'" class="row">
+        <div *ngFor="let item of objectKeys(dataTable)">
+            <div *ngIf="item != 'General Discount'&& item !='Additional Discount' else discount " class="row" >
                 <div class="col-6"><strong>{{item}}</strong></div>
                 <div class="">:</div>
-                <div class="col text-capitalize text-right">{{dataTable[item]}}</div>
+                <div class="col text-capitalize text-right">{{dataTable?.[item]}}</div>
             </div>
-            <div *ngIf="item === 'General Discount'" class="row">
+            <ng-template #discount>
+              <div class="row">
                 <strong class="col-6">{{item}} </strong>
                 <div class="">:</div>
-                <div class="col text-right">{{dataTable[item].discount}} ( {{dataTable[item]['After Discount']}} % )</div>
-            </div>
+                <div class="col text-right">({{dataTable?.[item].discount}} %) {{dataTable?.[item].after}}  </div>
+              </div>
+            </ng-template>
         </div>
         <div class="text-center mt-3">
             <button nbButton class="mx-1" status="primary" outline size="small">
@@ -80,7 +85,7 @@
             <ng-container [nbTreeGridColumnDef]="'Approve'">
               <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
                 <div class="text-center">
-                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #approval (ngModel)="approval" name="approvalStatus" class="m-1">
                     <nb-option *ngFor="let value of approvalStatus; let id=index;" [value]="approvalStatus[id]" (click)="approveStatus(id)">{{value}}</nb-option>
                   </nb-select>
                 </div>

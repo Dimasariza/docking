@@ -21,12 +21,11 @@ interface FSEntry{}
 })
 
 export class TenderBateraComponent  {
-  constructor(
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    private projectService : ProjectBateraService,
-    private tenderService : TenderBateraService,
-    private dialog : MatDialog,
-    private subMenuProject : SubMenuProjectComponent
+  constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+              private projectService : ProjectBateraService,
+              private tenderService : TenderBateraService,
+              private dialog : MatDialog,
+              private subMenuProject : SubMenuProjectComponent
   ) {}
 
   defaultColumns = [ 'Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract','Total Price Contract', 'Category', 'Remarks' ];
@@ -51,34 +50,30 @@ export class TenderBateraComponent  {
     fileInput.click()
   }
 
-  public dataTable = [{
-    'Yard' : "yard Batera",
-    'Currency': '',
-    'Offhire Repair Period (In Dock)': '',
-    'Offhire Cost': '',
-    'Owner Cost': '',
-    'Owner Total Cost': '',
-    'Yard Total Contract': '',
-    'General Discount': {
-      discount : '',
-      'After Discount' : 12
-    },
+  public dataTable = 
+    {'Yard' : "yard Batera",
+    'Currency': 'IDr',
+    'Offhire Repair Period (In Dock)': 10000,
+    'Offhire Cost': 1000,
+    'Owner Cost': 120000,
+    'Owner Total Cost': 10000,
+    'Yard Total Contract': 2000,
     'Sum Internal Adjusment': 1000,
-    'Additional Discount': {
-      discount : '',
-      'After Discount' : 15 
+    'General Discount': {
+      discount : '11',
+      'after' : 10000
     },
-  },
-  {
-    'comment': '', // from here
-    'Yard Location' : '',
-    'Responsible' : '',
-    'Yard Quote' : '',
-    'Contract' : '',
-  }]
+    'Additional Discount': {
+      discount : '10',
+      'after' : 10000
+    }
+  }
+
 
   allDataTender : object = {}
-  public id_proyek
+  id_proyek : any
+  enableSelectYard : boolean = true
+
   ngOnInit(): void {
     this.projectService.getDataProjects()
     .subscribe(({data} : any) => {
@@ -99,8 +94,13 @@ export class TenderBateraComponent  {
       this.allDataTender['tender'] = data
     })
   }
+
+  getYard(data){
+    console.log(data)
+  }
   
   getProject(id){
+    this.enableSelectYard = false
     let {work_area, id_proyek} = this.allDataTender['project'][id]
     this.id_proyek = id_proyek
     let tender = this.allDataTender['tender'][id]
@@ -159,7 +159,7 @@ export class TenderBateraComponent  {
   editLoadDetails(row){
     let {data} = row
     const dialog = this.dialog.open(UpdateLoadDetailsComponent, {
-      // disableClose : true,
+      disableClose : true,
       autoFocus:true, 
       data : {
         project : this.id_proyek,

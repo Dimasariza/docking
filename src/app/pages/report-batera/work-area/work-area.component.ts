@@ -23,10 +23,12 @@ export class WorkAreaComponent implements OnInit {
   unitType = [["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
   responsible = []
   variantWorkContainer : any = []
+  project_id : any
   modelData : any = {}
 
   ngOnInit(): void {
     this.variantWorkContainer = this.data.data.variant_work
+    this.project_id = this.data.data.id_proyek
     const data = this.data.subData?.data
       switch (this.data.dial) {
         case 'Add':
@@ -65,7 +67,6 @@ export class WorkAreaComponent implements OnInit {
   }
 
   addVariantWorkaData(newData){
-    console.log(newData)
     let submitData = newData.value
     this.variantWorkContainer === null ||
     this.variantWorkContainer === undefined ||
@@ -78,15 +79,10 @@ export class WorkAreaComponent implements OnInit {
       id: this.variantWorkContainer.length, 
       type : "pekerjaan"
     }
-    const variant_work = [
+    this.submitData([
       ...this.variantWorkContainer,
       submitData
-    ]
-    this.reportService.updateVarianWork({variant_work}, this.data.id)
-    .subscribe(() => {
-      this.onSuccess.emit()
-      this.close()
-    })
+    ])
   }
 
   updateWorkAreaData = (data, parentIndex, newData) => {
@@ -106,11 +102,7 @@ export class WorkAreaComponent implements OnInit {
   updateVariantWorkData(newData){
     let parentIndex = this.modelData?.id.toString().split('')
     const variant_work = this.updateWorkAreaData(this.variantWorkContainer, parentIndex, newData.value)
-    this.reportService.updateVarianWork({variant_work}, this.data.id)
-    .subscribe(() => {
-      this.onSuccess.emit()
-      this.close()
-    })
+    this.submitData(variant_work)
   }
 
   addSubJobData = (data, newData, parentIndex) => {
@@ -133,7 +125,11 @@ export class WorkAreaComponent implements OnInit {
     } 
     let parentIndex = this.modelData?.id.toString().split('')
     const variant_work = this.addSubJobData(this.variantWorkContainer, submitData, parentIndex)
-    this.reportService.updateVarianWork({variant_work}, this.data.id)
+    this.submitData(variant_work)
+  }
+
+  submitData(variant_work){
+    this.reportService.updateVarianWork({variant_work}, this.project_id)
     .subscribe(() => {
       this.onSuccess.emit()
       this.close()

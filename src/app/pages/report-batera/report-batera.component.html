@@ -22,7 +22,7 @@
             <ngx-work-progress (reloadReport)="ngOnInit()" [workProgressData]="projectData"></ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work [variantWorkData]="projectData"></ngx-variant-work>
+            <ngx-variant-work (reloadReport)="ngOnInit()" [variantWorkData]="projectData"></ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
             <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>

@@ -1,38 +1,29 @@
 <nb-card>
-    <nb-card-header>
-        <div class="d-flex justify-content-between">    
-            <h5 style="color:burlywood;">Edit Job</h5>
-            <button nbButton status="danger" size="small" (click)="close()">
-                <nb-icon icon="close-square-outline"></nb-icon>
-            </button>
+    <nb-card-header class="d-flex justify-content-between">
+        <div class="w-100 mr-3">    
+            <strong>Edit Job</strong>
+            <span class="text-primary"> {{ data.job['Job No']}}.{{data.job.Job}}</span>
         </div>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline" style="font-size: 10px;"></nb-icon>
+        </button>
     </nb-card-header>
     <nb-card-body>
         <form action="">
-            <div class="row">
-                <div class="col-12">
-                    <label class="d-block" for="">Job</label>
-                    <span class="text-primary">{{data.job['Job No']}}.{{data.job.Job}}</span>
-                    <label class="d-block" for="">Departement</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Departement" [ngModel]="data.job.Dept" name="departemen" #departemen>
-                    <label class="d-block" for="">Responsible</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Responsible" [ngModel]="data.job.Resp.name" name="responsible" #responsible class="text-uppercase">
-                    <label class="d-block" for="">Start</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Start" [nbDatepicker]="startDatePicker" [ngModel]="data.job.Start" name="start" #start>
-                    <nb-datepicker #startDatePicker></nb-datepicker>
-                    <label class="d-block" for="">Stop</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Stop" [nbDatepicker]="stopDatePicker" [ngModel]="data.job.Stop" name="end" #end>
-                    <nb-datepicker #stopDatePicker></nb-datepicker>
-                    <label class="d-block" for="">Volume</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Volume" name="volume" [ngModel]="data.job.Vol" #volume>
-                    <label class="d-block" for="">Unit</label>
-                    <nb-select [placeholder]="data.job.Unit" class="" size="small" name="satuan" fullWidth>
-                        <nb-option *ngFor="let value of unitType ; let id=index;" [value]="unitType[id]">{{value}}</nb-option>
-                    </nb-select>    
-                    <label class="d-block" for="">Unit Price Contract</label>
-                    <input type="text" fieldSize="small" nbInput placeholder="Unit Price Contract" (ngModel)="unitPrice" #unitPrice name="unit_price_contract">
-                </div>
-            </div>
+            <label class="d-block" for="">Departement</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Departement" [ngModel]="data.job.Dept" name="departemen" #departemen>
+            <label class="d-block" for="">Responsible</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Responsible" [ngModel]="data.job.Resp.name" name="responsible" #responsible class="text-uppercase">
+            <label class="d-block" for="">Start</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Start" [nbDatepicker]="startDatePicker" [ngModel]="data.job.Start" name="start" #start>
+            <nb-datepicker #startDatePicker></nb-datepicker>
+            <label class="d-block" for="">Stop</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Stop" [nbDatepicker]="stopDatePicker" [ngModel]="data.job.Stop" name="end" #end>
+            <nb-datepicker #stopDatePicker></nb-datepicker>
+            <label class="d-block" for="">Volume</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Volume" name="volume" [ngModel]="data.job.Vol" #volume>
+            <label class="d-block" for="">Unit Price Contract</label>
+            <input type="text" fullWidth fieldSize="small" nbInput placeholder="Unit Price Contract" (ngModel)="unitPrice" #unitPrice name="unit_price_contract">
 
             <button nbButton type="submit" status="success" fullWidth class="my-2"> 
                 Submit

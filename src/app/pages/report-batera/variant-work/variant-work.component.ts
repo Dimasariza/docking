@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
@@ -48,8 +48,6 @@ export class VariantWorkComponent implements OnChanges {
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
-  shipYard : boolean = false
-  shipOwner : boolean = false
 
   updateSort(sortRequest: NbSortRequest): void {
     return  this.subMenuProject.updateSort(sortRequest)
@@ -62,11 +60,16 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   @Input() variantWorkData : any = ""
+  shipYard : boolean = false
+  shipOwner : boolean = false
   
+
   ngOnChanges(){
+    console.log(this.variantWorkData)
     this.variantWorkData === null ||
-    this.variantWorkData === undefined ? null :
-    this.dataSource = this.dataSourceBuilder.create(this.variantWorkData.variant_work.map(work => 
+    this.variantWorkData === undefined ||
+    this.variantWorkData?.variant_work[0] === null ? null :
+    this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => 
     this.populateData(work)))
   }
 
@@ -116,6 +119,9 @@ export class VariantWorkComponent implements OnChanges {
         data : this.variantWorkData
       }
     })
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.reloadReport.emit('complete')
+    });
   }
 
   addSubVariantDial(data){
@@ -128,23 +134,9 @@ export class VariantWorkComponent implements OnChanges {
         subData : data
       }
     })
-  }
-
-  deleteVariant(id){
-    let parentIndex = id.toString().split('')
-    let postBody
-    const deleteData = this.subMenuProject.reconstructData(this.variantWorkData.variant_work, parentIndex)
-    deleteData.length === 0 ||
-    deleteData === undefined ? 
-    postBody = {variant_work : [null]} : postBody = {work_area : deleteData}
-    console.log(postBody)
-    const {id_proyek} = this.variantWorkData
-    this.reportService.updateVarianWork(postBody, id_proyek)
-    .subscribe(res => {
-
-      console.log(res)
-      // this.dataSource = this.dataSourceBuilder.create(postBody)
-    })
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.reloadReport.emit('complete')
+    });
   }
 
   updateVariantDial(data){
@@ -157,5 +149,58 @@ export class VariantWorkComponent implements OnChanges {
         subData : data
       }
     })
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.reloadReport.emit('complete')
+    });
   }
+
+  updateWorkAreaData = (data, parentIndex, newData) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
+      } else if(i == parentIndex[0]) {
+        let item
+        w?.items ? item = w.items : item = null
+        return {...w, ...newData, items : item}
+      }
+      return w
+    })
+  }
+
+  approvedByYard(newData){
+    this.shipYard = true
+    let postData = { ...newData.data, yardApproval : this.shipYard}
+    const parentIndex = postData.id.toString().split('')
+    const approveData = this.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
+    this.updateVariantWork(approveData)
+  }
+  
+  approvedByOwner(newData){
+    this.shipOwner = true
+    let postData = { ...newData.data, ownerApproval : this.shipOwner}
+    const parentIndex = postData.id.toString().split('')
+    const approveData = this.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
+    this.updateVariantWork(approveData)
+  }
+
+
+  deleteVariant(id){
+    let parentIndex = id.toString().split('')
+    let postBody
+    const deleteData = this.subMenuProject.reconstructData(this.variantWorkData.variant_work, parentIndex)
+    deleteData.length === 0 ||
+    deleteData === undefined ? 
+    postBody = [null] : postBody =  deleteData
+    this.updateVariantWork(postBody)
+  }
+  
+  @Output() reloadReport = new EventEmitter<string>();
+  updateVariantWork(variant_work){
+    this.reportService.updateVarianWork({variant_work}, this.variantWorkData.id_proyek)
+    .subscribe(() => 
+    this.reloadReport.emit('complete')
+    )
+  }
+
 }
