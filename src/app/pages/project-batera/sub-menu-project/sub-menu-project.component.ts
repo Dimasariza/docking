@@ -1,5 +1,5 @@
 import { KeyValue } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
@@ -235,6 +235,8 @@ export class SubMenuProjectComponent implements OnInit {
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+  @Output() reloadPage = new EventEmitter<string>();
+
 
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -291,6 +293,10 @@ export class SubMenuProjectComponent implements OnInit {
       break;
       case 'Monitoring' :
         this.navigateTo(this.id_proyek)
+        
+      break;
+      case 'Refresh' :
+        this.reloadPage.emit('complete')
       break;
     }
   }

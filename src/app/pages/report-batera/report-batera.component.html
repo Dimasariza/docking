@@ -1,14 +1,15 @@
 <nb-card>
-    <nb-card-header>
+    <nb-card-header class="d-flex">
         <h3>{{subProjectData?.head}}</h3>
-        <button nbButton status="primary" class="my-2" outline size="tiny" (click)="buttonAct(button.menu)" *ngFor="let button of buttonKey">
-            <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
-            {{button.menu}}
-        </button>
+        <div>
+            <button nbButton status="primary" class="mx-4" outline size="tiny" (click)="projectStatusDial()">
+                <nb-icon icon="info-outline" pack="eva"></nb-icon>
+            </button>
+        </div>
     </nb-card-header>
     <div class="m-3">
         <h6>Description</h6>    
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Atque, incidunt, quis accusantium voluptas nisi explicabo, ipsam veritatis repudiandae sed dolorem autem commodi possimus ipsa reiciendis iusto sapiente magnam tempora voluptatum!</p>
+        <p>{{subProjectData?.tender.komentar}}</p>
     </div> 
 </nb-card>
 
@@ -19,19 +20,19 @@
             <ngx-pic></ngx-pic>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress (reloadReport)="ngOnInit()" [workProgressData]="projectData"></ngx-work-progress>
+            <ngx-work-progress (reloadPage)="ngOnInit()" [workProgressData]="projectData"></ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work (reloadReport)="ngOnInit()" [variantWorkData]="projectData"></ngx-variant-work>
+            <ngx-variant-work (reloadPage)="ngOnInit()" [variantWorkData]="projectData"></ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
-            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
+            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Surat Teguran">
-            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'surat_teguran'"></ngx-bast>
+            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'surat_teguran'"></ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Close Out Report (COR)">
-            <ngx-bast (reloadReport)="ngOnInit()" [typeMenu]="'close_out_report'"></ngx-bast>
+            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'close_out_report'"></ngx-bast>
         </nb-tab>
       </nb-tabset>
 </nb-card>

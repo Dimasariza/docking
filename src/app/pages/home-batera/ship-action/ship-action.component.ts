@@ -92,5 +92,5 @@ export class ShipActionComponent implements OnInit {
     }
   }
 
-  close(){this.dialogRef.close(); }
+  close(){this.dialogRef.close()}
 }

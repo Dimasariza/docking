@@ -5,12 +5,6 @@ import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
 
-const buttonKey = [
-  { icon : "info-outline",
-    menu : "Project Status"
-  },
-];
-
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
@@ -23,17 +17,14 @@ export class ReportBateraComponent {
     ) {
   }
 
-  buttonKey = buttonKey
   projectData : any
   subProjectData : any
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-
     this.projectService.getSubProjectData(id) 
     .subscribe(({data} : any) => {
       this.subProjectData = data
-      console.log(data)
       this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
     })
 
@@ -44,18 +35,10 @@ export class ReportBateraComponent {
   }
 
   projectStatusDial(){
-    const dialogRef = this.dialog.open(ProjectStatusComponent, {
+    this.dialog.open(ProjectStatusComponent, {
       disableClose : true, 
       autoFocus:true, 
     })
-  }
-
-  buttonAct(desc){
-    switch (desc){
-      case "Project Status" :
-        this.projectStatusDial()
-        break; 
-    }
   }
 }
 

@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../report-batera.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class WorkAreaComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<WorkAreaComponent>,
               private datepipe : DatePipe,
               private reportService : ReportBateraService,
+              private profileService : ProfileBateraService,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
@@ -48,6 +50,15 @@ export class WorkAreaComponent implements OnInit {
           this.modelData['head'] = `${data['Job No']}. ${data.Job}`
         break;
     }
+
+    this.profileService.getUserData(1, 10, '', "shipyard", '')
+    .subscribe(({data} : any) => {
+      this.responsible =
+      data.map(user => ({
+          name : user.username,
+          id: user.id_user
+        }))
+    })
   }
 
   workAreaBtn(newData){

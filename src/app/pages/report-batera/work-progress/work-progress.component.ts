@@ -17,10 +17,6 @@ const useButtons = [
   desc: 'Refresh'
   },
   {
-    icon: 'flag-outline',
-    desc: 'Add Job'
-  },
-  {
     icon: 'external-link',
     desc: 'Export to Excel'
   },
@@ -114,9 +110,8 @@ export class WorkProgressComponent {
 
   onClick(desc){
     switch (desc) {
-      case 'Add Job' :
-        break;
       case 'Refresh' :
+        this.reloadPage.emit('complete')
         break;
     }
   }
@@ -151,11 +146,11 @@ export class WorkProgressComponent {
     this.updateWorkApproval(approveData)
   }
 
-  @Output() reloadReport = new EventEmitter<string>();
+  @Output() reloadPage = new EventEmitter<string>();
   updateWorkApproval(work_area){
     this.reportService.updateWorkProgress({work_area}, this.projectId)
     .subscribe(() =>
-    this.reloadReport.emit('complete')
+    this.reloadPage.emit('complete')
     )
   }
 
@@ -184,7 +179,7 @@ export class WorkProgressComponent {
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.reloadReport.emit('complete')
+      this.reloadPage.emit('complete')
     });
   }
 }

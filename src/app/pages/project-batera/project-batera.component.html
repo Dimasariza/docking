@@ -1,6 +1,6 @@
 <nb-card>
   <nb-card-body>
-    <h5>Tasks | Mine (60 Days)</h5>
+    <h5>Tasks | Mine</h5>
     <button nbButton class="mx-1" ghost shape="rectangle">
       <nb-icon icon="menu-outline" pack="eva"></nb-icon>
         Projects
@@ -40,7 +40,7 @@
     <nb-card-body>
       <nb-card-header class="d-flex justify-content-between w-100" >
           <h5>Project List</h5>
-          <button nbButton outline status="primary" (click)="addProjectDial()" >Add Project</button>
+          <button nbButton outline size="small" status="primary" (click)="addProjectDial()" >Add Project</button>
         </nb-card-header>
 
       <ngx-datatable [class]="'bootstrap'" [rows]="allProjectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>

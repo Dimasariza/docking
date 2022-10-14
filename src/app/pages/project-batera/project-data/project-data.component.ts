@@ -80,7 +80,8 @@ export class ProjectDataComponent implements OnInit {
     let postBody = this.checkPostBody(newData.value)
     postBody = {
       ...postBody,
-      ...this.transformDate(postBody)
+      ...this.transformDate(postBody),
+      selected_yard : ""
     }
     this.projectService.addDataProject(postBody)
     .subscribe(res => {

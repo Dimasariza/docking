@@ -20,9 +20,7 @@ interface FSEntry {}
 export class ProjectBateraComponent {
   constructor(
     private dialog : MatDialog,
-    private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     private projectService:ProjectBateraService,
-    private trackingService : TrackingBateraService,
     private subMenuProject : SubMenuProjectComponent,
     private profileService : ProfileBateraService
     ) {

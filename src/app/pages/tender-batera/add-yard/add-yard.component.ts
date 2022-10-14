@@ -1,4 +1,4 @@
-import { Component, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
@@ -18,6 +18,7 @@ export class AddYardComponent  {
     private projectComp : ProjectDataComponent,
     @Inject( MAT_DIALOG_DATA ) public data
   ) { }
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
   ngOnInit(): void {
     this.profileService.getUserData(1, 10, '', "shipyard", '')
@@ -46,8 +47,9 @@ export class AddYardComponent  {
     this.tenderService.addDataTender({...body, id_proyek : this.data})
     .subscribe(res => {
       console.log(res)
+      this.onSuccess.emit()
+      this.close()
     })
-    this.close()
   };
 
   close(){this.dialogRef.close()};

@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraComponent } from './home-batera.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 const routes: Routes = [{
     path: '',
@@ -16,5 +17,6 @@ export class HomeBateraRoutingModule { }
 
 export const routedComponents = [
   HomeBateraComponent,
-  ShipActionComponent
+  ShipActionComponent,
+  DeleteDialogComponent
 ];

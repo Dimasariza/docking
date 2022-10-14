@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Inject } from '@angular/core';  
+import { Component, EventEmitter, Inject, Output } from '@angular/core';  
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../../report-batera/report-batera.service';
@@ -21,6 +21,8 @@ export class WorkAreaComponent {
   ) {}
   
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
+  @Output() reloadPage = new EventEmitter<string>();
+
   close(){ this.dialogRef.close();}
 
   public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"Yard cost", "Yard cancelled jobs"]

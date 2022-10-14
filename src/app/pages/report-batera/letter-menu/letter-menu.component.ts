@@ -26,13 +26,12 @@ export class LetterMenuComponent  {
   ) { }
 
   @Input() typeMenu : any
+  @Output() reloadPage = new EventEmitter<string>();
   buttons = buttons
   menuData : any = []
   pojectId : any
-  // @Output() reloadReport = new EventEmitter<string>();
 
   ngOnInit(){
-    // this.reloadReport.emit()
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     this.pojectId = id
     this.reportService.getDocument(id, "", this.typeMenu)
@@ -57,6 +56,7 @@ export class LetterMenuComponent  {
         this.addLetterDial()
         break
       case 'Refresh' :
+        this.reloadPage.emit()
         break
     }
   }

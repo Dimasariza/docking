@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraService } from './home-batera.service';
 import { environment } from "../../../environments/environment"
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'ngx-home-batera',
@@ -69,9 +70,17 @@ export class HomeBateraComponent implements OnInit {
   };
 
   deleteShip(id){
-    this.homeservice.deleteShip(id)
-    .subscribe( ({status} : any) => {
-      this.ngOnInit();
+    const dialog = this.dialog.open(DeleteDialogComponent ,{
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        id : id,
+        dial : "Delete Ship",
+      }
+    });
+
+    dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
     });
   };
 

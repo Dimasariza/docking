@@ -1,0 +1,16 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>{{deleteData.dial}}</strong>
+
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <span class="d-block">Are you sure to delete this?</span>
+        <div class="w-100 text-center">
+            <button nbButton size="small" status="danger" class="mx-1" (click)="acceptDeletion()"  >Yes</button>
+            <button nbButton size="small" status="basic" class="mx-1"  (click)="close()" >No</button>
+        </div>
+    </nb-card-body>
+</nb-card>

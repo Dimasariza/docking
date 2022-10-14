@@ -2,8 +2,11 @@
   <div class="row">
     <div *ngIf="allDataTender" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
       <div class="d-flex justify-content-between">
-        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable['Yard']}}</Span></h5>
-        <button nbButton size="tiny" status="primary"  (click)="addContractDial()" [disabled]="!id_proyek">Add Contract</button>
+        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable['Yard'] || ''}}</Span></h5>
+        <div>
+          <button nbButton size="tiny" class="mx-1" status="danger"  (click)="unselectTender()" outline [disabled]="!id_tender">Unselect Tender</button>
+          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()" [disabled]="!id_proyek">Add Contract</button>
+        </div> 
       </div>
           <div>
             <span class="d-block label">Project Name</span>  
@@ -14,7 +17,6 @@
             <nb-select *ngIf="allDataTender" [placeholder]="allDataTender.yard || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="enableSelectYard" #selectedYard class="m-1">
               <nb-option *ngFor="let value of allDataTender?.['yard']; let id=index;" [value]="allDataTender?.['yard'][id]" (click)="getYard(projectNameVal)">{{value.name}}</nb-option>
             </nb-select>
-            <!-- <span class="d-block text-capitalize">{{dataTable.Yard || 'Data Not Available'}}</span> -->
             <span class="d-block label">Yard Location</span> 
             <span class="d-block text-capitalize">{{dataTable['Yard Location'] || 'Data Not Available'}}</span>
             <span class="d-block label">Responsible</span>
@@ -45,10 +47,6 @@
             </ng-template>
         </div>
         <div class="text-center mt-3">
-            <button nbButton class="mx-1" status="primary" outline size="small">
-                <nb-icon icon="cloud-upload-outline"></nb-icon>
-                Publish
-            </button>
             <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
         </div>
       </nb-card>

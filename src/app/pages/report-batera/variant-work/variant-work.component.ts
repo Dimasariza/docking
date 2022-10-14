@@ -43,8 +43,8 @@ export class VariantWorkComponent implements OnChanges {
   ) { }
 
   useButtons = useButtons
-  defaultColumns = [ 'Status', '%', 'Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
-  allColumns = ['Job', ...this.defaultColumns, 'Approved', "Comment" , 'edit'];
+  defaultColumns = ['Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
+  allColumns = ['Job', '%', ...this.defaultColumns, 'Approved', "Comment" , 'edit'];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -74,7 +74,9 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   populateData = (work) => {          
-    const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, id , responsible, unit} = work  
+    const {items, jobNumber, jobName, start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, id ,yardApproval, ownerApproval,
+      responsible, unit, status, progress} = work  
+      console.log(work)
       return {
       data: {
         "Job No": jobNumber,
@@ -89,8 +91,12 @@ export class VariantWorkComponent implements OnChanges {
         "Category" : category,
         "Remarks" : variantRemarks,
         "Responsible" : responsible,
+        "kind" : items?.length ? 'dir' : 'doc',
+        "Status" : status,
+        progress,
         id,
-        "kind" : items?.length ? 'dir' : 'doc'
+        yardApproval,
+        ownerApproval,
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -101,11 +107,8 @@ export class VariantWorkComponent implements OnChanges {
       case 'Add Job' :
         this.addVariantDial()
       break;
-      case 'shipYard':
-        this.shipYard = !this.shipYard
-      break;
-      case 'shipOwner':
-        this.shipOwner =! this.shipOwner
+      case 'Refresh':
+        this.reloadPage.emit('complete')
       break;
     }
   }
@@ -120,7 +123,7 @@ export class VariantWorkComponent implements OnChanges {
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.reloadReport.emit('complete')
+      this.reloadPage.emit('complete')
     });
   }
 
@@ -135,7 +138,7 @@ export class VariantWorkComponent implements OnChanges {
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.reloadReport.emit('complete')
+      this.reloadPage.emit('complete')
     });
   }
 
@@ -150,7 +153,7 @@ export class VariantWorkComponent implements OnChanges {
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.reloadReport.emit('complete')
+      this.reloadPage.emit('complete')
     });
   }
 
@@ -195,11 +198,11 @@ export class VariantWorkComponent implements OnChanges {
     this.updateVariantWork(postBody)
   }
   
-  @Output() reloadReport = new EventEmitter<string>();
+  @Output() reloadPage = new EventEmitter<string>();
   updateVariantWork(variant_work){
     this.reportService.updateVarianWork({variant_work}, this.variantWorkData.id_proyek)
     .subscribe(() => 
-    this.reloadReport.emit('complete')
+    this.reloadPage.emit('complete')
     )
   }
 

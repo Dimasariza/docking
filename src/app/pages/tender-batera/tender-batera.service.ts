@@ -31,4 +31,14 @@ export class TenderBateraService {
         const url = this.apiUrl + "/tender"
         return this.httpClient.post(url, body)
     }
+
+    selectTender(id){
+        const url = this.apiUrl + "/tender/" + id + "/select_tender"
+        return this.httpClient.post(url, "")
+    }
+
+    unselectTender(id){
+        const url = this.apiUrl + "/tender/" + id + "/unselect_tender"
+        return this.httpClient.delete(url)
+    }
 }

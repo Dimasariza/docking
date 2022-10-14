@@ -31,7 +31,15 @@
                       {{row.data['Job'] || '-'}}
                 </td>
             </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'%'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-progress-bar [value]="row.data.progress" [displayValue]="true" status="primary"></nb-progress-bar>
+                </td>
+            </ng-container>
             
+
             <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
