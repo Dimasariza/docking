@@ -12,17 +12,17 @@ import { ProjectBateraService } from '../project-batera.service';
   templateUrl: './project-data.component.html',
 })
 export class ProjectDataComponent implements OnInit {
-  constructor(
-    protected dateService: NbDateService<Date>,
-    private dialogRef: MatDialogRef<ProjectDataComponent>,
-    private homeService : HomeBateraService,
-    private profileService : ProfileBateraService,
-    private projectService : ProjectBateraService,
-    public datepipe: DatePipe,
-    public activatedRoute : ActivatedRoute,
-    @Inject( MAT_DIALOG_DATA ) public data ) { 
-    this.min = this.dateService.addMonth(this.dateService.today(), -1);
+  constructor(protected dateService: NbDateService<Date>,
+              private dialogRef: MatDialogRef<ProjectDataComponent>,
+              private homeService : HomeBateraService,
+              private profileService : ProfileBateraService,
+              private projectService : ProjectBateraService,
+              public datepipe: DatePipe,
+              public activatedRoute : ActivatedRoute,
+              @Inject( MAT_DIALOG_DATA ) public data ) { 
+  this.min = this.dateService.addMonth(this.dateService.today(), -1);
   }
+  
   min: Date;
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
