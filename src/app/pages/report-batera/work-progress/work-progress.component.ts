@@ -106,7 +106,6 @@ export class WorkProgressComponent {
     }
   }
 
-
   onClick(desc){
     switch (desc) {
       case 'Refresh' :
@@ -152,7 +151,6 @@ export class WorkProgressComponent {
   updateWorkApproval(work_area){
     this.reportService.updateWorkProgress({work_area}, this.projectId)
     .subscribe((res) =>{
-      console.log(res)
       this.reloadPage.emit('complete')
     })
   }

@@ -1,10 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ReportBateraService } from '../report-batera.service';
-import { Upload } from "../../../shared/base/upload"
 
 @Component({
   selector: 'ngx-letter-doc',

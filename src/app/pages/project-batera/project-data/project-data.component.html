@@ -24,11 +24,11 @@
         <nb-select class="w-100" placeholder="Phase" size="small" #phase [ngModel]="projectData?.phase" name="phase">
           <nb-option [value]="newProjectMenu.Phase[id]" *ngFor="let status of newProjectMenu.phase; let id=index;">{{status}}</nb-option>
         </nb-select>
-        <label *ngIf="data.dial === 'Update'" for="Selected Yard" class="w-100 text-muted">Selected Yard</label>
+        <!-- <label *ngIf="data.dial === 'Update'" for="Selected Yard" class="w-100 text-muted">Selected Yard</label>
         <nb-select *ngIf="data.dial === 'Update'" size="small" class="w-100" name="selected_yard" #selectedYard (ngModel)="selectedYard" placeholder="No Data To Display" 
         [readonly]="phase.value === 'requisition' ? false : true">
           <nb-option [value]="newProjectMenu.BaseCurrency[id]" *ngFor="let status of newProjectMenu.BaseCurrency; let id=index;">{{status}}</nb-option>
-        </nb-select>
+        </nb-select> -->
         <label for="Base Currency" class="text-muted d-block" fieldSize="small">Base Currency</label>
         <nb-select class="w-100" placeholder="Base Currency" size="small"  #currency [ngModel]="projectData?.mata_uang" name="mata_uang">
           <nb-option [value]="newProjectMenu.BaseCurrency[id]" *ngFor="let status of newProjectMenu.BaseCurrency; let id=index;">{{status}}</nb-option>

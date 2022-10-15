@@ -36,10 +36,19 @@
                 <nb-select [placeholder]="modelData.Unit || 'Unit'" class="w-100" size="small" name="unit" #unit [ngModel]="modelData?.Unit" [disabled]="disabledEdit">
                     <nb-option *ngFor="let value of unitType[0]; let id=index;" [value]="value">{{value}}</nb-option>
                 </nb-select>
-                <span class="p-2 d-block">Unit Price</span>
-                <input type="number" nbInput fullWidth placeholder="Unit Price Add On" fieldSize="small" required name="unitPrice" [disabled]="disabledEdit" #unitPrice [ngModel]="modelData?.['Total Price Add On']" (change)="totalPrice = volume.value * unitPrice.value">
-                <span class="p-2 d-block">Total Price Budget</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Add On" readonly fieldSize="small" required [(ngModel)]="totalPrice" [disabled]="disabledEdit" #totalPriceAddOn name="totalPriceAddOn">
+                <div>
+                    <span class="p-2 d-block">Unit Price Add On</span>
+                    <input type="number" nbInput fullWidth placeholder="Unit Price Add On" fieldSize="small" required name="unitPrice" [disabled]="disabledEdit" #unitPrice [ngModel]="modelData?.['Total Price Add On']" (change)="totalPrice = volume.value * unitPrice.value">
+                    <span class="p-2 d-block">Total Price Add On</span>
+                    <input type="text" nbInput fullWidth placeholder="Total Price Add On" readonly fieldSize="small" required [(ngModel)]="totalPrice" [disabled]="disabledEdit" #totalPriceAddOn name="totalPriceAddOn">
+                </div>
+                
+                <div>
+                    <span class="p-2 d-block">Unit Actual</span>
+                    <input type="number" nbInput fullWidth placeholder="Unit Price Add On" fieldSize="small" required name="unitPrice" [disabled]="disabledEdit" #unitPrice [ngModel]="modelData?.['Total Price Add On']" (change)="totalPrice = volume.value * unitPrice.value">
+                    <span class="p-2 d-block">Total Price Actual</span>
+                    <input type="text" nbInput fullWidth placeholder="Total Price Add On" readonly fieldSize="small" required [(ngModel)]="totalPrice" [disabled]="disabledEdit" #totalPriceAddOn name="totalPriceAddOn">
+                </div>
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Progress</span>

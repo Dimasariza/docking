@@ -25,7 +25,7 @@ export class WorkAreaComponent {
 
   close(){ this.dialogRef.close();}
 
-  public category = ["Owner Exp- Supplies", "Services", "Class", "Others" ,"Yard cost", "Yard cancelled jobs"]
+  public category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs"]
   public rank = ["Critical", "High", "Medium", "Low"]
   public unitType = [["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
   public responsible = []
@@ -99,7 +99,6 @@ export class WorkAreaComponent {
       id: this.workAreaContainer.length, 
       type : "pekerjaan"
     }]
-    console.log({work_area})
     this.reportService.updateWorkProgress({work_area}, this.data.id)
     this.tenderService.updateWorkArea({work_area}, this.data.id)
     this.projectSerivce.addProjectJob({work_area}, this.data.id)
@@ -126,7 +125,6 @@ export class WorkAreaComponent {
   updateWorkArea(newData){
     let parentIndex = this.data.parentId.toString().split('')
     const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, newData.value)
-    console.log({work_area})
     this.reportService.updateWorkProgress({work_area}, this.data.id)  
     .subscribe(res => console.log(res))
     this.tenderService.updateWorkArea({work_area}, this.data.id)

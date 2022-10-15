@@ -95,6 +95,7 @@ export class WorkAreaComponent implements OnInit {
   }
 
   updateWorkProgress(newData){
+    console.log(newData) 
     const parentIndex = this.modelData.id.toString().split('')
     const work_area = this.updateWorkAreaData(this.workProgressContainer, parentIndex, newData.value)
     this.reportService.updateWorkProgress({work_area}, this.project_id)
