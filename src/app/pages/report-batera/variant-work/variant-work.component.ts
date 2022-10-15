@@ -3,7 +3,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { ReportBateraService } from '../report-batera.service';
-import { WorkAreaComponent } from '../work-area/work-area.component';
+import { VariantWorkAreaComponent } from '../variant-work-area/variant-work-area.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -117,7 +117,7 @@ export class VariantWorkComponent implements OnChanges {
 
 
   addVariantDial(){
-    const dialogRef = this.dialog.open(WorkAreaComponent, {
+    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
@@ -131,7 +131,7 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   addSubVariantDial(data){
-    const dialogRef = this.dialog.open(WorkAreaComponent, {
+    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
@@ -147,7 +147,7 @@ export class VariantWorkComponent implements OnChanges {
 
   updateVariantDial(data){
     console.log(data)
-    const dialogRef = this.dialog.open(WorkAreaComponent, {
+    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {

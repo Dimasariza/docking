@@ -6,12 +6,12 @@ import { ReportBateraService } from '../report-batera.service';
 
 @Component({
   selector: 'ngx-work-area',
-  templateUrl: './work-area.component.html',
+  templateUrl: './variant-work-area.component.html',
   styles: [
   ]
 })
-export class WorkAreaComponent implements OnInit {
-  constructor(private dialogRef: MatDialogRef<WorkAreaComponent>,
+export class VariantWorkAreaComponent implements OnInit {
+  constructor(private dialogRef: MatDialogRef<VariantWorkAreaComponent>,
               private datepipe : DatePipe,
               private reportService : ReportBateraService,
               private profileService : ProfileBateraService,

@@ -54,9 +54,7 @@
             </button>
         </div>
     </div>
-
     <h6 class="mx-3" style="color: burlywood;">Work Area</h6>
-
     <div style="overflow: auto; width: 100%;">
         <div style="width: 1424px;">
             <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
@@ -80,7 +78,7 @@
                 <ng-container [nbTreeGridColumnDef]="'rank'">
                     <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                      <nb-icon icon="alert-circle-outline" [nbPopover]="row.data.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : rankColor(row.data['rank'])}"></nb-icon>
+                      <nb-icon icon="alert-circle-outline" [nbPopover]="row.data.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : rankColor(row.data['rank'].name)}"></nb-icon>
                     </td>
                 </ng-container>
 
@@ -107,10 +105,9 @@
                 <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                     <div *ngIf="!addSubJob">
                         <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
-                        <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                        <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-capitalize">{{row.data[column] || '-'}}</td>
                     </div>
                 </ng-container>
-
             </table>
         </div>
     </div>

@@ -206,7 +206,6 @@ export class SubMenuProjectComponent implements OnInit {
       Actual: 0,
     }
   } 
-
   
   rankColor(rank){
     let rankStatus 
@@ -230,7 +229,7 @@ export class SubMenuProjectComponent implements OnInit {
     return rankStatus
   }
 
-  defaultColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price','Total Price Budget', 'Category', 'Remarks'];
+  defaultColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Budget','Total Price Budget', 'Category', 'Remarks'];
   allColumns = [ 'Job No', 'rank', ...this.defaultColumns, 'Resp', 'action']
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
@@ -257,7 +256,7 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   populateData = (work) => {  
-    const {items, jobNumber, jobName, start, end, departement, volume, unitPrice , remarks, id, unit, responsible, category, rank } = work  
+    const {items, jobNumber, jobName, start, end, departement, volume, unitPrice , remarks, id, unit, responsible, category } = work  
     return {
       data: {
         "Job No": jobNumber,
@@ -267,14 +266,14 @@ export class SubMenuProjectComponent implements OnInit {
         "Start": start,
         "Stop": end,
         "Vol" : volume,
-        "Unit" : unit,
-        "Unit Price": unitPrice,
-        "Total Price Budget" : volume * unitPrice,
-        "Category" : category,
+        "Unit" : unit.name,
+        "Unit Price Budget": work['Price Budget'],
+        "Total Price Budget" : volume * work['Price Budget'],
+        "Category" : category.name,
         "Remarks" : remarks,
         "id" : id,
-        "rank" : rank,
-        "kind" : items?.length ? 'dir' : 'doc'
+        "kind" : items?.length ? 'dir' : 'doc',
+        ...work,
       },
       children: 
       work === null ||
@@ -314,7 +313,6 @@ export class SubMenuProjectComponent implements OnInit {
         project : this.projectData  
       }
     })    
-    
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
     })
@@ -331,7 +329,6 @@ export class SubMenuProjectComponent implements OnInit {
         parentId : row.data.id
       }
     })
-
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
     })
@@ -346,7 +343,6 @@ export class SubMenuProjectComponent implements OnInit {
         id : this.id_proyek
       }
     })    
-    
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
     })

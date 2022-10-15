@@ -6,6 +6,7 @@ import { ReportBateraService } from '../../report-batera/report-batera.service';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { ProjectBateraService } from '../project-batera.service';
 
+
 @Component({
   selector: 'ngx-work-area',
   templateUrl: './work-area.component.html',
@@ -18,38 +19,60 @@ export class WorkAreaComponent {
               private tenderService : TenderBateraService,
               private reportService : ReportBateraService,
               @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
-  
+  ) {
+  }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
   @Output() reloadPage = new EventEmitter<string>();
 
   close(){ this.dialogRef.close();}
 
-  public category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
-  public rank = ["Critical", "High", "Medium", "Low"]
-  public unitType = [["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
-  public responsible = []
-  public workAreaContainer : any = []
-  public totalPriceBudget = 0
-  public modelData : any = {}
+  category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
+  rank = ["Critical", "High", "Medium", "Low"]
+  jobUnit = ["Lumpsum"]
+  subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
+  status = ["Not Started", "In Progress", "Done", "Canceled"]
+  responsible = []
+  workAreaContainer : any = []
+  modelData : any = {}
+  disabledJob : boolean = false
+  totalPrice = 0
+  unitPriceLabel : string
+  unitType
+  workProgressContainer : any
   
   ngOnInit(){
     const data = this.data.data?.data
     switch (this.data.dial) {
       case 'Add':
-        this.unitType = this.unitType.filter((v, i) => i == 0)
+        this.unitType = this.jobUnit
+        this.unitPriceLabel = 'Price Budget'
         break;
       case 'Add Sub':
-        this.unitType = this.unitType.filter((v, i) => i == 1)
+        this.unitType = this.subJobUnit
         this.modelData['head'] = `${data['Job No']}. ${data.Job}` 
+        this.unitPriceLabel = 'Price Budget'
       break;
       case 'Update' :
         const parentId = this.data?.parentId.toString().split('')
         parentId.length === 1 ?
-        this.unitType = this.unitType.filter((v, i) => i == 0) :
-        this.unitType = this.unitType.filter((v, i) => i == 1)
+        this.unitType = this.jobUnit :
+        this.unitType = this.subJobUnit
         this.modelData = this.data.data.data
         this.modelData['head'] = `${data['Job No']}. ${data.Job}`
+        this.modelData['unitPriceLabel'] = this.modelData['Unit Price Budget']
+        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.Vol
+        this.disabledJob = true
+        this.unitPriceLabel = 'Price Budget'
+      break;
+      case 'Work Progress':
+        this.disabledJob = true
+        this.modelData = this.data.data.data
+        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
+        this.unitPriceLabel = 'Price Actual'
+        this.reportService.getWorkPerProject(this.data.id)
+        .subscribe(({data} : any) => {
+          this.workProgressContainer = data
+        })
       break;
     }
 
@@ -82,6 +105,25 @@ export class WorkAreaComponent {
     if(this.data.dial === "Add Sub") {
       this.addSubJob(data)
     }
+    if(this.data.dial === 'Work Progress'){
+      this.updateWorkProgress(data)
+    }
+  }
+
+  reconstructData(reData){
+    if(typeof(reData.category) === 'number'){
+      reData.category = {name : this.category[reData.category] ,id : reData.category}
+    }
+    if(typeof(reData.rank) === 'number'){
+      reData.rank = {name : this.rank[reData.rank] ,id : reData.rank}
+    }
+    if(typeof(reData.unit) === 'number'){
+      reData.unit = {name : this.unitType[reData.unit] ,id : reData.unit}
+    }
+    if(typeof(reData?.status) === 'number'){
+      reData.status = {name : this.status[reData.status] ,id : reData.status}
+    }
+    return reData
   }
 
   addWorkArea(data){
@@ -89,23 +131,15 @@ export class WorkAreaComponent {
     this.workAreaContainer === null ||
     this.workAreaContainer === undefined ||
     this.workAreaContainer[0] === null ? this.workAreaContainer = [] : null
-    const work_area = [{
+    let work_area = [
       ...this.workAreaContainer,
+      {
       ...submitData , 
-      start : this.datepipe.transform(submitData.start, 'yyyy-MM-dd'),
-      end : this.datepipe.transform(submitData.end, 'yyyy-MM-dd'),
-      category : submitData.category.toLowerCase(),
-      responsible : submitData.responsible,
+      ...this.reconstructData(submitData),
       id: this.workAreaContainer.length, 
       type : "pekerjaan"
     }]
-    this.reportService.updateWorkProgress({work_area}, this.data.id)
-    this.tenderService.updateWorkArea({work_area}, this.data.id)
-    this.projectSerivce.addProjectJob({work_area}, this.data.id)
-    .subscribe(() => {
-      this.onSuccess.emit()
-      this.close()
-    })
+    this.uploadData(work_area)
   }
   
   updateWorkAreaData = (data, parentIndex, newData) => {
@@ -118,19 +152,34 @@ export class WorkAreaComponent {
         w?.items ? item = w.items : item = null
         return {...w, ...newData, items : item}
       }
-      return w
+      return {...w,
+        start : this.datepipe.transform(newData.start, 'yyyy-MM-dd'),
+        end : this.datepipe.transform(newData.end, 'yyyy-MM-dd'),
+      }
     })
   }
 
   updateWorkArea(newData){
-    let parentIndex = this.data.parentId.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, newData.value)
-    this.reportService.updateWorkProgress({work_area}, this.data.id)  
-    .subscribe(res => console.log(res))
-    this.tenderService.updateWorkArea({work_area}, this.data.id)
-    .subscribe(res => console.log(res))
-    this.projectSerivce.addProjectJob({work_area}, this.data.id)
-    .subscribe(() => {
+    const submitData = newData.value
+    const reconstructData = {
+      ...submitData,
+      ...this.reconstructData(submitData),
+    }
+    const parentIndex = this.data.parentId.toString().split('')
+    const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
+    this.uploadData(work_area)
+  }
+
+  updateWorkProgress(newData){
+    const submitData = newData.value
+    const reconstructData = {
+      ...submitData,
+      ...this.reconstructData(submitData),
+    }
+    const parentIndex = this.modelData.id.toString().split('')
+    const work_area = this.updateWorkAreaData(this.workProgressContainer.work_area, parentIndex, reconstructData)
+    this.reportService.updateWorkProgress({work_area}, this.data.id)
+    .subscribe(() =>{
       this.onSuccess.emit()
       this.close()
     })
@@ -150,15 +199,22 @@ export class WorkAreaComponent {
   }
 
   addSubJob(newData){
-    let submitData = {...newData.value, 
+    const submitData = newData.value
+    const reconstructData = {...submitData, 
+      ...this.reconstructData(submitData),
       type : "pekerjaan",
-      start : this.datepipe.transform(newData.value.start, 'yyyy-MM-dd'),
-      end : this.datepipe.transform(newData.value.end, 'yyyy-MM-dd')
     } 
     let parentIndex = this.data.parentId.toString().split('')
-    const work_area = this.addSubJobData(this.workAreaContainer, submitData, parentIndex)
-    this.reportService.updateWorkProgress({work_area}, this.data.id)
+    const work_area = this.addSubJobData(this.workAreaContainer, reconstructData, parentIndex)
+    this.uploadData(work_area)
+  }
+
+
+  uploadData(work_area){
+    this.reportService.updateWorkProgress({work_area}, this.data.id)  
+    .subscribe(res => console.log(res))
     this.tenderService.updateWorkArea({work_area}, this.data.id)
+    .subscribe(res => console.log(res))
     this.projectSerivce.addProjectJob({work_area}, this.data.id)
     .subscribe(() => {
       this.onSuccess.emit()

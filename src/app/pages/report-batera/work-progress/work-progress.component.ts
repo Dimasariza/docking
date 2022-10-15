@@ -4,10 +4,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
+import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
 import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
-import { WorkAreaComponent } from '../work-area/work-area.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -50,7 +50,7 @@ export class WorkProgressComponent {
               private reportService : ReportBateraService
     ) {
   }
-  defaultColumns = [ 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = [ 'Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   allColumns = ['Job' ,'rank' ,'%' , 'Responsible' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -80,27 +80,22 @@ export class WorkProgressComponent {
   }
 
   populateData = (work) => {          
-    const {items, jobNumber, jobName, start, end, departement, volume, kontrak , remarks, responsible, unit, category, 
-      status, unitPrice, last_update} = work  
+    const {items, jobName, start, end, volume, responsible, unit, status, unitPrice, last_update, rank} = work  
       return {
       data: {
-        ...work,
         "Job": jobName,
-        "Dept": departement,
         "Start": start,
         "Stop": end,
         "Vol" : volume,
-        "Unit" : unit,
-        "Total Price Budget" : kontrak,
-        "Category" : category,
-        "Remarks" : remarks,
+        "Unit" : unit.name,
         "Responsible" : responsible,
-        "kind" : items?.length ? 'dir' : 'doc',
-        "Status" : status,
+        "Status" : status?.name,
         "Unit Price Actual" : unitPrice,
         "Total Price Actual" : volume * unitPrice,
         "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
-        "Job No":jobNumber,
+        "Rank" : rank?.name,
+        "kind" : items?.length ? 'dir' : 'doc',
+        ...work
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -180,8 +175,8 @@ export class WorkProgressComponent {
       autoFocus:true,
       data : {
         dial : "Work Progress",
-        subData : row,
-        data : this.workProgressData,
+        data : row,
+        parentId : row.data.id,
         id : this.projectId,
       }
     })

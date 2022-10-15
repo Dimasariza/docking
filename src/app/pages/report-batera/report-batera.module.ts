@@ -25,10 +25,10 @@ import { LetterDocComponent } from './letter-doc/letter-doc.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { FsIconComponent, ReportBateraComponent } from './report-batera.component';
 import { MatTableModule } from '@angular/material/table';
-import { WorkAreaComponent } from './work-area/work-area.component'
 import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
 import { JobSuplierComponent } from './job-suplier/job-suplier.component';
+import { VariantWorkAreaComponent } from './variant-work-area/variant-work-area.component';
 
 
 @NgModule({
@@ -41,9 +41,9 @@ import { JobSuplierComponent } from './job-suplier/job-suplier.component';
     ReportBateraComponent,
     ProjectStatusComponent,
     FsIconComponent,
-    WorkAreaComponent,
     VariantWorkComponent,
-    LetterMenuComponent
+    LetterMenuComponent,
+    VariantWorkAreaComponent
   ],
   entryComponents: [ LetterDocComponent, ProjectStatusComponent],
   imports: [
