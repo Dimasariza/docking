@@ -38,7 +38,7 @@ export class ReportBateraComponent {
     this.dialog.open(ProjectStatusComponent, {
       disableClose : true, 
       autoFocus:true, 
-      data : this.subProjectData
+      data : this.projectData
     })
   }
 }
