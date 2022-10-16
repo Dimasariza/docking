@@ -256,7 +256,7 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   populateData = (work) => {  
-    const {items, jobNumber, jobName, start, end, departement, volume, unitPrice , remarks, id, unit, responsible, category } = work  
+    const {items, jobNumber, jobName, start, end, departement, volume , remarks, id, unit, responsible, category } = work  
     return {
       data: {
         "Job No": jobNumber,
@@ -266,10 +266,10 @@ export class SubMenuProjectComponent implements OnInit {
         "Start": start,
         "Stop": end,
         "Vol" : volume,
-        "Unit" : unit.name,
+        "Unit" : unit?.name,
         "Unit Price Budget": work['Price Budget'],
         "Total Price Budget" : volume * work['Price Budget'],
-        "Category" : category.name,
+        "Category" : category?.name,
         "Remarks" : remarks,
         "id" : id,
         "kind" : items?.length ? 'dir' : 'doc',
@@ -277,7 +277,7 @@ export class SubMenuProjectComponent implements OnInit {
       },
       children: 
       work === null ||
-      work === undefined ? console.log(true) :
+      work === undefined ? null :
       items?.length ? items.map(child => this.populateData(child)) : []
     }
   }

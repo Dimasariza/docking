@@ -71,12 +71,13 @@ export class WorkProgressComponent {
   shipYard : boolean = false
   shipOwner : boolean = false
   
-
   ngOnChanges(){
     this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
-    this.workProgressData ?
+    this.workProgressData?.work_area === null ||
+    this.workProgressData?.work_area === undefined ||
+    this.workProgressData?.work_area[0] === null ? null :
     this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => 
-    this.populateData(work)) as TreeNode<FSEntry>[]) : null
+    this.populateData(work)) as TreeNode<FSEntry>[])
   }
 
   populateData = (work) => {          

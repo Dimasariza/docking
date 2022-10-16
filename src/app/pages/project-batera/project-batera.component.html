@@ -5,27 +5,33 @@
       <nb-icon icon="menu-outline" pack="eva"></nb-icon>
         Projects
     </button>
-    <input nbInput id="search" class="search-input mx-3" placeholder="Search">
-    <nb-select selected="1" class="mx-3">
-      <nb-option value="1">Reposition</nb-option>
-      <nb-option value="2">Plan</nb-option>
-      <nb-option value="3">Evaluation</nb-option>
-      <nb-option value="3">Finish</nb-option>
+    <input nbInput fieldSize="small" id="search" class="search-input mx-3" placeholder="Search">
+
+    <nb-select size="small" placeholder="Status" class="mx-1 w-25">
+      <nb-option *ngFor="let stat of status;let id = index;" [value]="1">{{stat}}</nb-option>
     </nb-select>
 
-    <nb-select selected="1" class="mx-3">
-      <nb-option value="1">Responsible</nb-option>
-      <nb-option value="2">SS</nb-option>
+    <nb-select size="small" placeholder="Responsible" class="mx-1 w-25">
+      <nb-option *ngFor="let value of responsible; let id = index;" [value]="1">{{value.username}}</nb-option>
     </nb-select>
          
-        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)" equalColumnsWidth>
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
   
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
+
+          <ng-container [nbTreeGridColumnDef]="'icon'">
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Job No</th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded">
+              </ngx-fs-icon>
+              {{row?.data?.jobNumber}}
+            </td>
+          </ng-container>
       
-          <ng-container *ngFor="let column of allColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
+          <ng-container *ngFor="let column of columnContents; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
               <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
-              {{column}}
+                {{columnHead[index]}}
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
                 {{row.data[column] || '-'}}

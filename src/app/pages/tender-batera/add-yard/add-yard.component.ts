@@ -44,12 +44,12 @@ export class AddYardComponent  {
 
   onSubmit(data){
     let body = this.projectComp.checkPostBody(data.value)
-    this.tenderService.addDataTender({...body, id_proyek : this.data})
-    .subscribe(res => {
-      console.log(res)
-      this.onSuccess.emit()
-      this.close()
-    })
+    console.log(body)
+    // this.tenderService.addDataTender({...body})
+    // .subscribe(res => {
+    //   this.onSuccess.emit()
+    //   this.close()
+    // })
   };
 
   close(){this.dialogRef.close()};

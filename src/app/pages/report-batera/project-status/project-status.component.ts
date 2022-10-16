@@ -37,46 +37,63 @@ export class ProjectStatusComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.data?.work_area === null ||
+    this.data?.work_area === undefined ||
+    this.data?.work_area[0] === null ? null :
     this.reGroupData(this.data.work_area)
   }
 
   reGroupData(work_area){
-    work_area.map(w => {
-      console.log(w)
-      const id = w.rank.id
-      const status = w?.status?.name
-      if(status == 'In Progress'){
-        this.progressData[id].progress++
-      } else if(status == 'Done'){
-        this.progressData[id].done++
-      } else if(status == 'Canceled'){
-        this.progressData[id].cancel++
-      } else {
-        this.progressData[id].notStart++
-      }
-      const endDate = this.datePipe.transform(w.end, 'yyyy-MM-dd')
+    work_area.map(job => {
+      console.log(job)
+      const id = job?.rank?.id
+      const status = job?.status?.name
+      const endDate = this.datePipe.transform(job.end, 'yyyy-MM-dd')
       const currDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
       if(endDate < currDate){
         this.progressData[id].delay++
       } 
-      const category = w.category.name
-      if(category == 'Owner Exp-Supplies'){
-        this.completionData[id].progress = w.progress
-      } else if(category == 'Services'){
-        this.completionData[id].progress = w.progress
-      } else if(category == 'Class'){
-        this.completionData[id].progress = w.progress
-      } else if( category == "Others"){
-        this.completionData[id].progress = w.progress
-      } else if ("Owner Canceled Job") {
-        this.completionData[id].progress = w.progress
-      } else if("Yard cost") {
-        this.completionData[id].progress = w.progress
-      } else if("Yard cancelled jobs"){
-        this.completionData[id].progress = w.progress
+      if(status == 'In Progress'){
+        this.progressData[id].progress++
+        this.progressData[this.progressData.length - 1].progress++
+      } else if(status == 'Done'){
+        this.progressData[id].done++
+        this.progressData[this.progressData.length - 1].done++
+      } else if(status == 'Canceled'){
+        this.progressData[id].cancel++
+        this.progressData[this.progressData.length - 1].cancel++
+      } else {
+        this.progressData[id].notStart++
+        this.progressData[this.progressData.length - 1].notStart++
       }
+
+      job?.items === null ||
+      job?.items === undefined ||
+      job?.items.length === 0 ? null :
+      job?.items.map(item => this.reGroupData([item]))
+
+      const category = job.category.name
+      if(category == 'Owner Exp-Supplies'){
+        this.completionData[id].progress = job.progress
+      } else if(category == 'Services'){
+        this.completionData[id].progress = job.progress
+      } else if(category == 'Class'){
+        this.completionData[id].progress = job.progress
+      } else if( category == "Others"){
+        this.completionData[id].progress = job.progress
+      } else if ("Owner Canceled Job") {
+        this.completionData[id].progress = job.progress
+      } else if("Yard cost") {
+        this.completionData[id].progress = job.progress
+      } else if("Yard cancelled jobs"){
+        this.completionData[id].progress = job.progress
+      }
+
     })
   }
 
   close(){ this.dialogRef.close();}
 }
+
+
+

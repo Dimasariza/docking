@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource } from '@nebular/theme';
+import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from './project-batera.service';
 import { ProjectDataComponent } from './project-data/project-data.component';
@@ -18,7 +19,8 @@ export class ProjectBateraComponent {
   constructor(private dialog : MatDialog,
               private projectService:ProjectBateraService,
               private subMenuProject : SubMenuProjectComponent,
-              private profileService : ProfileBateraService
+              private profileService : ProfileBateraService,
+              private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
     ) {
   }
 
@@ -34,26 +36,64 @@ export class ProjectBateraComponent {
     return this.subMenuProject.getShowOn(index)
   }
 
-  allColumns = ['Tasks', 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
+  columnContents = ['jobName', 'project', 'cust', 'status', 'resp', 'end']
+  allColumns = [ 'icon', ...this.columnContents]
+  columnHead = ['Tasks', 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+
   allProjectDatas : any
+  workAreaContainer : any
   shipManagement : string
-  
-  addProjectDial(){
-    const dialog = this.dialog.open(ProjectDataComponent, { 
-      disableClose : true,
-      autoFocus : true,
-      data : {
-        dial : "Add",
-        ship : this.shipManagement
-      }
+  responsible : any = []
+  status : any = ['Not Started', 'Done', 'In Progress', 'Done']
+
+  ngOnInit() {
+    this.projectService.getDataProjects()
+      .subscribe(({data} : any) => {
+        this.allProjectDatas = data
+
+        this.allProjectDatas.length ||
+        this.allProjectDatas !== null ||
+        this.allProjectDatas[0] !== null ? 
+        (() => {
+          this.allProjectDatas.map((i, index) => {
+            this.allProjectDatas[index].phase = 
+            this.phaseStatus(this.allProjectDatas[index].phase)
+          }) 
+
+          let work_area = []
+          data.map((work, id) => {
+            work_area.push(...work.work_area)
+            work_area[work_area.length-1]['project'] = `${work.kapal.nama_kapal} -DD- ${work.tahun}`
+          })
+          this.workAreaContainer = work_area
+        })() : null
+        this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
+        this.populateData(work)) as TreeNode<FSEntry>[]) 
     });
 
-    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.ngOnInit()
-    });
+    this.profileService.getCompanyProfile()
+    .subscribe(({data} : any) => {
+      this.shipManagement = data.profile_merk_perusahaan
+    })
+
+    this.profileService.getUserData(1, 10,'', '', '')
+    .subscribe(({data} : any) => this.responsible = data)
+  }
+
+  populateData = (data) => {
+    const {items, responsible} = data
+    return {
+      data : {
+        ...data,
+        cust : this.shipManagement,
+        resp : responsible.name,
+        kind: items?.length ? 'dir' : 'doc'
+      },
+      children : items?.length ? items.map(item => this.populateData(item)) : []
+    }
   }
 
   phaseStatus(data){
@@ -72,46 +112,37 @@ export class ProjectBateraComponent {
     return data
   }
 
-  ngOnInit() {
-    this.projectService.getDataProjects()
-      .subscribe(({data} : any) => {
-        this.allProjectDatas = data
-        this.allProjectDatas.length ||
-        this.allProjectDatas === null ||
-        this.allProjectDatas[0] === null ? 
-        this.allProjectDatas.map((item, index) => {
-          this.allProjectDatas[index].phase = 
-          this.phaseStatus(this.allProjectDatas[index].phase)
-        }) : null
-    });
-
-    this.profileService.getCompanyProfile()
-    .subscribe(({data} : any) => {
-      this.shipManagement = data.profile_merk_perusahaan
-    })
-  }
-
-  
-  populateData = (data) => {
-    const {end, items, jobName, status, responsible} = data
-    return {
+  addProjectDial(){
+    const dialog = this.dialog.open(ProjectDataComponent, { 
+      disableClose : true,
+      autoFocus : true,
       data : {
-        Tasks : jobName,
-        // "Project/Asset" : nama_kapal,
-        // Customer : customer,
-        Status : status,
-        Responsible : responsible.name,
-        Due : end,
-        kind: items?.length ? 'dir' : 'doc'
-      },
-      children : items?.length ? items.map(item => this.populateData(item)) : []
-    }
+        dial : "Add",
+        ship : this.shipManagement
+      }
+    });
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    });
   }
 
   deleteProject(row){
-    console.log(row)
-    // let id_proyek = this.allProjectDatas[row].id_proyek
-    // this.service.deleteProject(id_proyek)
+    const dialog = this.dialog.open(DeleteDialogComponent, { 
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        dial : "project",
+        id : row.id_proyek
+      }
+    });
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    });
+
+  }
+
+  succesFunction(){
+
   }
 }
 

@@ -23,7 +23,7 @@
                     <div *ngIf="reportData[item.value].type === 'text';">
                         <div class="row my-2">
                           <div class="col-5"><strong>{{item.value}}</strong></div>
-                          <div class="col-7 text-capitalize" [ngClass]="reportData[item.value]?.value ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value].value || 'Data Not Availlable'}}</div>
+                          <div class="col-7 text-capitalize" [ngClass]="reportData[item.value]?.value ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value]?.value || 'Data Not Availlable'}}</div>
                         </div>
                     </div>
                     
@@ -71,14 +71,15 @@
 
                 <ng-container [nbTreeGridColumnDef]="'Resp'">
                     <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 0px">Responsible</th>
-                    <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data.Resp.name}}
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                        {{row.data.Resp?.name}}
                     </td>
                 </ng-container>
                 
                 <ng-container [nbTreeGridColumnDef]="'rank'">
                     <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                      <nb-icon icon="alert-circle-outline" [nbPopover]="row.data.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : rankColor(row.data['rank'].name)}"></nb-icon>
+                      <nb-icon icon="alert-circle-outline" [nbPopover]="row.data.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : rankColor(row.data['rank']?.name)}"></nb-icon>
                     </td>
                 </ng-container>
 

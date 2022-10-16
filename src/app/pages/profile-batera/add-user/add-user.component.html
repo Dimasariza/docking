@@ -22,21 +22,22 @@
                 <label class="p-2">User name</label> 
                 <input fullWidth type="text" nbInput  placeholder="User Name" class="" id="user_name" fieldSize="small"
                 required (ngModel)="userName" name="username" #userName="ngModel" >
-                <div *ngIf="userName.invalid && (userName.dirty || userName.touched)"
-                class="danger text-danger">
+
+                <div *ngIf="userName.invalid && (userName.dirty || userName.touched)" class="danger text-danger">
                     <div *ngIf="userName.errors?.['required']">
                     Name is required.
                     </div>
                 </div>
+
                 <label class="p-2">Full Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Full Name" id="full_name" fieldSize="small"
                 required (ngModel)="fullName" name="nama_lengkap" #fullName="ngModel">
                 <label class="p-2">User Id</label>
                 <input fullWidth type="text" nbInput  placeholder="User Id" id="full_name" fieldSize="small"
                 required (ngModel)="fullName" name="departemen_id" #fullName="ngModel">
-                <label class="p-2">Vessel Name</label>
+                <!-- <label class="p-2">Vessel Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Vessel Name" id="ship_name" fieldSize="small"
-                required (ngModel)="shipName" name="nama_kapal" #shipName="ngModel">
+                required (ngModel)="shipName" name="nama_kapal" #shipName="ngModel"> -->
                 <label class="p-2">Company Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"
                 required (ngModel)="department" name="departemen" #department="ngModel">
@@ -58,11 +59,20 @@
                 <label class="p-2">Password</label>
 
                 <div class="d-flex border rounded">
-                <input fullWidth [type]="passwordFieldType ? 'password' : 'text'"  placeholder="Password" id="password" fieldSize="small"
-                required (ngModel)="password" name="password" #password nbInput fullWidth>
-                <button nbButton size="small" status="basic" class="input-group-text" type="button" (click)="passwordField()">
-                    <nb-icon [icon]="passwordFieldType ? 'eye-outline' : 'eye-off-outline'"></nb-icon>
-                </button>
+                    <input fullWidth [type]="passwordFieldType ? 'password' : 'text'"  placeholder="Password" id="password" fieldSize="small" required (ngModel)="password" name="password" #password="ngModel" nbInput fullWidth minlength="5">
+                
+                    <button nbButton size="small" status="basic" class="input-group-text" type="button" (click)="passwordField()">
+                        <nb-icon [icon]="passwordFieldType ? 'eye-outline' : 'eye-off-outline'"></nb-icon>
+                    </button>
+                </div>
+
+                <div *ngIf="password.invalid && (password.dirty || password.touched)" class="danger text-danger">
+                    <div *ngIf="password.errors?.['required']">
+                        Password is required.
+                    </div>
+                    <div *ngIf="password.errors?.['minlength']">
+                        Password must be at least 5 characters long.
+                    </div>
                 </div>
 
                 <label class="p-2">Role</label>

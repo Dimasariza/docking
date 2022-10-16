@@ -86,11 +86,12 @@ export class AddUserComponent {
   }
 
   onSubmit(data){
-    console.log(data)
     let postBody = data.value
     postBody.avatar_url = ""
 
     postBody['departemen_id'] = "SM"
+    postBody['nama_kapal'] = ""
+    postBody['jabatan'] = ""
     this.profileService.addUser(postBody)
       .subscribe(res => {console.log(res)},
       err => {console.log('HTTP Error', err)},

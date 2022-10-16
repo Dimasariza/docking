@@ -5,7 +5,7 @@
         <h5>Selected Yard : <Span class="text-capitalize">{{dataTable['Yard'] || ''}}</Span></h5>
         <div>
           <button nbButton size="tiny" class="mx-1" status="danger"  (click)="unselectTender()" outline [disabled]="!id_tender">Unselect Tender</button>
-          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()" [disabled]="!id_proyek">Add Contract</button>
+          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Contract</button>
         </div> 
       </div>
           <div>

@@ -76,7 +76,8 @@ export class TrackingBateraComponent implements OnInit {
           })
         ))
       ))
-      this.chartOptions.chart.height = dataContainer.length * 155
+      console.log(dataContainer.length)
+      this.chartOptions.chart.height = dataContainer.length * 114
       
       this.trackingData = dataContainer
       this.series = [{

@@ -67,8 +67,8 @@ export class VariantWorkComponent implements OnChanges {
   
 
   ngOnChanges(){
-    this.variantWorkData === null ||
-    this.variantWorkData === undefined ||
+    this.variantWorkData?.variant_work === null ||
+    this.variantWorkData?.variant_work === undefined ||
     this.variantWorkData?.variant_work[0] === null ? null :
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => 
     this.populateData(work)))
