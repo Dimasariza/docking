@@ -36,6 +36,7 @@ export class ProfilBateraComponent implements OnInit {
     this.pofileService.getUserData(1, 10, '', '', '')
       .subscribe(({data} : any) => {
         this.userData = data
+        console.log(data)
     }); 
 
     this.pofileService.getCompanyProfile()

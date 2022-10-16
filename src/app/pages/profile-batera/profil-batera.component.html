@@ -73,7 +73,11 @@
                 </ng-template>
             </ngx-datatable-column>
             <ngx-datatable-column [name]="'User Name'" prop="nama_lengkap" resizeable="true"></ngx-datatable-column>
-            <ngx-datatable-column [name]="'Vessel Name'" prop="nama_kapal" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Vessel Name'" prop="nama_kapal" resizeable="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.nama_kapal || 'Update Vessel' }}
+                </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column [name]="'Title'" prop="jabatan" resizeable="true"></ngx-datatable-column>
             <ngx-datatable-column [name]="'Company Name'" prop="departemen" resizeable="true"></ngx-datatable-column>
             <ngx-datatable-column [name]="'Email'" prop="email" resizeable="true" minWidth="200"></ngx-datatable-column>

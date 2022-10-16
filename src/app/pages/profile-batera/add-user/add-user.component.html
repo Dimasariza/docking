@@ -76,7 +76,7 @@
                 </div>
 
                 <label class="p-2">Role</label>
-                <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="basic" #role (ngModel)="role" name="role">
+                <nb-select fullWidth class="w-100" placeholder="Role" size="small" status="basic" #role="ngModel" (ngModel)="role" name="role">
                     <nb-option [value]="dataRole[id]" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
                 </nb-select>
             </div>

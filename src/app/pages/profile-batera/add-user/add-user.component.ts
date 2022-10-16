@@ -89,19 +89,20 @@ export class AddUserComponent {
     let postBody = data.value
     postBody.avatar_url = ""
 
+    if(this.avatarUrl !== undefined) {
+      console.log('avatar not available')
+      console.log(this.avatarUrl.data.file)
+    }
+
     postBody['departemen_id'] = "SM"
     postBody['nama_kapal'] = ""
     postBody['jabatan'] = ""
     this.profileService.addUser(postBody)
       .subscribe(res => {console.log(res)},
       err => {console.log('HTTP Error', err)},
-      () => console.log('HTTP request completed.')
+      () => console.log('HTTP request completed.'),
     )
-
-    if(this.avatarUrl !== undefined) {
-      console.log('avatar not available')
-      console.log(this.avatarUrl.data.file)
-    }
+    this.close()
   }
   
   close(){ this.dialogRef.close();}
