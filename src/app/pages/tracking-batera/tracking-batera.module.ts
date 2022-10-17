@@ -5,6 +5,7 @@ import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TrackingBateraRoutingModule } from './tracking-batera.routing.module';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { GanttComponent } from './gantt-component/gantt.component';
 
 @NgModule({
   imports: [
@@ -19,7 +20,8 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
   ],
   exports: [],
   declarations: [
-    ...routedComponents
+    ...routedComponents,
+    GanttComponent
   ],
 })
 export class TrackingBateraModule { }

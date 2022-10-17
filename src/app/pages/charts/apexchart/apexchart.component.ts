@@ -19,6 +19,7 @@ export type ChartOptions = {
   xaxis: ApexXAxis;
   yaxis?: ApexYAxis;
   grid?: ApexGrid;
+  stroke?: ApexStroke;
   title?: ApexTitleSubtitle;
   plotOptions?: ApexPlotOptions;
   legend?: ApexLegend;

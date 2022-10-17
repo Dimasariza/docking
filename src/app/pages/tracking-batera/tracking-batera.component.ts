@@ -9,6 +9,75 @@ import { TrackingBateraService } from './tracking-batera.service';
   styleUrls: ['./tracking-batera.component.scss']
 })
 export class TrackingBateraComponent implements OnInit {
+  lineChartOption: Partial<ChartOptions> = {
+    series: [
+      {
+        name: "Rencana",
+        data: [10, 30, 35, 40, 50, 62, 69, 91, 100],
+        color: "#2665fc"
+      },
+      {
+        name: "Actual",
+        data: [10, 41, 45, 51, 59, 62, 69, 91, 100],
+        color: "#008a2d"
+      }
+    ],
+    legend: {
+      show: false
+    },
+    chart: {
+      height: 200,
+      // width: 340,
+      offsetX: 0,
+      type: "line",
+      zoom: {
+        enabled: false
+      },
+      toolbar: {
+        show: false,
+      },
+    },
+    dataLabels: {
+      enabled: false,
+    },
+    stroke: {
+      curve: "smooth",
+      lineCap: 'square',
+    },
+    // title: {
+    //   text: "Product Trends by Month",
+    //   align: "left"
+    // },
+    grid: {
+      show: false
+    },
+    yaxis: {
+      labels: {
+        show: false
+      },
+      show: false
+    },
+    xaxis: {
+      axisBorder: {
+        show: false
+      },
+      labels: {
+        show: false
+      },
+      categories: [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep"
+      ]
+    },
+  };
+
   chartOptions: Partial<ChartOptions> = {
     chart: {
       height: 300,
@@ -18,6 +87,9 @@ export class TrackingBateraComponent implements OnInit {
       bar: {
         horizontal: true
       }
+    },
+    grid: {
+      show: false
     },
     xaxis: {
       type: 'datetime'
@@ -76,12 +148,14 @@ export class TrackingBateraComponent implements OnInit {
           })
         ))
       ))
-      console.log(dataContainer.length)
-      this.chartOptions.chart.height = dataContainer.length * 114
+      this.chartOptions.chart.height = dataContainer.length * 112
       
       this.trackingData = dataContainer
+      // console.log(this.trackingData);
+      
       this.series = [{
-        name : "rencana",
+        name: "rencana",
+        // type: "rangeBar",
         data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
           x: nama_kapal,
           y: [
@@ -91,7 +165,8 @@ export class TrackingBateraComponent implements OnInit {
         }))
       },
       {
-        name : "actual",
+        name: "actual",
+        // type: "rangeBar",
         data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
           x: nama_kapal,
           y: [
@@ -99,7 +174,15 @@ export class TrackingBateraComponent implements OnInit {
             new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
           ]
         }))
-      }
+      },
+      // {
+      //   name: "Kurva S",
+      //   type: "line",
+      //   data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
+      //     x: nama_kapal,
+      //     y: []
+      //   }))
+      // }
     ]
     }
     )
