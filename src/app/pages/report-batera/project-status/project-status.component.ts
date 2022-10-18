@@ -37,6 +37,7 @@ export class ProjectStatusComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    console.log(this.data)
     this.data?.work_area === null ||
     this.data?.work_area === undefined ||
     this.data?.work_area[0] === null ? null :

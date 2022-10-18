@@ -92,50 +92,54 @@ export class TenderBateraComponent  {
       this.tenderData = data
       let selectedYard
 
-      data.length ? selectedYard = data.find(yard => yard.id_proyek) 
-      :
-      this.tenderService.getDataTender(10, "all")
-      .subscribe(({data} : any) => {
-        this.tenderData = data
-        this.tenderId = false
-        this.renderYard(undefined)
-      })
+      if(data.length) {
+        selectedYard = data.find(yard => yard.id_proyek)
+      } else {
+        this.tenderService.getDataTender(10, "all")
+        .subscribe(({data} : any) => {
+          this.tenderData = data
+          this.tenderId = false
+          this.renderYard(undefined)
+        })
+      }
 
-      selectedYard.proyek.id_proyek === this.projectId ?
-      this.tenderService.getDataTenderPerId(selectedYard.id_tender)
-      .subscribe(({data} : any) => {
-        this.selectedYard = data
-        this.tenderId = selectedYard.id_tender
-        this.renderYard(data)
-      })
-      :
-      this.tenderService.getDataTender(10, "all")
-      .subscribe(({data} : any) => {
-        this.tenderId = false
-        this.selectedYard = false
-        this.tenderData = null
-        this.displayTender = null
-        this.tenderData = data.filter(yard => yard.id_tender !== selectedYard.id_tender)
-      })
+      if(selectedYard.proyek.id_proyek === this.projectId) {
+        this.tenderService.getDataTenderPerId(selectedYard.id_tender)
+        .subscribe(({data} : any) => {
+          this.selectedYard = data
+          this.tenderId = selectedYard.id_tender
+          this.renderYard(data)
+        })
+      } else {
+        this.tenderService.getDataTender(10, "all")
+        .subscribe(({data} : any) => {
+          this.tenderId = false
+          this.selectedYard = false
+          this.tenderData = null
+          this.displayTender = null
+          this.tenderData = data.filter(yard => yard.id_tender !== selectedYard.id_tender)
+        })
+      }  
 
     })
   }
 
   getYard(id){
-    const {tender, id_tender} = this.tenderData[id]
-    console.log(tender)
+    const {id_tender} = this.tenderData[id]
     console.log(this.projectId, id_tender)
-    this.tenderService.selectTender(this.projectId, this.tenderId)
+
+    this.tenderService.selectTender(this.projectId, id_tender)
     .subscribe(res => console.log(res))
-    console.log(this.tenderData[id])
     this.renderYard(this.tenderData[id])
   }
+
   
   displayTender
   renderYard(tender){
     const {general_diskon_persen, additional_diskon, nama_galangan, sum_internal_adjusment} = tender
     this.displayTender = tender
     console.log(tender)
+    this.selectedYard = true
 
     this.tenderId = tender.id_tender
     this.profileService.getUserPerId(tender.id_user)

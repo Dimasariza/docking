@@ -69,8 +69,6 @@ export class WorkProgressComponent {
   }
 
   @Input() workProgressData : any = ""
-
-
   workProgressConatainer
   useButtons = useButtons
   projectId : any
@@ -79,21 +77,25 @@ export class WorkProgressComponent {
   
 
   ngOnInit(){
-    const id = this.activatedRoute.snapshot.paramMap.get("id")
-    this.projectService.getSubProjectData(id)
+    this.projectId = this.activatedRoute.snapshot.paramMap.get("id")
+    this.projectService.getSubProjectData(this.projectId)
     .subscribe(({data} : any) => {
       this.dataSource = this.dataSourceBuilder.create(data.work_area.map(work => 
       this.populateData(work)) as TreeNode<FSEntry>[])
     })
   }
-  ngOnChanges(){
-    this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
 
+  ngOnChanges(){
+    if(!this.projectId) return;
     this.workProgressData?.work_area === null ||
     this.workProgressData?.work_area === undefined ||
-    this.workProgressData?.work_area[0] === null ? null : null
-    // this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => 
-    // this.populateData(work)) as TreeNode<FSEntry>[])
+    this.workProgressData?.work_area[0] === null ? null : 
+    this.workProgressConatainer =
+    this.workProgressData.work_area.map(work => ({
+        id : work.id,
+        category : work.category
+    }))
+    console.log(this.workProgressConatainer)
   }
 
   populateData = (work) => {          
@@ -143,11 +145,12 @@ export class WorkProgressComponent {
   }
 
   approvedByYard(newData){
-    this.shipYard = true
-    let postData = { ...newData.data, yardApproval : this.shipYard}
-    const parentIndex = postData.id.toString().split('')
-    const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-    this.updateWorkApproval(approveData)
+    console.log(newData)
+    // this.shipYard = true
+    // let postData = { ...newData.data, yardApproval : this.shipYard}
+    // const parentIndex = postData.id.toString().split('')
+    // const approveData = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+    // this.updateWorkApproval(approveData)
   }
   
   approvedByOwner(newData){

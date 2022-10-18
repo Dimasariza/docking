@@ -32,21 +32,41 @@
                 <label class="p-2">Full Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Full Name"  fieldSize="small"
                 required [ngModel]="userData?.nama_lengkap" name="nama_lengkap" #fullName="ngModel">
-                <label class="p-2">User Id</label>
+                
+                
+                <div *ngIf="users.dial == 'Add' ">
+                    <label class="p-2">Role</label>
+                    <nb-select fullWidth [placeholder]="userData?.role || 'Role'" size="small" status="basic" #role="ngModel" 
+                    required [ngModel]="userData?.role" name="role">
+                        <nb-option [value]="dataRole[id]" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
+                    </nb-select>
+                </div>
+
+                <!-- <label class="p-2">User Id</label>
                 <input fullWidth type="text" nbInput  placeholder="User Id" fieldSize="small"
-                required [ngModel]="userData?.departemen_id" name="departemen_id" #fullName="ngModel">
+                required [ngModel]="userData?.departemen_id" name="departemen_id" #fullName="ngModel"> -->
+
+                <label class="p-2">Title</label>
+                <input fullWidth type="text" nbInput  placeholder="Title" id="title" fieldSize="small"
+                required [ngModel]="userData?.title" name="title" #title="ngModel">
+
                 <label class="p-2">Company Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"
                 required [ngModel]="userData?.departemen" name="departemen" #department="ngModel">
+
+                <div *ngIf="users.dial == 'Update'">
+                    <label class="p-2">Vessel Name</label>
+                    <nb-select fullWidth [placeholder]="userData?.nama_kapal || 'Vessel Name'" size="small" status="basic" #shipName="ngModel" 
+                    required [ngModel]="userData?.nama_kapal" name="nama_kapal">
+                        <nb-option [value]="vessels[id]" *ngFor="let vessel of vessels; let id=index;">{{vessel.nama_kapal}}</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-6">
                 <label class="p-2">Status</label>
                 <nb-select fullWidth [placeholder]="userData?.status || 'Status'" size="small" status="basic" #status [ngModel]="userData?.status" name="status">
                     <nb-option [value]="status" *ngFor="let status of ['active', 'suspend']; let id=index;" class="text-capitalize">{{status}}</nb-option>
                 </nb-select>
-            </div>
-            <div class="col-6">
-                <label class="p-2">Title</label>
-                <input fullWidth type="text" nbInput  placeholder="Title" id="title" fieldSize="small"
-                required [ngModel]="userData?.title" name="title" #title="ngModel">
                 <label class="p-2">Mobile Number</label>
                 <input fullWidth type="text" nbInput  placeholder="Mobile Number" id="mobile_no" fieldSize="small"
                 required [ngModel]="userData?.no_hp" name="no_hp" #mobileNo="ngModel">
@@ -72,21 +92,8 @@
                     </div>
                 </div>
 
-                <div *ngIf="users.dial == 'Add' ">
-                    <label class="p-2">Role</label>
-                    <nb-select fullWidth [placeholder]="userData?.role || 'Role'" size="small" status="basic" #role="ngModel" 
-                    required [ngModel]="userData?.role" name="role">
-                        <nb-option [value]="dataRole[id]" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
-                    </nb-select>
-                </div>
 
-                <div *ngIf="users.dial == 'Update'">
-                    <label class="p-2">Vessel Name</label>
-                    <nb-select fullWidth [placeholder]="userData?.nama_kapal || 'Vessel Name'" size="small" status="basic" #shipName="ngModel" 
-                    required [ngModel]="userData?.nama_kapal" name="nama_kapal">
-                        <nb-option [value]="vessels[id]" *ngFor="let vessel of vessels; let id=index;">{{vessel.nama_kapal}}</nb-option>
-                    </nb-select>
-                </div>
+ 
 
             </div>
         </div>

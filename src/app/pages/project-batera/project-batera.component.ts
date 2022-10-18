@@ -38,9 +38,16 @@ export class ProjectBateraComponent {
     return this.subMenuProject.getShowOn(index)
   }
 
-  columnHead = ['Tasks', 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
-  columnContents = ['jobName', 'project', 'cust', 'status', 'resp', 'due']
-  allColumns = [ 'icon', ...this.columnContents]
+  shortCut = [
+    {icon : 'plus-square-outline', menu : ''},
+    {icon : 'book-outline', menu : ''},
+    {icon : 'trash-2-outline', menu : 'Delete Project'},
+    {icon : 'checkmark-square', menu : 'Approval'},
+    {icon : 'archive-outline', menu : ''},
+  ]
+  columnHead = ['Tasks', 'Customer'];
+  columnContents = ['jobName','cust']
+  allColumns = [ 'icon', ...this.columnContents, 'project', 'status' ,'resp', 'due']
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -50,12 +57,17 @@ export class ProjectBateraComponent {
   shipManagement : string
   responsible : any = []
   status : any = ['Not Started', 'Done', 'In Progress', 'Done']
+  project
 
   ngOnInit() {
     this.projectService.getDataProjects()
       .subscribe(({data} : any) => {
         if(!data.length || data === null) return;
         this.projectDatas = data
+        this.project = data.map(item => ({
+          name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
+          id : item.id_proyek
+        }))
         this.collectData()
         this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
         this.populateData(work)) as TreeNode<FSEntry>[]) 
@@ -84,13 +96,11 @@ export class ProjectBateraComponent {
   }
 
   populateData = (data) => {
-    const {items, responsible, end} = data
+    const {items} = data
     return {
       data : {
         cust : this.shipManagement,
-        resp : responsible.name,
         kind: items?.length ? 'dir' : 'doc',
-        due : this.datePipe.transform(end, 'yyyy-MM-dd'),
         ...data,
       },
       children : items?.length ? items.map(item => this.populateData(item)) : []
@@ -113,6 +123,17 @@ export class ProjectBateraComponent {
       break;
     }
     return data
+  }
+
+  clickAction(btn, data){
+    switch(btn){
+      case 'Delete Project':
+        this.deleteProject(data)
+      break;
+      case 'Approval':
+        console.log("Approve")
+      break;
+    }
   }
 
   addProjectDial(){

@@ -22,15 +22,15 @@ export class ReportBateraComponent {
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
+    this.reportBateraService.getWorkPerProject(id)
+    .subscribe(({data} : any) => {
+      this.projectData = data
+    })
+
     this.projectService.getSubProjectData(id) 
     .subscribe(({data} : any) => {
       this.subProjectData = data
       this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
-    })
-
-    this.reportBateraService.getWorkPerProject(id)
-    .subscribe(({data} : any) => {
-      this.projectData = data
     })
   }
 

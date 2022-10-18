@@ -1,14 +1,7 @@
 <nb-card class="p-3">  
   <div class="row">
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-      <div>
-        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable?.['Yard'] || ''}}</Span></h5>
-          <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!tenderId">Delete Yard</button>
-          <button nbButton size="tiny" class="mx-1" status="warning"  (click)="unselectTender()" outline [disabled]="!tenderId">Unselect Yard</button>
-          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!tenderId">Update Yard</button>
-          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Yard</button>
-      </div>
-          <div class="my-3">
+          <div>
             <span class="d-block label">Project Name</span>  
             <nb-select placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
               <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(id)" #projectNameVal>{{value.shipName}}</nb-option>
@@ -28,12 +21,16 @@
             <span class="d-block label">Comment</span>
             <p class="d-block">{{displayTender?.komentar || 'Data Not Available'}}</p>
           </div>
-
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <div class="my-2">
+        <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!tenderId">Delete Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="warning"  (click)="unselectTender()" outline [disabled]="!tenderId">Unselect Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!tenderId">Update Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Yard</button>
+      </div>
 
       <nb-card class="p-3" *ngIf=" selectedYard ">
-
           <div *ngFor="let item of objectKeys(dataTable)">
             <div *ngIf="item != 'General Discount'&& item !='Additional Discount' else discount " class="row" >
               <div class="col-6"><strong>{{item}}</strong></div>
@@ -51,8 +48,6 @@
           <div class="text-center mt-3">
             <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
           </div>
-          
-        
       </nb-card>
     </div>
   </div>

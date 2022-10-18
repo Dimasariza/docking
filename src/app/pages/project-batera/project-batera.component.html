@@ -1,34 +1,60 @@
 <nb-card>
-  <nb-card-body>
-    <h5>Tasks | Mine</h5>
-    <button nbButton class="mx-1" ghost shape="rectangle">
-      <nb-icon icon="menu-outline" pack="eva"></nb-icon>
-        Projects
-    </button>
-    <input nbInput fieldSize="small" id="search" class="search-input mx-3" placeholder="Search">
-
-    <nb-select size="small" placeholder="Status" class="mx-1 w-25">
-      <nb-option *ngFor="let stat of status;let id = index;" [value]="1">{{stat}}</nb-option>
-    </nb-select>
-
-    <nb-select size="small" placeholder="Responsible" class="mx-1 w-25">
-      <nb-option *ngFor="let value of responsible; let id = index;" [value]="1">{{value.username}}</nb-option>
-    </nb-select>
-         
+    <h5 class="m-4">Tasks | Mine</h5>
+    <div style="overflow: auto; width: 100%;">
+      <div style="width: 1424px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
-  
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
           <ng-container [nbTreeGridColumnDef]="'icon'">
-            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Job No</th>
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 80px;">Job No</th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
               <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded">
               </ngx-fs-icon>
               {{row?.data?.jobNumber}}
             </td>
           </ng-container>
-      
+
+          <ng-container [nbTreeGridColumnDef]="'project'">
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 280px;">
+              <nb-select size="small" placeholder="Project" class="w-100">
+                <nb-option *ngFor="let project of project;let id = index;" [value]="project">{{project.name}}</nb-option>
+              </nb-select>
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              {{row?.data?.project}}
+            </td>
+          </ng-container>
+
+          <ng-container [nbTreeGridColumnDef]="'status'" >
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
+              <nb-select size="small" placeholder="Status" class="w-100">
+                <nb-option *ngFor="let stat of status;let id = index;" [value]="stat">{{stat}}</nb-option>
+              </nb-select>
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              {{row?.data?.status || '-'}}
+            </td>
+          </ng-container>
+
+          <ng-container [nbTreeGridColumnDef]="'resp'" >
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
+              <nb-select size="small" placeholder="Responsible" class="w-100">
+                <nb-option *ngFor="let value of responsible; let id = index;" [value]="value">{{value.username}}</nb-option>
+              </nb-select>
+            </th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              {{row?.data?.responsible.name}}
+            </td>
+          </ng-container>
+
+          <ng-container [nbTreeGridColumnDef]="'due'">
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Due</th>
+            <td nbTreeGridCell *nbTreeGridCellDef="let row">
+              {{row?.data?.end | date : 'medium'}}
+            </td>
+          </ng-container>
+
           <ng-container *ngFor="let column of columnContents; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
               <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                 {{columnHead[index]}}
@@ -38,7 +64,8 @@
               </td>
           </ng-container>
       </table>
-  </nb-card-body>
+      </div>
+    </div>
 </nb-card>
 
 
@@ -59,13 +86,11 @@
            </ng-template>
           </ngx-datatable-column>
 
-          <ngx-datatable-column name="Shortcut" prop="">
+          <ngx-datatable-column name="Shortcut" width="220">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon [ngStyle]="{'color': 'green'}" icon="plus-square-outline"></nb-icon>
-              <nb-icon [ngStyle]="{'color': 'green'}" icon="trash-2-outline"></nb-icon>
-              <nb-icon [ngStyle]="{'color': 'green'}" icon="book-outline"></nb-icon>
-              <nb-icon [ngStyle]="{'color': 'green'}" icon="checkmark-square"></nb-icon>
-              <nb-icon [ngStyle]="{'color': 'green'}" icon="archive-outline"></nb-icon>
+              <button *ngFor="let button of shortCut" class="mx-1" nbButton size="small" ghost (click)="clickAction(button.menu, row)" [nbPopover]="button.menu" nbPopoverTrigger="hover" nbPopoverPlacement="top">
+                <nb-icon [icon]="button.icon" status="danger"></nb-icon>
+              </button>
             </ng-template>  
           </ngx-datatable-column>
 
@@ -117,10 +142,10 @@
 
           <ngx-datatable-column [name]="''" width="50">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <button nbButton size="small" ghost (click)="deleteProject(row)"
+              <!-- <button nbButton size="small" ghost (click)="deleteProject(row)"
               nbPopover="Delete Project" nbPopoverTrigger="hover" nbPopoverPlacement="top">
                 <nb-icon icon="trash-2-outline" status="danger"></nb-icon>
-              </button>
+              </button> -->
             </ng-template>
           </ngx-datatable-column>
 
