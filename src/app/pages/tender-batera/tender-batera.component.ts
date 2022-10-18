@@ -18,7 +18,7 @@ interface FSEntry{}
   templateUrl: './tender-batera.component.html',
 })
 
-export class TenderBateraComponent  {
+export class TenderBateraComponent {
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private projectService : ProjectBateraService,
               private tenderService : TenderBateraService,
@@ -80,9 +80,9 @@ export class TenderBateraComponent  {
     this.projectData['offHire'] = offHire
     this.projectData['offHireCost'] = offHireCost
     this.projectData['ownerCost'] = ownerCost
-    // workArea === null ||
-    // workArea === undefined ? this.dataSource = null :
-    // this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
+    workArea === null ||
+    workArea === undefined ?  null :
+    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
     this.loadYardData()
   }
 
@@ -126,13 +126,10 @@ export class TenderBateraComponent  {
 
   getYard(id){
     const {id_tender} = this.tenderData[id]
-    console.log(this.projectId, id_tender)
-
     this.tenderService.selectTender(this.projectId, id_tender)
     .subscribe(res => console.log(res))
     this.renderYard(this.tenderData[id])
   }
-
   
   displayTender
   renderYard(tender){
@@ -171,15 +168,14 @@ export class TenderBateraComponent  {
 
   populateData = (work) => { 
     const {items, start, end, unit, category} = work   
-    console.log(work)
     return {
       data: {
+        ...work,
         Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
         Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
         Unit : unit.name,
         kind : items?.length ? 'dir' : 'doc',
         Category : category.name,
-        ...work,
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -241,6 +237,9 @@ export class TenderBateraComponent  {
 
   deleteYard(){}
 
+  ngOnDestroy(){
+
+  }
 }
 
 @Component({

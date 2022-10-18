@@ -192,13 +192,13 @@ export class SubMenuProjectComponent implements OnInit {
     const {items, volume , unit, category, start, end} = work  
     return {
       data: {
+        ...work,
         "Unit" : unit?.name,
         "Total Price Budget" : volume * work['Price Budget'],
         Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
         Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
         Category : category?.name,
         kind : items?.length ? 'dir' : 'doc',
-        ...work,
       },
       children: 
       work === null ||

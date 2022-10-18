@@ -1,14 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../report-batera.service';
 
 @Component({
   selector: 'ngx-work-area',
   templateUrl: './variant-work-area.component.html',
-  styles: [
-  ]
 })
 export class VariantWorkAreaComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<VariantWorkAreaComponent>,
@@ -25,7 +23,6 @@ export class VariantWorkAreaComponent implements OnInit {
   unitType = [["Lumpsum"], ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]]
   responsible = []
   variantWorkContainer : any = []
-  workProgressContainer : any = []
   project_id : any
   modelData : any = {}
   disabledEdit : boolean = false
@@ -52,16 +49,6 @@ export class VariantWorkAreaComponent implements OnInit {
           this.modelData['head'] = `${data['Job No']}. ${data.Job}`
           this.disabledEdit = true
         break;
-        case 'Work Progress' :
-          this.reportService.getWorkPerProject(this.project_id)
-          .subscribe(({data} : any) => this.workProgressContainer = data.work_area)
-          parentId.length === 1 ?
-          this.unitType = this.unitType.filter((v, i) => i == 0) :
-          this.unitType = this.unitType.filter((v, i) => i == 1)
-          this.modelData = data
-          this.modelData['head'] = `${data['Job No']}. ${data.Job}`
-          this.disabledEdit = true
-        break;
     }
 
     this.profileService.getUserData(1, 10, '', "shipyard", '')
@@ -72,7 +59,6 @@ export class VariantWorkAreaComponent implements OnInit {
           id: user.id_user
         }))
     })
-
   }
 
   workAreaBtn(newData){
@@ -88,21 +74,7 @@ export class VariantWorkAreaComponent implements OnInit {
       case 'Add Sub Variant' :
         this.addSubVariantData(newData)
         break;
-      case 'Work Progress':
-        this.updateWorkProgress(newData)
-        break;
     }
-  }
-
-  updateWorkProgress(newData){
-    console.log(newData) 
-    const parentIndex = this.modelData.id.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workProgressContainer, parentIndex, newData.value)
-    this.reportService.updateWorkProgress({work_area}, this.project_id)
-    .subscribe((res) =>{
-      this.onSuccess.emit()
-      this.close()
-    })
   }
 
   addVariantWorkaData(newData){

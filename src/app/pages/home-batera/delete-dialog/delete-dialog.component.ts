@@ -61,7 +61,7 @@ export class DeleteDialogComponent implements OnInit {
     let postBody
     work_area.length === 0 ||
     work_area === undefined ? postBody = {work_area : [null]} : postBody = {work_area : work_area}
-    this.projectService.addProjectJob(postBody, this.deleteData.id)
+    this.projectService.workArea(postBody, this.deleteData.id)
     .subscribe(() => {
       this.onSuccess.emit()
       this.close()

@@ -26,6 +26,7 @@ export class AddUserComponent {
   vessels : any
   userRole = ["Director", "Ship Manager", "Ship Yard", "Super Admin"]
   dataRole = ["director", "shipmanager", "shipyard", "admin"]
+  roleSymbol = ["MD", "SM", "FM", "SA"]
 
   ngOnInit(){
     this.userData = this.users.data
@@ -61,7 +62,7 @@ export class AddUserComponent {
     }
   }
   
-  private uploadAvatarUrl
+  private uploadAvatarUrl : any = null
   onImageLoad(event){
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
@@ -90,14 +91,17 @@ export class AddUserComponent {
       case 'Update' :
       this.updateUserData(postBody)
       break;
-
     }
   }
 
   addNewUserData(postBody){
+    this.uploadAvatarUrl ? 
+    postBody.avatar_url = this.uploadAvatarUrl.data.file : 
     postBody.avatar_url = ""
     postBody['nama_kapal'] = ""
-    postBody['jabatan'] = ""
+    postBody['departemen_id'] = ""
+    postBody['title'] = postBody.username + '_' + this.roleSymbol[postBody.role]
+    postBody['role'] = this.dataRole[postBody.role]
     console.log(postBody)
     this.profileService.addUser(postBody)
       .subscribe(res => {console.log(res)},
@@ -109,17 +113,14 @@ export class AddUserComponent {
   }
 
   updateUserData(postBody){
-    console.log("update")
+    this.uploadAvatarUrl ? null : postBody.avatar_url = this.uploadAvatarUrl
     postBody.id_user = this.users.id_user
-    console.log(postBody)
-
-    // this.profileService.updateUser(postBody)
-    // .subscribe(() => {},
-    //   err => {console.log('HTTP Error', err)},
-    //   () => console.log('HTTP request completed.'),
-    // )
-    // this.onSuccess.emit()
-    // this.close()
+    this.profileService.updateUser(postBody)
+    .subscribe(() => {},
+      err => {console.log('HTTP Error', err)},
+      () => console.log('HTTP request completed.'))
+    this.onSuccess.emit()
+    this.close()
   }
   
   close(){ this.dialogRef.close();}

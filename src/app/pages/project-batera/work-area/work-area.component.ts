@@ -16,7 +16,6 @@ export class WorkAreaComponent {
               private dialogRef: MatDialogRef<WorkAreaComponent>,
               private datepipe : DatePipe,
               private profileService : ProfileBateraService,
-              private tenderService : TenderBateraService,
               private reportService : ReportBateraService,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
@@ -38,7 +37,6 @@ export class WorkAreaComponent {
   totalPrice = 0
   unitPriceLabel : string = null
   unitType
-  workProgressContainer : any
   
   ngOnInit(){
     const data = this.data.data?.data
@@ -69,10 +67,6 @@ export class WorkAreaComponent {
         this.modelData = this.data.data.data
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
         this.unitPriceLabel = 'Price Actual'
-        this.reportService.getWorkPerProject(this.data.id)
-        .subscribe(({data} : any) => {
-          this.workProgressContainer = data
-        })
       break;
     }
 
@@ -106,7 +100,7 @@ export class WorkAreaComponent {
       this.addSubJob(data)
     }
     if(this.data.dial === 'Work Progress'){
-      // this.updateWorkProgress(data)
+      this.updateWorkArea(data)
     }
   }
 
@@ -138,7 +132,7 @@ export class WorkAreaComponent {
       ...this.reconstructData(submitData),
       id: this.workAreaContainer.length, 
       type : "pekerjaan",
-      status : 'Not Started'
+      status : 'Not Started',
     }]
     this.uploadData(work_area)
   }
@@ -165,22 +159,12 @@ export class WorkAreaComponent {
     const reconstructData = {
       ...submitData,
       ...this.reconstructData(submitData),
+      last_update : new Date()
     }
     const parentIndex = this.data.parentId.toString().split('')
     const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
     this.uploadData(work_area)
   }
-
-  // updateWorkProgress(newData){
-  //   const submitData = newData.value
-  //   const reconstructData = {
-  //     ...submitData,
-  //     ...this.reconstructData(submitData),
-  //   }
-  //   const parentIndex = this.modelData.id.toString().split('')
-  //   const work_area = this.updateWorkAreaData(this.workProgressContainer.work_area, parentIndex, reconstructData)
-  //   this.uploadData(work_area)
-  // }
 
   addSubJobData = (data, newData, parentIndex) => {
     return data.map((w, i) => {
@@ -206,13 +190,8 @@ export class WorkAreaComponent {
     this.uploadData(work_area)
   }
 
-
   uploadData(work_area){
-    // this.reportService.updateWorkProgress({work_area}, this.data.id)  
-    // .subscribe(res => console.log(res))
-    // this.tenderService.updateWorkArea({work_area}, this.data.id)
-    // .subscribe(res => console.log(res))
-    this.projectSerivce.addProjectJob({work_area}, this.data.id)
+    this.projectSerivce.workArea({work_area}, this.data.id)
     .subscribe(() => {
       this.onSuccess.emit()
       this.close()

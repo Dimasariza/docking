@@ -1,6 +1,8 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
@@ -9,7 +11,7 @@ import { ReportBateraService } from './report-batera.service';
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
 })
-export class ReportBateraComponent {
+export class ReportBateraComponent implements OnInit, OnDestroy  {
   constructor(private reportBateraService : ReportBateraService,
               private dialog : MatDialog,
               private activatedRoute : ActivatedRoute,
@@ -19,19 +21,25 @@ export class ReportBateraComponent {
 
   projectData : any
   subProjectData : any
+  subscription : Subscription[] = []
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
-    this.reportBateraService.getWorkPerProject(id)
+    const _subs1 = this.reportBateraService.getWorkPerProject(id)
+    .pipe(take(1))
     .subscribe(({data} : any) => {
       this.projectData = data
     })
 
-    this.projectService.getSubProjectData(id) 
+    const _subs2 = this.projectService.getSubProjectData(id) 
+    .pipe(take(1))
     .subscribe(({data} : any) => {
       this.subProjectData = data
       this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
     })
+
+    this.subscription.push(_subs1)
+    this.subscription.push(_subs2)
   }
 
   projectStatusDial(){
@@ -40,6 +48,10 @@ export class ReportBateraComponent {
       autoFocus:true, 
       data : this.projectData
     })
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach((subs) => subs.unsubscribe())
   }
 }
 

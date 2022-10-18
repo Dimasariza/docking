@@ -1,30 +1,34 @@
-import { Component, EventEmitter, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraService } from './home-batera.service';
 import { environment } from "../../../environments/environment"
 import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
 })
-export class HomeBateraComponent implements OnInit {
+export class HomeBateraComponent implements OnInit, OnDestroy {
   constructor(
     private homeservice:HomeBateraService,
     private dialog : MatDialog,
   ){}
     
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  public shipData: any;
-  public flipped : any = []
+  shipData: any;
+  flipped : any = []
+  subscription : Subscription
 
   toggleView(id) {
     this.flipped[id] = !this.flipped[id]
   }
 
   ngOnInit() {
-    this.homeservice.getAllShip()
+    this.subscription = this.homeservice.getAllShip()
+    .pipe(take(1))
     .subscribe(({data} : any) => {
       data.length? this.shipData = data.map(item => {
         this.flipped.push(false)
@@ -36,7 +40,8 @@ export class HomeBateraComponent implements OnInit {
     });
 
     this.homeservice.getUserLogin()
-    .subscribe(({data} : any) => {});
+    .pipe(take(1))
+    .subscribe(({data} : any) => {}).unsubscribe();
   }
 
   addShipDial(){
@@ -82,6 +87,10 @@ export class HomeBateraComponent implements OnInit {
       this.ngOnInit()
     });
   };
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe()
+  }
 
 }
 

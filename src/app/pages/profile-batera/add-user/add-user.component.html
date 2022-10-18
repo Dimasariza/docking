@@ -38,17 +38,13 @@
                     <label class="p-2">Role</label>
                     <nb-select fullWidth [placeholder]="userData?.role || 'Role'" size="small" status="basic" #role="ngModel" 
                     required [ngModel]="userData?.role" name="role">
-                        <nb-option [value]="dataRole[id]" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
+                        <nb-option [value]="id" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
                     </nb-select>
                 </div>
 
-                <!-- <label class="p-2">User Id</label>
-                <input fullWidth type="text" nbInput  placeholder="User Id" fieldSize="small"
-                required [ngModel]="userData?.departemen_id" name="departemen_id" #fullName="ngModel"> -->
-
                 <label class="p-2">Title</label>
-                <input fullWidth type="text" nbInput  placeholder="Title" id="title" fieldSize="small"
-                required [ngModel]="userData?.title" name="title" #title="ngModel">
+                <input fullWidth type="text" nbInput  placeholder="Title" fieldSize="small"
+                required [ngModel]="userData?.title" name="jabatan" #title="ngModel">
 
                 <label class="p-2">Company Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"

@@ -44,7 +44,7 @@ export class ProjectBateraService {
     return this.httpClient.delete(url)
   }
 
-  addProjectJob(postbody, id){
+  workArea(postbody, id){
     const url = this.apiUrl + "/proyek/" + id + "/work_area"
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')

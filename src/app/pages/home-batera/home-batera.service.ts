@@ -4,7 +4,7 @@ import { environment } from "../../../environments/environment"
   
 @Injectable({
   providedIn: 'root'
-})
+}) 
 export class HomeBateraService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl
