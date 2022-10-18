@@ -1,8 +1,7 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HomeBateraService } from '../../home-batera/home-batera.service';
 import { ProfileBateraService } from '../profil-batera.service';
 
@@ -12,44 +11,42 @@ import { ProfileBateraService } from '../profil-batera.service';
   styleUrls : ['./add-user.component.scss']
 })
 export class AddUserComponent {
-  constructor(
-    private profileService:ProfileBateraService,
-    private homeService : HomeBateraService,
-    public dialog : MatDialog,
-    public route : Router,
-    private dialogRef: MatDialogRef<AddUserComponent>
+  constructor(  private profileService :ProfileBateraService,
+                private homeService : HomeBateraService,
+                public dialog : MatDialog,
+                private dialogRef: MatDialogRef<AddUserComponent>,
+                @Inject( MAT_DIALOG_DATA) public users : any
   ) {}
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
-  public userData = {
-    username : 'User Name',
-    nama_lengkap : 'Full Name',
-    nama_kapal : 'Ship Name',
-    title : 'Title',
-    departemen : 'Department',
-    user_id : 'User Id',
-    jabatan : 'Position',
-    no_hp : 'Mobile Number',
-    email : 'Email',
-    password : 'Password',
-    role : 'Role',
-    avatar_url: {
-      url : '',
-      exist : false
-    },
+  userData
+  urlLink
+  avatar_url = null
+  passwordFieldType: boolean = true;
+  vessels : any
+  userRole = ["Director", "Ship Manager", "Ship Yard", "Super Admin"]
+  dataRole = ["director", "shipmanager", "shipyard", "admin"]
+
+  ngOnInit(){
+    this.userData = this.users.data
+    if(this.users.dial == "Update") {
+      this.homeService.getAllShip()
+      .subscribe(({data} : any) => {
+        this.vessels = data.map(ship => ({
+          nama_kapal : ship.nama_kapal,
+          id_kapal : ship.id_kapal
+        }))
+      });
+    }
   }
 
-  passwordFieldType: boolean = true;
   addUserForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });
 
-  public urlLink
-  public userRole = ["Super Intendent", "Director", "Fleet Manager", "Yard Manager", "Ship Yard", "Super Admin"]
-  public dataRole = ["superintendent", "director", "shipmanager", "yardmanager", "shipyard", "admin"]
   onFileChange(res){
-    this.userData.avatar_url.exist = res.isTrusted
     const file = res.target.files[0];
     if (res.target.files.length > 0) {
       this.addUserForm.patchValue({
@@ -59,14 +56,13 @@ export class AddUserComponent {
       reader.readAsDataURL(file)
       reader.onload = (event ) => {
         this.urlLink = event.target.result
-        this.userData.avatar_url.url = this.urlLink
+        this.avatar_url = this.urlLink
       }
     }
   }
   
-  private avatarUrl
+  private uploadAvatarUrl
   onImageLoad(event){
-    this.userData.avatar_url.exist = event.isTrusted
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
     this.homeService.uploadFile(formData)
@@ -76,8 +72,8 @@ export class AddUserComponent {
         } else if ( res.type === HttpEventType.Response){
           console.log("final Response uploading image")
         }
-        this.avatarUrl = res
-        this.avatarUrl = this.avatarUrl.body
+        this.uploadAvatarUrl = res
+        this.uploadAvatarUrl = this.uploadAvatarUrl.body
     })
   }
 
@@ -86,23 +82,44 @@ export class AddUserComponent {
   }
 
   onSubmit(data){
-    let postBody = data.value
-    postBody.avatar_url = ""
+    const postBody = data.value
+    switch(this.users.dial){
+      case 'Add' :
+      this.addNewUserData(postBody)
+      break;
+      case 'Update' :
+      this.updateUserData(postBody)
+      break;
 
-    if(this.avatarUrl !== undefined) {
-      console.log('avatar not available')
-      console.log(this.avatarUrl.data.file)
     }
+  }
 
-    postBody['departemen_id'] = "SM"
+  addNewUserData(postBody){
+    postBody.avatar_url = ""
     postBody['nama_kapal'] = ""
     postBody['jabatan'] = ""
+    console.log(postBody)
     this.profileService.addUser(postBody)
       .subscribe(res => {console.log(res)},
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.'),
     )
+    this.onSuccess.emit()
     this.close()
+  }
+
+  updateUserData(postBody){
+    console.log("update")
+    postBody.id_user = this.users.id_user
+    console.log(postBody)
+
+    // this.profileService.updateUser(postBody)
+    // .subscribe(() => {},
+    //   err => {console.log('HTTP Error', err)},
+    //   () => console.log('HTTP request completed.'),
+    // )
+    // this.onSuccess.emit()
+    // this.close()
   }
   
   close(){ this.dialogRef.close();}

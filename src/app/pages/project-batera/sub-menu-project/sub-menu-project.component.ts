@@ -1,4 +1,4 @@
-import { KeyValue } from '@angular/common';
+import { DatePipe, KeyValue } from '@angular/common';
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -7,6 +7,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectDataComponent } from '../project-data/project-data.component';
+import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -52,11 +53,11 @@ export class SubMenuProjectComponent implements OnInit {
                 private route: ActivatedRoute,
                 public dialog : MatDialog,
                 private router : Router,
+                private datePipe : DatePipe,
                 private projectService : ProjectBateraService) {
   }
 
   shipName 
-  work_area: any
   id_proyek : any
   projectData : any
   reportData : any
@@ -69,7 +70,6 @@ export class SubMenuProjectComponent implements OnInit {
       this.reportData = this.reportDataDestruction(data)
       this.projectData = data
       const {work_area, kapal} = data
-      this.work_area = work_area
       this.shipName = kapal.nama_kapal + " -DD- " + data.tahun
       work_area === null || 
       work_area[0] === null ||
@@ -84,6 +84,11 @@ export class SubMenuProjectComponent implements OnInit {
       const resp = data.map(user => user.username)
     })
   }
+
+  orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
+    return 0
+  }
+  objectKeys = Object.keys;
 
   reportDataDestruction(data){
     const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_period, repair_in_dock_period, repair_additional_day } = data
@@ -135,78 +140,6 @@ export class SubMenuProjectComponent implements OnInit {
     }
   }
 
-  
-  orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
-    return 0
-  }
-  objectKeys = Object.keys;
-  priceHeadData = [
-    'Totals', 'Budget', 'Contract', 'Actual'  
-  ]
-
-  priceData = {
-    'Offhire Days' : {
-      type : 'title',
-      Budget: 20,
-      Contract: '_',
-      Actual: 0,
-    },
-    'Owner Exp': {
-      type : 'title',
-      Budget: '1.412.000.000',
-      Contract: '1.412.000.000',
-      Actual: 0,
-    },
-    Supplies: {
-      type : 'subTitle',
-      Budget: '877.000.000',
-      Contract: '877.000.000',
-      Actual: 0,
-    },
-    Services: {
-      type : 'subTitle',
-      Budget: '350.000.000',
-      Contract: '350.000.000',
-      Actual: 0,
-    },
-    Class: {
-      type : 'subTitle',
-      Budget: 0,
-      Contract: 0,
-      Actual: 0,
-    },
-    Other: {
-      type : 'subTitle',
-      Budget: '185.000.000',
-      Contract: '185.000.000',
-      Actual: 0,
-    },
-    'Owner Canceled Jobs': {
-      type : 'highlight',
-      Budget: '_',
-      Contract: 0,
-      Actual: '_',
-    },
-    'Yard Cost': {
-      type : 'title',
-      Budget: '5.056.566.061',
-      Contract: '4.541.787.983',
-      Actual: 0,
-    },
-    'Yard Canceled Jobs' : {
-      type : 'highlight',
-      Budget: '_',
-      Contract: 0,
-      Actual: '_',
-    },
-    'Total Cost' : {
-      type : 'title',
-      Budget: '6.468.566.061',
-      Contract: '5.953.787.983',
-      Actual: 0,
-    }
-  } 
-  
   rankColor(rank){
     let rankStatus 
     switch (rank){
@@ -229,14 +162,14 @@ export class SubMenuProjectComponent implements OnInit {
     return rankStatus
   }
 
-  defaultColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Budget','Total Price Budget', 'Category', 'Remarks'];
-  allColumns = [ 'Job No', 'rank', ...this.defaultColumns, 'Resp', 'action']
+  headColumns = ['Job', 'Departement', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Budget', 'Total Price Budget', 'Category', 'Remarks']
+  defaultColumns = ['jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'Price Budget','Total Price Budget', 'Category', 'remarks'];
+  allColumns = [ 'jobNumber', 'rank', ...this.defaultColumns, 'responsible', 'action']
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+
   @Output() reloadPage = new EventEmitter<string>();
-
-
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
     this.sortDirection = sortRequest.direction;
@@ -256,23 +189,15 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   populateData = (work) => {  
-    const {items, jobNumber, jobName, start, end, departement, volume , remarks, id, unit, responsible, category } = work  
+    const {items, volume , unit, category, start, end} = work  
     return {
       data: {
-        "Job No": jobNumber,
-        "Job": jobName,
-        "Dept": departement,
-        "Resp" : responsible,
-        "Start": start,
-        "Stop": end,
-        "Vol" : volume,
         "Unit" : unit?.name,
-        "Unit Price Budget": work['Price Budget'],
         "Total Price Budget" : volume * work['Price Budget'],
-        "Category" : category?.name,
-        "Remarks" : remarks,
-        "id" : id,
-        "kind" : items?.length ? 'dir' : 'doc',
+        Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
+        Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
+        Category : category?.name,
+        kind : items?.length ? 'dir' : 'doc',
         ...work,
       },
       children: 
@@ -292,7 +217,6 @@ export class SubMenuProjectComponent implements OnInit {
       break;
       case 'Monitoring' :
         this.navigateTo(this.id_proyek)
-        
       break;
       case 'Refresh' :
         this.ngOnInit()
@@ -363,30 +287,19 @@ export class SubMenuProjectComponent implements OnInit {
     });
   };
 
-  reconstructData = (data, parentIndex) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.reconstructData(w.items, parentIndex)}
-      } else if(i == parentIndex[0]) {
-        return null
-      }
-      return w
-    })
-    .filter(f => f != null)
-  }
-
   delete(id: string) {
-    let parentIndex = id.toString().split('')
-    const work_area = this.reconstructData(this.work_area, parentIndex)
-    let postBody
-    work_area.length === 0 ||
-    work_area === undefined ? postBody = {work_area : [null]} : postBody = {work_area : work_area}
-    this.projectService.addProjectJob(postBody, this.id_proyek)
-    .subscribe(() => {
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => 
-        this.populateData(work)) as TreeNode<FSEntry>[])
-    })
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      disableClose : true,
+      autoFocus: true,
+      data : {
+        dial : "job",
+        parentId : id,
+        work_area : this.projectData.work_area,
+        id : this.id_proyek
+      }});
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    });
   }
 }
 

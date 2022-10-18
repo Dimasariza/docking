@@ -36,7 +36,7 @@ export class WorkAreaComponent {
   modelData : any = {}
   disabledJob : boolean = false
   totalPrice = 0
-  unitPriceLabel : string
+  unitPriceLabel : string = null
   unitType
   workProgressContainer : any
   
@@ -49,7 +49,7 @@ export class WorkAreaComponent {
         break;
       case 'Add Sub':
         this.unitType = this.subJobUnit
-        this.modelData['head'] = `${data['Job No']}. ${data.Job}` 
+        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
         this.unitPriceLabel = 'Price Budget'
       break;
       case 'Update' :
@@ -58,9 +58,9 @@ export class WorkAreaComponent {
         this.unitType = this.jobUnit :
         this.unitType = this.subJobUnit
         this.modelData = this.data.data.data
-        this.modelData['head'] = `${data['Job No']}. ${data.Job}`
-        this.modelData['unitPriceLabel'] = this.modelData['Unit Price Budget']
-        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.Vol
+        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
+        this.modelData['unitPriceLabel'] = this.modelData['Price Budget']
+        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.volume
         this.disabledJob = true
         this.unitPriceLabel = 'Price Budget'
       break;
@@ -106,7 +106,7 @@ export class WorkAreaComponent {
       this.addSubJob(data)
     }
     if(this.data.dial === 'Work Progress'){
-      this.updateWorkProgress(data)
+      // this.updateWorkProgress(data)
     }
   }
 
@@ -137,7 +137,8 @@ export class WorkAreaComponent {
       ...submitData , 
       ...this.reconstructData(submitData),
       id: this.workAreaContainer.length, 
-      type : "pekerjaan"
+      type : "pekerjaan",
+      status : 'Not Started'
     }]
     this.uploadData(work_area)
   }
@@ -170,20 +171,16 @@ export class WorkAreaComponent {
     this.uploadData(work_area)
   }
 
-  updateWorkProgress(newData){
-    const submitData = newData.value
-    const reconstructData = {
-      ...submitData,
-      ...this.reconstructData(submitData),
-    }
-    const parentIndex = this.modelData.id.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workProgressContainer.work_area, parentIndex, reconstructData)
-    this.reportService.updateWorkProgress({work_area}, this.data.id)
-    .subscribe(() =>{
-      this.onSuccess.emit()
-      this.close()
-    })
-  }
+  // updateWorkProgress(newData){
+  //   const submitData = newData.value
+  //   const reconstructData = {
+  //     ...submitData,
+  //     ...this.reconstructData(submitData),
+  //   }
+  //   const parentIndex = this.modelData.id.toString().split('')
+  //   const work_area = this.updateWorkAreaData(this.workProgressContainer.work_area, parentIndex, reconstructData)
+  //   this.uploadData(work_area)
+  // }
 
   addSubJobData = (data, newData, parentIndex) => {
     return data.map((w, i) => {
@@ -211,10 +208,10 @@ export class WorkAreaComponent {
 
 
   uploadData(work_area){
-    this.reportService.updateWorkProgress({work_area}, this.data.id)  
-    .subscribe(res => console.log(res))
-    this.tenderService.updateWorkArea({work_area}, this.data.id)
-    .subscribe(res => console.log(res))
+    // this.reportService.updateWorkProgress({work_area}, this.data.id)  
+    // .subscribe(res => console.log(res))
+    // this.tenderService.updateWorkArea({work_area}, this.data.id)
+    // .subscribe(res => console.log(res))
     this.projectSerivce.addProjectJob({work_area}, this.data.id)
     .subscribe(() => {
       this.onSuccess.emit()

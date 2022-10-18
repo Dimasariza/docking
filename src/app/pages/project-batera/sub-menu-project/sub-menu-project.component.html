@@ -61,18 +61,18 @@
                 <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
                 <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
-                <ng-container [nbTreeGridColumnDef]="'Job No'">
+                <ng-container [nbTreeGridColumnDef]="'jobNumber'">
                   <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 100px">Job No.</th>
                   <td nbTreeGridCell *nbTreeGridCellDef="let row">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                    {{row.data['Job No']}}
+                    {{row.data.jobNumber}}
                   </td>
                 </ng-container>
 
-                <ng-container [nbTreeGridColumnDef]="'Resp'">
-                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 0px">Responsible</th>
+                <ng-container [nbTreeGridColumnDef]="'responsible'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 20px">Responsible</th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                        {{row.data.Resp?.name}}
+                        {{row.data.responsible?.name}}
                     </td>
                 </ng-container>
                 

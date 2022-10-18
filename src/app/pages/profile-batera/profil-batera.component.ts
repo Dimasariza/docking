@@ -1,20 +1,8 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { AddUserComponent } from './add-user/add-user.component';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfileBateraService } from './profil-batera.service';
-import { UpdateUserComponent } from './update-user/update-user.component';
-
-interface companyData {
-  profile_nama_perusahaan : string
-  profile_alamat_perusahaan_1 : string
-  profile_telepon : string
-  profile_npwp : string
-  profile_merk_perusahaan : string
-  profile_alamat_perusahaan_2 : string
-  profile_fax : string
-  profile_email : any
-}
 
 @Component({
   selector: 'ngx-profil-batera',
@@ -27,8 +15,8 @@ export class ProfilBateraComponent implements OnInit {
     public dialog : MatDialog,
   ) {}
 
-  public userData : any;
-  public companyProfile : any
+  userData : any;
+  companyData : any
   changeText : string  = 'CHANGE PROFILE'
   formCondition = true
 
@@ -36,24 +24,12 @@ export class ProfilBateraComponent implements OnInit {
     this.pofileService.getUserData(1, 10, '', '', '')
       .subscribe(({data} : any) => {
         this.userData = data
-        console.log(data)
     }); 
 
     this.pofileService.getCompanyProfile()
     .subscribe(({data} : any) => {
-      data.length === 0 ? '' : this.companyData = data
+      this.companyData = data 
     })
-  }
-
-  companyData : companyData = {
-    profile_nama_perusahaan : 'Company Name',
-    profile_alamat_perusahaan_1 : 'Company Address',
-    profile_telepon : 'Company Mobile Number',
-    profile_npwp : 'Company NPWP',
-    profile_merk_perusahaan : 'Company Brand',
-    profile_alamat_perusahaan_2 : 'Company Address',
-    profile_fax : 'Company FAX',
-    profile_email : 'Company Email'
   }
 
   changeProfile(){
@@ -63,29 +39,42 @@ export class ProfilBateraComponent implements OnInit {
 
   updateCompanyProfile(formValue){
     this.changeProfile()
-    this.pofileService.updateCompanyProfile(this.companyData)
+    this.pofileService.updateCompanyProfile(formValue.value)
     .subscribe(res => {
       console.log(res)
     })
   }
 
   changeLogoDial(){
-    const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(ChangeLogoComponent)
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+    });
   }
 
   addNewUserDial(){
-    const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(AddUserComponent, {
       disableClose : true, autoFocus:true, 
+      data : {
+        dial : "Add"
+      }
     })
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+    });
   }
 
   updateUserDial(row){
-    const dialogConfig = new MatDialogConfig();
-    const dialogRef = this.dialog.open(UpdateUserComponent, {
-      data : this.userData[row]
+    const dialogRef = this.dialog.open(AddUserComponent, {
+      data : {
+        dial : "Update",
+        data : row
+      }
     })
+
+    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+    });
   }
 }
 

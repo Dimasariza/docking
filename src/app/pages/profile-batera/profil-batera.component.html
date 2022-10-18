@@ -9,7 +9,7 @@
             </nb-card>
         </div>
         <div class="mx-3 w-100 align-middle">
-            <h5>{{companyData.profile_nama_perusahaan}}</h5>
+            <h5>{{companyData?.profile_nama_perusahaan}}</h5>
         </div>
     </nb-card-header>
 
@@ -22,36 +22,34 @@
         <div class="row">
             <div class="col-6">
                 <span class="p-2 d-block">Company Name</span>
-                <input type="text" nbInput fullWidth placeholder="Company Name" class="form-control" id="name" (change)="companyData.profile_nama_perusahaan = $event.target.value"
-                required [(ngModel)]="companyData.profile_nama_perusahaan" name="name" [disabled]="formCondition">
+                <input type="text" nbInput fullWidth placeholder="Company Name" class="form-control" (change)="companyData.profile_nama_perusahaan = $event.target.value"  [ngModel]="companyData?.profile_nama_perusahaan" name="profile_nama_perusahaan" [disabled]="formCondition">
                 <span class="p-2 d-block">Company Adress</span>
-                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="First Company Address" id="adreess_01"
-                required [(ngModel)]="companyData.profile_alamat_perusahaan_1" name="address_01" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
+                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="First Company Address"
+                required [ngModel]="companyData?.profile_alamat_perusahaan_1" name="profile_alamat_perusahaan_1" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
                 <span class="p-2 d-block">Mobile Number</span>
-                <input type="text" nbInput fullWidth placeholder="Mobile Number" id="telp_number" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_telepon" name="telp_number" #telp_number="ngModel">
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_telepon" name="profile_telepon" #telp_number="ngModel">
                 <span class="p-2 d-block">NPWP</span>
-                <input type="text" nbInput fullWidth placeholder="Company NPWP" id="npwp" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_npwp" name="npwp" #npwp="ngModel">
+                <input type="text" nbInput fullWidth placeholder="Company NPWP" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_npwp" name="profile_npwp" #npwp="ngModel">
             </div>
             <div class="col-6">
                 <span class="p-2 d-block">Company Brand</span>
-                <input type="text" nbInput fullWidth placeholder="Company Brand" id="brand" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_merk_perusahaan" name="brand" #brand="ngModel">
+                <input type="text" nbInput fullWidth placeholder="Company Brand" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_merk_perusahaan" name="profile_merk_perusahaan" #brand="ngModel">
                 <span class="p-2 d-block">Company Address</span>
-                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Second Company Address" id="adreess_02" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_alamat_perusahaan_2" name="address_02" #address_02="ngModel" shape="rectangle"></textarea>
+                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Second Company Address" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_alamat_perusahaan_2" name="profile_alamat_perusahaan_2" #address_02="ngModel" shape="rectangle"></textarea>
                 <span class="p-2 d-block">Faximile</span>
-                <input type="text" nbInput fullWidth placeholder="Faximile Address" id="faximile" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_fax" name="faximile" #faximile="ngModel">
+                <input type="text" nbInput fullWidth placeholder="Faximile Address"  [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_fax" name="profile_fax" #faximile="ngModel">
                 <span class="p-2 d-block">E-mail</span>
-                <input type="text" nbInput fullWidth placeholder="E-mail Address" id="companyemail" [disabled]="formCondition"
-                required [(ngModel)]="companyData.profile_email" name="email" #email="ngModel">
+                <input type="text" nbInput fullWidth placeholder="E-mail Address" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_email" name="profile_email" #email="ngModel">
             </div>
         </div>
 
         <button type="submit" nbButton status="success" [disabled]="!companyForm.form.valid" *ngIf="formCondition == false" fullWidth>Submit</button>
-        <!-- <button type="button" nbButton status="basic" (click)="companyForm.reset()">Reset</button> -->
     </form>
     </nb-card-body>
 
@@ -92,7 +90,7 @@
             <ngx-datatable-column name="Status" prop="status"  width="60"></ngx-datatable-column> 
             <ngx-datatable-column width="60">
                 <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                    <button nbButton size="small" ghost status="primary" (click)="updateUserDial(rowIndex)"> 
+                    <button nbButton size="small" ghost status="primary" (click)="updateUserDial(row)"> 
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
                 </ng-template>

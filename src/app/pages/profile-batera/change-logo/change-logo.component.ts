@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -11,6 +11,8 @@ export class ChangeLogoComponent {
   constructor(
     private dialogRef: MatDialogRef<ChangeLogoComponent>
   ) { }
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+
 
   getFile(val){}
   close(){this.dialogRef.close();}

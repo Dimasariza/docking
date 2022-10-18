@@ -22,6 +22,11 @@ export class ProfileBateraService {
     })
   }
 
+  getUserPerId(id){
+    const url = this.apiUrl + "/user/" + id
+    return this.httpClient.get(url)
+  }
+
   updateUser(postData){
     const url = this.apiUrl + "/user/" + postData.id_user
     const httpHeaders = new HttpHeaders();

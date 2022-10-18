@@ -49,7 +49,7 @@
           <button nbButton outline size="small" status="primary" (click)="addProjectDial()" >Add Project</button>
         </nb-card-header>
 
-      <ngx-datatable [class]="'bootstrap'" [rows]="allProjectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
+      <ngx-datatable [class]="'bootstrap'" [rows]="projectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
           <ngx-datatable-column [name]="'Project name'" prop="kapal">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <a class="text-primary text-decoration-none" 

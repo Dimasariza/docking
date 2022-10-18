@@ -7,12 +7,12 @@ import { TenderBateraService } from '../tender-batera.service';
 
 @Component({
   providers : [ProjectDataComponent],
-  selector: 'ngx-add-yard',
-  templateUrl: './add-yard.component.html',
+  selector: 'ngx-contract-action',
+  templateUrl: './contract-action.component.html',
 })
-export class AddYardComponent  {
+export class ContractActionComponent  {
   constructor(
-    private dialogRef: MatDialogRef<AddYardComponent>,
+    private dialogRef: MatDialogRef<ContractActionComponent>,
     private tenderService : TenderBateraService,
     private profileService : ProfileBateraService,
     private projectComp : ProjectDataComponent,
@@ -20,6 +20,7 @@ export class AddYardComponent  {
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
+  modelData
   ngOnInit(): void {
     this.profileService.getUserData(1, 10, '', "shipyard", '')
     .subscribe(({data} : any) => {
@@ -30,8 +31,8 @@ export class AddYardComponent  {
         }))
       this.addProjectBody.responsible = user
     })
+    this.modelData = this.data.data
   }
-
 
   addProjectBody = {
     project : [],
@@ -44,13 +45,29 @@ export class AddYardComponent  {
 
   onSubmit(data){
     let body = this.projectComp.checkPostBody(data.value)
-    console.log(body)
-    // this.tenderService.addDataTender({...body})
-    // .subscribe(res => {
-    //   this.onSuccess.emit()
-    //   this.close()
-    // })
+    switch (this.data.dial) {
+      case 'Add' :
+        this.addNewContract(body)
+        break;
+      case 'Update' :
+        this.updateContract(data)
+        break;
+    }
   };
+
+  addNewContract(body){
+    this.tenderService.addTenderContract({...body})
+    .subscribe(res => {
+      this.onSuccess.emit()
+      this.close()
+    })
+  }
+
+  updateContract(body){
+    const {id_tender} = this.modelData
+    this.tenderService.updateTenderContract(body.value, id_tender)
+    .subscribe(res => console.log(res))
+  }
 
   close(){this.dialogRef.close()};
 

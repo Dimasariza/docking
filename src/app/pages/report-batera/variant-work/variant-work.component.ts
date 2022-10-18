@@ -191,11 +191,23 @@ export class VariantWorkComponent implements OnChanges {
     this.updateVariantWork(approveData)
   }
 
+  reconstructData = (data, parentIndex) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.reconstructData(w.items, parentIndex)}
+      } else if(i == parentIndex[0]) {
+        return null
+      }
+      return w
+    })
+    .filter(f => f != null)
+  }
 
   deleteVariant(id){
     let parentIndex = id.toString().split('')
     let postBody
-    const deleteData = this.subMenuProject.reconstructData(this.variantWorkData.variant_work, parentIndex)
+    const deleteData = this.reconstructData(this.variantWorkData.variant_work, parentIndex)
     deleteData.length === 0 ||
     deleteData === undefined ? 
     postBody = [null] : postBody =  deleteData

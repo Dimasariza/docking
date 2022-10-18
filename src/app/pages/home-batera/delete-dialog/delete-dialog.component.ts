@@ -35,9 +35,37 @@ export class DeleteDialogComponent implements OnInit {
           this.onSuccess.emit()
           this.close()
         })
+      case 'job' :
+        this.deleteJob()
       default:
         break;
     }
+  }
+
+  reconstructData = (data, parentIndex) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.reconstructData(w.items, parentIndex)}
+      } else if(i == parentIndex[0]) {
+        return null
+      }
+      return w
+    })
+    .filter(f => f != null)
+  }
+
+  deleteJob(){
+    const parentIndex = this.deleteData.parentId.toString().split('')
+    const work_area = this.reconstructData(this.deleteData.work_area, parentIndex)
+    let postBody
+    work_area.length === 0 ||
+    work_area === undefined ? postBody = {work_area : [null]} : postBody = {work_area : work_area}
+    this.projectService.addProjectJob(postBody, this.deleteData.id)
+    .subscribe(() => {
+      this.onSuccess.emit()
+      this.close()
+    })
   }
 
   switchServ(){

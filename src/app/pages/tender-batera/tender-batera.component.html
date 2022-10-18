@@ -1,42 +1,44 @@
 <nb-card class="p-3">  
   <div class="row">
-    <div *ngIf="allDataTender" class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-      <div class="d-flex justify-content-between">
-        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable['Yard'] || ''}}</Span></h5>
-        <div>
-          <button nbButton size="tiny" class="mx-1" status="danger"  (click)="unselectTender()" outline [disabled]="!id_tender">Unselect Tender</button>
-          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Contract</button>
-        </div> 
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <div>
+        <h5>Selected Yard : <Span class="text-capitalize">{{dataTable?.['Yard'] || ''}}</Span></h5>
+          <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!tenderId">Delete Yard</button>
+          <button nbButton size="tiny" class="mx-1" status="warning"  (click)="unselectTender()" outline [disabled]="!tenderId">Unselect Yard</button>
+          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!tenderId">Update Yard</button>
+          <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Yard</button>
       </div>
-          <div>
+          <div class="my-3">
             <span class="d-block label">Project Name</span>  
-            <nb-select *ngIf="allDataTender" placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
-              <nb-option *ngFor="let value of allDataTender['project']; let id=index;" [value]="allDataTender['project'][id]" (click)="getProject(id)" #projectNameVal>{{value.name}}</nb-option>
+            <nb-select placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+              <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(id)" #projectNameVal>{{value.shipName}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Name</span>
-            <nb-select *ngIf="allDataTender" [placeholder]="allDataTender.yard || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="enableSelectYard" #selectedYard class="m-1">
-              <nb-option *ngFor="let value of allDataTender?.['yard']; let id=index;" [value]="allDataTender?.['yard'][id]" (click)="getYard(projectNameVal)">{{value.name}}</nb-option>
+            <nb-select [placeholder]=" selectedYard?.nama_galangan || 'Select Yard' " size="small" fullWidth class="w-100" [ngModel]="selectedYard?.nama_galangan" [disabled]="!(!projectId || !selectedYard || !tenderId)" #selectYard class="m-1">
+              <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Location</span> 
-            <span class="d-block text-capitalize">{{dataTable['Yard Location'] || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data Not Available'}}</span>
             <span class="d-block label">Responsible</span>
-            <span class="d-block text-capitalize">{{dataTable['Responsible'] || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.responsible || 'Data Not Available'}}</span>
             <span class="d-block label">Contract Number</span> 
-            <span class="d-block text-capitalize">{{dataTable['Contract'] || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data Not Available'}}</span>
             <span class="d-block label">Yard Quote</span> 
-            <span class="d-block text-capitalize">{{dataTable['Yard Quote'] || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.yard_total_quote || 'Data Not Available'}}</span>
             <span class="d-block label">Comment</span>
-            <p class="d-block">{{dataTable['comment'] || 'Data Not Available'}}</p>
+            <p class="d-block">{{displayTender?.komentar || 'Data Not Available'}}</p>
           </div>
 
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-      <nb-card class="p-3">
-        <div *ngFor="let item of objectKeys(dataTable)">
+
+      <nb-card class="p-3" *ngIf=" selectedYard ">
+
+          <div *ngFor="let item of objectKeys(dataTable)">
             <div *ngIf="item != 'General Discount'&& item !='Additional Discount' else discount " class="row" >
-                <div class="col-6"><strong>{{item}}</strong></div>
-                <div class="">:</div>
-                <div class="col text-capitalize text-right">{{dataTable?.[item]}}</div>
+              <div class="col-6"><strong>{{item}}</strong></div>
+              <div class="">:</div>
+              <div class="col text-capitalize text-right">{{dataTable?.[item]}}</div>
             </div>
             <ng-template #discount>
               <div class="row">
@@ -45,10 +47,12 @@
                 <div class="col text-right">({{dataTable?.[item].discount}} %) {{dataTable?.[item].after}}  </div>
               </div>
             </ng-template>
-        </div>
-        <div class="text-center mt-3">
+          </div>
+          <div class="text-center mt-3">
             <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
-        </div>
+          </div>
+          
+        
       </nb-card>
     </div>
   </div>
@@ -67,17 +71,17 @@
           <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" [clickToToggle]="false"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
-            <ng-container [nbTreeGridColumnDef]="'Job No'">
+            <ng-container [nbTreeGridColumnDef]="'jobNumber'">
               <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 90px">Job No.</th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" >
                 <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
-                {{row.data['Job No']}}
+                {{row.data.jobNumber}}
               </td>
             </ng-container>
             <ng-container [nbTreeGridColumnDef]="'rank'">
               <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 50px"></th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" >
-                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data['rank'])}"></nb-icon>
+                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data?.rank?.name)}"></nb-icon>
               </td>
             </ng-container>
             <ng-container [nbTreeGridColumnDef]="'Approve'">
@@ -106,14 +110,14 @@
 
             <ng-container [nbTreeGridColumnDef]="'Resp'">
               <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px">Resp</th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">{{row.data.Resp.name}}
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">{{row.data?.responsible?.name}}
               </td>
           </ng-container>
 
             <ng-container *ngFor="let column of defaultColumns; let index = index"
                           [nbTreeGridColumnDef]="column"
                           [showOn]="getShowOn(index)">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">{{column}}</th>
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">{{headColumns[index]}}</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
             </ng-container>
           </table>

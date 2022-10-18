@@ -29,7 +29,7 @@ export class ProjectBateraService {
     })
   }
 
-  getSubProjectData(id : any = 1){
+  getSubProjectData(id){
     const url = this.apiUrl + "/proyek/" + id
     return this.httpClient.get(url)
   }

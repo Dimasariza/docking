@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -21,6 +22,7 @@ export class ProjectBateraComponent {
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
               private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
+              private datePipe : DatePipe
     ) {
   }
 
@@ -36,15 +38,15 @@ export class ProjectBateraComponent {
     return this.subMenuProject.getShowOn(index)
   }
 
-  columnContents = ['jobName', 'project', 'cust', 'status', 'resp', 'end']
-  allColumns = [ 'icon', ...this.columnContents]
   columnHead = ['Tasks', 'Project/Asset', 'Customer', 'Status', 'Responsible', 'Due'];
+  columnContents = ['jobName', 'project', 'cust', 'status', 'resp', 'due']
+  allColumns = [ 'icon', ...this.columnContents]
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  allProjectDatas : any
-  workAreaContainer : any
+  projectDatas : any
+  workAreaContainer : any = []
   shipManagement : string
   responsible : any = []
   status : any = ['Not Started', 'Done', 'In Progress', 'Done']
@@ -52,24 +54,9 @@ export class ProjectBateraComponent {
   ngOnInit() {
     this.projectService.getDataProjects()
       .subscribe(({data} : any) => {
-        this.allProjectDatas = data
-
-        this.allProjectDatas.length ||
-        this.allProjectDatas !== null ||
-        this.allProjectDatas[0] !== null ? 
-        (() => {
-          this.allProjectDatas.map((i, index) => {
-            this.allProjectDatas[index].phase = 
-            this.phaseStatus(this.allProjectDatas[index].phase)
-          }) 
-
-          let work_area = []
-          data.map((work, id) => {
-            work_area.push(...work.work_area)
-            work_area[work_area.length-1]['project'] = `${work.kapal.nama_kapal} -DD- ${work.tahun}`
-          })
-          this.workAreaContainer = work_area
-        })() : null
+        if(!data.length || data === null) return;
+        this.projectDatas = data
+        this.collectData()
         this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
         this.populateData(work)) as TreeNode<FSEntry>[]) 
     });
@@ -83,31 +70,47 @@ export class ProjectBateraComponent {
     .subscribe(({data} : any) => this.responsible = data)
   }
 
+  collectData(){
+    this.projectDatas.map((work, id) => {
+      this.projectDatas[id].phase = this.phaseStatus(this.projectDatas[id].phase)
+      const {work_area} = work
+      if(!work_area || work_area[0] === null) return; 
+      const projectJob = work_area.map(project => ({
+        ...project,
+        project : `${work.kapal.nama_kapal} -DD- ${work.tahun}`
+      }))
+      this.workAreaContainer.push(...projectJob)
+    }) 
+  }
+
   populateData = (data) => {
-    const {items, responsible} = data
+    const {items, responsible, end} = data
     return {
       data : {
-        ...data,
         cust : this.shipManagement,
         resp : responsible.name,
-        kind: items?.length ? 'dir' : 'doc'
+        kind: items?.length ? 'dir' : 'doc',
+        due : this.datePipe.transform(end, 'yyyy-MM-dd'),
+        ...data,
       },
       children : items?.length ? items.map(item => this.populateData(item)) : []
     }
   }
 
   phaseStatus(data){
-    if(data === "requisition"){
-      data = [true, false, false, false]
-    }
-    if(data === "in_progress"){
-      data = [true, true, false, false]
-    }
-    if(data === "evaluasi"){
-      data = [true, true, true, false]
-    }
-    if(data === "finish"){
-      data = [true, true, true, true]
+    switch (data){
+      case 'requisition' :
+        data = [true, false, false, false]
+      break;
+      case 'in_progress' :
+        data = [true, true, false, false]
+      break;
+      case 'evaluasi' :
+        data = [true, true, true, false]
+      break;
+      case 'finish' :
+        data = [true, true, true, true]
+      break;
     }
     return data
   }
@@ -138,11 +141,6 @@ export class ProjectBateraComponent {
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
     });
-
-  }
-
-  succesFunction(){
-
   }
 }
 

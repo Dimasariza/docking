@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
@@ -47,11 +48,13 @@ export class WorkProgressComponent {
               private datepipe : DatePipe,
               private subMenuProject : SubMenuProjectComponent,
               private activatedRoute : ActivatedRoute,
-              private reportService : ReportBateraService
+              private reportService : ReportBateraService,
+              private projectService : ProjectBateraService
     ) {
   }
-  defaultColumns = [ 'Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
-  allColumns = ['Job' ,'rank' ,'%' , 'Responsible' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
+  headColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Change', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'last_update', 'volume', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -66,30 +69,42 @@ export class WorkProgressComponent {
   }
 
   @Input() workProgressData : any = ""
+
+
+  workProgressConatainer
   useButtons = useButtons
   projectId : any
   shipYard : boolean = false
   shipOwner : boolean = false
   
+
+  ngOnInit(){
+    const id = this.activatedRoute.snapshot.paramMap.get("id")
+    this.projectService.getSubProjectData(id)
+    .subscribe(({data} : any) => {
+      this.dataSource = this.dataSourceBuilder.create(data.work_area.map(work => 
+      this.populateData(work)) as TreeNode<FSEntry>[])
+    })
+  }
   ngOnChanges(){
     this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
+
     this.workProgressData?.work_area === null ||
     this.workProgressData?.work_area === undefined ||
-    this.workProgressData?.work_area[0] === null ? null :
-    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => 
-    this.populateData(work)) as TreeNode<FSEntry>[])
+    this.workProgressData?.work_area[0] === null ? null : null
+    // this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => 
+    // this.populateData(work)) as TreeNode<FSEntry>[])
   }
 
   populateData = (work) => {          
-    const {items, jobName, start, end, volume, responsible, unit, status, unitPrice, last_update, rank} = work  
+    const {items, start, end, volume, responsible, unit, status, unitPrice, last_update, rank} = work  
       return {
       data: {
-        "Job": jobName,
-        "Start": start,
-        "Stop": end,
-        "Vol" : volume,
-        "Unit" : unit.name,
-        "Responsible" : responsible,
+        "Start": this.datepipe.transform(start, 'yyyy-MM-dd'),
+        "Stop": this.datepipe.transform(end, 'yyyy-MM-dd'),
+        "Vol" : volume?.name,
+        "Unit" : unit?.name,
+        "Responsible" : responsible?.name,
         "Status" : status?.name,
         "Unit Price Actual" : unitPrice,
         "Total Price Actual" : volume * unitPrice,

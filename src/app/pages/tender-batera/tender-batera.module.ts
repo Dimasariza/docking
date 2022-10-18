@@ -6,7 +6,7 @@ import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDatep
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AddYardComponent } from './add-yard/add-yard.component';
+import { ContractActionComponent } from './contract-action/contract-action.component';
 import { FormsModule } from '@angular/forms';
 
 @NgModule({
@@ -32,7 +32,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NbDatepickerModule
   ],
-  entryComponents: [AddYardComponent],
+  entryComponents: [ContractActionComponent],
   declarations: [
     ...routedComponents,
   ],

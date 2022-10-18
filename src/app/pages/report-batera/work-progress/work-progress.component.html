@@ -24,16 +24,15 @@
                 </td>
             </ng-container>
 
-            <ng-container [nbTreeGridColumnDef]="'Job'">
+            <ng-container [nbTreeGridColumnDef]="'jobName'">
                 <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:250px;">Job</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
                   <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
                   <span class="text-primary btn" style="cursor: pointer;" (click)="jobMenuDial(row)">
-                      {{row.data['Job']}}
+                      {{row.data.jobName}}
                   </span>
                 </td>
-              </ng-container>
-
+            </ng-container>
               
             <ng-container [nbTreeGridColumnDef]="'rank'">
                 <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:80px"></th>
@@ -50,13 +49,6 @@
                 </td>
             </ng-container>
 
-            <ng-container [nbTreeGridColumnDef]="'Responsible'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Responsible</th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                    {{row.data.Responsible.name}}
-                </td>
-            </ng-container>
-            
             <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
