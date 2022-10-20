@@ -4,7 +4,6 @@ import { routedComponents, TenderBateraRoutingModule } from './tender-batera-rou
 import { NumberCardModule } from '@swimlane/ngx-charts';
 import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTreeGridModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { TablesRoutingModule } from '../tables/tables-routing.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ContractActionComponent } from './contract-action/contract-action.component';
 import { FormsModule } from '@angular/forms';
@@ -23,7 +22,6 @@ import { FormsModule } from '@angular/forms';
     NbButtonModule,
     NbTreeGridModule,
     NbInputModule,
-    TablesRoutingModule,
     NbAccordionModule,
     MatDialogModule,
     NbInputModule,
