@@ -1,7 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { ApexAxisChartSeries } from 'ng-apexcharts';
-import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
 
 @Component({
@@ -10,112 +8,13 @@ import { TrackingBateraService } from './tracking-batera.service';
   styleUrls: ['./tracking-batera.component.scss']
 })
 export class TrackingBateraComponent implements OnInit {
-  lineChartOption: Partial<ChartOptions> = {
-    series: [
-      {
-        name: "Rencana",
-        data: [10, 30, 35, 40, 50, 62, 69, 91, 100],
-        color: "#2665fc"
-      },
-      {
-        name: "Actual",
-        data: [10, 41, 45, 51, 59, 62, 69, 91, 100],
-        color: "#008a2d"
-      }
-    ],
-    legend: {
-      show: false
-    },
-    chart: {
-      height: 200,
-      // width: 340,
-      offsetX: 0,
-      type: "line",
-      zoom: {
-        enabled: false
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "smooth",
-      lineCap: 'square',
-    },
-    // title: {
-    //   text: "Product Trends by Month",
-    //   align: "left"
-    // },
-    grid: {
-      show: false
-    },
-    yaxis: {
-      labels: {
-        show: false
-      },
-      show: false
-    },
-    xaxis: {
-      axisBorder: {
-        show: false
-      },
-      labels: {
-        show: false
-      },
-      categories: [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep"
-      ]
-    },
-  };
-
-  chartOptions: Partial<ChartOptions> = {
-    chart: {
-      height: 300,
-      type: 'rangeBar'
-    },
-    plotOptions: {
-      bar: {
-        horizontal: true
-      }
-    },
-    grid: {
-      show: false
-    },
-    xaxis: {
-      type: 'datetime'
-    },
-    yaxis: {
-      show: false  
-    },
-    dataLabels: {
-      enabled: true,
-      formatter: function(val, opts) {
-        var label = opts.w.globals.labels[opts.dataPointIndex]
-        // var a = moment(val[0])
-        // var b = moment(val[1])
-        // var diff = b.diff(a, 'days')
-        return label // + ': ' + diff + (diff > 1 ? ' days' : ' day')
-      },
-    }
-  }
 
   constructor(private trackingService : TrackingBateraService,
               private route : Router
   ) { }
 
   public trackingData : any 
-  series: ApexAxisChartSeries
+  // series: ApexAxisChartSeries
 
   phasesStatus(status){
     if(status === 'requisition'){
@@ -149,42 +48,8 @@ export class TrackingBateraComponent implements OnInit {
           })
         ))
       ))
-      this.chartOptions.chart.height = dataContainer.length * 112
       
       this.trackingData = dataContainer
-      // console.log(this.trackingData);
-      
-      this.series = [{
-        name: "rencana",
-        // type: "rangeBar",
-        data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
-          x: nama_kapal,
-          y: [
-            new Date(periode).getTime(),
-            new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
-          ]
-        }))
-      },
-      {
-        name: "actual",
-        // type: "rangeBar",
-        data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
-          x: nama_kapal,
-          y: [
-            new Date(periode).getTime(),
-            new Date(updated_at).getTime() + (3600*24*1000) // tambah 1 hari
-          ]
-        }))
-      },
-      // {
-      //   name: "Kurva S",
-      //   type: "line",
-      //   data:  this.trackingData.map(({nama_kapal, periode, updated_at}) => ({
-      //     x: nama_kapal,
-      //     y: []
-      //   }))
-      // }
-    ]
     }
     )
   } 

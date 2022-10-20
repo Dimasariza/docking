@@ -41,7 +41,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    NbDatepickerModule.forRoot()  
+    NbDatepickerModule.forRoot(),
   ],
   providers: [
 

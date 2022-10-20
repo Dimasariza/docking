@@ -1,11 +1,3 @@
-@import '~@swimlane/ngx-datatable/index.css';
-@import '~@swimlane/ngx-datatable/themes/bootstrap.scss';
-@import '~@swimlane/ngx-datatable/assets/icons.css';
-
-.datatable-body-row, .datatable-body-cell {
-    height: auto !important;
-}
-
 $bar-color: #b8c2cc !default;
 $bar-stroke: #8D99A6 !default;
 $border-color: #e0e0e0 !default;
@@ -143,8 +135,6 @@ $curve-line-color: #0400ff !default;
 
 	.curve-line {
 		stroke: $curve-line-color;
-		fill:none;
-		stroke-width:3;
 	}
 }
 
