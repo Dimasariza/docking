@@ -27,8 +27,8 @@
     </nb-card-header>
 
     <nb-card-body>
-        <!-- <gantt></gantt> -->
-        <div class="d-flex">
+        <f-gantt></f-gantt>
+        <!-- <div class="d-flex">
             <div style="width: 350px">
                 <ngx-datatable
                     class="bootstrap"
@@ -82,32 +82,6 @@
                     ></apx-chart>
                 </div>
             </div>
-        </div>
+        </div> -->
     </nb-card-body>
 </nb-card>
-
-<ng-template #table>
-    <ngx-datatable
-        class="bootstrap"
-        [rows]="data"
-        [count]="data.length"
-        columnMode="force"
-        default>
-        <ngx-datatable-column name="Phases">
-            <ng-template let-row="row">
-                <button nbButton *ngFor="let stat of row.phases">
-                    {{stat}}+
-                    <nb-icon icon="check"></nb-icon>
-                </button>
-            </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Periode"></ngx-datatable-column>
-    </ngx-datatable>
-</ng-template>
-
-<ng-template #timeline let-series>
-    <!-- {{series | json}} -->
-    <ng-container *ngIf="series">
-        
-    </ng-container>
-</ng-template>
