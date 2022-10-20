@@ -1,27 +1,29 @@
 import { HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Inject } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { HomeBateraService } from '../../home-batera/home-batera.service';
 import { ProfileBateraService } from '../profil-batera.service';
+import { environment } from "../../../../environments/environment"
+
 
 @Component({
-  selector: 'ngx-add-user',
-  templateUrl: './add-user.component.html',
-  styleUrls : ['./add-user.component.scss']
+  selector: 'ngx-user-action',
+  templateUrl: './user-action.component.html',
+  styleUrls : ['./user-action.component.scss']
 })
-export class AddUserComponent {
+export class UserActionComponent implements OnInit, OnDestroy{
   constructor(  private profileService :ProfileBateraService,
                 private homeService : HomeBateraService,
                 public dialog : MatDialog,
-                private dialogRef: MatDialogRef<AddUserComponent>,
+                private dialogRef: MatDialogRef<UserActionComponent>,
                 @Inject( MAT_DIALOG_DATA) public users : any
   ) {}
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-
+  subscription : Subscription [] = []
   userData
-  urlLink
-  avatar_url = null
+  avatar_url : any = ""
   passwordFieldType: boolean = true;
   vessels : any
   userRole = ["Director", "Ship Manager", "Ship Yard", "Super Admin"]
@@ -31,13 +33,16 @@ export class AddUserComponent {
   ngOnInit(){
     this.userData = this.users.data
     if(this.users.dial == "Update") {
-      this.homeService.getAllShip()
+      this.avatar_url = environment.apiUrl + "/file/show/" + this.userData.avatar_url
+      const _subs = this.homeService.getAllShip()
       .subscribe(({data} : any) => {
         this.vessels = data.map(ship => ({
           nama_kapal : ship.nama_kapal,
           id_kapal : ship.id_kapal
-        }))
+        }));
+        this.subscription.push(_subs)
       });
+      this.subscription.push(_subs)
     }
   }
 
@@ -56,26 +61,29 @@ export class AddUserComponent {
       var reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = (event ) => {
-        this.urlLink = event.target.result
-        this.avatar_url = this.urlLink
+        this.avatar_url = event.target.result
       }
     }
+    this.onImageLoad()
   }
   
-  private uploadAvatarUrl : any = null
-  onImageLoad(event){
+  private uploadAvatarUrl : any = ""
+  onImageLoad(){
+    console.log("upload image")
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
-    this.homeService.uploadFile(formData)
+    const _subs = this.homeService.uploadFile(formData)
       .subscribe((res) => {
         if (res.type === HttpEventType.UploadProgress) {
           console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
         } else if ( res.type === HttpEventType.Response){
           console.log("final Response uploading image")
+          this.uploadAvatarUrl = res.body
+          this.uploadAvatarUrl = this.uploadAvatarUrl.data.file
         }
-        this.uploadAvatarUrl = res
-        this.uploadAvatarUrl = this.uploadAvatarUrl.body
     })
+
+    // this.subscription.push(_subs)
   }
 
   passwordField(){
@@ -95,33 +103,41 @@ export class AddUserComponent {
   }
 
   addNewUserData(postBody){
-    this.uploadAvatarUrl ? 
-    postBody.avatar_url = this.uploadAvatarUrl.data.file : 
-    postBody.avatar_url = ""
+    postBody.avatar_url = this.uploadAvatarUrl
     postBody['nama_kapal'] = ""
     postBody['departemen_id'] = ""
     postBody['title'] = postBody.username + '_' + this.roleSymbol[postBody.role]
     postBody['role'] = this.dataRole[postBody.role]
-    console.log(postBody)
-    this.profileService.addUser(postBody)
-      .subscribe(res => {console.log(res)},
+    const _subs = this.profileService.addUser(postBody)
+      .subscribe(res => {
+        console.log(res)
+        this.onSuccess.emit()
+        this.close()
+      },
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.'),
     )
-    this.onSuccess.emit()
-    this.close()
+    // this.subscription.push(_subs)
   }
 
   updateUserData(postBody){
-    this.uploadAvatarUrl ? null : postBody.avatar_url = this.uploadAvatarUrl
-    postBody.id_user = this.users.id_user
-    this.profileService.updateUser(postBody)
+    this.uploadAvatarUrl ? 
+    postBody.avatar_url = this.uploadAvatarUrl : 
+    postBody.avatar_url = this.userData.avatar_url
+    postBody['id_user'] = this.userData.id_user
+    postBody['departemen_id'] = ""
+    const _subs =  this.profileService.updateUser(postBody)
     .subscribe(() => {},
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.'))
     this.onSuccess.emit()
+    // this.subscription.push(_subs) 
     this.close()
   }
   
+  ngOnDestroy(): void {
+    this.subscription.forEach(subs => subs.unsubscribe())
+  }
+
   close(){ this.dialogRef.close();}
 }

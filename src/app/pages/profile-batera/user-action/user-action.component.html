@@ -13,7 +13,7 @@
                 <input type="file" (change)="onFileChange($event)">
             </picture>
             <picture *ngIf="avatar_url" class="avatar_image">
-                <img [src]="avatar_url" (load)="onImageLoad($event)"  crossorigin="anonymous">
+                <img [src]="avatar_url" crossorigin="anonymous">
                 <input type="file"  class="change_image" (change)="onFileChange($event)">
             </picture>
         </div>
@@ -44,7 +44,7 @@
 
                 <label class="p-2">Title</label>
                 <input fullWidth type="text" nbInput  placeholder="Title" fieldSize="small"
-                required [ngModel]="userData?.title" name="jabatan" #title="ngModel">
+                required [ngModel]="userData?.jabatan" name="jabatan" #jabatan="ngModel">
 
                 <label class="p-2">Company Name</label>
                 <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"
@@ -54,7 +54,7 @@
                     <label class="p-2">Vessel Name</label>
                     <nb-select fullWidth [placeholder]="userData?.nama_kapal || 'Vessel Name'" size="small" status="basic" #shipName="ngModel" 
                     required [ngModel]="userData?.nama_kapal" name="nama_kapal">
-                        <nb-option [value]="vessels[id]" *ngFor="let vessel of vessels; let id=index;">{{vessel.nama_kapal}}</nb-option>
+                        <nb-option [value]="vessel.nama_kapal" *ngFor="let vessel of vessels; let id=index;">{{vessel.nama_kapal}}</nb-option>
                     </nb-select>
                 </div>
             </div>

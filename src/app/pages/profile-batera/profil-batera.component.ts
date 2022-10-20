@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { AddUserComponent } from './add-user/add-user.component';
+import { MatDialog } from '@angular/material/dialog';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfileBateraService } from './profil-batera.service';
+import { UserActionComponent } from './user-action/user-action.component';
 
 @Component({
   selector: 'ngx-profil-batera',
@@ -47,32 +47,35 @@ export class ProfilBateraComponent implements OnInit {
 
   changeLogoDial(){
     const dialogRef = this.dialog.open(ChangeLogoComponent)
-    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+    dialogRef.componentInstance.onSuccess.asObservable()
+    .subscribe(()=> {
       this.ngOnInit()
     });
   }
 
   addNewUserDial(){
-    const dialogRef = this.dialog.open(AddUserComponent, {
+    const dialogRef = this.dialog.open(UserActionComponent, {
       disableClose : true, autoFocus:true, 
       data : {
         dial : "Add"
       }
     })
-    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+    dialogRef.componentInstance.onSuccess.asObservable()
+    .subscribe(()=> {
       this.ngOnInit()
     });
   }
 
   updateUserDial(row){
-    const dialogRef = this.dialog.open(AddUserComponent, {
+    const dialogRef = this.dialog.open(UserActionComponent, {
       data : {
         dial : "Update",
         data : row
       }
     })
 
-    dialogRef.componentInstance.onSuccess.asObservable().subscribe(()=> {
+    dialogRef.componentInstance.onSuccess.asObservable()
+    .subscribe(()=> {
       this.ngOnInit()
     });
   }

@@ -8,8 +8,7 @@ import { ProfilBateraRoutingModule, routedComponents } from './profil-batera-rou
 import { MatInputModule } from '@angular/material/input';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { MatDialogModule } from '@angular/material/dialog';
-import { AddUserComponent } from './add-user/add-user.component';
-import { UpdateUserComponent } from './update-user/update-user.component';
+import { UserActionComponent } from './user-action/user-action.component';
 
 @NgModule({
   imports: [
@@ -27,7 +26,7 @@ import { UpdateUserComponent } from './update-user/update-user.component';
     MatDialogModule,
     NbSelectModule,
   ],
-  entryComponents: [ChangeLogoComponent, AddUserComponent, UpdateUserComponent],
+  entryComponents: [ChangeLogoComponent, UserActionComponent],
   declarations: [
     ...routedComponents
   ],
