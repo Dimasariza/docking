@@ -5,6 +5,8 @@ import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
+import { PdfGeneratorBateraComponent } from '../../pdf-generator-batera/pdf-generator-batera.component';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
@@ -43,7 +45,9 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
               private datepipe : DatePipe,
               private subMenuProject : SubMenuProjectComponent,
               private activatedRoute : ActivatedRoute,
-              private projectService : ProjectBateraService
+              private projectService : ProjectBateraService,
+              public FNCOL : FunctionCollection,
+              public pdfExporter : PdfGeneratorBateraComponent
     ) {
   }
 
@@ -82,32 +86,30 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     this.workProgressData?.work_area === null ||
     this.workProgressData?.work_area === undefined ||
     this.workProgressData?.work_area[0] === null ? null : 
-    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => 
-    this.populateData(work)) as TreeNode<FSEntry>[])
-
-    this.subscription.push(_subs1)
-  }
-
-  populateData = (work) => {          
-    const {items, start, end, volume, responsible, unit, status, unitPrice, last_update, rank} = work  
-      return {
-      data: {
-        ...work,
-        "Start": this.datepipe.transform(start, 'yyyy-MM-dd'),
-        "Stop": this.datepipe.transform(end, 'yyyy-MM-dd'),
+    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
+      const {volume, responsible, status, last_update, rank} = work  
+      const workItem = {
         "Last Update": this.datepipe.transform(last_update, 'yyyy-MM-dd'),
-        "Vol" : volume,
-        "Unit" : unit?.name,
         "Responsible" : responsible?.name,
         "Status" : status?.name,
         "Unit Price Actual" : work['Price Actual'],
         "Total Price Actual" : volume * work['Price Actual'],
         "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
         "Rank" : rank?.name,
-        "kind" : items?.length ? 'dir' : 'doc',
-      },
-      children: items?.length ? items.map(child => this.populateData(child)) : []
-    }
+      }
+      return this.FNCOL.populateData(work, workItem)
+    }) as TreeNode<FSEntry>[])
+
+    this.subscription.push(_subs1)
+  }
+
+  parentIndex(row){
+    const parentIndex = row.data.id.toString().split('')
+    if(parentIndex.length == 1) return true
+  }
+
+  generatePDF(row){
+    this.pdfExporter.generatePDFBasedOnJob(row.data, this.workProgressData)
   }
 
   onClick(desc){
@@ -119,20 +121,6 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         this.addJobSuplier()
         break;
     }
-  }
-
-  updateWorkAreaData = (data, parentIndex, newData) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
-      } else if(i == parentIndex[0]) {
-        let item
-        w?.items ? item = w.items : item = null
-        return {...w, ...newData, items : item}
-      }
-      return w
-    })
   }
 
   approvedByYard(newData) {
@@ -150,7 +138,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   @Output() reloadPage = new EventEmitter<string>();
   updateWorkApproval(postData){
     const parentIndex = postData.id.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+    const work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
     .subscribe(() =>{

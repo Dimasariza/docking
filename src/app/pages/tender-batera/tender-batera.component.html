@@ -77,7 +77,7 @@
             <ng-container [nbTreeGridColumnDef]="'rank'">
               <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 50px"></th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" >
-                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data?.rank?.name)}"></nb-icon>
+                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank?.name)}"></nb-icon>
               </td>
             </ng-container>
             <ng-container [nbTreeGridColumnDef]="'Approve'">
@@ -90,7 +90,7 @@
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                 <button class="text-center" nbButton ghost (click)="approvedByYard(row)">
-                  <nb-icon [ngStyle]="{'color': row.data?.approvalStatus ? 'green' : 'grey'}" [icon]="row.data?.approvalStatus ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"></nb-icon>
+                  <nb-icon [ngStyle]="{'color': row.data?.tenderApproval ? 'green' : 'grey'}" [icon]="row.data?.tenderApproval ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"></nb-icon>
                 </button>
               </td>
             </ng-container>

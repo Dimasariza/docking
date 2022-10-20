@@ -28,15 +28,6 @@ export class ShipActionComponent implements OnInit {
   });
       
   public formIsValid : boolean = true
-  get f(){
-    let validators = this.addShipForm.controls
-    // if ( validators.name.status === "VALID" &&  validators.file.status === "VALID") {
-    //   this.formIsValid = false
-    // } else {
-    //   this.formIsValid = true
-    // }
-    return this.addShipForm.controls;
-  }
      
   public viewImageLink : any
   onFileChange(res) {

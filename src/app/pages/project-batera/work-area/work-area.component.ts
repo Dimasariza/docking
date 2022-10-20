@@ -1,9 +1,7 @@
-import { DatePipe } from '@angular/common';
-import { Component, EventEmitter, Inject, Output } from '@angular/core';  
+import { Component, EventEmitter, Inject } from '@angular/core';  
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
-import { ReportBateraService } from '../../report-batera/report-batera.service';
-import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { ProjectBateraService } from '../project-batera.service';
 
 
@@ -14,22 +12,13 @@ import { ProjectBateraService } from '../project-batera.service';
 export class WorkAreaComponent {
   constructor(private projectSerivce:ProjectBateraService,
               private dialogRef: MatDialogRef<WorkAreaComponent>,
-              private datepipe : DatePipe,
               private profileService : ProfileBateraService,
-              private reportService : ReportBateraService,
+              public FNCOL : FunctionCollection,
               @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {
-  }
+  ) {}
+
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  @Output() reloadPage = new EventEmitter<string>();
 
-  close(){ this.dialogRef.close();}
-
-  category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
-  rank = ["Critical", "High", "Medium", "Low"]
-  jobUnit = ["Lumpsum"]
-  subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
-  status = ["Not Started", "In Progress", "Done", "Canceled"]
   responsible = []
   workAreaContainer : any = []
   modelData : any = {}
@@ -40,21 +29,21 @@ export class WorkAreaComponent {
   
   ngOnInit(){
     const data = this.data.data?.data
+    const parentId = this.data?.parentId.toString().split('')
     switch (this.data.dial) {
       case 'Add':
-        this.unitType = this.jobUnit
+        this.unitType = this.FNCOL.jobUnit
         this.unitPriceLabel = 'Price Budget'
         break;
       case 'Add Sub':
-        this.unitType = this.subJobUnit
+        this.unitType = this.FNCOL.subJobUnit
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
         this.unitPriceLabel = 'Price Budget'
       break;
       case 'Update' :
-        const parentId = this.data?.parentId.toString().split('')
         parentId.length === 1 ?
-        this.unitType = this.jobUnit :
-        this.unitType = this.subJobUnit
+        this.unitType = this.FNCOL.jobUnit :
+        this.unitType = this.FNCOL.subJobUnit
         this.modelData = this.data.data.data
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
         this.modelData['unitPriceLabel'] = this.modelData['Price Budget']
@@ -67,6 +56,17 @@ export class WorkAreaComponent {
         this.modelData = this.data.data.data
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
         this.unitPriceLabel = 'Price Actual'
+      break;
+      case 'Update Load Details':
+        parentId.length === 1 ?
+        this.unitType = this.FNCOL.jobUnit :
+        this.unitType = this.FNCOL.subJobUnit
+        this.modelData = this.data.data.data
+        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
+        this.modelData['unitPriceLabel'] = this.modelData['Price Budget']
+        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.volume
+        this.disabledJob = true
+        this.unitPriceLabel = 'Price Contract'
       break;
     }
 
@@ -84,38 +84,40 @@ export class WorkAreaComponent {
     .subscribe(({data} : any) => {
       const {work_area} = data
       work_area === null || 
-      work_area === undefined ? null 
-      : this.workAreaContainer = work_area
+      work_area === undefined ? null : 
+      this.workAreaContainer = work_area
     })
   }
     
   workAreaBtn(data){
-    if(this.data.dial === "Add") {
+    switch (this.data.dial) {
+      case 'Add' :
       this.addWorkArea(data)
-    }
-    if(this.data.dial === "Update") {
+        break
+      case 'Update' :
       this.updateWorkArea(data)
-    }
-    if(this.data.dial === "Add Sub") {
+        break
+      case 'Add Sub' :
       this.addSubJob(data)
-    }
-    if(this.data.dial === 'Work Progress'){
+        break
+      case 'Work Progress' :
       this.updateWorkArea(data)
+        break
     }
   }
 
   reconstructData(reData){
     if(typeof(reData.category) === 'number'){
-      reData.category = {name : this.category[reData.category] ,id : reData.category}
+      reData.category = {name : this.FNCOL.category[reData.category] ,id : reData.category}
     }
     if(typeof(reData.rank) === 'number'){
-      reData.rank = {name : this.rank[reData.rank] ,id : reData.rank}
+      reData.rank = {name : this.FNCOL.rank[reData.rank] ,id : reData.rank}
     }
     if(typeof(reData.unit) === 'number'){
       reData.unit = {name : this.unitType[reData.unit] ,id : reData.unit}
     }
     if(typeof(reData?.status) === 'number'){
-      reData.status = {name : this.status[reData.status] ,id : reData.status}
+      reData.status = {name : this.FNCOL.status[reData.status] ,id : reData.status}
     }
     return reData
   }
@@ -137,23 +139,6 @@ export class WorkAreaComponent {
     this.uploadData(work_area)
   }
   
-  updateWorkAreaData = (data, parentIndex, newData) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
-      } else if(i == parentIndex[0]) {
-        let item
-        w?.items ? item = w.items : item = null
-        return {...w, ...newData, items : item}
-      }
-      return {...w,
-        start : this.datepipe.transform(newData.start, 'yyyy-MM-dd'),
-        end : this.datepipe.transform(newData.end, 'yyyy-MM-dd'),
-      }
-    })
-  }
-
   updateWorkArea(newData){
     const submitData = newData.value
     const reconstructData = {
@@ -162,7 +147,7 @@ export class WorkAreaComponent {
       last_update : new Date()
     }
     const parentIndex = this.data.parentId.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
+    const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
     this.uploadData(work_area)
   }
 
@@ -197,4 +182,7 @@ export class WorkAreaComponent {
       this.close()
     })
   }
+
+  close(){ this.dialogRef.close()}
+
 }

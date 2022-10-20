@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../report-batera.service';
 
@@ -13,6 +14,7 @@ export class VariantWorkAreaComponent implements OnInit {
               private datepipe : DatePipe,
               private reportService : ReportBateraService,
               private profileService : ProfileBateraService,
+              public FNCOL : FunctionCollection,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
@@ -83,10 +85,9 @@ export class VariantWorkAreaComponent implements OnInit {
     this.variantWorkContainer === undefined ||
     this.variantWorkContainer[0] === null ? this.variantWorkContainer = [] : null
     submitData = {...submitData , 
-      start : this.datepipe.transform(submitData.start, 'yyyy-MM-dd'),
-      end : this.datepipe.transform(submitData.end, 'yyyy-MM-dd'),
+      // start : this.datepipe.transform(submitData.start, 'yyyy-MM-dd'),
+      // end : this.datepipe.transform(submitData.end, 'yyyy-MM-dd'),
       category : submitData.category.toLowerCase(),
-      responsible : submitData.responsible,
       id: this.variantWorkContainer.length, 
       type : "pekerjaan"
     }
@@ -96,23 +97,9 @@ export class VariantWorkAreaComponent implements OnInit {
     ])
   }
 
-  updateWorkAreaData = (data, parentIndex, newData) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
-      } else if(i == parentIndex[0]) {
-        let item
-        w?.items ? item = w.items : item = null
-        return {...w, ...newData, items : item}
-      }
-      return w
-    })
-  }
-
   updateVariantWorkData(newData){
     let parentIndex = this.modelData?.id.toString().split('')
-    const variant_work = this.updateWorkAreaData(this.variantWorkContainer, parentIndex, newData.value)
+    const variant_work = this.FNCOL.updateWorkAreaData(this.variantWorkContainer, parentIndex, newData.value)
     this.submitData(variant_work)
   }
 

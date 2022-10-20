@@ -24,11 +24,11 @@
                 </td>
             </ng-container>
 
-            <ng-container [nbTreeGridColumnDef]="'Job'">
+            <ng-container [nbTreeGridColumnDef]="'jobName'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Job</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
                     <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded || expandAll"></ngx-fs-icon>
-                      {{row.data['Job'] || '-'}}
+                      {{row.data.jobName|| '-'}}
                 </td>
             </ng-container>
 

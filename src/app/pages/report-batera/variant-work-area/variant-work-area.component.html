@@ -23,10 +23,10 @@
                 <span class="p-2 d-block"><strong>Job</strong></span>
                 <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required #job name="jobName" [disabled]="disabledEdit" [ngModel]="modelData?.Job">
                 <span class="p-2 d-block">Start</span>
-                <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" placeholder="Start Date" [disabled]="disabledEdit" name="start" #startDate [ngModel]="modelData?.Start">
+                <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" placeholder="Start Date"  name="start" #startDate [ngModel]="modelData?.Start">
                 <nb-datepicker #startdatepicker></nb-datepicker>
                 <span class="p-2 d-block">End</span>
-                <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small" placeholder="End Date" [disabled]="disabledEdit" name="end" #endDate [ngModel]="modelData?.Stop">
+                <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small" placeholder="End Date"  name="end" #endDate [ngModel]="modelData?.Stop">
                 <nb-datepicker #enddatepicker></nb-datepicker>
             </div>
             <div class="col-4">

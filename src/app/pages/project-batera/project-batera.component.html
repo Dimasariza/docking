@@ -17,8 +17,13 @@
 
           <ng-container [nbTreeGridColumnDef]="'project'">
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 280px;">
-              <nb-select size="small" placeholder="Project" class="w-100">
-                <nb-option *ngFor="let project of project;let id = index;" [value]="project" (click)="clickAction('project' ,project)">{{project.name}}</nb-option>
+              <nb-select size="small" placeholder="All Project" class="w-100">
+                <nb-option (click)="clickAction('all data', null)">
+                  All Projects
+                </nb-option>
+                <nb-option *ngFor="let project of projectDatas;let id = index;" [value]="project" (click)="clickAction('project' ,project)">
+                  {{project.kapal?.nama_kapal}} -DD- {{project.tahun}}
+                </nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
@@ -28,7 +33,10 @@
 
           <ng-container [nbTreeGridColumnDef]="'status'" >
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-              <nb-select size="small" placeholder="Status" class="w-100">
+              <nb-select size="small" placeholder="All Status" class="w-100">
+                <nb-option (click)="clickAction('all data', null)">
+                  All Statuses
+                </nb-option>
                 <nb-option *ngFor="let stat of status;let id = index;" [value]="stat" (click)="clickAction('status', stat)">{{stat}}</nb-option>
               </nb-select>
             </th>
@@ -39,12 +47,17 @@
 
           <ng-container [nbTreeGridColumnDef]="'resp'" >
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-              <nb-select size="small" placeholder="Responsible" class="w-100">
-                <nb-option *ngFor="let value of responsible; let id = index;" [value]="value" (click)="clickAction('resp', value.id_user)">{{value.username}}</nb-option>
+              <nb-select size="small" placeholder="All Responsible" class="w-100">
+                <nb-option (click)="clickAction('all data', null)">
+                  All Responsibles  
+                </nb-option>
+                <nb-option *ngFor="let value of responsible; let id = index;" [value]="value" (click)="clickAction('resp', value.id_user)">
+                  {{value.username}}
+                </nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              {{row?.data?.responsible.name}}
+              {{row?.data?.responsible?.name}}
             </td>
           </ng-container>
 

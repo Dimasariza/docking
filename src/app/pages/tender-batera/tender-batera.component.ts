@@ -3,6 +3,7 @@ import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { take } from 'rxjs/operators';
+import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
@@ -28,7 +29,8 @@ export class TenderBateraComponent {
               private dialog : MatDialog,
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
-              private datePipe : DatePipe
+              private datePipe : DatePipe,
+              public FNCOL : FunctionCollection
   ) {}
 
   headColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract', 'Total Price Contract', 'Category', 'Remarks' ]
@@ -61,8 +63,9 @@ export class TenderBateraComponent {
   selectedYard : any
   approvalStatus = ["All","Critical","High","Medium","Low"]
   selectedText = "Select"
-  yardApproval : boolean = false
+  tenderApproval : boolean = false
   workAreaContainer
+  currentProjectId
 
   ngOnInit(): void {
     this.projectService.getDataProjects()
@@ -81,6 +84,7 @@ export class TenderBateraComponent {
   }
 
   getProject(id){
+    this.currentProjectId = id
     this.selectedYard = null
     this.displayTender = null
     const {workArea, projectId, currency, offHire, offHireCost, ownerCost} = this.projectData[id]
@@ -93,7 +97,10 @@ export class TenderBateraComponent {
     workArea === null ||
     workArea === undefined ? 
     this.dataSource = this.dataSourceBuilder.create([]) :
-    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
+    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
+      const workItem = {}
+      return this.FNCOL.populateData(work, workItem)
+    }) as TreeNode<FSEntry>[])
     this.loadYardData()
   }
 
@@ -177,29 +184,15 @@ export class TenderBateraComponent {
     }
   }
 
-  populateData = (work) => { 
-    const {items, start, end, unit, category} = work   
-    return {
-      data: {
-        ...work,
-        Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
-        Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
-        Unit : unit?.name,
-        kind : items?.length ? 'dir' : 'doc',
-        Category : category?.name,
-      },
-      children: items?.length ? items.map(child => this.populateData(child)) : []
-    }
-  }
-
   editLoadDetails(row){
-    let {data} = row
     const dialog = this.dialog.open(WorkAreaComponent, {
       disableClose : true,
       autoFocus:true, 
       data : {
-        project : this.projectId,
-        job : data
+        dial : 'Update Load Details',
+        parentId : row.data.id,
+        id : this.projectId,
+        data : row,
       }
     })    
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -242,34 +235,21 @@ export class TenderBateraComponent {
   }
 
   approvedByYard(newData){
-    this.yardApproval = true
-    let postData = { ...newData.data, ownerApproval : this.yardApproval}
-    console.log(postData)
-    // this.updateWorkApproval(postData)
+    this.tenderApproval = true
+    let postData = { ...newData.data, tenderApproval : this.tenderApproval}
+    this.updateWorkApproval(postData)
   }
 
   updateWorkApproval(postData){
     const parentIndex = postData.id.toString().split('')
-    const work_area = this.updateWorkAreaData(this.workAreaContainer.work_area, parentIndex, postData)
+    const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, postData)
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
-    .subscribe((res) =>{ console.log(res)})
-  }
-
-  updateWorkAreaData = (data, parentIndex, newData) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
-      } else if(i == parentIndex[0]) {
-        let item
-        w?.items ? item = w.items : item = null
-        return {...w, ...newData, items : item}
-      }
-      return w
+    .subscribe((res) => {
+      this.ngOnInit()
     })
+    this.getProject(this.currentProjectId)
   }
-
 
 
   chooseTender(){

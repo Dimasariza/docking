@@ -37,7 +37,7 @@
             <ng-container [nbTreeGridColumnDef]="'rank'">
                 <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:80px"></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center h-100">
-                  <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : subMenuProject.rankColor(row.data['rank'].name)}"
+                  <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data['rank'].name)}"
                   [nbPopover]="row.data?.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
                 </td>
               </ng-container>
@@ -69,12 +69,18 @@
             </ng-container> -->
             
             <ng-container [nbTreeGridColumnDef]="'edit'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 100px;"></th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center"
-                nbPopover="Edit Job Pogress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
-                    <button class="btn btn-light btn-sm" (click)="updateWorkProgress(row)">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px;"></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                <div class="d-flex">
+
+                    <button class="btn btn-light btn-sm mx-1" (click)="updateWorkProgress(row)" nbPopover="Edit Job Pogress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                         <nb-icon icon="edit-outline"></nb-icon>
                     </button>
+                    
+                    <button *ngIf="parentIndex(row)" class="btn btn-light btn-sm mx-1" (click)="generatePDF(row)" nbPopover="Export To PDF" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                        <nb-icon icon="file-outline"></nb-icon>
+                    </button>
+                </div>
                 </td>
             </ng-container>
 

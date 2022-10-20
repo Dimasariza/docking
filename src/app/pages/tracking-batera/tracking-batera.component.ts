@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { FunctionCollection } from '../function-collection-batera/function-collection.component';
+import { ReportBateraService } from '../report-batera/report-batera.service';
+import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { TrackingBateraService } from './tracking-batera.service';
 
 @Component({
@@ -9,50 +12,40 @@ import { TrackingBateraService } from './tracking-batera.service';
 })
 export class TrackingBateraComponent implements OnInit {
 
-  constructor(private trackingService : TrackingBateraService,
-              private route : Router
+  constructor(private tenderService : TenderBateraService,
+              private route : Router,
+              private reportService : ReportBateraService,
+              public FNCOL : FunctionCollection,
+              
   ) { }
 
   public trackingData : any 
   // series: ApexAxisChartSeries
 
-  phasesStatus(status){
-    if(status === 'requisition'){
-      status = [true, false, false, false]
-    }
-    if(status === 'in_progress'){
-      status = [true, true, false, false]
-    } 
-    if(status === 'evaluasi'){
-      status = [true, true, true, false]
-    }
-    if(status === 'finish'){
-      status = [true, true, true, true]
-    }
-    return status
-  }
-
   ngOnInit(): void {
-    this.trackingService.getDataTracking()
+    this.tenderService.getProjectSummary("", "", "", "")
     .subscribe(({data} : any) => {
-      let dataContainer = new Array
-      data.map(({nama_kapal, id_kapal, proyek}) => (
-        proyek.map(({id_proyek, phase, repair_start, repair_end}) => (
-          dataContainer.push({
-            nama_kapal: nama_kapal, 
-            phases: this.phasesStatus(phase), 
-            periode: repair_start, 
-            updated_at: repair_end, 
-            id_kapal : id_kapal, 
-            id_proyek : id_proyek
-          })
-        ))
-      ))
-      
-      this.trackingData = dataContainer
-    }
-    )
+      this.trackingData = data.map(({proyek, id_proyek}) => ({
+        phases : this.FNCOL.phasesStatus(proyek.phase),
+        nama_kapal : proyek.kapal.nama_kapal + ' -DD- ' + proyek.tahun,
+        periode : proyek.repair_start,
+        id_proyek
+      }))
+    })
   } 
+
+        // data.map(({nama_kapal, id_kapal, proyek}) => (
+      //   proyek.map(({id_proyek, phase, repair_start, repair_end}) => (
+      //     dataContainer.push({
+      //       nama_kapal: nama_kapal, 
+      //       phases: this.FNCOL.phasesStatus(phase), 
+      //       periode: repair_start, 
+      //       updated_at: repair_end, 
+      //       id_kapal : id_kapal, 
+      //       id_proyek : id_proyek
+      //     })
+      //   ))
+      // ))
 
   topButton : any = [
     {icon : 'star-outline', desc : 'All Assets'},

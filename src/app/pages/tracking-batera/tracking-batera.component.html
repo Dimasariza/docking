@@ -5,6 +5,7 @@
             {{button.desc}}
         </button>
     </nb-card-header>
+    <!-- <button nbButton (click)="FNCOL.functionCollection()">Test function collection</button> -->
     <nb-card-header class="justify-content-between d-flex" >
         <div>
             <button nbButton *ngFor="let button of leftButton" status="primary" size="small" shape="rectangle" class="mx-1" outline (click)="clickButton(button.desc)">
@@ -27,35 +28,34 @@
     </nb-card-header>
 
     <nb-card-body>
+        <ngx-datatable
+            class="bootstrap"
+            [rows]="trackingData"
+            [count]="trackingData"
+            columnMode="force"
+            default>
+            <ngx-datatable-column name="Ship Name" prop="nama_kapal" routeLink="/">
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                    <a class="text-primary text-decoration-none" 
+                    style="cursor: pointer;" 
+                    [routerLink]="['/pages/report-batera', row.id_proyek]" 
+                    [data] = 'row'>{{row['nama_kapal']}}</a>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Phases">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
+                </ng-template>
+            </ngx-datatable-column>
+                <ngx-datatable-column name="Periode">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.periode | date:'shortDate'}} - {{row.updated_at | date:'shortDate'}}
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
         <f-gantt></f-gantt>
         <!-- <div class="d-flex">
             <div style="width: 350px">
-                <ngx-datatable
-                    class="bootstrap"
-                    [rows]="trackingData"
-                    [count]="trackingData"
-                    columnMode="force"
-                    [scrollbarH]="true"
-                    default>
-                    <ngx-datatable-column name="Ship Name" prop="nama_kapal" routeLink="/">
-                        <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-                            <a class="text-primary text-decoration-none" 
-                            style="cursor: pointer;" 
-                            [routerLink]="['/pages/report-batera', row.id_proyek]" 
-                            [data] = 'row'>{{row['nama_kapal']}}</a>
-                        </ng-template>
-                    </ngx-datatable-column>
-                    <ngx-datatable-column name="Phases">
-                        <ng-template let-row="row" ngx-datatable-cell-template>
-                            <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
-                        </ng-template>
-                    </ngx-datatable-column>
-                        <ngx-datatable-column name="Periode">
-                            <ng-template let-row="row" ngx-datatable-cell-template>
-                                {{row.periode | date:'shortDate'}} - {{row.updated_at | date:'shortDate'}}
-                        </ng-template>
-                    </ngx-datatable-column>
-                </ngx-datatable>
             </div>
             <div *ngIf="series" style="flex: 1; margin-top: 1.2em; position: relative;">
                 <apx-chart 

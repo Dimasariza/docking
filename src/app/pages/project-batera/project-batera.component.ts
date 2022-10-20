@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from './project-batera.service';
@@ -22,7 +23,7 @@ export class ProjectBateraComponent {
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
               private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-              private datePipe : DatePipe
+              public FNCOL : FunctionCollection,
     ) {
   }
 
@@ -45,6 +46,7 @@ export class ProjectBateraComponent {
     {icon : 'checkmark-square', menu : 'Approval'},
     {icon : 'archive-outline', menu : ''},
   ]
+
   columnHead = ['Tasks', 'Customer'];
   columnContents = ['jobName','cust']
   allColumns = [ 'icon', ...this.columnContents, 'project', 'status' ,'resp', 'due']
@@ -57,7 +59,9 @@ export class ProjectBateraComponent {
   shipManagement : string
   responsible : any = []
   status : any = ['Not Started', 'Done', 'In Progress', 'Done']
-  project
+  projectFilter : string = "all"
+  statusFilter : string = "all"
+  respFilter : string = "all"
 
   ngOnInit() {
     this.profileService.getCompanyProfile()
@@ -69,29 +73,17 @@ export class ProjectBateraComponent {
     .subscribe(({data} : any) => {
       if(!data.length || data === null) return;
       this.projectDatas = data
-
-      this.collectData()
-
-      this.project = data.map(item => ({
-        name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
-        id : item.id_proyek
-      }))
-
-      this.generateDataSource(this.workAreaContainer)
+      this.collectData() 
+      this.regroupAllData()
     });
 
     this.profileService.getUserData(1, 10,'', '', '')
     .subscribe(({data} : any) => this.responsible = data)
   }
 
-  generateDataSource(workArea){
-    this.dataSource = this.dataSourceBuilder.create(workArea.map(work =>
-    this.populateData(work)) as TreeNode<FSEntry>[]) 
-  }
-
   collectData(){
     this.projectDatas.map((work, id) => {
-      this.projectDatas[id].phase = this.phaseStatus(this.projectDatas[id].phase)
+      this.projectDatas[id].phase = this.FNCOL.phasesStatus(this.projectDatas[id].phase)
       const {work_area} = work
       if(!work_area || work_area[0] === null) return; 
       const projectJob = work_area.map(project => ({
@@ -100,36 +92,6 @@ export class ProjectBateraComponent {
       }))
       this.workAreaContainer.push(...projectJob)
     }) 
-  }
-
-  populateData = (data) => {
-    const {items} = data
-    return {
-      data : {
-        cust : this.shipManagement,
-        ...data,
-        kind: items?.length ? 'dir' : 'doc',
-      },
-      children : items?.length ? items.map(item => this.populateData(item)) : []
-    }
-  }
-
-  phaseStatus(data){
-    switch (data){
-      case 'requisition' :
-        data = [true, false, false, false]
-      break;
-      case 'in_progress' :
-        data = [true, true, false, false]
-      break;
-      case 'evaluasi' :
-        data = [true, true, true, false]
-      break;
-      case 'finish' :
-        data = [true, true, true, true]
-      break;
-    }
-    return data
   }
 
   clickAction(btn, data){
@@ -148,23 +110,42 @@ export class ProjectBateraComponent {
         break;
       case 'resp' :
         this.regroupBasedResp(data)
+        break;
+      case 'all data' :
+        this.regroupAllData()
+        break;
     }
   }
 
+  generateDataSource(workArea){
+    workArea === null ||
+    workArea === undefined ||
+    workArea[0] === null ? 
+    this.dataSource = this.dataSourceBuilder.create([]) :
+    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
+      const workItem = { cust : this.shipManagement}
+      return this.FNCOL.populateData(work, workItem)
+    }) as TreeNode<FSEntry>[] ) 
+  }
+
+  regroupAllData(){
+    this.generateDataSource(this.workAreaContainer)
+  }
+
   regroupBasedProject(data){
-    const work = this.projectDatas.find(project => project.id_proyek === data.id)
-    console.log(work)
-    // this.dataSource = this.dataSourceBuilder.create([])
-    this.generateDataSource(work.work_area)
+    this.generateDataSource(data.work_area)
   }
 
   regroupBasedStatus(data){
     console.log(data)
-
   }
 
   regroupBasedResp(data){
-    console.log(data)
+    let workContainer = []
+    const work = this.projectDatas
+    .filter(project => project.id_user === data)
+    .forEach(item => console.log(item))
+    this.generateDataSource(workContainer)
   }
 
   addProjectDial(){

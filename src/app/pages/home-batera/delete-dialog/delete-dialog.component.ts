@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { HomeBateraService } from '../home-batera.service';
@@ -15,6 +16,7 @@ export class DeleteDialogComponent implements OnInit {
               private homeService : HomeBateraService,
               private projectService : ProjectBateraService,
               private tenderService : TenderBateraService,
+              public FNCOL : FunctionCollection,
               @Inject(MAT_DIALOG_DATA) public deleteData: any
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
@@ -49,22 +51,9 @@ export class DeleteDialogComponent implements OnInit {
     }
   }
 
-  reconstructData = (data, parentIndex) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.reconstructData(w.items, parentIndex)}
-      } else if(i == parentIndex[0]) {
-        return null
-      }
-      return w
-    })
-    .filter(f => f != null)
-  }
-
   deleteJob(){
     const parentIndex = this.deleteData.parentId.toString().split('')
-    const work_area = this.reconstructData(this.deleteData.work_area, parentIndex)
+    const work_area = this.FNCOL.reconstructData(this.deleteData.work_area, parentIndex)
     let postBody
     work_area.length === 0 ||
     work_area === undefined ? postBody = {work_area : [null]} : postBody = {work_area : work_area}
