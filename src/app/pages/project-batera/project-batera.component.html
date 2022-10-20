@@ -7,7 +7,7 @@
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
           <ng-container [nbTreeGridColumnDef]="'icon'">
-            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 80px;">Job No</th>
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px;">Job No</th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
               <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded">
               </ngx-fs-icon>
@@ -33,7 +33,7 @@
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              {{row?.data?.status || '-'}}
+              {{row?.data?.status?.name || '-'}}
             </td>
           </ng-container>
 
@@ -49,7 +49,7 @@
           </ng-container>
 
           <ng-container [nbTreeGridColumnDef]="'due'">
-            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>Due</th>
+            <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 250px;">Due</th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
               {{row?.data?.end | date : 'medium'}}
             </td>

@@ -60,23 +60,23 @@ export class ProjectBateraComponent {
   project
 
   ngOnInit() {
-    this.projectService.getDataProjects()
-      .subscribe(({data} : any) => {
-        if(!data.length || data === null) return;
-        this.projectDatas = data
-        this.project = data.map(item => ({
-          name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
-          id : item.id_proyek
-        }))
-        this.collectData()
-        this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
-        this.populateData(work)) as TreeNode<FSEntry>[]) 
-    });
-
     this.profileService.getCompanyProfile()
     .subscribe(({data} : any) => {
       this.shipManagement = data.profile_merk_perusahaan
     })
+
+    this.projectService.getDataProjects()
+      .subscribe(({data} : any) => {
+        if(!data.length || data === null) return;
+        this.projectDatas = data
+        this.collectData()
+        this.project = data.map(item => ({
+          name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
+          id : item.id_proyek
+        }))
+        this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
+        this.populateData(work)) as TreeNode<FSEntry>[]) 
+    });
 
     this.profileService.getUserData(1, 10,'', '', '')
     .subscribe(({data} : any) => this.responsible = data)
