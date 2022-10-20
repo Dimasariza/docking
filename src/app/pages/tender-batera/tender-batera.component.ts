@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { take } from 'rxjs/operators';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
@@ -61,6 +62,7 @@ export class TenderBateraComponent {
   approvalStatus = ["All","Critical","High","Medium","Low"]
   selectedText = "Select"
   yardApproval : boolean = false
+  workAreaContainer
 
   ngOnInit(): void {
     this.projectService.getDataProjects()
@@ -82,6 +84,7 @@ export class TenderBateraComponent {
     this.selectedYard = null
     this.displayTender = null
     const {workArea, projectId, currency, offHire, offHireCost, ownerCost} = this.projectData[id]
+    this.workAreaContainer = workArea
     this.projectId = projectId
     this.projectData['currency'] = currency
     this.projectData['offHire'] = offHire
@@ -238,22 +241,36 @@ export class TenderBateraComponent {
     // this.approvalStatus = !this.approvalStatus
   }
 
-  // approvedByOwner(newData){
-  //   this.shipOwner = true
-  //   let postData = { ...newData.data, ownerApproval : this.shipOwner}
-  //   this.updateWorkApproval(postData)
-  // }
+  approvedByYard(newData){
+    this.yardApproval = true
+    let postData = { ...newData.data, ownerApproval : this.yardApproval}
+    console.log(postData)
+    // this.updateWorkApproval(postData)
+  }
 
-  // @Output() reloadPage = new EventEmitter<string>();
-  // updateWorkApproval(postData){
-  //   const parentIndex = postData.id.toString().split('')
-  //   const work_area = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-  //   this.projectService.workArea({work_area}, this.projectId)
-  //   .pipe(take(1))
-  //   .subscribe(() =>{
-  //     this.reloadPage.emit('complete')
-  //   })
-  // }
+  updateWorkApproval(postData){
+    const parentIndex = postData.id.toString().split('')
+    const work_area = this.updateWorkAreaData(this.workAreaContainer.work_area, parentIndex, postData)
+    this.projectService.workArea({work_area}, this.projectId)
+    .pipe(take(1))
+    .subscribe((res) =>{ console.log(res)})
+  }
+
+  updateWorkAreaData = (data, parentIndex, newData) => {
+    return data.map((w, i) => {
+      if (parentIndex.length > 1 && i == parentIndex[0]) {
+        parentIndex = parentIndex.slice(1)
+        return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
+      } else if(i == parentIndex[0]) {
+        let item
+        w?.items ? item = w.items : item = null
+        return {...w, ...newData, items : item}
+      }
+      return w
+    })
+  }
+
+
 
   chooseTender(){
     if(this.selectedText == 'Select') {

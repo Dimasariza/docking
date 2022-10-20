@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { PdfGeneratorRoutingModule } from './pdf-generator-routing.module';
-import { NbCardModule } from '@nebular/theme';
+import { NbButtonModule, NbCardModule, NbSelectModule } from '@nebular/theme';
 import { PdfGeneratorBateraComponent } from './pdf-generator-batera.component';
 
 
@@ -14,6 +14,8 @@ import { PdfGeneratorBateraComponent } from './pdf-generator-batera.component';
     CommonModule,
     PdfGeneratorRoutingModule,
     NbCardModule,
+    NbButtonModule,
+    NbSelectModule
   ]
 })
 export class PdfGeneratorModule { }

@@ -1,5 +1,7 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfileBateraService } from './profil-batera.service';
 import { UserActionComponent } from './user-action/user-action.component';
@@ -10,9 +12,9 @@ import { UserActionComponent } from './user-action/user-action.component';
   styleUrls: ['./profil-batera.component.scss']
 })
 export class ProfilBateraComponent implements OnInit {
-  constructor(
-    private pofileService : ProfileBateraService,
-    public dialog : MatDialog,
+  constructor(private pofileService : ProfileBateraService,
+              private dialog : MatDialog,
+              private homeService : HomeBateraService
   ) {}
 
   userData : any;
@@ -51,6 +53,26 @@ export class ProfilBateraComponent implements OnInit {
     .subscribe(()=> {
       this.ngOnInit()
     });
+  }
+
+  triggerSelectFile(fileInput: HTMLInputElement) {
+    fileInput.click()
+  }
+
+  onFileChange(res){
+    const formData = new FormData();
+    const file = res.target?.files[0];
+    formData.append('dokumen', file);
+    const _subs = this.homeService.uploadFile(formData)
+    .subscribe((res) => {
+      if (res.type === HttpEventType.UploadProgress) {
+        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+      } else if ( res.type === HttpEventType.Response){
+        console.log("final Response uploading image")
+        console.log(res)
+      }
+    })
+    // this.subscription.push(_subs)
   }
 
   addNewUserDial(){

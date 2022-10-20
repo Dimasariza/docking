@@ -55,15 +55,6 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   }
 }
 
-
-
-
-
-
-
-
-
-
 @Component({
   selector: 'ngx-fs-icon',
   template: `

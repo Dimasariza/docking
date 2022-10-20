@@ -16,10 +16,10 @@
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.yardApproval" (click)="approvedByYard(row)" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
-                        <nb-icon [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
+                        <nb-icon [ngStyle]="{'color': row.data?.yardApproval ? 'green' : 'grey'}" [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
                     </button>
                     <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner(row)" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
-                        <nb-icon [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
+                        <nb-icon [ngStyle]="{'color': row.data?.ownerApproval ? 'green' : 'grey'}" [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
                     </button>
                 </td>
             </ng-container>

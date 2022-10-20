@@ -30,9 +30,6 @@
                     <input formControlName="file" id="file" type="file" class="img_input col-12" (change)="onFileChange($event)" fullWidth>
                     <span class="col-12">Drop Your Image Here</span>
                 </div>
-                <div *ngIf="f.file.touched && f.file.invalid" class="alert alert-danger">
-                    <div *ngIf="f.file.errors.required">File is required.</div>
-                </div>
             </div>
             <button class="text-center" nbButton status="success" type="submit" [disabled]="formIsValid">Submit</button>
         </form>
