@@ -48,7 +48,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
-  allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', "Comment", 'edit' ];
+  allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -135,7 +135,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     })
   }
 
-  approvedByYard(newData){
+  approvedByYard(newData) {
     this.shipYard = true
     let postData = { ...newData.data, yardApproval : this.shipYard}
     this.updateWorkApproval(postData)

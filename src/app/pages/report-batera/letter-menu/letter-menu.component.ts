@@ -1,6 +1,8 @@
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { LetterDocComponent } from '../letter-doc/letter-doc.component';
 import { ReportBateraService } from '../report-batera.service';
 
@@ -19,7 +21,7 @@ const buttons = [
   selector: 'ngx-bast',
   templateUrl: './letter-menu.component.html',
 })
-export class LetterMenuComponent  {
+export class LetterMenuComponent implements OnInit, OnDestroy {
   constructor(private activatedRoute : ActivatedRoute,
               private reportService : ReportBateraService,
               private dialog : MatDialog,
@@ -30,24 +32,24 @@ export class LetterMenuComponent  {
   buttons = buttons
   menuData : any = []
   pojectId : any
+  subscription : Subscription [] = []
 
-  ngOnInit(){
+  ngOnInit() : void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     this.pojectId = id
-    this.reportService.getDocument(id, "", this.typeMenu)
+    const _subs = this.reportService.getDocument(id, "", this.typeMenu)
+    .pipe(take(1))
     .subscribe(({data} : any) => {
-      data.length ? 
+      if(!data.length) return; 
       this.menuData = data.map(data => {
         const {perihal, tgl, nama_pengirim, created_by, keterangan} = data
-        return {
-          perihal : perihal,
-          tgl : tgl,
-          nama_pengirim : nama_pengirim,
-          created_by : created_by,
-          keterangan : keterangan
+        return { 
+          perihal ,tgl, nama_pengirim, created_by, keterangan
         }
-      }) : null
+      })
     })
+
+    this.subscription.push(_subs)
   }
 
   onClickBtn(desc, data){
@@ -74,11 +76,17 @@ export class LetterMenuComponent  {
         id : this.pojectId
       }
     })
-    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+    const _subs = dialog.componentInstance.onSuccess.asObservable()
+    .pipe(take(1))
+    .subscribe(() => {
       this.ngOnInit()
     })
+    this.subscription.push(_subs)
   }
 
+  ngOnDestroy(): void {
+    this.subscription.forEach(subs => subs.unsubscribe())
+  }
 }
 
 

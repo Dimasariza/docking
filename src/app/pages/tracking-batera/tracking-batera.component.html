@@ -1,47 +1,27 @@
 <nb-card>
     <nb-card-header>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="star-outline" pack="eva"></nb-icon>
-            All Assets
-        </button>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="menu-outline" pack="eva"></nb-icon>
-            Docking Plan
-        </button>
-        <button nbButton class="mx-1" ghost>
-            <nb-icon icon="refresh-outline" pack="eva"></nb-icon>
-            Refresh
+        <button nbButton *ngFor="let button of topButton" status="primary" size="small" shape="rectangle" class="mx-1" outline>
+            <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
+            {{button.desc}}
         </button>
     </nb-card-header>
     <nb-card-header class="justify-content-between d-flex" >
         <div>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="book-outline" pack="eva"></nb-icon>
-                Export to PDF
+            <button nbButton *ngFor="let button of leftButton" status="primary" size="small" shape="rectangle" class="mx-1" outline (click)="clickButton(button.desc)">
+                <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
+                {{button.desc}}
             </button>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="chevron-down-outline" pack="eva"></nb-icon>
-                Extend
-            </button>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="info-outline" pack="eva"></nb-icon>
-                Extended Info
-            </button>
-            <button nbButton status="primary" (click)="curve.checked=!curve.checked" class="mx-1" outline>
+
+            <button nbButton status="primary" size="small" (click)="curve.checked=!curve.checked" class="mx-1" outline>
                 <input #curve type="checkbox" style="visibility: hidden;" class="position-absolute">
                 <nb-icon icon="activity-outline" pack="eva"></nb-icon>
                 S Curve
             </button>
         </div>
+
         <div>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Week
-            </button>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Month
-            </button>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Year
+            <button *ngFor="let button of rightButton" nbButton status="primary" class="mx-1" outline size="tiny">
+                {{button}}
             </button>
         </div>
     </nb-card-header>

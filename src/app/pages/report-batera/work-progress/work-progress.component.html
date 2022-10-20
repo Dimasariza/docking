@@ -13,7 +13,7 @@
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
 
             <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.yardApproval" (click)="approvedByYard(row)" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
                         <nb-icon [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
@@ -49,14 +49,14 @@
                 </td>
             </ng-container>
 
-            <ng-container [nbTreeGridColumnDef]="'Comment'">
+            <!-- <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm">
                         <nb-icon icon="file-text-outline"></nb-icon>
                     </button>
                 </td>
-            </ng-container>
+            </ng-container> -->
 
             <!-- <ng-container [nbTreeGridColumnDef]="'suplier'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
@@ -69,7 +69,7 @@
             </ng-container> -->
             
             <ng-container [nbTreeGridColumnDef]="'edit'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 100px;"></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center"
                 nbPopover="Edit Job Pogress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                     <button class="btn btn-light btn-sm" (click)="updateWorkProgress(row)">

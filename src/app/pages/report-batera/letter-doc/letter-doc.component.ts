@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
 import { HttpEventType } from '@angular/common/http';
-import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Subscription } from 'rxjs';
 import { ReportBateraService } from '../report-batera.service';
 
 @Component({
@@ -10,20 +11,20 @@ import { ReportBateraService } from '../report-batera.service';
   styles: [
   ]
 })
-export class LetterDocComponent implements OnInit {
+export class LetterDocComponent implements OnInit, OnDestroy {
   constructor(private dialogRef: MatDialogRef<LetterDocComponent>,
               private reportService : ReportBateraService,
               private datepipe: DatePipe,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
+  subscription : Subscription []  = []
 
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   addLetter(data){
     switch (this.data.dial) {
@@ -39,25 +40,21 @@ export class LetterDocComponent implements OnInit {
     }
   }
 
-  public fileName : any;
-  public uploadFile : any
+  public fileName : any = ""
   onFileChange(res){
-    const file = res.target?.files[0];
-    file?.name ? (() => {
-      this.fileName = file.name
-      this.uploadFile = file
-    })() : null
     const formData = new FormData();
+    const file = res.target?.files[0];
+    file?.name ? this.fileName = file.name : null
     formData.append('dokumen', file);
-    this.reportService.addAttachment(formData)
+    const _subs = this.reportService.addAttachment(formData)
     .subscribe((res) => {
-      console.log(res)
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
       }
     })
+    this.subscription.push(_subs)
   }
 
   addBastDoc(data){
@@ -94,12 +91,17 @@ export class LetterDocComponent implements OnInit {
   }
 
   submitLetter(postBody){
-    this.reportService.addDocument(postBody)
+    const _subs = this.reportService.addDocument(postBody)
     .subscribe(() => {
+    this.onSuccess.emit()
+    this.subscription.push(_subs)
     this.close()
-  })
+    })
   }
 
   close(){this.dialogRef.close();}
 
+  ngOnDestroy(): void {
+    this.subscription.forEach(subs => subs.unsubscribe())
+  }
 }

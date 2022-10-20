@@ -17,8 +17,4 @@ export class TrackingBateraService {
         return this.httpClient.get(url,  {params  : queryParams})
     }
     
-    getPDF(id){
-        const url = this.apiUrl + '/proyek/' + id + '/export_pdf'
-        return this.httpClient.get(url)
-    }
 }

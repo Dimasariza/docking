@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApexAxisChartSeries } from 'ng-apexcharts';
 import { ChartOptions } from '../charts/apexchart/apexchart.component';
 import { TrackingBateraService } from './tracking-batera.service';
@@ -109,8 +110,8 @@ export class TrackingBateraComponent implements OnInit {
     }
   }
 
-  constructor(
-    private trackingService : TrackingBateraService,
+  constructor(private trackingService : TrackingBateraService,
+              private route : Router
   ) { }
 
   public trackingData : any 
@@ -188,9 +189,30 @@ export class TrackingBateraComponent implements OnInit {
     )
   } 
 
-  exportToPDF(id){
-    this.trackingService.getPDF(id)
-    .subscribe(res =>{
-    })
+  topButton : any = [
+    {icon : 'star-outline', desc : 'All Assets'},
+    {icon : 'menu-outline', desc : 'Docking Plan'},
+    {icon : 'grid-outline', desc : 'Default'}
+  ]
+
+  leftButton : any = [
+    {icon : 'book-outline', desc : 'Export to PDF'},
+    {icon : 'chevron-down-outline', desc : 'Extend'},
+    {icon : 'info-outline', desc : 'Extended Info'}
+  ]
+
+  rightButton : any = ['Week', 'Month', 'Year']
+
+  clickButton(desc){
+    switch(desc){
+      case 'Export to PDF':
+        this.navigateToPdf()
+        break
+    }
   }
+
+  navigateToPdf(){
+    this.route.navigateByUrl('/pages/export-pdf')
+  }
+
 }
