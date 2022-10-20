@@ -66,20 +66,27 @@ export class ProjectBateraComponent {
     })
 
     this.projectService.getDataProjects()
-      .subscribe(({data} : any) => {
-        if(!data.length || data === null) return;
-        this.projectDatas = data
-        this.collectData()
-        this.project = data.map(item => ({
-          name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
-          id : item.id_proyek
-        }))
-        this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work =>
-        this.populateData(work)) as TreeNode<FSEntry>[]) 
+    .subscribe(({data} : any) => {
+      if(!data.length || data === null) return;
+      this.projectDatas = data
+
+      this.collectData()
+
+      this.project = data.map(item => ({
+        name : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
+        id : item.id_proyek
+      }))
+
+      this.generateDataSource(this.workAreaContainer)
     });
 
     this.profileService.getUserData(1, 10,'', '', '')
     .subscribe(({data} : any) => this.responsible = data)
+  }
+
+  generateDataSource(workArea){
+    this.dataSource = this.dataSourceBuilder.create(workArea.map(work =>
+    this.populateData(work)) as TreeNode<FSEntry>[]) 
   }
 
   collectData(){
@@ -100,8 +107,8 @@ export class ProjectBateraComponent {
     return {
       data : {
         cust : this.shipManagement,
-        kind: items?.length ? 'dir' : 'doc',
         ...data,
+        kind: items?.length ? 'dir' : 'doc',
       },
       children : items?.length ? items.map(item => this.populateData(item)) : []
     }
@@ -133,7 +140,31 @@ export class ProjectBateraComponent {
       case 'Approval':
         console.log("Approve")
       break;
+      case 'project' :
+        this.regroupBasedProject(data)
+        break;
+      case 'status':
+        this.regroupBasedStatus(data)
+        break;
+      case 'resp' :
+        this.regroupBasedResp(data)
     }
+  }
+
+  regroupBasedProject(data){
+    const work = this.projectDatas.find(project => project.id_proyek === data.id)
+    console.log(work)
+    // this.dataSource = this.dataSourceBuilder.create([])
+    this.generateDataSource(work.work_area)
+  }
+
+  regroupBasedStatus(data){
+    console.log(data)
+
+  }
+
+  regroupBasedResp(data){
+    console.log(data)
   }
 
   addProjectDial(){
