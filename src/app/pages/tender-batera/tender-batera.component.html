@@ -7,7 +7,7 @@
               <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(id)" #projectNameVal>{{value.shipName}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Name</span>
-            <nb-select [placeholder]=" selectedYard?.nama_galangan || 'Select Yard' " size="small" fullWidth class="w-100" [ngModel]="selectedYard?.nama_galangan" [disabled]="!(!projectId || !selectedYard || !tenderId)" #selectYard class="m-1">
+            <nb-select [placeholder]="selectedYard?.nama_galangan || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="!projectId || selectedText == 'Unselect'" #selectYard class="m-1">
               <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Location</span> 
@@ -23,10 +23,11 @@
           </div>
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+
       <div class="my-2">
-        <button nbButton size="tiny" class="mx-1" status="warning"  (click)="unselectTender()" outline [disabled]="!tenderId">Unselect Yard</button>
-        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!tenderId">Update Yard</button>
-        <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!tenderId">Delete Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="warning"  (click)="chooseTender()" outline [disabled]="!displayTender">{{selectedText}} Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!displayTender">Update Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!displayTender">Delete Yard</button>
         <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Yard</button>
       </div>
 
@@ -45,9 +46,9 @@
               </div>
             </ng-template>
           </div>
-          <div class="text-center mt-3">
+          <!-- <div class="text-center mt-3">
             <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
-          </div>
+          </div> -->
       </nb-card>
     </div>
   </div>

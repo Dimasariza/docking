@@ -61,4 +61,9 @@ export class TenderBateraService {
         const url = this.apiUrl + "/tender/" + id + "/unselect_tender"
         return this.httpClient.delete(url)
     }
+
+    deleteTender(id){
+        const url = this.apiUrl + "/tender/" + id 
+        return this.httpClient.delete(url)
+    }
 }

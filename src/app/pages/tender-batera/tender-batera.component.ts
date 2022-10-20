@@ -5,6 +5,7 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-menu-project.component';
+import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ContractActionComponent } from './contract-action/contract-action.component';
 import { TenderBateraService } from './tender-batera.service'
 import { UpdateLoadDetailsComponent } from './update-load-details/update-load-details.component';
@@ -49,13 +50,14 @@ export class TenderBateraComponent {
     fileInput.click()
   }
 
-  tenderData 
+  tenderData : any = []
   projectData
   projectId : any
   tenderId : any
   dataTable : object = {}
   selectedYard : any
   approvalStatus = ["All","Critical","High","Medium","Low"]
+  selectedText = "Select"
 
   ngOnInit(): void {
     this.projectService.getDataProjects()
@@ -74,60 +76,62 @@ export class TenderBateraComponent {
   }
 
   getProject(id){
+    this.selectedYard = null
+    this.displayTender = null
     const {workArea, projectId, currency, offHire, offHireCost, ownerCost} = this.projectData[id]
     this.projectId = projectId
     this.projectData['currency'] = currency
     this.projectData['offHire'] = offHire
     this.projectData['offHireCost'] = offHireCost
     this.projectData['ownerCost'] = ownerCost
-    workArea === null ||
-    workArea === undefined ?  null :
-    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
+    // workArea === null ||
+    // workArea === undefined ?  null :
+    // this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
     this.loadYardData()
   }
 
   loadYardData(){
+    let selectedYard
+    this.selectedText = "Select"
     this.tenderService.getProjectSummary(1, '', '','')
     .subscribe(({data} : any) => {
       this.tenderData = data
-      let selectedYard
+      if(data.length) getProjectTender()
+      if(!data.length) getAllTender('all', '')
+    })
 
-      if(data.length) {
-        selectedYard = data.find(yard => yard.id_proyek)
-      } else {
-        this.tenderService.getDataTender(10, "all")
-        .subscribe(({data} : any) => {
-          this.tenderData = data
-          this.tenderId = false
-          this.renderYard(undefined)
-        })
-      }
-
-      if(selectedYard.proyek.id_proyek === this.projectId) {
-        this.tenderService.getDataTenderPerId(selectedYard.id_tender)
+    const getProjectTender = () => {
+      selectedYard = this.tenderData.find(yard => yard.id_proyek)
+      if(selectedYard?.proyek.id_proyek === this.projectId) {
+        this.selectedText = "Unselect"
+        this.tenderService.getDataTenderPerId(selectedYard?.id_tender)
         .subscribe(({data} : any) => {
           this.selectedYard = data
-          this.tenderId = selectedYard.id_tender
+          this.tenderId = selectedYard?.id_tender
           this.renderYard(data)
         })
       } else {
-        this.tenderService.getDataTender(10, "all")
-        .subscribe(({data} : any) => {
-          this.tenderId = false
-          this.selectedYard = false
-          this.tenderData = null
-          this.displayTender = null
-          this.tenderData = data.filter(yard => yard.id_tender !== selectedYard.id_tender)
-        })
-      }  
+        getAllTender('other', selectedYard.id_tender)
+      }
+    }
 
-    })
+    const getAllTender = (conds, id_tender) => {
+      this.tenderService.getDataTender(10, "all")
+      .subscribe(({data} : any) => {
+        if(conds == 'other') {
+          this.tenderData = data.filter(tender => tender.id_tender !== id_tender)
+        }
+        if(conds == 'all') {
+          this.tenderData = data
+        }
+      })
+    }
   }
 
   getYard(id){
     const {id_tender} = this.tenderData[id]
-    this.tenderService.selectTender(this.projectId, id_tender)
-    .subscribe(res => console.log(res))
+    this.tenderId = id_tender
+    this.selectedYard = this.tenderData[id] 
     this.renderYard(this.tenderData[id])
   }
   
@@ -135,10 +139,8 @@ export class TenderBateraComponent {
   renderYard(tender){
     const {general_diskon_persen, additional_diskon, nama_galangan, sum_internal_adjusment} = tender
     this.displayTender = tender
-    console.log(tender)
-    this.selectedYard = true
+    this.tenderId = tender?.id_tender
 
-    this.tenderId = tender.id_tender
     this.profileService.getUserPerId(tender.id_user)
     .subscribe(({data} : any) => this.displayTender.responsible = data.nama_lengkap)
 
@@ -183,7 +185,7 @@ export class TenderBateraComponent {
 
   editLoadDetails(row){
     let {data} = row
-    const dialog = this.dialog.open(UpdateLoadDetailsComponent, {
+    const dialog = this.dialog.open(WorkAreaComponent, {
       disableClose : true,
       autoFocus:true, 
       data : {
@@ -230,12 +232,21 @@ export class TenderBateraComponent {
     // this.approvalStatus = !this.approvalStatus
   }
 
-  unselectTender(){
-    this.tenderService.unselectTender(this.tenderId)
-    .subscribe(res => console.log(res))
+  chooseTender(){
+    if(this.selectedText == 'Select') {
+      this.tenderService.selectTender(this.projectId, this.tenderId)
+      .subscribe(res => console.log(res))
+    }
+    if(this.selectedText == 'Unselect') {
+      this.tenderService.unselectTender(this.tenderId)
+      .subscribe(res => console.log(res))
+    }
   }
 
-  deleteYard(){}
+  deleteYard(){
+    this.tenderService.deleteTender(this.tenderId)
+    .subscribe(res => console.log(res))
+  }
 
   ngOnDestroy(){
 
