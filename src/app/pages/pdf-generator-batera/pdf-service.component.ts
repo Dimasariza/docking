@@ -18,4 +18,9 @@ export class PDFService {
                                 .append("status", status)
         return this.httpClient.get(url, {params : queryParams})
     }
+
+    getSummarryPerProject(id){
+        const url = this.apiUrl + "/report/proyek" + id
+        return this.httpClient.get(url)
+    }
 }
