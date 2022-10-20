@@ -53,6 +53,11 @@ const routes: Routes = [{
         .then(m => m.HomeBateraModule),
     },
     {
+      path: 'export-pdf',
+      loadChildren: () => import('./pdf-generator-batera/pdf-generator.module')
+        .then(m => m.PdfGeneratorModule),
+    },
+    {
       path: 'dashboard',
       component: ECommerceComponent,
     },
