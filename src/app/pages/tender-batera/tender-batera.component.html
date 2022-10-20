@@ -11,15 +11,15 @@
               <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
             </nb-select>
             <span class="d-block label">Yard Location</span> 
-            <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data not available'}}</span>
             <span class="d-block label">Responsible</span>
-            <span class="d-block text-capitalize">{{displayTender?.responsible || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.responsible || 'Data not available'}}</span>
             <span class="d-block label">Contract Number</span> 
-            <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data not available'}}</span>
             <span class="d-block label">Yard Quote</span> 
-            <span class="d-block text-capitalize">{{displayTender?.yard_total_quote || 'Data Not Available'}}</span>
+            <span class="d-block text-capitalize">{{displayTender?.yard_total_quote || 'Data not available'}}</span>
             <span class="d-block label">Comment</span>
-            <p class="d-block">{{displayTender?.komentar || 'Data Not Available'}}</p>
+            <p class="d-block">{{displayTender?.komentar || 'Data not available'}}</p>
           </div>
         </div>
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
@@ -58,10 +58,10 @@
   <nb-accordion-item>
     <nb-accordion-item-header >Load Details</nb-accordion-item-header>
     <nb-accordion-item-body>
-      <button nbButton class="m-1" status="primary" outline type="button" size="small" (click)="triggerSelectFile(addFromFile)">
+      <!-- <button nbButton class="m-1" status="primary" outline type="button" size="small" (click)="triggerSelectFile(addFromFile)">
         Add From File
       <input type="file" style="display: none;" #addFromFile>
-      </button>
+      </button> -->
       <div style="overflow: auto; width: 100%;">
         <div style="width: 1524px;">
           <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
@@ -90,7 +90,7 @@
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                 <button class="text-center" nbButton ghost >
-                  <nb-icon [icon]="approvalStatus ?  'checkmark-square-2-outline' :  'square-outline'" status="primary"></nb-icon>
+                  <nb-icon [icon]="row.data?.approvalStatus ?  'checkmark-square-2-outline' :  'square-outline'" status="primary"></nb-icon>
                 </button>
               </td>
             </ng-container>

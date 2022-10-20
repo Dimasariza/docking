@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
+import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { HomeBateraService } from '../home-batera.service';
 
 @Component({
@@ -13,6 +14,7 @@ export class DeleteDialogComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<DeleteDialogComponent>,
               private homeService : HomeBateraService,
               private projectService : ProjectBateraService,
+              private tenderService : TenderBateraService,
               @Inject(MAT_DIALOG_DATA) public deleteData: any
   ) { }
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
@@ -35,8 +37,13 @@ export class DeleteDialogComponent implements OnInit {
           this.onSuccess.emit()
           this.close()
         })
+        break
       case 'job' :
         this.deleteJob()
+        break;
+      case 'yard' :
+        this.deleteYard()
+        break;
       default:
         break;
     }
@@ -68,7 +75,9 @@ export class DeleteDialogComponent implements OnInit {
     })
   }
 
-  switchServ(){
+  deleteYard(){
+    this.tenderService.deleteTender(this.deleteData.id)
+    .subscribe(res => console.log(res))
   }
   
   close(){this.dialogRef.close(); }

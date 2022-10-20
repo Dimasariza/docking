@@ -2,6 +2,7 @@ import { DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-menu-project.component';
@@ -52,12 +53,14 @@ export class TenderBateraComponent {
 
   tenderData : any = []
   projectData
+  tenderCollection : any = []
   projectId : any
   tenderId : any
   dataTable : object = {}
   selectedYard : any
   approvalStatus = ["All","Critical","High","Medium","Low"]
   selectedText = "Select"
+  yardApproval : boolean = false
 
   ngOnInit(): void {
     this.projectService.getDataProjects()
@@ -84,25 +87,27 @@ export class TenderBateraComponent {
     this.projectData['offHire'] = offHire
     this.projectData['offHireCost'] = offHireCost
     this.projectData['ownerCost'] = ownerCost
-    // workArea === null ||
-    // workArea === undefined ?  null :
-    // this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
+    workArea === null ||
+    workArea === undefined ? 
+    this.dataSource = this.dataSourceBuilder.create([]) :
+    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => this.populateData(work)) as TreeNode<FSEntry>[])
     this.loadYardData()
   }
 
   loadYardData(){
     let selectedYard
     this.selectedText = "Select"
-    this.tenderService.getProjectSummary(1, '', '','')
+    this.tenderService.getProjectSummary('', '', '','')
     .subscribe(({data} : any) => {
       this.tenderData = data
+      this.tenderCollection = data.map(tender => tender.id_tender)
       if(data.length) getProjectTender()
-      if(!data.length) getAllTender('all', '')
+      if(!data.length) getAllTender('all')
     })
 
     const getProjectTender = () => {
-      selectedYard = this.tenderData.find(yard => yard.id_proyek)
-      if(selectedYard?.proyek.id_proyek === this.projectId) {
+      selectedYard = this.tenderData.find(yard => yard.id_proyek === this.projectId)
+      if(selectedYard) {
         this.selectedText = "Unselect"
         this.tenderService.getDataTenderPerId(selectedYard?.id_tender)
         .subscribe(({data} : any) => {
@@ -110,16 +115,17 @@ export class TenderBateraComponent {
           this.tenderId = selectedYard?.id_tender
           this.renderYard(data)
         })
-      } else {
-        getAllTender('other', selectedYard.id_tender)
+      } 
+      else {
+        getAllTender('other')
       }
     }
 
-    const getAllTender = (conds, id_tender) => {
+    const getAllTender = (conds) => {
       this.tenderService.getDataTender(10, "all")
       .subscribe(({data} : any) => {
         if(conds == 'other') {
-          this.tenderData = data.filter(tender => tender.id_tender !== id_tender)
+          this.tenderData = data.filter(tender => !this.tenderCollection.includes(tender.id_tender))
         }
         if(conds == 'all') {
           this.tenderData = data
@@ -175,9 +181,9 @@ export class TenderBateraComponent {
         ...work,
         Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
         Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
-        Unit : unit.name,
+        Unit : unit?.name,
         kind : items?.length ? 'dir' : 'doc',
-        Category : category.name,
+        Category : category?.name,
       },
       children: items?.length ? items.map(child => this.populateData(child)) : []
     }
@@ -232,6 +238,23 @@ export class TenderBateraComponent {
     // this.approvalStatus = !this.approvalStatus
   }
 
+  // approvedByOwner(newData){
+  //   this.shipOwner = true
+  //   let postData = { ...newData.data, ownerApproval : this.shipOwner}
+  //   this.updateWorkApproval(postData)
+  // }
+
+  // @Output() reloadPage = new EventEmitter<string>();
+  // updateWorkApproval(postData){
+  //   const parentIndex = postData.id.toString().split('')
+  //   const work_area = this.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+  //   this.projectService.workArea({work_area}, this.projectId)
+  //   .pipe(take(1))
+  //   .subscribe(() =>{
+  //     this.reloadPage.emit('complete')
+  //   })
+  // }
+
   chooseTender(){
     if(this.selectedText == 'Select') {
       this.tenderService.selectTender(this.projectId, this.tenderId)
@@ -244,8 +267,17 @@ export class TenderBateraComponent {
   }
 
   deleteYard(){
-    this.tenderService.deleteTender(this.tenderId)
-    .subscribe(res => console.log(res))
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        dial : 'yard',
+        id : this.tenderId
+      }
+    })
+    dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+    });
   }
 
   ngOnDestroy(){
