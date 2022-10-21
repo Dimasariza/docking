@@ -11,7 +11,6 @@ import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-
 import { WorkAreaComponent } from '../project-batera/work-area/work-area.component';
 import { ContractActionComponent } from './contract-action/contract-action.component';
 import { TenderBateraService } from './tender-batera.service'
-import { UpdateLoadDetailsComponent } from './update-load-details/update-load-details.component';
 
 interface TreeNode<T> {}
 interface FSEntry{}
@@ -98,7 +97,11 @@ export class TenderBateraComponent {
     workArea === undefined ? 
     this.dataSource = this.dataSourceBuilder.create([]) :
     this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
-      const workItem = {}
+      const {volume, 'Price Contract' : contractPrice} = work
+      const workItem = {
+        "unitPrice" : contractPrice,
+        "totalPrice" : volume * contractPrice,
+      }
       return this.FNCOL.populateData(work, workItem)
     }) as TreeNode<FSEntry>[])
     this.loadYardData()

@@ -96,6 +96,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         "Total Price Actual" : volume * work['Price Actual'],
         "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
         "Rank" : rank?.name,
+        "Vol" : volume
       }
       return this.FNCOL.populateData(work, workItem)
     }) as TreeNode<FSEntry>[])

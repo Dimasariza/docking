@@ -25,7 +25,6 @@ export class WorkAreaComponent {
   disabledJob : boolean = false
   totalPrice = 0
   unitPriceLabel : string = null
-  unitPriceJob
   unitType
   
   ngOnInit(){
@@ -43,33 +42,23 @@ export class WorkAreaComponent {
         this.unitPriceLabel = 'Price Budget'
       break;
       case 'Update' :
-        parentId.length === 1 ?
-        this.unitType = this.FNCOL.jobUnit :
-        this.unitType = this.FNCOL.subJobUnit
-        this.modelData = this.data.data.data
-        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
-        this.modelData['unitPriceLabel'] = this.modelData['Price Budget']
-        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.volume
-        this.disabledJob = true
-        this.unitPriceLabel = 'Price Budget'
-        this.unitPriceJob = this.modelData?.[this.unitPriceLabel]
-      break;
       case 'Work Progress':
-        this.disabledJob = true
-        this.modelData = this.data.data.data
-        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
-        this.unitPriceLabel = 'Price Actual'
-      break;
       case 'Update Load Details':
         parentId.length === 1 ?
         this.unitType = this.FNCOL.jobUnit :
         this.unitType = this.FNCOL.subJobUnit
         this.modelData = this.data.data.data
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
-        this.modelData['unitPriceLabel'] = this.modelData['Price Budget']
-        this.totalPrice = this.modelData.unitPriceLabel * this.modelData.volume
         this.disabledJob = true
+      case 'Update' :
+        this.unitPriceLabel = 'Price Budget'
+        this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume
+      case 'Work Progress':
+        this.unitPriceLabel = 'Price Actual'
+        this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume
+      case 'Update Load Details':
         this.unitPriceLabel = 'Price Contract'
+        this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume
       break;
     }
 
@@ -96,16 +85,15 @@ export class WorkAreaComponent {
     switch (this.data.dial) {
       case 'Add' :
       this.addWorkArea(data)
-        break
-      case 'Update' :
-      this.updateWorkArea(data)
-        break
+        break;
       case 'Add Sub' :
       this.addSubJob(data)
-        break
+        break;
+      case 'Update' :
       case 'Work Progress' :
-      this.updateWorkArea(data)
-        break
+      case 'Update Load Details':
+        this.updateWorkArea(data)
+        break;
     }
   }
 

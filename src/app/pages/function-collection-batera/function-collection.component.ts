@@ -59,7 +59,6 @@ export class FunctionCollection {
             Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
             Unit : unit?.name,
             Category : category?.name,
-            Volume : volume?.name,
             Responsible : responsible?.name,
             kind : work.items?.length ? 'dir' : 'doc',
           },

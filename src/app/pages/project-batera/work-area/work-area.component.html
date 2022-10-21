@@ -51,7 +51,7 @@
                 <span class="p-2 d-block">Unit {{unitPriceLabel}}</span>
                 <input type="number" nbInput fullWidth placeholder="Unit Price" fieldSize="small" required [ngModel]="modelData?.[unitPriceLabel]" [name]="unitPriceLabel" #unitPrices (change)="totalPrice = volume.value * unitPrices.value">
                 <span class="p-2 d-block">Total {{unitPriceLabel}}</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Budget" readonly fieldSize="small" required #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
+                <input type="text" nbInput fullWidth placeholder="Total Price Budget" readonly fieldSize="small" #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
                 
             </div>
             <div class="col-4">
