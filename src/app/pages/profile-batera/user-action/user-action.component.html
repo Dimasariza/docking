@@ -93,9 +93,9 @@
 
             </div>
         </div>
-        <button type="submit" nbButton status="success" fullWidth  class="my-2" >Submit</button>
+        <button type="submit" nbButton status="success" fullWidth [disabled]="!addUserForm.form.valid" class="my-2" >Submit</button>
     </form>
     </nb-card-body>
 </nb-card>
 
-<!-- [disabled]="!addUserForm.form.valid" -->
+

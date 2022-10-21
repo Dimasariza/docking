@@ -32,6 +32,7 @@ export class UserActionComponent implements OnInit, OnDestroy{
 
   ngOnInit(){
     this.userData = this.users.data
+    console.log(this.userData)
     if(this.users.dial == "Update") {
       this.avatar_url = environment.apiUrl + "/file/show/" + this.userData.avatar_url
       const _subs = this.homeService.getAllShip()
@@ -82,7 +83,6 @@ export class UserActionComponent implements OnInit, OnDestroy{
           this.uploadAvatarUrl = this.uploadAvatarUrl.data.file
         }
     })
-
     // this.subscription.push(_subs)
   }
 
@@ -121,12 +121,15 @@ export class UserActionComponent implements OnInit, OnDestroy{
   }
 
   updateUserData(postBody){
-    this.uploadAvatarUrl ? 
-    postBody.avatar_url = this.uploadAvatarUrl : 
-    postBody.avatar_url = this.userData.avatar_url
-    postBody['id_user'] = this.userData.id_user
+    postBody.avatar_url = this.uploadAvatarUrl ? 
+    this.uploadAvatarUrl : this.userData.avatar_url
+    this.dataRole.find((i, id)=> {
+      if(i === this.dataRole[id]) {
+        postBody['title'] = postBody.username + '_' + this.roleSymbol[id]
+      }
+    })
     postBody['departemen_id'] = ""
-    const _subs =  this.profileService.updateUser(postBody)
+    const _subs =  this.profileService.updateUser(postBody, this.userData.id_user)
     .subscribe(() => {},
       err => {console.log('HTTP Error', err)},
       () => console.log('HTTP request completed.'))

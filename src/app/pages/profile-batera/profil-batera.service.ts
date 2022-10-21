@@ -27,8 +27,8 @@ export class ProfileBateraService {
     return this.httpClient.get(url)
   }
 
-  updateUser(postData){
-    const url = this.apiUrl + "/user/" + postData.id_user
+  updateUser(postData, id){
+    const url = this.apiUrl + "/user/" + id
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')
     return this.httpClient.put(url , postData, {
