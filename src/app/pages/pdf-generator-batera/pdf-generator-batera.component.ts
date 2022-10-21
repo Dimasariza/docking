@@ -165,7 +165,8 @@ export class PdfGeneratorBateraComponent implements OnInit {
   async populatePDFDataPerJob(data, projectData){
     const url = await this.getBase64ImageFromURL('./assets/images/Logo/Logo Sikomodo.jpeg')
     const head = projectData.kapal.nama_kapal + ' -DD- ' + projectData.tahun
-    const jobName = data.jobNumber + '.' + data.jobName
+    const {Status, jobNumber, jobName, rank, responsible, remarks} = data
+    const job = jobNumber + '.' + jobName
     let regroupContent
     let content = [
       {
@@ -179,10 +180,69 @@ export class PdfGeneratorBateraComponent implements OnInit {
         color: '#222'  
       }, 
       {  
-        text: jobName,  
+        text: job,  
         fontSize: 12,  
-        color: '#047886'  
+        color: '#047886',
+        margin : [0 , 6],
       }, 
+      {
+        layout: 'noBorders',
+        margin : [0 , 6],
+        table: {
+          headerRows: 1,
+          widths: [ '*', '*', '*', '*'],  
+    
+          body: [
+            [ 
+              { text :'Vessel', fontSize : 10, bold : true}, 
+              { text : projectData?.kapal?.nama_kapal, fontSize : 10}, 
+              { text :'Component', fontSize : 10, bold : true}, 
+              { text :'', fontSize : 10},  
+            ],
+            [ 
+              { text :'Type/Serial No', fontSize : 10, bold : true}, 
+              { text :'', fontSize : 10}, 
+              { text :'Maker', fontSize : 10, bold : true}, 
+              { text :'', fontSize : 10},  
+            ],
+            [ 
+              { text :'Start Date', fontSize : 10, bold : true}, 
+              { text : data?.Start, fontSize : 10}, 
+              { text :'End Date', fontSize : 10, bold : true}, 
+              { text : data?.Stop, fontSize : 10},  
+            ],
+            [ 
+              { text :'Status', fontSize : 10, bold : true}, 
+              { text : Status, fontSize : 10}, 
+              { text :'Priority', fontSize : 10, bold : true}, 
+              { text : rank.name, fontSize : 10},  
+            ],
+            [ 
+              { text :'Responsible', fontSize : 10, bold : true}, 
+              { text : responsible.name, fontSize : 10}, 
+              { text :'', fontSize : 10, bold : true}, 
+              { text :'', fontSize : 10},  
+            ],
+          ]
+        }
+      },
+      {
+        layout: 'noBorders',
+        margin : [0 , 3],
+        table: {
+          headerRows: 1,
+          widths: ['*'],  
+    
+          body: [
+            [ 
+              { text :'Description', fontSize : 10, bold : true}, 
+            ],
+            [
+              { text : remarks, fontSize : 10, margin : [0, 4]}, 
+            ],
+          ]
+        }
+      },
     ]
     regroupContent = this.reGroupJobData(data)
     regroupContent.push(...this.subJobCollection)

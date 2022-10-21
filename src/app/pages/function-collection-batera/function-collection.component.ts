@@ -50,7 +50,7 @@ export class FunctionCollection {
     }
 
     populateData = (work, workItem) => {  
-        const {volume , unit, category, start, end, responsible}= work  
+        const {volume , unit, category, start, end, responsible, "total price" : total}= work  
         return {
           data: {
             ...work,
@@ -105,5 +105,11 @@ export class FunctionCollection {
           status = [true, true, true, true]
         }
         return status
+    }
+
+    minimal( a, b) {
+      if(a<b) return a;
+      else if(a==b) return a;
+      else return b;
     }
 }

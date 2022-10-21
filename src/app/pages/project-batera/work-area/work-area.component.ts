@@ -25,9 +25,11 @@ export class WorkAreaComponent {
   disabledJob : boolean = false
   totalPrice = 0
   unitPriceLabel : string = null
+  unitPriceJob
   unitType
   
   ngOnInit(){
+    console.log(this.data)
     const data = this.data?.data?.data
     const parentId = data?.id.toString().split('')
     switch (this.data.dial) {
@@ -50,6 +52,7 @@ export class WorkAreaComponent {
         this.totalPrice = this.modelData.unitPriceLabel * this.modelData.volume
         this.disabledJob = true
         this.unitPriceLabel = 'Price Budget'
+        this.unitPriceJob = this.modelData?.[this.unitPriceLabel]
       break;
       case 'Work Progress':
         this.disabledJob = true
@@ -136,7 +139,7 @@ export class WorkAreaComponent {
       type : "pekerjaan",
       status : 'Not Started',
     }]
-    this.uploadData(work_area)
+    // this.uploadData(work_area)
   }
   
   updateWorkArea(newData){
@@ -148,7 +151,8 @@ export class WorkAreaComponent {
     }
     const parentIndex = this.data.parentId.toString().split('')
     const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
-    this.uploadData(work_area)
+    console.log(work_area)
+    // this.uploadData(work_area)
   }
 
   addSubJobData = (data, newData, parentIndex) => {
@@ -172,7 +176,7 @@ export class WorkAreaComponent {
     } 
     let parentIndex = this.data.parentId.toString().split('')
     const work_area = this.addSubJobData(this.workAreaContainer, reconstructData, parentIndex)
-    this.uploadData(work_area)
+    // this.uploadData(work_area)
   }
 
   uploadData(work_area){

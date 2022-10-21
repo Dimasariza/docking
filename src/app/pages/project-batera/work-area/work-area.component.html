@@ -22,7 +22,7 @@
                         </div>
                     </div>
                     <span class="p-2 d-block"><strong>Job</strong></span>
-                    <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required [ngModel]="modelData.Job" #pekerjaan name="jobName" [disabled]="disabledJob">
+                    <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required [ngModel]="modelData?.jobName" #pekerjaan name="jobName" [disabled]="disabledJob">
                 </div>
                 <div *ngIf="data.dial === 'Work Progress'">
                     <span class="p-2 d-block"><strong>Status</strong></span>
@@ -46,12 +46,13 @@
                 <nb-select [placeholder]="modelData?.unit?.name || 'Unit'" class="w-100" size="small" name="unit" required #unit [ngModel]="modelData.unit" >
                     <nb-option *ngFor="let value of unitType; let id=index;" [value]="id">{{value}}</nb-option>
                 </nb-select>
+
+
                 <span class="p-2 d-block">Unit {{unitPriceLabel}}</span>
-                <input type="number" nbInput fullWidth placeholder="Unit Price" fieldSize="small" required [ngModel]="unitPrices" [name]="unitPriceLabel" #unitPrices (change)="totalPrice = volume.value * unitPrices.value">
+                <input type="number" nbInput fullWidth placeholder="Unit Price" fieldSize="small" required [ngModel]="modelData?.[unitPriceLabel]" [name]="unitPriceLabel" #unitPrices (change)="totalPrice = volume.value * unitPrices.value">
                 <span class="p-2 d-block">Total {{unitPriceLabel}}</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Budget" readonly fieldSize="small" required #allTotalPrice [ngModel]="totalPrice" [name]="unitPriceLabel">
-
-
+                <input type="text" nbInput fullWidth placeholder="Total Price Budget" readonly fieldSize="small" required #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
+                
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Departement</span>

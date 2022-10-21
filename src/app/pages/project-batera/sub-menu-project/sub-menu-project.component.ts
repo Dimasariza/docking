@@ -208,7 +208,7 @@ export class SubMenuProjectComponent implements OnInit {
       autoFocus:true, 
       data : {
         dial : "Update",
-        project : this.projectData  
+        project : this.projectData,
       }
     })  
     return dialog
@@ -234,6 +234,7 @@ export class SubMenuProjectComponent implements OnInit {
         dial : "Add Sub",
         id : this.id_proyek,
         data : row,
+        parentId : row.data.id
       }
     })
     return dialog
@@ -247,6 +248,7 @@ export class SubMenuProjectComponent implements OnInit {
         dial : "Update",
         id : this.id_proyek,
         data : row,
+        parentId : row.data.id
       }});
     return dialog
   };
@@ -259,6 +261,7 @@ export class SubMenuProjectComponent implements OnInit {
         dial : "job",
         id : this.id_proyek,
         work_area : this.projectData.work_area,
+        parentId : row.data.id
       }});
     return dialog
   }

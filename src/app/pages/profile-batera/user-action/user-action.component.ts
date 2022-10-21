@@ -70,7 +70,6 @@ export class UserActionComponent implements OnInit, OnDestroy{
   
   private uploadAvatarUrl : any = ""
   onImageLoad(){
-    console.log("upload image")
     const formData = new FormData();
     formData.append('dokumen', this.addUserForm.get('fileSource').value);
     const _subs = this.homeService.uploadFile(formData)
@@ -141,6 +140,7 @@ export class UserActionComponent implements OnInit, OnDestroy{
   ngOnDestroy(): void {
     this.subscription.forEach(subs => subs.unsubscribe())
   }
+
 
   close(){ this.dialogRef.close();}
 }

@@ -109,6 +109,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(row){
+    console.log(row.data, this.workProgressData)
     this.pdfExporter.generatePDFBasedOnJob(row.data, this.workProgressData)
   }
 
