@@ -1,11 +1,15 @@
 import { DatePipe } from "@angular/common";
 import { Injectable } from "@angular/core";
+import { take } from "rxjs/operators";
+import { HomeBateraService } from "../home-batera/home-batera.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class FunctionCollection {
-    constructor (public datePipe : DatePipe){}
+    constructor (public datePipe : DatePipe,
+                private homeService : HomeBateraService
+      ){}
 
     category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
     rank = ["Critical", "High", "Medium", "Low"]
@@ -55,8 +59,8 @@ export class FunctionCollection {
             Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
             Unit : unit?.name,
             Category : category?.name,
-            Volume : volume.name,
-            Responsible : responsible.name,
+            Volume : volume?.name,
+            Responsible : responsible?.name,
             kind : work.items?.length ? 'dir' : 'doc',
           },
           children: 

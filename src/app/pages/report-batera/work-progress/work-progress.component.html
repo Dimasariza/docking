@@ -37,8 +37,8 @@
             <ng-container [nbTreeGridColumnDef]="'rank'">
                 <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width:80px"></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center h-100">
-                  <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data['rank'].name)}"
-                  [nbPopover]="row.data?.rank" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
+                  <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data['rank']?.name)}"
+                  [nbPopover]="row.data?.rank?.name" nbPopoverTrigger="hint" nbPopoverPlacement="top"></nb-icon>
                 </td>
               </ng-container>
 

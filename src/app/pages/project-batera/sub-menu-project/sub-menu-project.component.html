@@ -105,7 +105,7 @@
             
                 <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                     <div *ngIf="!addSubJob">
-                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{column}}</th>
+                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{headColumns[index]}}</th>
                         <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-capitalize">{{row.data[column] || '-'}}</td>
                     </div>
                 </ng-container>

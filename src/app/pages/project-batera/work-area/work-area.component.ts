@@ -28,8 +28,8 @@ export class WorkAreaComponent {
   unitType
   
   ngOnInit(){
-    const data = this.data.data?.data
-    const parentId = this.data?.parentId.toString().split('')
+    const data = this.data?.data?.data
+    const parentId = data?.id.toString().split('')
     switch (this.data.dial) {
       case 'Add':
         this.unitType = this.FNCOL.jobUnit
