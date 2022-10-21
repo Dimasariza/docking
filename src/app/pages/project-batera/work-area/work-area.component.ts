@@ -139,7 +139,7 @@ export class WorkAreaComponent {
       type : "pekerjaan",
       status : 'Not Started',
     }]
-    // this.uploadData(work_area)
+    this.uploadData(work_area)
   }
   
   updateWorkArea(newData){
@@ -152,7 +152,7 @@ export class WorkAreaComponent {
     const parentIndex = this.data.parentId.toString().split('')
     const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, reconstructData)
     console.log(work_area)
-    // this.uploadData(work_area)
+    this.uploadData(work_area)
   }
 
   addSubJobData = (data, newData, parentIndex) => {
@@ -176,7 +176,7 @@ export class WorkAreaComponent {
     } 
     let parentIndex = this.data.parentId.toString().split('')
     const work_area = this.addSubJobData(this.workAreaContainer, reconstructData, parentIndex)
-    // this.uploadData(work_area)
+    this.uploadData(work_area)
   }
 
   uploadData(work_area){
