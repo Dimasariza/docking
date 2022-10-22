@@ -21,7 +21,8 @@
         </div>
 
         <div>
-            <button *ngFor="let button of rightButton" nbButton status="primary" class="mx-1" outline size="tiny">
+            <input #viewMode type="text" style="visibility: hidden;" class="position-absolute">
+            <button *ngFor="let button of rightButton" (click)="viewMode.value=button" nbButton status="primary" class="mx-1" outline size="tiny">
                 {{button}}
             </button>
         </div>
@@ -53,7 +54,7 @@
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable>
-        <f-gantt></f-gantt>
+        <f-gantt [showSCurve]="curve.checked" [viewMode]="viewMode.value"></f-gantt>
         <!-- <div class="d-flex">
             <div style="width: 350px">
             </div>

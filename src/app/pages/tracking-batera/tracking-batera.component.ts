@@ -59,7 +59,7 @@ export class TrackingBateraComponent implements OnInit {
     {icon : 'info-outline', desc : 'Extended Info'}
   ]
 
-  rightButton : any = ['Week', 'Month', 'Year']
+  rightButton : any = ['Day', 'Week', 'Month', 'Year']
 
   clickButton(desc){
     switch(desc){
