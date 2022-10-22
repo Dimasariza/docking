@@ -4,8 +4,8 @@ import Bar from './bar';
 import Arrow from './arrow';
 import Popup from './popup';
 
-import './gantt.scss';
-import scurve from './scurve';
+// import './gantt.scss';
+// import scurve from './scurve';
 import SCurve from './scurve';
 
 const VIEW_MODE = {
