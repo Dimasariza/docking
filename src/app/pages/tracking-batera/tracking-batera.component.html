@@ -29,7 +29,7 @@
     </nb-card-header>
 
     <nb-card-body>
-        <ngx-datatable
+        <!-- <ngx-datatable
             class="bootstrap"
             [rows]="trackingData"
             [count]="trackingData"
@@ -53,36 +53,38 @@
                         {{row.periode | date:'shortDate'}} - {{row.updated_at | date:'shortDate'}}
                 </ng-template>
             </ngx-datatable-column>
-        </ngx-datatable>
-        <f-gantt [showSCurve]="curve.checked" [viewMode]="viewMode.value"></f-gantt>
-        <!-- <div class="d-flex">
-            <div style="width: 350px">
+        </ngx-datatable> -->
+
+        <div class="row" style="min-width: 800px;">
+            <div class="col-4 pr-0">
+                <ngx-datatable
+                    class="bootstrap custom"
+                    [rows]="tasks"
+                    [count]="tasks.length"
+                    [scrollbarH]="true"
+                    default>
+                    <ngx-datatable-column name="#" [width]="8">
+                        <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                            {{rowIndex+1}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Uraian Pekerjaan" prop="name"></ngx-datatable-column>
+                    <ngx-datatable-column name="Jumlah Harga">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.price | currency:'IDR'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Bobot (%)" prop="weight">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.weight | number:'2.1'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
             </div>
-            <div *ngIf="series" style="flex: 1; margin-top: 1.2em; position: relative;">
-                <apx-chart 
-                    [title]="chartOptions.title"
-                    [series]="series"
-                    [chart]="chartOptions.chart"
-                    [xaxis]="chartOptions.xaxis"
-                    [yaxis]="chartOptions.yaxis"
-                    [grid]="chartOptions.grid"
-                    [plotOptions]="chartOptions.plotOptions"
-                    [dataLabels]="chartOptions.dataLabels"
-                ></apx-chart>
-                
-                <div *ngIf="!curve.checked" class="position-absolute w-100 h-100" style="left: 0; top: 0;">
-                    <apx-chart
-                        [series]="lineChartOption.series"
-                        [chart]="lineChartOption.chart"
-                        [stroke]="lineChartOption.stroke"
-                        [legend]="lineChartOption.legend"
-                        [dataLabels]="lineChartOption.dataLabels"
-                        [grid]="lineChartOption.grid"
-                        [yaxis]="lineChartOption.yaxis"
-                        [xaxis]="lineChartOption.xaxis"
-                    ></apx-chart>
-                </div>
+            <div class="col-8 pl-0">
+                <f-gantt [showSCurve]="curve.checked" [viewMode]="viewMode.value" [tasks]="tasks"></f-gantt>
             </div>
-        </div> -->
+        </div>
+        
     </nb-card-body>
 </nb-card>
