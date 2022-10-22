@@ -53,9 +53,11 @@ export class WorkAreaComponent {
       case 'Update' :
         this.unitPriceLabel = 'Price Budget'
         this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume
+        break;
       case 'Work Progress':
         this.unitPriceLabel = 'Price Actual'
         this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume
+        break;
       case 'Update Load Details':
         this.unitPriceLabel = 'Price Contract'
         this.totalPrice = this.modelData?.[this.unitPriceLabel] * this.modelData.volume

@@ -1,8 +1,9 @@
 <nb-card >
     <nb-card-header>
-    <h5 style="color:burlywood;">{{shipName}}</h5>
-    <div class="d-flex">
-        <div class="my-3" *ngFor = "let button of menuButton">
+        
+    <div class="d-flex justify-content-between">
+        <h5 style="color:burlywood;">{{shipName}}</h5>
+        <div *ngFor = "let button of menuButton">
             <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" nbButton status="primary" class="mx-1" outline size="small">
                 <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
                 {{button.text}}

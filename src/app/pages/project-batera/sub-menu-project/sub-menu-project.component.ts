@@ -19,11 +19,11 @@ const menuButton = [
     icon: 'compass-outline',
     text: 'Monitoring'
   },
-  {
-    position: 'top',
-    icon: 'file-outline',
-    text: 'Export To PDF'
-  },
+  // {
+  //   position: 'top',
+  //   icon: 'file-outline',
+  //   text: 'Export To PDF'
+  // },
   {
     position: 'bottom',
     text : 'Add Job',
@@ -95,7 +95,8 @@ export class SubMenuProjectComponent implements OnInit {
   objectKeys = Object.keys;
 
   reconstruction(data){
-    const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day } = data
+    const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day,
+      off_hire_start, off_hire_end , repair_start, repair_end, repair_in_dock_start, repair_in_dock_end} = data
     return {
         "Vessel": {
           type : 'text',
@@ -115,7 +116,7 @@ export class SubMenuProjectComponent implements OnInit {
         },
         "Off Hire Period": {
           type : 'text',
-          value: off_hire_period
+          value: `(${off_hire_period} Days) ${off_hire_start} to ${off_hire_end}`  
         },
         "- Deviation": {
           type : 'date',
@@ -131,11 +132,11 @@ export class SubMenuProjectComponent implements OnInit {
         }, 
         "Repair Period": {
           type: 'text',
-          value : off_hire_period
+          value : `(${off_hire_period} Days) ${repair_start} to ${repair_end}`
         },
         "- In Dock": {
           type : 'text',
-          value : repair_in_dock_period
+          value : `(${repair_in_dock_period} Days) ${repair_in_dock_start} to ${repair_in_dock_end}`
         },
         "- Additional Days": {
           type : 'date',

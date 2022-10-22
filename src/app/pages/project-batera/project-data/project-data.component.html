@@ -31,15 +31,15 @@
       </div>
 
       <div class="right_site col-6">
-        <label for="Deviation" class="d-block text-muted">- Deviation</label>
-        <input type="number" class="w-100" nbInput fieldSize="small" placeholder="Deviation" name="off_hire_deviasi" #deviation [ngModel]="projectData?.off_hire_deviasi">
-        <label for="Charter Rate" class="d-block text-muted" >- Charter Rate</label>
-        <input type="text" class="w-100" nbInput fieldSize="small" placeholder="Chareter Rate" name="off_hire_rate_per_day" #charterRate [ngModel]="projectData?.off_hire_rate_per_day">
-        <label for="Bunker" class="d-block text-muted" >- Bunker</label>
-        <input type="text" class="w-100" nbInput fieldSize="small" placeholder="Bunker Rate" name="off_hire_bunker_per_day" #bunker [ngModel]=" projectData?.off_hire_bunker_per_day">
         <label for="Off Hire Period" class="d-block text-muted">Off Hire Period</label>
         <nb-rangepicker #offHirePeriodDate ></nb-rangepicker>  
         <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="offHirePeriodDate" name="offHirePeriod" #offHirePeriod (ngModel)="offHirePeriod">
+        <label for="Deviation" class="d-block text-muted">- Deviation</label>
+        <input type="number" class="w-100" nbInput fieldSize="small" placeholder="Deviation" name="off_hire_deviasi" #deviation [ngModel]="projectData?.off_hire_deviasi">
+        <label for="Charter Rate" class="d-block text-muted" >- Charter Rate</label>
+        <input type="text" class="w-100" nbInput fieldSize="small" placeholder="Charter Rate" name="off_hire_rate_per_day" #charterRate [ngModel]="projectData?.off_hire_rate_per_day">
+        <label for="Bunker" class="d-block text-muted" >- Bunker Rate</label>
+        <input type="text" class="w-100" nbInput fieldSize="small" placeholder="Bunker Rate" name="off_hire_bunker_per_day" #bunker [ngModel]=" projectData?.off_hire_bunker_per_day">
         <label for="Repair Period" class="d-block text-muted">Repair Period</label>
         <nb-rangepicker #repairPeriodDate ></nb-rangepicker>  
         <input fieldSize="small" class="w-100" type="text" nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="repairPeriodDate" name="repairPeriod" #repairPeriod (ngModel)="repairPeriod">
@@ -49,7 +49,7 @@
         <label for="Additional Day" class="d-block text-muted" >- Additional Day</label>
         <input type="number" class="w-100" nbInput fieldSize="small" placeholder="Additional Day" name="repair_additional_day" #additionalDay [ngModel]="projectData?.repair_additional_day" >
       </div>
-      <button nbButton class="m-3 w-100" status="success" type="submit" [disabled]="!newProjectMenu.shipManagement">Add Project</button>
+      <button nbButton class="m-3 w-100" status="success" type="submit" [disabled]="!newProjectForm.form.valid">Add Project</button>
     </form>
   </nb-card-body>
 </nb-card> 

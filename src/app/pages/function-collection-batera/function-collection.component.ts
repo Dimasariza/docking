@@ -11,7 +11,7 @@ export class FunctionCollection {
                 private homeService : HomeBateraService
       ){}
 
-    category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
+    category = ["Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
     rank = ["Critical", "High", "Medium", "Low"]
     jobUnit = ["Lumpsum"]
     subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
@@ -55,11 +55,12 @@ export class FunctionCollection {
           data: {
             ...work,
             ...workItem,
-            Start : this.datePipe.transform(start, 'yyyy-MM-dd'),
-            Stop : this.datePipe.transform(end, 'yyyy-MM-dd'),
+            Start : this.datePipe.transform(start, 'dd-MM-yyyy'),
+            Stop : this.datePipe.transform(end, 'dd-MM-yyyy'),
             Unit : unit?.name,
             Category : category?.name,
             Responsible : responsible?.name,
+            "Total Price Budget" : volume * work['Price Budget'],
             kind : work.items?.length ? 'dir' : 'doc',
           },
           children: 

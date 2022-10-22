@@ -40,11 +40,11 @@ export class ProjectBateraComponent {
   }
 
   shortCut = [
-    {icon : 'plus-square-outline', menu : ''},
-    {icon : 'book-outline', menu : ''},
+    // {icon : 'plus-square-outline', menu : ''},
+    // {icon : 'book-outline', menu : ''},
     {icon : 'trash-2-outline', menu : 'Delete Project'},
     {icon : 'checkmark-square', menu : 'Approval'},
-    {icon : 'archive-outline', menu : ''},
+    // {icon : 'archive-outline', menu : ''},
   ]
 
   columnHead = ['Tasks', 'Customer'];

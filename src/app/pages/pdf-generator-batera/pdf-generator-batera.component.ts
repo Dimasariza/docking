@@ -79,10 +79,10 @@ export class PdfGeneratorBateraComponent implements OnInit {
             margin : [0 , 3],
             table: {
               headerRows: 1,
-              widths: [ '*', 180, '*', 60, 60, 30],  
+              widths: [ 60, 180, '*', 60, 60, 30],  
               body: [
                 [ 
-                  { text :'SFI', fontSize : 10, bold : true}, 
+                  { text :'Job Number', fontSize : 10, bold : true}, 
                   { text :'Item Name', fontSize : 10, bold : true}, 
                   { text :'Priority', fontSize : 10, bold : true}, 
                   { text :'Type', fontSize : 10, bold : true},
@@ -139,7 +139,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
                           margin : [0 , 3],
                           table: {
                             headerRows: 1,
-                            widths: [ '*', 180, '*', 60, 60, 30],  
+                            widths: [ 60, 180, '*', 60, 60, 30],  
                             body: [
                               [
                                 { text : jobNumber, fontSize : 9,}, 
@@ -187,6 +187,26 @@ export class PdfGeneratorBateraComponent implements OnInit {
       }, 
       {
         layout: 'noBorders',
+        // {
+        //   hLineWidth: function (i, node) {
+        //   if (i === 0 || i === node.table.body.length) {
+        //     return 0;
+        //   }
+        //   return 1;
+        //   },
+        //   vLineWidth: function (i) {
+        //     return 0;
+        //   },
+        //   hLineColor: function (i) {
+        //     return '#aaa';
+        //   },
+        //   paddingLeft: function (i) {
+        //     return i === 0 ? 0 : 8;
+        //   },
+        //   paddingRight: function (i, node) {
+        //     return (i === node.table.widths.length - 1) ? 0 : 8;
+        //   }
+        // },
         margin : [0 , 6],
         table: {
           headerRows: 1,
@@ -196,14 +216,8 @@ export class PdfGeneratorBateraComponent implements OnInit {
             [ 
               { text :'Vessel', fontSize : 10, bold : true}, 
               { text : projectData?.kapal?.nama_kapal, fontSize : 10}, 
-              { text :'Component', fontSize : 10, bold : true}, 
-              { text :'', fontSize : 10},  
-            ],
-            [ 
-              { text :'Type/Serial No', fontSize : 10, bold : true}, 
-              { text :'', fontSize : 10}, 
-              { text :'Maker', fontSize : 10, bold : true}, 
-              { text :'', fontSize : 10},  
+              { text :'Responsible', fontSize : 10, bold : true}, 
+              { text : responsible.name, fontSize : 10},
             ],
             [ 
               { text :'Start Date', fontSize : 10, bold : true}, 
@@ -216,12 +230,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
               { text : Status, fontSize : 10}, 
               { text :'Priority', fontSize : 10, bold : true}, 
               { text : rank.name, fontSize : 10},  
-            ],
-            [ 
-              { text :'Responsible', fontSize : 10, bold : true}, 
-              { text : responsible.name, fontSize : 10}, 
-              { text :'', fontSize : 10, bold : true}, 
-              { text :'', fontSize : 10},  
             ],
           ]
         }
