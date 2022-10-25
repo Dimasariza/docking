@@ -1,11 +1,11 @@
-<nb-card>
+<nb-card *ngIf="progressData">
     <table mat-table [dataSource]="progressData" class="mat-elevation-z8 w-100">
         <tr mat-header-row *matHeaderRowDef="statusColumn"></tr>
         <tr mat-row *matRowDef="let row; columns: statusColumn;"></tr>
 
         <ng-container matColumnDef="name">
-            <th mat-header-cell *matHeaderCellDef class="text-center"> Totals </th>
-            <td mat-cell *matCellDef="let element; let i = index">{{element.name || '0'}}</td>
+            <th mat-header-cell *matHeaderCellDef class=""> Totals </th>
+            <td mat-cell *matCellDef="let element; let i = index">{{element.name}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Budget">
@@ -15,12 +15,12 @@
 
         <ng-container matColumnDef="Contract">
             <th mat-header-cell *matHeaderCellDef class="text-center"> Contract </th>
-            <td mat-cell *matCellDef="let element" class="text-center">{{element.contract || '0'}} </td>
+            <td mat-cell *matCellDef="let element" class="text-center">{{element.contract || '0'}}</td>
         </ng-container>
 
         <ng-container matColumnDef="Actual">
             <th mat-header-cell *matHeaderCellDef class="text-center"> Actual </th>
-            <td mat-cell *matCellDef="let element" class="text-center">{{element.actual || '0'}}  </td>
+            <td mat-cell *matCellDef="let element" class="text-center">{{element.actual || '0'}}</td>
         </ng-container>
     </table>
 </nb-card>
