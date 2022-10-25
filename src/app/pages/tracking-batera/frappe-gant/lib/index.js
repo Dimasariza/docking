@@ -4,8 +4,8 @@ import Bar from './bar';
 import Arrow from './arrow';
 import Popup from './popup';
 
-import './gantt.scss';
-import scurve from './scurve';
+// import './gantt.scss';
+// import scurve from './scurve';
 import SCurve from './scurve';
 
 const VIEW_MODE = {
@@ -78,6 +78,7 @@ export default class Gantt {
         const default_options = {
             header_height: 50,
             column_width: 30,
+            showSCurve: false,
             step: 24,
             view_modes: [...Object.values(VIEW_MODE)],
             bar_height: 20,
@@ -94,6 +95,9 @@ export default class Gantt {
     }
 
     setup_tasks(tasks) {
+        //weight
+        this.total_price = tasks.map(task => task.price ?? 0).reduce((p, c) => p+c)
+        console.log(this.total_price);
         // prepare tasks
         this.tasks = tasks.map((task, i) => {
             // convert to Date objects
@@ -150,6 +154,18 @@ export default class Gantt {
             // uids
             if (!task.id) {
                 task.id = generate_id(task);
+            }
+
+            // progress_log
+            if (task.progress_log) {
+                task.progress_log = task.progress_log.map(progress => {
+                    return {...progress, date: date_utils.parse(progress.date)}
+                })
+            }
+
+            // weight
+            if (task.price) {
+                task.weight = task.price/this.total_price*100
             }
 
             return task;
@@ -281,7 +297,7 @@ export default class Gantt {
         this.map_arrows_on_bars();
         this.set_width();
         this.set_scroll_position();
-        this.make_scurve();
+        if (this.options.showSCurve) this.make_scurve();
     }
 
     setup_layers() {
@@ -296,12 +312,17 @@ export default class Gantt {
         }
     }
 
+    toggle_scurve() {
+        this.options.showSCurve = !this.options.showSCurve
+        this.render()
+    }
+
     make_scurve() {
         const grid_width = this.dates.length * this.options.column_width;
         const top = this.options.header_height + this.options.padding;
         const bottom = this.options.header_height + ((this.options.bar_height + this.options.padding) * this.tasks.length);
 
-        const scurve = new SCurve(this, {
+        new SCurve(this, {
             x1: this.options.padding,
             y1: bottom,
             x2: grid_width - this.options.padding,

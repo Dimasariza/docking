@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Task } from './frappe-gant/lib';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { ReportBateraService } from '../report-batera/report-batera.service';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
@@ -20,6 +21,56 @@ export class TrackingBateraComponent implements OnInit {
   ) { }
 
   public trackingData : any 
+
+  tasks: Task[] = [
+    {
+        id: 'Task 1',
+        name: 'Redesign website',
+        start: '2016-1-11',
+        end: '2016-1-21',
+        price: 500,
+        progress_log: [
+            {progress: 10, date: '2016-1-12'},
+            {progress: 50, date: '2016-1-15'},
+            {progress: 100, date: '2016-1-30'},
+        ],
+        // dependencies: 'Task 2, Task 3',
+    },
+    {
+        id: 'Task 2',
+        name: 'Redesign website 2',
+        start: '2016-1-21',
+        end: '2016-1-25',
+        price: 300,
+        progress_log: [
+            {progress: 100, date: '2016-1-24'}
+        ],
+        dependencies: 'Task 1',
+    },
+    {
+        id: 'Task 3',
+        name: 'Redesign website 3',
+        start: '2016-1-25',
+        end: '2016-1-31',
+        price: 200,
+        progress_log: [
+            {progress: 100, date: '2016-1-31'},
+        ],
+        dependencies: 'Task 2',
+    },
+    {
+        id: 'Task 4',
+        name: 'Redesign website',
+        start: '2016-1-11',
+        end: '2016-1-21',
+        price: 100,
+        progress_log: [
+            {progress: 50, date: '2016-1-15'},
+            {progress: 100, date: '2016-1-21'},
+        ],
+        // dependencies: 'Task 2, Task 3',
+    },
+  ]
   // series: ApexAxisChartSeries
 
   ngOnInit(): void {
@@ -34,19 +85,6 @@ export class TrackingBateraComponent implements OnInit {
     })
   } 
 
-        // data.map(({nama_kapal, id_kapal, proyek}) => (
-      //   proyek.map(({id_proyek, phase, repair_start, repair_end}) => (
-      //     dataContainer.push({
-      //       nama_kapal: nama_kapal, 
-      //       phases: this.FNCOL.phasesStatus(phase), 
-      //       periode: repair_start, 
-      //       updated_at: repair_end, 
-      //       id_kapal : id_kapal, 
-      //       id_proyek : id_proyek
-      //     })
-      //   ))
-      // ))
-
   topButton : any = [
     {icon : 'star-outline', desc : 'All Assets'},
     {icon : 'menu-outline', desc : 'Docking Plan'},
@@ -59,7 +97,7 @@ export class TrackingBateraComponent implements OnInit {
     {icon : 'info-outline', desc : 'Extended Info'}
   ]
 
-  rightButton : any = ['Week', 'Month', 'Year']
+  rightButton : any = ['Day', 'Week', 'Month', 'Year']
 
   clickButton(desc){
     switch(desc){

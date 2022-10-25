@@ -371,7 +371,7 @@ export default class Bar {
         this.$bar_progress.setAttribute('x', this.$bar.getX());
         this.$bar_progress.setAttribute(
             'width',
-            this.$bar.getWidth() * (this.task.progress / 100)
+            this.$bar.getWidth() * (this.task.progress ?? 0 / 100)
         );
     }
 
