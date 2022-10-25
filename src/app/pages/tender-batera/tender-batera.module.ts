@@ -7,6 +7,7 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatDialogModule } from '@angular/material/dialog';
 import { ContractActionComponent } from './contract-action/contract-action.component';
 import { FormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -34,7 +35,6 @@ import { FormsModule } from '@angular/forms';
   declarations: [
     ...routedComponents,
   ],
-  providers: [
-  ]
+  providers: [CurrencyPipe]
 })
 export class TenderBateraModule { }

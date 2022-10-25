@@ -78,13 +78,16 @@ export class ProjectDataComponent implements OnInit {
 
   addNewProject(newData){
     let postBody = this.checkPostBody(newData.value)
+    const addingDay = postBody.repair_additional_day * 60 * 60 * 24 * 1000
+    const repairEnd = new Date(postBody.repairInDock.end.getTime() + addingDay)
     postBody = {
       ...postBody,
       ...this.transformDate(postBody),
-      selected_yard : ""
+      repair_start : postBody.repair_in_dock_start,
+      repair_end : this.datepipe.transform(repairEnd, 'yyyy-MM-dd')
     }
     this.projectService.addDataProject(postBody)
-    .subscribe(res => {
+    .subscribe(() => {
       this.onSuccess.emit()
       this.close()
     })
@@ -96,10 +99,10 @@ export class ProjectDataComponent implements OnInit {
       data.off_hire_start = this.datepipe.transform(offHirePeriod?.start , 'yyyy-MM-dd')
       data.off_hire_end = this.datepipe.transform(offHirePeriod?.end , 'yyyy-MM-dd')
     } 
-    if(repairPeriod){
-      data.repair_start = this.datepipe.transform(repairPeriod?.start , 'yyyy-MM-dd')
-      data.repair_end = this.datepipe.transform(repairPeriod?.end , 'yyyy-MM-dd')
-    }
+    // if(repairPeriod){
+    //   data.repair_start = this.datepipe.transform(repairPeriod?.start , 'yyyy-MM-dd')
+    //   data.repair_end = this.datepipe.transform(repairPeriod?.end , 'yyyy-MM-dd')
+    // }
     if(repairInDock){
       data.repair_in_dock_start = this.datepipe.transform(repairInDock?.start , 'yyyy-MM-dd')
       data.repair_in_dock_end = this.datepipe.transform(repairInDock?.end , 'yyyy-MM-dd')

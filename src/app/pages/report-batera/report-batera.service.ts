@@ -50,4 +50,13 @@ export class ReportBateraService {
                                 .append("type", type)
         return this.httpClient.get(url, {params : queryParams})
     }
+
+    sendNotification(body) {
+        const url = "https://formspree.io/f/xvoywpnp"
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.httpClient.post(url, 
+            {name : body.sender, replyto : body.receiver, message : body.message}, 
+            {headers : headers}
+        )
+    }
 }

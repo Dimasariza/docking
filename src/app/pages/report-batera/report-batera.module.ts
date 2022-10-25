@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NbAccordionModule, 
@@ -28,7 +28,6 @@ import { MatTableModule } from '@angular/material/table';
 import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
 import { JobSuplierComponent } from './job-suplier/job-suplier.component';
-import { VariantWorkAreaComponent } from './variant-work-area/variant-work-area.component';
 
 
 @NgModule({
@@ -43,7 +42,6 @@ import { VariantWorkAreaComponent } from './variant-work-area/variant-work-area.
     FsIconComponent,
     VariantWorkComponent,
     LetterMenuComponent,
-    VariantWorkAreaComponent
   ],
   entryComponents: [ LetterDocComponent, ProjectStatusComponent],
   imports: [
@@ -66,7 +64,8 @@ import { VariantWorkAreaComponent } from './variant-work-area/variant-work-area.
     NbAccordionModule,
     NbIconModule,
     MatTableModule,
-  ]
+  ],
+  providers : [CurrencyPipe]
 })
 export class ReportBateraModule {
 

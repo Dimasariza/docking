@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatOptionModule } from '@angular/material/core';
@@ -46,6 +47,7 @@ import { WorkAreaComponent } from './work-area/work-area.component';
   declarations: [
     ...routedComponents,
   ],
+  providers : [CurrencyPipe]
 })
 export class ProjectBateraModule{ 
 }

@@ -2,6 +2,7 @@ import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
+import { ReportBateraService } from '../../report-batera/report-batera.service';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { HomeBateraService } from '../home-batera.service';
 
@@ -16,6 +17,7 @@ export class DeleteDialogComponent implements OnInit {
               private homeService : HomeBateraService,
               private projectService : ProjectBateraService,
               private tenderService : TenderBateraService,
+              private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
               @Inject(MAT_DIALOG_DATA) public deleteData: any
   ) { }
@@ -41,11 +43,24 @@ export class DeleteDialogComponent implements OnInit {
         })
         break
       case 'job' :
-        this.deleteJob()
+        const work_area = this.deleteJob()
+        this.projectService.workArea({work_area}, this.deleteData.id)
+        .subscribe(() => {
+          this.onSuccess.emit()
+          this.close()
+        })
         break;
       case 'yard' :
-        this.deleteYard()
+        this.tenderService.deleteTender(this.deleteData.id)
+        .subscribe(res => console.log(res))
         break;
+      case 'variant job' :
+        const variant_work = this.deleteJob()
+        this.reportService.updateVarianWork({variant_work}, this.deleteData.id)
+        .subscribe(() => {
+          this.onSuccess.emit()
+          this.close()
+        })
       default:
         break;
     }
@@ -54,21 +69,10 @@ export class DeleteDialogComponent implements OnInit {
   deleteJob(){
     const parentIndex = this.deleteData.parentId.toString().split('')
     const work_area = this.FNCOL.reconstructData(this.deleteData.work_area, parentIndex)
-    let postBody
-    work_area.length === 0 ||
-    work_area === undefined ? postBody = {work_area : [null]} : postBody = {work_area : work_area}
-    this.projectService.workArea(postBody, this.deleteData.id)
-    .subscribe(() => {
-      this.onSuccess.emit()
-      this.close()
-    })
+    if (work_area.length === 0 || work_area === undefined) return [null]
+    else return work_area
   }
 
-  deleteYard(){
-    this.tenderService.deleteTender(this.deleteData.id)
-    .subscribe(res => console.log(res))
-  }
-  
   close(){this.dialogRef.close(); }
 
 }

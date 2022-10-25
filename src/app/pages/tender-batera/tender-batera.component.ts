@@ -1,4 +1,4 @@
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -28,12 +28,12 @@ export class TenderBateraComponent {
               private dialog : MatDialog,
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
-              private datePipe : DatePipe,
+              public currency : CurrencyPipe,
               public FNCOL : FunctionCollection
   ) {}
 
   headColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract', 'Total Price Contract', 'Category', 'Remarks' ]
-  defaultColumns = [ 'jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'unitPrice', 'totalPrice', 'Category', 'remarks' ];
+  defaultColumns = [ 'jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'Unit Price Contract', 'Total Price Contract', 'Category', 'remarks' ];
   allColumns = [ "jobNumber", 'rank',  ...this.defaultColumns, "Approve", "Edit"];
 
   dataSource: NbTreeGridDataSource<FSEntry>; 
@@ -98,9 +98,10 @@ export class TenderBateraComponent {
     this.dataSource = this.dataSourceBuilder.create([]) :
     this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
       const {volume, 'Price Contract' : contractPrice} = work
+      console.log(currency)
       const workItem = {
-        "unitPrice" : contractPrice,
-        "totalPrice" : volume * contractPrice,
+        "Unit Price Contract" : this.currency.transform(contractPrice, this.FNCOL.convertCurrency(currency)),
+        "Total Price Contract" : this.currency.transform(contractPrice * volume, this.FNCOL.convertCurrency(currency))
       }
       return this.FNCOL.populateData(work, workItem)
     }) as TreeNode<FSEntry>[])
@@ -172,17 +173,17 @@ export class TenderBateraComponent {
       'Yard' : nama_galangan,
       'Currency': currency,
       'Offhire Repair Period (In Dock)': offHire,
-      'Offhire Cost': offHireCost,
-      'Owner Cost': ownerCost,
-      'Owner Total Cost': offHireCost + ownerCost,
-      'Sum Internal Adjusment': sum_internal_adjusment,
+      'Offhire Cost': this.currency.transform(offHireCost, this.FNCOL.convertCurrency(currency)),
+      'Owner Cost': this.currency.transform(ownerCost, this.FNCOL.convertCurrency(currency)),
+      'Owner Total Cost': this.currency.transform(offHireCost + ownerCost, this.FNCOL.convertCurrency(currency)),
+      'Sum Internal Adjusment': this.currency.transform(sum_internal_adjusment, this.FNCOL.convertCurrency(currency)), 
       'General Discount': {
         discount : general_diskon_persen,
-        'after' : general_diskon_persen * (offHireCost + ownerCost) / 100
+        'after' : this.currency.transform(general_diskon_persen * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(currency))
       },
       'Additional Discount': {
         discount : additional_diskon,
-        'after' : additional_diskon * (offHireCost + ownerCost) / 100
+        'after' : this.currency.transform(additional_diskon * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(currency))
       }
     }
   }

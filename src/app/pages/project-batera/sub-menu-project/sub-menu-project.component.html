@@ -2,21 +2,26 @@
     <nb-card-header>
         
     <div class="d-flex justify-content-between">
-        <h5 style="color:burlywood;">{{shipName}}</h5>
-        <div *ngFor = "let button of menuButton">
-            <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" nbButton status="primary" class="mx-1" outline size="small">
-                <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
-                {{button.text}}
-            </button>
+        <h5>{{shipName}}</h5>
+        <div>
+            <div *ngFor = "let button of menuButton">
+                <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" nbButton status="primary" class="mx-1" outline size="small">
+                    <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
+                    {{button.text}}
+                </button>
+            </div>
         </div>
+        
     </div>
+
+
     </nb-card-header>
 
     <nb-card-body>
         <div class="row">
             <div class="col-lg-5 col-md-12 col-sm-12" *ngIf="reportData">
                 <div class="d-flex justify-content-between">
-                    <h6 style="color: burlywood;">Summary</h6>
+                    <h6>Summary</h6>
                     <button nbButton status="primary" size="small" (click)="buttonAction('update project')">Update</button>
                 </div>
                 
@@ -24,21 +29,21 @@
                     <div *ngIf="reportData[item.value].type === 'text';">
                         <div class="row my-2">
                           <div class="col-5"><strong>{{item.value}}</strong></div>
-                          <div class="col-7 text-capitalize" [ngClass]="reportData[item.value]?.value ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value]?.value || 'Data Not Availlable'}}</div>
+                          <div class="col-7" [ngClass]="reportData[item.value]?.value ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value]?.value || 'Data Not Availlable'}}</div>
                         </div>
                     </div>
                     
                     <div *ngIf="reportData[item.value].type === 'date';">
                         <div class="row my-2">
                           <div class="col-5"><strong>{{item.value}} </strong></div>
-                          <div class="col-4">{{reportData[item.value]?.value || 'Data Not Availlable'}}  days</div>
+                          <div class="col-4">{{reportData[item.value]?.value || 'Data Not Availlable'}}  Days</div>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-7 col-md-12 col-sm-12">
-                <ngx-table-data></ngx-table-data>
+                <ngx-table-data [tableData]="projectData"></ngx-table-data>
             </div>
         </div>
     </nb-card-body>
@@ -55,9 +60,10 @@
             </button>
         </div>
     </div>
-    <h6 class="mx-3" style="color: burlywood;">Work Area</h6>
+    <h6 class="mx-3">Work Area</h6>
+    <!-- <h6 class="mx-3" style="color: burlywood;">Work Area</h6> -->
     <div style="overflow: auto; width: 100%;">
-        <div style="width: 1600px;">
+        <div style="width: 2000px;">
             <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
                 <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
                 <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>

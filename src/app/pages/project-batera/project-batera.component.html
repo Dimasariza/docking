@@ -37,7 +37,7 @@
                 <nb-option (click)="clickAction('all data', null)">
                   All Statuses
                 </nb-option>
-                <nb-option *ngFor="let stat of status;let id = index;" [value]="stat" (click)="clickAction('status', stat)">{{stat}}</nb-option>
+                <nb-option *ngFor="let stat of this.FNCOL.status;let id = index;" [value]="stat" (click)="clickAction('status', stat)">{{stat}}</nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">

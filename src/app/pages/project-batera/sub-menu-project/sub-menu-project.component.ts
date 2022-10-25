@@ -1,11 +1,10 @@
-import { DatePipe, KeyValue } from '@angular/common';
+import { CurrencyPipe, DatePipe, KeyValue } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
 import { MatDialog } from '@angular/material/dialog';
 import { WorkAreaComponent } from '../work-area/work-area.component';
-import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ProjectDataComponent } from '../project-data/project-data.component';
 import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
@@ -19,11 +18,6 @@ const menuButton = [
     icon: 'compass-outline',
     text: 'Monitoring'
   },
-  // {
-  //   position: 'top',
-  //   icon: 'file-outline',
-  //   text: 'Export To PDF'
-  // },
   {
     position: 'bottom',
     text : 'Add Job',
@@ -50,12 +44,12 @@ const menuButton = [
 export class SubMenuProjectComponent implements OnInit {
   public menuButton = menuButton
   constructor(  private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-                private profileService : ProfileBateraService,
                 private route: ActivatedRoute,
                 private dialog : MatDialog,
                 private router : Router,
-                private datePipe : DatePipe,
                 private projectService : ProjectBateraService,
+                public currency : CurrencyPipe,
+                public convertDate : DatePipe,
                 public FNCOL : FunctionCollection,
   ) { }
 
@@ -80,9 +74,11 @@ export class SubMenuProjectComponent implements OnInit {
       work_area.length === 0 ? null : 
 
       this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
-        const {volume} = work  
+        const {volume, 'Price Budget' : budgetPrice} = work 
+        const currency = data.mata_uang
         const workItem = {
-          "Total Price Budget" : volume * work['Price Budget'],
+          'Unit Price Budget' : this.currency.transform(budgetPrice, this.FNCOL.convertCurrency(currency)),
+          'Total Price Budget' : this.currency.transform(budgetPrice * volume, this.FNCOL.convertCurrency(currency)),
         }
         return this.FNCOL.populateData(work, workItem) 
       }) as TreeNode<FSEntry>[] 
@@ -96,7 +92,8 @@ export class SubMenuProjectComponent implements OnInit {
 
   reconstruction(data){
     const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day,
-      off_hire_start, off_hire_end , repair_start, repair_end, repair_in_dock_start, repair_in_dock_end} = data
+      off_hire_start, off_hire_end , repair_start, repair_end, repair_in_dock_start, repair_in_dock_end, repair_period} = data
+    const convertDate = (date) => this.convertDate.transform(date, 'dd-MM-yyyy')
     return {
         "Vessel": {
           type : 'text',
@@ -104,7 +101,7 @@ export class SubMenuProjectComponent implements OnInit {
         },
         "Phase": {
           type : 'text',
-          value: phase
+          value: this.FNCOL.convertPhase(phase) 
         },
         "Selected Yard": {
           type : 'text',
@@ -116,7 +113,7 @@ export class SubMenuProjectComponent implements OnInit {
         },
         "Off Hire Period": {
           type : 'text',
-          value: `(${off_hire_period} Days) ${off_hire_start} to ${off_hire_end}`  
+          value: `(${off_hire_period} Days) ${convertDate(off_hire_start)} to ${convertDate(off_hire_end)}`  
         },
         "- Deviation": {
           type : 'date',
@@ -124,19 +121,19 @@ export class SubMenuProjectComponent implements OnInit {
         },
         "- Charter Rate": {
           type : 'text',
-          value: off_hire_rate_per_day
+          value: this.currency.transform(off_hire_rate_per_day, this.FNCOL.convertCurrency(mata_uang)) 
         } ,
         "- Bunker": {
           type : 'text',
-          value : off_hire_bunker_per_day
+          value: this.currency.transform(off_hire_bunker_per_day, this.FNCOL.convertCurrency(mata_uang)) 
         }, 
         "Repair Period": {
           type: 'text',
-          value : `(${off_hire_period} Days) ${repair_start} to ${repair_end}`
+          value : `(${repair_period} Days) ${convertDate(repair_start)} to ${convertDate(repair_end)}`
         },
         "- In Dock": {
           type : 'text',
-          value : `(${repair_in_dock_period} Days) ${repair_in_dock_start} to ${repair_in_dock_end}`
+          value : `(${repair_in_dock_period} Days) ${convertDate(repair_in_dock_start)} to ${convertDate(repair_in_dock_end)}`
         },
         "- Additional Days": {
           type : 'date',
@@ -146,7 +143,7 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   headColumns = ['Job', 'Departement', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Budget', 'Total Price Budget', 'Category', 'Remarks']
-  defaultColumns = ['jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'Price Budget','Total Price Budget', 'Category', 'remarks'];
+  defaultColumns = ['jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'Unit Price Budget','Total Price Budget', 'Category', 'remarks'];
   allColumns = [ 'jobNumber', 'rank', ...this.defaultColumns, 'responsible', 'action']
   dataSource: NbTreeGridDataSource<FSEntry>; 
   sortColumn: string;
@@ -216,12 +213,14 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   addWorkAreaDial(){
+    console.log(this.projectData)
     const dialog = this.dialog.open(WorkAreaComponent, {
       disableClose : true,
       autoFocus:true, 
       data : {
         dial : "Add",
-        id : this.id_proyek
+        id : this.id_proyek,
+        work : this.projectData
       }
     }) 
     return dialog   
@@ -235,7 +234,7 @@ export class SubMenuProjectComponent implements OnInit {
         dial : "Add Sub",
         id : this.id_proyek,
         data : row,
-        parentId : row.data.id
+        work : this.projectData
       }
     })
     return dialog
@@ -249,7 +248,7 @@ export class SubMenuProjectComponent implements OnInit {
         dial : "Update",
         id : this.id_proyek,
         data : row,
-        parentId : row.data.id
+        work : this.projectData
       }});
     return dialog
   };

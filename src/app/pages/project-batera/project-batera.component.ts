@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -58,10 +57,7 @@ export class ProjectBateraComponent {
   workAreaContainer : any = []
   shipManagement : string
   responsible : any = []
-  status : any = ['Not Started', 'Done', 'In Progress', 'Done']
-  projectFilter : string = "all"
-  statusFilter : string = "all"
-  respFilter : string = "all"
+
 
   ngOnInit() {
     this.profileService.getCompanyProfile()
@@ -74,7 +70,7 @@ export class ProjectBateraComponent {
       if(!data.length || data === null) return;
       this.projectDatas = data
       this.collectData() 
-      this.regroupAllData()
+      this.generateDataSource(this.workAreaContainer)
     });
 
     this.profileService.getUserData(1, 10,'', '', '')
@@ -102,18 +98,6 @@ export class ProjectBateraComponent {
       case 'Approval':
         console.log("Approve")
       break;
-      case 'project' :
-        this.regroupBasedProject(data)
-        break;
-      case 'status':
-        this.regroupBasedStatus(data)
-        break;
-      case 'resp' :
-        this.regroupBasedResp(data)
-        break;
-      case 'all data' :
-        this.regroupAllData()
-        break;
     }
   }
 
@@ -128,25 +112,7 @@ export class ProjectBateraComponent {
     }) as TreeNode<FSEntry>[] ) 
   }
 
-  regroupAllData(){
-    this.generateDataSource(this.workAreaContainer)
-  }
 
-  regroupBasedProject(data){
-    this.generateDataSource(data.work_area)
-  }
-
-  regroupBasedStatus(data){
-    console.log(data)
-  }
-
-  regroupBasedResp(data){
-    let workContainer = []
-    const work = this.projectDatas
-    .filter(project => project.id_user === data)
-    .forEach(item => console.log(item))
-    this.generateDataSource(workContainer)
-  }
 
   addProjectDial(){
     const dialog = this.dialog.open(ProjectDataComponent, { 
