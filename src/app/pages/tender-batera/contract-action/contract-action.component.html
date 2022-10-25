@@ -38,7 +38,7 @@
             <div class="d-flex justify-content-center m-3 mr-5">
                 <button nbButton class="mx-2" shape="rectangle" status="primary" type="button" outline size="small" (click)="triggerSelectFile(uploadContract)">
                     Upload Contract
-                <input type="file" style="display: none;" #uploadContract name="dokumen" #document (ngModel)="document">
+                <input type="file" style="display: none;" #uploadContract #document (ngModel)="document">
                 </button>
                 <button nbButton status="success" type="submit">Submit</button>
             </div>
