@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { HomeBateraService } from '../home-batera/home-batera.service';
-import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { ProfileBateraService } from './profil-batera.service';
 import { UserActionComponent } from './user-action/user-action.component';
 
@@ -47,13 +46,13 @@ export class ProfilBateraComponent implements OnInit {
     })
   }
 
-  changeLogoDial(){
-    const dialogRef = this.dialog.open(ChangeLogoComponent)
-    dialogRef.componentInstance.onSuccess.asObservable()
-    .subscribe(()=> {
-      this.ngOnInit()
-    });
-  }
+  // changeLogoDial(){
+  //   const dialogRef = this.dialog.open(ChangeLogoComponent)
+  //   dialogRef.componentInstance.onSuccess.asObservable()
+  //   .subscribe(()=> {
+  //     this.ngOnInit()
+  //   });
+  // }
 
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()

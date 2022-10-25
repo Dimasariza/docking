@@ -1,6 +1,6 @@
 <nb-card>
-    <nb-card-header class="d-flex">
-        <div style="min-width: 8rem;">
+    <nb-card-header>
+        <!-- <div style="min-width: 8rem;">
             <nb-card class="h-100" style="cursor: pointer;" (click)="triggerSelectFile(changeLogo)">
                 <nb-card-body class="text-secondary d-flex justify-content-center">
                     <nb-icon *ngIf="companyData" icon="plus-square-outline" pack="eva" style="font-size: 2rem;" class="align-self-center"></nb-icon>
@@ -8,8 +8,9 @@
                 </nb-card-body>
                 <input type="file" style="display: none;" #changeLogo (change)="onFileChange($event)">
             </nb-card>
-        </div>
-        <div class="mx-3 w-100 align-middle">
+        </div> -->
+        <h3>Welcome</h3>
+        <div class="my-2 w-100 align-middle">
             <h5>{{companyData?.profile_nama_perusahaan}}</h5>
         </div>
     </nb-card-header>

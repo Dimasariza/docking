@@ -6,7 +6,6 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
 import { ProfilBateraRoutingModule, routedComponents } from './profil-batera-routing.module';
 import { MatInputModule } from '@angular/material/input';
-import { ChangeLogoComponent } from './change-logo/change-logo.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { UserActionComponent } from './user-action/user-action.component';
 
@@ -26,7 +25,7 @@ import { UserActionComponent } from './user-action/user-action.component';
     MatDialogModule,
     NbSelectModule,
   ],
-  entryComponents: [ChangeLogoComponent, UserActionComponent],
+  entryComponents: [UserActionComponent],
   declarations: [
     ...routedComponents
   ],
