@@ -1,17 +1,20 @@
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { ExportToExcel } from '../../function-collection-batera/export-excel';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { PdfGeneratorBateraComponent } from '../../pdf-generator-batera/pdf-generator-batera.component';
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
+import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
+
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -42,16 +45,18 @@ const useButtons = [{
 export class WorkProgressComponent implements OnInit, OnDestroy {
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private dialog : MatDialog,
-              private datepipe : DatePipe,
-              private subMenuProject : SubMenuProjectComponent,
               private activatedRoute : ActivatedRoute,
+              private subMenuProject : SubMenuProjectComponent,
               private projectService : ProjectBateraService,
+              private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
-              public pdfExporter : PdfGeneratorBateraComponent
+              public pdfExporter : PdfGeneratorBateraComponent,
+              public currency : CurrencyPipe,
+              public excelService : ExportToExcel
     ) {
   }
 
-  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'Vol', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'volume', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -76,32 +81,20 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   ngOnInit(){}
 
   ngOnChanges(){
-    this.projectId = this.activatedRoute.snapshot.paramMap.get("id")
-    const _subs1 = this.projectService.getSubProjectData(this.projectId)
-    .pipe(take(1))
-    .subscribe(({data} : any) => {
-      this.workProgressData = data
-    })
-    
-    this.workProgressData?.work_area === null ||
-    this.workProgressData?.work_area === undefined ||
-    this.workProgressData?.work_area[0] === null ? null : 
+    this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
+    const work_area = this.workProgressData?.work_area
+    work_area === null ||
+    work_area === undefined ||
+    work_area[0] === null ? null : 
     this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
-      const {volume, responsible, status, last_update, rank} = work  
+      const currency = this.workProgressData.mata_uang
+      const {'Price Actual' : unitPrice, volume} = work  
       const workItem = {
-        "Last Update": this.datepipe.transform(last_update, 'yyyy-MM-dd'),
-        "Responsible" : responsible?.name,
-        "Status" : status?.name,
-        "Unit Price Actual" : work['Price Actual'],
-        "Total Price Actual" : volume * work['Price Actual'],
-        "Last Change" : this.datepipe.transform(last_update, 'yyyy-MM-dd'),
-        "Rank" : rank?.name,
-        "Vol" : volume
+        'Unit Price Actual' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
+        'Total Price Actual' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
       }
       return this.FNCOL.populateData(work, workItem)
     }) as TreeNode<FSEntry>[])
-
-    this.subscription.push(_subs1)
   }
 
   parentIndex(row){
@@ -110,7 +103,6 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(row){
-    console.log(row.data, this.workProgressData)
     this.pdfExporter.generatePDFBasedOnJob(row.data, this.workProgressData)
   }
 
@@ -122,6 +114,19 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       case 'Add Suplier' :
         this.addJobSuplier()
         break;
+      case 'Export to Excel':
+        this.excelService.reconstructJobsToExcel(this.workProgressData.work_area)
+        this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
+        break
+      case 'Send Notification' :
+        const body = {
+          sender : 'Roganda Dimas',
+          receiver : 'roganda.sihombing11@gmail.com',
+          message: 'Test send message'
+        }
+        this.reportService.sendNotification(body)
+        .subscribe(res => console.log(res))
+        break
     }
   }
 
@@ -152,15 +157,8 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(JobSuplierComponent, {
       autoFocus : true,
       disableClose : true,
-      // data : data,
     })
-    const _subs = dialogRef.componentInstance.onSuccess.asObservable()
-    .pipe(take(1))
-    .subscribe(() => {
-      this.reloadPage.emit('complete')
-    });
-
-    this.subscription.push(_subs)
+    this.destroyDialog(dialogRef)
   }
 
   jobMenuDial(row){
@@ -168,6 +166,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       autoFocus : true,
       data : row,
     })
+    this.destroyDialog(dialogRef)
   }
 
   updateWorkProgress(row){
@@ -181,12 +180,15 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         id : this.projectId,
       }
     })
+    this.destroyDialog(dialogRef)
+  }
+
+  destroyDialog(dialogRef) {
     const _subs = dialogRef.componentInstance.onSuccess.asObservable()
     .pipe(take(1))
     .subscribe(() => {
       this.reloadPage.emit('complete')
     });
-
     this.subscription.push(_subs)
   }
 

@@ -40,14 +40,14 @@
             </ng-container>
             
 
-            <ng-container [nbTreeGridColumnDef]="'Comment'">
+            <!-- <ng-container [nbTreeGridColumnDef]="'Comment'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                     <button class="btn btn-light btn-sm">
                         <nb-icon icon="file-text-outline"></nb-icon>
                     </button>
                 </td>
-            </ng-container>
+            </ng-container> -->
 
                         
             <ng-container [nbTreeGridColumnDef]="'edit'">
@@ -62,7 +62,7 @@
                         nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                             <nb-icon icon="edit-outline" status="primary"></nb-icon>
                         </button>
-                        <button nbButton size="small" class="btn-sm text-center" outline (click)="deleteVariant(row.data.id)"
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="deleteVariant(row)"
                         nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                             <nb-icon icon="trash-outline" status="danger"></nb-icon>
                         </button>

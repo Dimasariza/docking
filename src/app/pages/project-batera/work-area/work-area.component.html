@@ -2,7 +2,7 @@
     <nb-card-header class="d-flex justify-content-between">
         <div>
             <strong>{{data.dial}} Job </strong>
-            <span *ngIf="data.dial !== 'Add'" class="text-primary">: {{modelData?.head}}</span>
+            <span *ngIf="!(data.dial === 'Add' || data.dial === 'Add Variant') " class="text-primary">: {{modelData?.head}}</span>
         </div>
         <button nbButton status="danger" size="tiny" (click)="close()">
             <nb-icon icon="close-outline" size="medium"></nb-icon>
@@ -12,9 +12,10 @@
     <form  (keyup.enter)="$event.target.value" #addWorkArea="ngForm" (ngSubmit)="workAreaBtn(addWorkArea)">
         <div class="row">
             <div class="col-4">
-                <div *ngIf="data.dial !== 'Work Progress'">
+
+                <div *ngIf="data.dial !== 'Work Progress' && data.dial !== 'Edit Variant' ">
                     <span class="p-2 d-block"><strong>Job Number</strong></span>
-                    <input type="text" nbInput fullWidth placeholder="Job Number" fieldSize="small" required #jobNumber name="jobNumber" [ngModel]="modelData.jobNumber" [disabled]="disabledJob">
+                    <input type="text" nbInput fullWidth placeholder="Job Number" fieldSize="small" required #jobNumber="ngModel" name="jobNumber" [ngModel]="modelData.jobNumber" [disabled]="disabledJob">
                     <div *ngIf="jobNumber.invalid && (jobNumber.dirty || jobNumber.touched)"
                     class="danger text-danger">
                         <div *ngIf="jobNumber.errors?.['required']">
@@ -24,7 +25,8 @@
                     <span class="p-2 d-block"><strong>Job</strong></span>
                     <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required [ngModel]="modelData?.jobName" #pekerjaan name="jobName" [disabled]="disabledJob">
                 </div>
-                <div *ngIf="data.dial === 'Work Progress'">
+
+                <div *ngIf="data.dial === 'Work Progress' || data.dial === 'Edit Variant' ">
                     <span class="p-2 d-block"><strong>Status</strong></span>
                     <nb-select [placeholder]="modelData?.status?.name || 'Status'" required class="w-100" size="small" #status name="status" [ngModel]="modelData.status" >
                         <nb-option *ngFor="let value of FNCOL.status; let id=index;" [value]="id">{{value}}</nb-option>
@@ -32,6 +34,7 @@
                     <span class="p-2 d-block"><strong>Progress</strong></span>
                     <input type="number" nbInput fullWidth placeholder="Progress" fieldSize="small" required [ngModel]="modelData?.progress" #progress name="progress">
                 </div>
+
                 <span class="p-2 d-block">Start</span>
                 <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" required placeholder="Start Date" [ngModel]="modelData?.start" name="start" #startDate>
                 <nb-datepicker #startdatepicker></nb-datepicker>
@@ -41,18 +44,17 @@
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Volume</span>
-                <input type="number" nbInput fullWidth placeholder="Volume" fieldSize="small" required [ngModel]="modelData?.volume" name="volume" #volume (change)="totalPrice = volume.value * unitPrices.value">
+                <input type="number" nbInput fullWidth placeholder="Volume" fieldSize="small" required [ngModel]="modelData?.volume" name="volume" #volume
+                (ngModelChange)="volumeAmount($event);">
                 <span class="p-2 d-block">Unit</span>
                 <nb-select [placeholder]="modelData?.unit?.name || 'Unit'" class="w-100" size="small" name="unit" required #unit [ngModel]="modelData.unit" >
                     <nb-option *ngFor="let value of unitType; let id=index;" [value]="id">{{value}}</nb-option>
                 </nb-select>
 
-
                 <span class="p-2 d-block">Unit {{unitPriceLabel}}</span>
-                <input type="number" nbInput fullWidth placeholder="Unit Price" fieldSize="small" required [ngModel]="modelData?.[unitPriceLabel]" [name]="unitPriceLabel" #unitPrices (change)="totalPrice = volume.value * unitPrices.value">
+                <input type="text" nbInput fullWidth placeholder="Unit Price" fieldSize="small" required [ngModel]="unitPrice" [name]="unitPriceLabel" #unitPrices (ngModelChange)="unitPriceAmount($event, volume.value);">
                 <span class="p-2 d-block">Total {{unitPriceLabel}}</span>
-                <input type="text" nbInput fullWidth placeholder="Total Price Budget" readonly fieldSize="small" #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
-                
+                <input type="text" nbInput fullWidth placeholder="Total Price" readonly fieldSize="small" #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Departement</span>
@@ -62,7 +64,7 @@
                     <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible[id]">{{value.name}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Category</span>
-                <nb-select [placeholder]="modelData?.category?.name || 'Category'" class="w-100 text-capitalize" required size="small" name="category" #category [ngModel]="modelData.category">
+                <nb-select [placeholder]="modelData?.category?.name || 'Category'" class="w-100 text-capitalize" required size="small" name="category" #category [ngModel]="modelData?.category">
                     <nb-option *ngFor="let value of FNCOL.category; let id=index;" [value]="id" class="text-capitalize">{{value}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Rank</span>

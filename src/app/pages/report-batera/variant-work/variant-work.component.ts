@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
+import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
+import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { ReportBateraService } from '../report-batera.service';
-import { VariantWorkAreaComponent } from '../variant-work-area/variant-work-area.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -39,6 +41,7 @@ const useButtons = [
 export class VariantWorkComponent implements OnChanges {
   constructor(private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               private dialog : MatDialog,
+              private activeRoute : ActivatedRoute,
               private subMenuProject : SubMenuProjectComponent,
               private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
@@ -46,7 +49,7 @@ export class VariantWorkComponent implements OnChanges {
 
   useButtons = useButtons
   defaultColumns = ['Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
-  allColumns = ['jobName', '%', ...this.defaultColumns, 'Approved', "Comment" , 'edit'];
+  allColumns = ['jobName', '%', ...this.defaultColumns, 'Approved' , 'edit'];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -66,16 +69,16 @@ export class VariantWorkComponent implements OnChanges {
   shipOwner : boolean = false
   expandAll : boolean = false
   expandText : string
+  projectId : string
   
-
   ngOnChanges(){
+    this.projectId = this.activeRoute.snapshot.paramMap.get('id')
     this.variantWorkData?.variant_work === null ||
     this.variantWorkData?.variant_work === undefined ||
     this.variantWorkData?.variant_work[0] === null ? null :
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => {
       const {start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, responsible, unit, status, updated_at} = work 
       const workItem = {
-        "Responsible" : responsible?.name,
         "Dept": departement,
         "Unit Price Add On": unitPriceAddOn,
         "Total Price Add On" : totalPriceAddOn,
@@ -103,12 +106,13 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   addVariantDial(){
-    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
         dial : "Add Variant",
-        data : this.variantWorkData
+        id : this.projectId,
+        work : this.variantWorkData
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -116,14 +120,15 @@ export class VariantWorkComponent implements OnChanges {
     });
   }
 
-  addSubVariantDial(data){
-    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
+  addSubVariantDial(row){
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
         dial : "Add Sub Variant",
-        data : this.variantWorkData,
-        subData : data
+        id : this.projectId,
+        data : row,
+        work : this.variantWorkData
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -131,15 +136,15 @@ export class VariantWorkComponent implements OnChanges {
     });
   }
 
-  updateVariantDial(data){
-    console.log(data)
-    const dialogRef = this.dialog.open(VariantWorkAreaComponent, {
+  updateVariantDial(row){
+    const dialogRef = this.dialog.open(WorkAreaComponent, {
       disableClose : true, 
       autoFocus:true,
       data : {
         dial : "Edit Variant",
-        data : this.variantWorkData,
-        subData : data
+        id : this.projectId,
+        data : row,
+        work : this.variantWorkData
       }
     })
     dialogRef.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -163,14 +168,27 @@ export class VariantWorkComponent implements OnChanges {
     this.updateVariantWork(approveData)
   }
 
-  deleteVariant(id){
-    let parentIndex = id.toString().split('')
-    let postBody
-    const deleteData = this.FNCOL.reconstructData(this.variantWorkData.variant_work, parentIndex)
-    deleteData.length === 0 ||
-    deleteData === undefined ? 
-    postBody = [null] : postBody =  deleteData
-    this.updateVariantWork(postBody)
+  // deleteVariant(id){
+  //   let parentIndex = id.toString().split('')
+  //   let postBody
+  //   const deleteData = this.FNCOL.reconstructData(this.variantWorkData.variant_work, parentIndex)
+  //   deleteData.length === 0 ||
+  //   deleteData === undefined ? 
+  //   postBody = [null] : postBody =  deleteData
+  //   this.updateVariantWork(postBody)
+  // }
+
+  deleteVariant(row) {
+    const dialog = this.dialog.open(DeleteDialogComponent, {
+      disableClose : true,
+      autoFocus: true,
+      data : {
+        dial : "variant job",
+        id : this.projectId,
+        work_area : this.variantWorkData.variant_work,
+        parentId : row.data.id
+      }});
+    // return dialog
   }
   
   @Output() reloadPage = new EventEmitter<string>();
