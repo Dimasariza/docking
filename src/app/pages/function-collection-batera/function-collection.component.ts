@@ -1,17 +1,14 @@
 import { DatePipe } from "@angular/common";
-import { Injectable } from "@angular/core";
-import { take } from "rxjs/operators";
-import { HomeBateraService } from "../home-batera/home-batera.service";
+import { Injectable, NgModule } from "@angular/core";
 
 @Injectable({
     providedIn: 'root'
 })
 export class FunctionCollection {
     constructor (public datePipe : DatePipe,
-                private homeService : HomeBateraService
       ){}
 
-    category = ["Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs", "Depreciation Jobs", "Amortization Jobs"]
+    category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Depreciation Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]
     jobUnit = ["Lumpsum"]
     subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
@@ -20,6 +17,24 @@ export class FunctionCollection {
     Phase: ['requisition','in_progress', 'evaluasi','finish']
     phase: ['Requisition','In Progress', 'Evaluation','Finish']
     BaseCurrency: ['IDR', 'EURO', 'US']
+
+    convertPhase(phase) {
+      switch(phase){
+        case 'requisition' :
+          phase = 'Requisition'
+          break;
+        case 'in_progress' :
+          phase = 'In Progress'
+          break;
+        case 'evaluasi' :
+          phase = 'Evaluation'
+          break;
+        case 'finish' :
+          phase = 'Finish'
+          break;
+      }
+      return phase
+    }
 
     reconstructData = (data, parentIndex) => {
         return data.map((w, i) => {
@@ -50,7 +65,7 @@ export class FunctionCollection {
     }
 
     populateData = (work, workItem) => {  
-        const {volume , unit, category, start, end, responsible, "total price" : total}= work  
+        const {unit, category, start, end, responsible, status, last_update, rank}= work  
         return {
           data: {
             ...work,
@@ -60,8 +75,10 @@ export class FunctionCollection {
             Unit : unit?.name,
             Category : category?.name,
             Responsible : responsible?.name,
-            "Total Price Budget" : volume * work['Price Budget'],
-            kind : work.items?.length ? 'dir' : 'doc',
+            Status : status?.name,
+            kind : work.items?.length ? 'dir' : 'doc',  
+            Rank : rank?.name,
+            update : this.datePipe.transform(last_update, 'dd-MM-yyyy'),
           },
           children: 
           work === null || work === undefined ? null :
@@ -105,6 +122,21 @@ export class FunctionCollection {
           status = [true, true, true, true]
         }
         return status
+    }
+
+    convertCurrency(curr) {
+      switch(curr) {
+        case 'IDR':
+          curr = 'Rp '
+        break;
+        case 'EURO':
+          curr = '€ '
+        break;
+        case 'US':
+          curr = '$ '
+        break;
+      }
+      return curr
     }
 
     minimal( a, b) {
