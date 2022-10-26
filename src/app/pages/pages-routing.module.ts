@@ -36,19 +36,9 @@ const routes: Routes = [{
       .then(m => m.ReportBateraModule),
     },
     {
-      path: 'report-batera',
-      loadChildren: () => import('./report-batera/report-batera.module')
-      .then(m => m.ReportBateraModule),
-    },
-    {
       path: 'profile-batera',
       loadChildren: () => import('./profile-batera/profil-batera.modules')
       .then(m => m.ProfilBateraModule),
-    },
-    {
-      path: 'home-batera',
-      loadChildren: () => import('./home-batera/home-batera.module')
-        .then(m => m.HomeBateraModule),
     },
     {
       path: 'export-pdf',

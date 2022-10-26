@@ -78,8 +78,10 @@ export class TrackingBateraComponent implements OnInit {
     .subscribe(({data} : any) => {
       this.trackingData = data.map(({proyek, id_proyek}) => ({
         phases : this.FNCOL.phasesStatus(proyek.phase),
-        nama_kapal : proyek.kapal.nama_kapal + ' -DD- ' + proyek.tahun,
-        periode : proyek.repair_start,
+        nama_kapal : proyek.kapal.nama_kapal,
+        start : proyek.repair_start,
+        end : proyek.repair_end,
+        year : proyek.tahun,
         id_proyek
       }))
     })

@@ -7,48 +7,77 @@ import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
+import { TenderBateraService } from '../tender-batera/tender-batera.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
 })
-export class HomeBateraComponent implements OnInit, OnDestroy {
+export class HomeBateraComponent implements OnInit {
   constructor(private homeservice:HomeBateraService,
               private dialog : MatDialog,
+              private tenderService : TenderBateraService,
+              private router : Router,
               private FNCOL : FunctionCollection,
   ){}
     
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  shipData: any;
+  shipData: any [] = []
   flipped : any = []
   subscription : Subscription
+  progressData : any
   role : string
-  // admin, shipmanager, shipyard, director
 
   toggleView(id) {
-    this.flipped[id] = !this.flipped[id]
+    this.shipData[id].flipped = !this.shipData[id].flipped
   }
 
   ngOnInit() {
-    this.subscription = this.homeservice.getAllShip()
-    .pipe(take(1))
-    .subscribe(({data} : any) => {
-      data.length? this.shipData = data.map(item => {
-        this.flipped.push(false)
-        return {
-          apiUrl : environment.apiUrl,
-          ...item
-        }
-      }) : null;
-    });
-
     this.homeservice.getUserLogin()
     .pipe(take(1))
     .subscribe(({data} : any) => this.role = data.role)
+
+    this.homeservice.getAllShip()
+    .pipe(take(1))
+    .subscribe(({data} : any) => {
+      if(!data.length) return;
+      this.shipData = data.map(item => {
+        return {
+          apiUrl : environment.apiUrl,
+          flipped : false,
+          ...item
+        }
+      })
+    })
+    
+    this.tenderService.getProjectSummary('','','','')
+    .pipe(take(1))
+    .subscribe(({data} : any) => { 
+      this.progressData = data
+      .map(project => {
+        const {kapal, tahun, phase, work_area} = project.proyek
+        const {id_kapal, nama_kapal} = kapal
+        const head = `${nama_kapal} - DD - ${tahun}`
+        const projectId = project.id_proyek
+        return {id_kapal, head, phase, projectId}
+      })
+    })
   }
-
-
-
+  
+  ngAfterViewChecked(){
+    if(this.shipData.length === 0 || !this.progressData) return;
+    this.shipData.map((ship, id) => {
+      this.progressData.forEach(project => {
+        const {phase, head, projectId} = project
+        if(project.id_kapal === ship.id_kapal) {
+            this.shipData[id]['phase'] = this.FNCOL.convertPhase(phase)
+            this.shipData[id]['head'] = head
+            this.shipData[id]['projectId'] = projectId
+        }
+      })
+    })
+  }
 
   addShipDial(){
     const dialog = this.dialog.open(ShipActionComponent ,{
@@ -58,10 +87,7 @@ export class HomeBateraComponent implements OnInit, OnDestroy {
         dial : "Add"
       }
     });
-
-    dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
-      this.ngOnInit()
-    });
+    this.reloadPage(dialog)
   }
 
   updateShipDial(id){
@@ -73,10 +99,7 @@ export class HomeBateraComponent implements OnInit, OnDestroy {
         dial : "Update"
       }
     });
-
-    dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
-      this.ngOnInit()
-    });
+    this.reloadPage(dialog)
   };
 
   deleteShip(id){
@@ -88,15 +111,18 @@ export class HomeBateraComponent implements OnInit, OnDestroy {
         dial : "ship",
       }
     });
-
-    dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
-      this.ngOnInit()
-    });
+    this.reloadPage(dialog)
   };
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe()
+  reloadPage(dialog){
+    return dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+    });
   }
+
+  // ngOnDestroy(): void {
+  //   this.subscription.unsubscribe()
+  // }
 
 }
 

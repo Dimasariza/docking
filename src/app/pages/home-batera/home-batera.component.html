@@ -1,8 +1,8 @@
 <div class="row">
   <div class="col-lg-4 col-md-6 col-sm-12" *ngFor="let item of shipData; let id=index;">
-    <nb-flip-card [showToggleButton]="false" [flipped]="flipped[id]">
+    <nb-flip-card [showToggleButton]="false" [flipped]="item.flipped">
       <nb-card-front>
-        <nb-card >
+        <nb-card size="small">
           <nb-icon class="flip-icon" icon="chevron-right-outline" pack="eva" (click)="toggleView(id)" style="cursor: pointer;"></nb-icon>
           <div class="card bg-transparent h-100 ">
             <img src="{{item.apiUrl}}/file/show/{{item.foto}}" crossorigin="anonymous" alt="{{item.nama_kapal}}" class="h-100">
@@ -20,15 +20,16 @@
         </nb-card>
       </nb-card-front>
       <nb-card-back>
-        <nb-card size="" class="bg-secondary">
+        <nb-card size="small" class="bg-secondary">
           <nb-icon icon="chevron-right-outline" pack="eva" class="flip-icon" (click)="toggleView(id)" style="cursor: pointer;"></nb-icon>
           <div class="p-5">
             <h6 style="color: rgb(0, 208, 208);">{{item.nama_kapal}}</h6>
-            <div class="back-card--desc mt-5">
+            <div class="back-card--desc mt-5" *ngIf="item?.head">
               <h2>5%</h2>
-              <span class="font-weight-bold">Status : </span>
-              <span class="font-weight-bolder"> In Progress</span> <br>
-              <span class="font-weight-bolder">{{item.nama_kapal}} -DD- 2022</span>
+              <span class="font-weight-bolder">Status : {{item?.phase || ''}}</span> <br>
+              <span class="font-weight-bolder">
+                <a class="text-decoration-none" [routerLink]="['/pages/report-batera', item.projectId]">{{item?.head || ''}}</a>
+              </span>
             </div>
           </div>
         </nb-card>      

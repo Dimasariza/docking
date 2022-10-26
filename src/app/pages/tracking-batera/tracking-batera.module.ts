@@ -13,7 +13,6 @@ import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
     NbCardModule,
     NbIconModule,
     NbButtonModule,
-    // NgApexchartsModule,
     NgxDatatableModule,
   ],
   exports: [],

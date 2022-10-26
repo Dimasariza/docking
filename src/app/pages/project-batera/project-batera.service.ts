@@ -51,4 +51,9 @@ export class ProjectBateraService {
     return this.httpClient.put(url, postbody, {headers : httpHeaders})
   }
 
+  addJobProgress(body) {
+    const url = this.apiUrl + "/report/progress"
+    return this.httpClient.post(url, body)
+  }
+
 }
