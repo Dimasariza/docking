@@ -15,7 +15,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   constructor(private reportBateraService : ReportBateraService,
               private dialog : MatDialog,
               private activatedRoute : ActivatedRoute,
-              private projectService : ProjectBateraService
+              private projectService : ProjectBateraService,
+              private reportService : ReportBateraService
     ) {
   }
 
@@ -24,6 +25,10 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   subscription : Subscription[] = []
   
   ngOnInit(): void {
+    this.reportService.getWorkPerProject(8)
+    .subscribe(res => console.log(res),
+    (err) => console.log(err))
+
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     const _subs1 = this.reportBateraService.getWorkPerProject(id)
     .pipe(take(1))

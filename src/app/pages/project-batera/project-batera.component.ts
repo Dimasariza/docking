@@ -58,6 +58,9 @@ export class ProjectBateraComponent {
   shipManagement : string
   responsible : any = []
 
+  sortByProject : any = "all"
+  sortByStatus : any = "all"
+  sortByResponsible : any = "all" 
 
   ngOnInit() {
     this.profileService.getCompanyProfile()
@@ -70,7 +73,6 @@ export class ProjectBateraComponent {
       if(!data.length || data === null) return;
       this.projectDatas = data
       this.collectData() 
-      this.generateDataSource(this.workAreaContainer)
     });
 
     this.profileService.getUserData(1, 10,'', '', '')
@@ -78,16 +80,40 @@ export class ProjectBateraComponent {
   }
 
   collectData(){
-    this.projectDatas.map((work, id) => {
+    this.workAreaContainer = []
+    const buildEmpty = () => this.dataSource = this.dataSourceBuilder.create([]);
+    const collectProject = this.projectDatas
+    .filter((project, id) => {
       this.projectDatas[id].phase = this.FNCOL.phasesStatus(this.projectDatas[id].phase)
-      const {work_area} = work
-      if(!work_area || work_area[0] === null) return; 
-      const projectJob = work_area.map(project => ({
-        ...project,
-        project : `${work.kapal.nama_kapal} -DD- ${work.tahun}`
-      }))
-      this.workAreaContainer.push(...projectJob)
-    }) 
+      if(project.id_proyek === this.sortByProject) return project
+      if(this.sortByProject === 'all') return project
+    })
+    .map(project => {
+      const {work_area, kapal, tahun} = project
+      return {
+        work_area,
+        name : `${kapal.nama_kapal} - DD - ${tahun}`
+      }})
+    .filter(project => {
+      const {work_area : work, name : projectName} = project
+      if(work === null || work === undefined || !work.length || work[0] === null) return;
+      work.forEach(item => {
+          item['projectName'] = projectName
+          item['cust'] = this.shipManagement
+          if(this.sortByStatus === 'all' && this.sortByResponsible === 'all') 
+          this.workAreaContainer.push(item);
+
+          if(typeof(this.sortByResponsible) === 'number')
+          if(item.responsible.id === this.sortByResponsible) 
+          this.workAreaContainer.push(item);
+          if(typeof(this.sortByStatus) === 'number') 
+          if(item?.status?.id === this.sortByStatus) 
+          this.workAreaContainer.push(item);
+      })
+    })
+
+    if(!this.workAreaContainer.length) buildEmpty();
+    else this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work => this.FNCOL.populateData(work, {})));
   }
 
   clickAction(btn, data){
@@ -100,19 +126,6 @@ export class ProjectBateraComponent {
       break;
     }
   }
-
-  generateDataSource(workArea){
-    workArea === null ||
-    workArea === undefined ||
-    workArea[0] === null ? 
-    this.dataSource = this.dataSourceBuilder.create([]) :
-    this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
-      const workItem = { cust : this.shipManagement}
-      return this.FNCOL.populateData(work, workItem)
-    }) as TreeNode<FSEntry>[] ) 
-  }
-
-
 
   addProjectDial(){
     const dialog = this.dialog.open(ProjectDataComponent, { 

@@ -18,26 +18,26 @@
           <ng-container [nbTreeGridColumnDef]="'project'">
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 280px;">
               <nb-select size="small" placeholder="All Project" class="w-100">
-                <nb-option (click)="clickAction('all data', null)">
+                <nb-option (click)="sortByProject = 'all'; collectData()">
                   All Projects
                 </nb-option>
-                <nb-option *ngFor="let project of projectDatas;let id = index;" [value]="project" (click)="clickAction('project' ,project)">
+                <nb-option *ngFor="let project of projectDatas;let id = index;" [value]="project" (click)="sortByProject = project.id_proyek; collectData()">
                   {{project.kapal?.nama_kapal}} -DD- {{project.tahun}}
                 </nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              {{row?.data?.project}}
+              {{row?.data?.projectName}}
             </td>
           </ng-container>
 
           <ng-container [nbTreeGridColumnDef]="'status'" >
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
               <nb-select size="small" placeholder="All Status" class="w-100">
-                <nb-option (click)="clickAction('all data', null)">
+                <nb-option (click)="sortByStatus ='all'; collectData()">
                   All Statuses
                 </nb-option>
-                <nb-option *ngFor="let stat of this.FNCOL.status;let id = index;" [value]="stat" (click)="clickAction('status', stat)">{{stat}}</nb-option>
+                <nb-option *ngFor="let stat of this.FNCOL.status;let id = index;" [value]="stat" (click)="sortByStatus = id; collectData()">{{stat}}</nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
@@ -48,11 +48,11 @@
           <ng-container [nbTreeGridColumnDef]="'resp'" >
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
               <nb-select size="small" placeholder="All Responsible" class="w-100">
-                <nb-option (click)="clickAction('all data', null)">
+                <nb-option (click)="sortByResponsible = 'all'; collectData()">
                   All Responsibles  
                 </nb-option>
-                <nb-option *ngFor="let value of responsible; let id = index;" [value]="value" (click)="clickAction('resp', value.id_user)">
-                  {{value.username}}
+                <nb-option *ngFor="let resp of responsible; let id = index;" [value]="resp" (click)="sortByResponsible = resp.id_user ;collectData()">
+                  {{resp.username}}
                 </nb-option>
               </nb-select>
             </th>
