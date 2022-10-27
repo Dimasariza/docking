@@ -89,7 +89,7 @@
                 </div>
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                <button class="text-center" nbButton ghost (click)="approvedByYard(row)">
+                <button class="text-center" nbButton ghost (click)="approvedByYard([row.data])">
                   <nb-icon [ngStyle]="{'color': row.data?.tenderApproval ? 'green' : 'grey'}" [icon]="row.data?.tenderApproval ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"></nb-icon>
                 </button>
               </td>

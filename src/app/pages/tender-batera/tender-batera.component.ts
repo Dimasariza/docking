@@ -62,7 +62,6 @@ export class TenderBateraComponent {
   selectedYard : any
   approvalStatus = ["All","Critical","High","Medium","Low"]
   selectedText = "Select"
-  tenderApproval : boolean = false
   workAreaContainer
   currentProjectId
 
@@ -194,9 +193,9 @@ export class TenderBateraComponent {
       autoFocus:true, 
       data : {
         dial : 'Update Load Details',
-        parentId : row.data.id,
         id : this.projectId,
         data : row,
+        work : {work_area : this.workAreaContainer}
       }
     })    
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
@@ -217,7 +216,6 @@ export class TenderBateraComponent {
       this.ngOnInit()
     });
   }
-
   
   updateContractDial(){
     const dialog = this.dialog.open(ContractActionComponent, {
@@ -234,19 +232,27 @@ export class TenderBateraComponent {
     });
   }
 
-  approveStatus(){
-    // this.approvalStatus = !this.approvalStatus
+  approveStatus(newData){
+    const ownerApproval = {ownerApproval : true}
+    this.approvedData(newData, ownerApproval)
   }
 
   approvedByYard(newData){
-    this.tenderApproval = true
-    let postData = { ...newData.data, tenderApproval : this.tenderApproval}
-    this.updateWorkApproval(postData)
+    const tenderApproval = {tenderApproval : true}
+    this.approvedData(newData, tenderApproval)
   }
 
-  updateWorkApproval(postData){
-    const parentIndex = postData.id.toString().split('')
-    const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, postData)
+  approvedData(newData, approve) {
+    newData.map(work => {
+      const postData = { ...work, ...approve}
+      const parentIndex = work.id.toString().split('')
+      this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, postData)
+      work?.items ? this.approvedData(work.items, approve) : 
+      this.updateWorkApproval(this.workAreaContainer)
+    })
+  }
+
+  updateWorkApproval(work_area){
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
     .subscribe((res) => {
@@ -254,7 +260,6 @@ export class TenderBateraComponent {
     })
     this.getProject(this.currentProjectId)
   }
-
 
   chooseTender(){
     if(this.selectedText == 'Select') {
