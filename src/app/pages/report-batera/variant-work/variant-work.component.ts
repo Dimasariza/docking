@@ -20,7 +20,7 @@ const useButtons = [
     desc: 'Export to Excel'
   },
   {
-    icon: 'plus-square-outline',
+    icon: 'arrow-ios-downward-outline',
     desc: 'Expand'
   },
   {
@@ -67,8 +67,6 @@ export class VariantWorkComponent implements OnChanges {
   @Input() variantWorkData : any = ""
   shipYard : boolean = false
   shipOwner : boolean = false
-  expandAll : boolean = false
-  expandText : string
   projectId : string
   
   ngOnChanges(){
@@ -76,8 +74,12 @@ export class VariantWorkComponent implements OnChanges {
     this.variantWorkData?.variant_work === null ||
     this.variantWorkData?.variant_work === undefined ||
     this.variantWorkData?.variant_work[0] === null ? null :
+    this.regroupData(false)
+  }
+
+  regroupData(expand){
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => {
-      const {start, end, departement, volume, unitPriceAddOn, totalPriceAddOn , category, variantRemarks, responsible, unit, status, updated_at} = work 
+      const { departement, unitPriceAddOn, totalPriceAddOn, variantRemarks, status, updated_at} = work 
       const workItem = {
         "Dept": departement,
         "Unit Price Add On": unitPriceAddOn,
@@ -86,7 +88,7 @@ export class VariantWorkComponent implements OnChanges {
         "Status" : status,
         "Last Change" : updated_at,
       }
-      return this.FNCOL.populateData(work, workItem)
+      return this.FNCOL.populateData(work, workItem, expand)
     }))
   }
 
@@ -99,8 +101,14 @@ export class VariantWorkComponent implements OnChanges {
         this.reloadPage.emit('complete')
       break;
       case 'Expand' :
-        this.expandAll = !this.expandAll
-        this.expandText = "unexpand"
+        useButtons[2].desc = "Unexpand"
+        useButtons[2].icon = 'arrow-ios-forward-outline'
+        this.regroupData(true)
+      break;
+      case 'Unexpand' :
+        useButtons[2].desc = "Expand"
+        useButtons[2].icon = 'arrow-ios-downward-outline'
+        this.regroupData(false)
       break;
     }
   }
@@ -151,32 +159,25 @@ export class VariantWorkComponent implements OnChanges {
       this.reloadPage.emit('complete')
     });
   }
-
   approvedByYard(newData){
-    this.shipYard = true
-    let postData = { ...newData.data, yardApproval : this.shipYard}
-    const parentIndex = postData.id.toString().split('')
-    const approveData = this.FNCOL.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
-    this.updateVariantWork(approveData)
-  }
-  
-  approvedByOwner(newData){
-    this.shipOwner = true
-    let postData = { ...newData.data, ownerApproval : this.shipOwner}
-    const parentIndex = postData.id.toString().split('')
-    const approveData = this.FNCOL.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
-    this.updateVariantWork(approveData)
+    const yardApproval = {yardApproval : true}
+    this.approvedData(newData, yardApproval)
   }
 
-  // deleteVariant(id){
-  //   let parentIndex = id.toString().split('')
-  //   let postBody
-  //   const deleteData = this.FNCOL.reconstructData(this.variantWorkData.variant_work, parentIndex)
-  //   deleteData.length === 0 ||
-  //   deleteData === undefined ? 
-  //   postBody = [null] : postBody =  deleteData
-  //   this.updateVariantWork(postBody)
-  // }
+  approvedByOwner(newData){
+    const ownerApproval = {ownerApproval : true}
+    this.approvedData(newData, ownerApproval)
+  }
+
+  approvedData(newData, approve) {
+    newData.map(work => {
+      const postData = { ...work, ...approve}
+      const parentIndex = work.id.toString().split('')
+      this.variantWorkData.variant_work = this.FNCOL.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
+      work?.items ? this.approvedData(work.items, approve) : 
+      this.updateVariantWork(this.variantWorkData.variant_work)
+    })
+  }
 
   deleteVariant(row) {
     const dialog = this.dialog.open(DeleteDialogComponent, {
@@ -188,7 +189,7 @@ export class VariantWorkComponent implements OnChanges {
         work_area : this.variantWorkData.variant_work,
         parentId : row.data.id
       }});
-    // return dialog
+    return dialog
   }
   
   @Output() reloadPage = new EventEmitter<string>();

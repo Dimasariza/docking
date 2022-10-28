@@ -23,7 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import { LetterDocComponent } from './letter-doc/letter-doc.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
-import { FsIconComponent, ReportBateraComponent } from './report-batera.component';
+import { ReportBateraComponent } from './report-batera.component';
 import { MatTableModule } from '@angular/material/table';
 import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
@@ -39,7 +39,6 @@ import { JobSuplierComponent } from './job-suplier/job-suplier.component';
     JobSuplierComponent,
     ReportBateraComponent,
     ProjectStatusComponent,
-    FsIconComponent,
     VariantWorkComponent,
     LetterMenuComponent,
   ],

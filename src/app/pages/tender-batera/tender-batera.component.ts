@@ -102,7 +102,7 @@ export class TenderBateraComponent {
         "Unit Price Contract" : this.currency.transform(contractPrice, this.FNCOL.convertCurrency(currency)),
         "Total Price Contract" : this.currency.transform(contractPrice * volume, this.FNCOL.convertCurrency(currency))
       }
-      return this.FNCOL.populateData(work, workItem)
+      return this.FNCOL.populateData(work, workItem, false)
     }) as TreeNode<FSEntry>[])
     this.loadYardData()
   }
@@ -291,22 +291,5 @@ export class TenderBateraComponent {
   }
 }
 
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-}
 
 

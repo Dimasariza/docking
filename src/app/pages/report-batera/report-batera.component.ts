@@ -1,9 +1,11 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generator-batera.component';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
+import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
 
@@ -16,24 +18,23 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private dialog : MatDialog,
               private activatedRoute : ActivatedRoute,
               private projectService : ProjectBateraService,
-              private reportService : ReportBateraService
+              private pdfExporter : PdfGeneratorBateraComponent,
+              private tenderService : TenderBateraService
     ) {
   }
 
   projectData : any
   subProjectData : any
+  yardDatas : any
   subscription : Subscription[] = []
   
   ngOnInit(): void {
-    this.reportService.getWorkPerProject(8)
-    .subscribe(res => console.log(res),
-    (err) => console.log(err))
-
     const id = this.activatedRoute.snapshot.paramMap.get('id')
     const _subs1 = this.reportBateraService.getWorkPerProject(id)
     .pipe(take(1))
     .subscribe(({data} : any) => {
       this.projectData = data
+      this.yardData(data.id_tender)
     })
 
     const _subs2 = this.projectService.getSubProjectData(id) 
@@ -47,6 +48,11 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     this.subscription.push(_subs2)
   }
 
+  yardData(id): void {
+    this.tenderService.getDataTenderPerId(id)
+    .subscribe(({data} : any) => this.yardDatas = data)
+  }
+
   projectStatusDial(){
     this.dialog.open(ProjectStatusComponent, {
       disableClose : true, 
@@ -55,25 +61,11 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     })
   }
 
+  exportToPDF(){
+    this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas)
+  }
+
   ngOnDestroy(): void {
     this.subscription.forEach((subs) => subs.unsubscribe())
-  }
-}
-
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-  isDir(): boolean {
-    return this.kind === 'dir';
   }
 }

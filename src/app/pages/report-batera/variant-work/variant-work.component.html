@@ -15,11 +15,11 @@
             <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.yardApproval" (click)="approvedByYard(row)" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
-                        <nb-icon [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
+                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.yardApproval" (click)="approvedByYard([row.data])" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                        <nb-icon [ngStyle]="{'color': row.data?.yardApproval ? 'green' : 'grey'}" [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
                     </button>
-                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner(row)" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
-                        <nb-icon [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
+                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner([row.data])" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
+                        <nb-icon [ngStyle]="{'color': row.data?.ownerApproval ? 'green' : 'grey'}" [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
                     </button>
                 </td>
             </ng-container>
@@ -27,7 +27,11 @@
             <ng-container [nbTreeGridColumnDef]="'jobName'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Job</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                    <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded || expandAll"></ngx-fs-icon>
+                    <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                    </nb-tree-grid-row-toggle>
+                    <ng-template #fileIcon>
+                      <nb-icon icon="file-text-outline"></nb-icon>
+                    </ng-template>
                       {{row.data.jobName|| '-'}}
                 </td>
             </ng-container>

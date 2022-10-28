@@ -70,7 +70,11 @@
             <ng-container [nbTreeGridColumnDef]="'jobNumber'">
               <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 90px">Job No.</th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" >
-                <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                </nb-tree-grid-row-toggle>
+                <ng-template #fileIcon>
+                  <nb-icon icon="file-text-outline"></nb-icon>
+                </ng-template>
                 {{row.data.jobNumber}}
               </td>
             </ng-container>

@@ -15,23 +15,27 @@ import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
 import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
 
-
 interface TreeNode<T> {}
 interface FSEntry {}
 
-const useButtons = [{
+const useButtons = [
+  {
   icon: 'refresh',
   desc: 'Refresh'
-  }, {
+  }, 
+  {
     icon: 'external-link',
     desc: 'Export to Excel'
-  }, {
-    icon: 'plus-square-outline',
+  }, 
+  {
+    icon: 'arrow-ios-downward-outline',
     desc: 'Expand'
-  },{
+  },
+  {
     icon: 'paper-plane-outline',
     desc: 'Send Notification'
-  }, {
+  }, 
+  {
     icon: 'person-add-outline',
     desc: 'Add Suplier'
   }]
@@ -74,8 +78,6 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   @Input() workProgressData : any = ""
   useButtons = useButtons
   projectId : any
-  shipYard : boolean = false
-  shipOwner : boolean = false
   subscription : Subscription [] = []
   
   ngOnInit(){}
@@ -86,15 +88,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     work_area === null ||
     work_area === undefined ||
     work_area[0] === null ? null : 
-    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
-      const currency = this.workProgressData.mata_uang
-      const {'Price Actual' : unitPrice, volume} = work  
-      const workItem = {
-        'Unit Price Actual' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
-        'Total Price Actual' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
-      }
-      return this.FNCOL.populateData(work, workItem)
-    }) as TreeNode<FSEntry>[])
+    this.regroupTableData(false)
   }
 
   parentIndex(row){
@@ -103,7 +97,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   generatePDF(row){
-    this.pdfExporter.generatePDFBasedOnJob(row.data, this.workProgressData)
+    this.pdfExporter.generatePDFBasedOnJob(this.workProgressData, row.data)
   }
 
   onClick(desc){
@@ -119,33 +113,54 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
         break
       case 'Send Notification' :
-        const body = {
-          sender : 'Roganda Dimas',
-          receiver : 'roganda.sihombing11@gmail.com',
-          message: 'Test send message'
-        }
-        this.reportService.sendNotification(body)
-        .subscribe(res => console.log(res))
         break
+      case 'Expand' :
+        useButtons[2].desc = 'Unexpand'
+        useButtons[2].icon = 'arrow-ios-forward-outline'
+        this.regroupTableData(true)
+        break;
+      case 'Unexpand' :
+        useButtons[2].desc = 'Expand'
+        useButtons[2].icon = 'arrow-ios-downward-outline'
+        this.regroupTableData(false)
+        break;
     }
   }
 
-  approvedByYard(newData) {
-    this.shipYard = true
-    let postData = { ...newData.data, yardApproval : this.shipYard}
-    this.updateWorkApproval(postData)
+  regroupTableData(expand){
+    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
+      const currency = this.workProgressData.mata_uang
+      const {'Price Actual' : unitPrice, volume} = work  
+      const workItem = {
+        'Unit Price Actual' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
+        'Total Price Actual' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
+      }
+      return this.FNCOL.populateData(work, workItem, expand)
+    }) as TreeNode<FSEntry>[])
   }
-  
+
+  approvedByYard(newData){
+    const yardApproval = {yardApproval : true}
+    this.approvedData(newData, yardApproval)
+  }
+
   approvedByOwner(newData){
-    this.shipOwner = true
-    let postData = { ...newData.data, ownerApproval : this.shipOwner}
-    this.updateWorkApproval(postData)
+    const ownerApproval = {ownerApproval : true}
+    this.approvedData(newData, ownerApproval)
+  }
+
+  approvedData(newData, approve) {
+    newData.map(work => {
+      const postData = { ...work, ...approve}
+      const parentIndex = work.id.toString().split('')
+      this.workProgressData.work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+      work?.items ? this.approvedData(work.items, approve) : 
+      this.updateWorkApproval(this.workProgressData.work_area)
+    })
   }
 
   @Output() reloadPage = new EventEmitter<string>();
-  updateWorkApproval(postData){
-    const parentIndex = postData.id.toString().split('')
-    const work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
+  updateWorkApproval(work_area){
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
     .subscribe(() =>{
@@ -176,8 +191,8 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       data : {
         dial : "Work Progress",
         data : row,
-        parentId : row.data.id,
         id : this.projectId,
+        work : this.workProgressData
       }
     })
     this.destroyDialog(dialogRef)
@@ -197,23 +212,3 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 }
 
-
-@Component({
-  selector: 'ngx-fs-icon',
-  template: `
-    <nb-tree-grid-row-toggle [expanded]="expanded" *ngIf="isDir(); else fileIcon">
-    </nb-tree-grid-row-toggle>
-    <ng-template #fileIcon>
-      <nb-icon icon="file-text-outline"></nb-icon>
-    </ng-template>
-  `,
-})
-
-export class FsIconComponent {
-  @Input() kind: string;
-  @Input() expanded: boolean;
-
-  isDir(): boolean {
-    return this.kind === 'dir';
-  }
-}
