@@ -1,5 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbDateService } from '@nebular/theme';
@@ -12,18 +13,30 @@ import { ProjectBateraService } from '../project-batera.service';
   templateUrl: './project-data.component.html',
 })
 export class ProjectDataComponent implements OnInit {
-  constructor(protected dateService: NbDateService<Date>,
+  min 
+  max
+
+
+  testtrigger(button : HTMLInputElement){
+    button.click()
+  }
+
+  triggerButton(){
+    console.log('buttonClicked')
+  }
+constructor(  protected dateService: NbDateService<Date>,
               private dialogRef: MatDialogRef<ProjectDataComponent>,
               private homeService : HomeBateraService,
               private profileService : ProfileBateraService,
               private projectService : ProjectBateraService,
               public datepipe: DatePipe,
               public activatedRoute : ActivatedRoute,
+              private date : DatePipe,
               @Inject( MAT_DIALOG_DATA ) public data ) { 
-  this.min = this.dateService.addMonth(this.dateService.today(), -1);
+  this.min = this.dateService.addDay(this.dateService.today(), 0);
+  this.max = this.dateService.addDay(this.dateService.today(), 1);
   }
   
-  min: Date;
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
 
   newProjectMenu = {
@@ -43,6 +56,7 @@ export class ProjectDataComponent implements OnInit {
     .subscribe(({data} : any) => {
       this.newProjectMenu.responsible = data
     });
+    
     this.homeService.getAllShip()
     .subscribe(({data} : any) => {
       this.newProjectMenu.vessel = data
@@ -54,6 +68,7 @@ export class ProjectDataComponent implements OnInit {
     } else {
       this.disabledData = false
     }
+
     this.profileService.getCompanyProfile()
     .subscribe(({data} : any) => {
       this.newProjectMenu.shipManagement = data.profile_merk_perusahaan
@@ -99,10 +114,6 @@ export class ProjectDataComponent implements OnInit {
       data.off_hire_start = this.datepipe.transform(offHirePeriod?.start , 'yyyy-MM-dd')
       data.off_hire_end = this.datepipe.transform(offHirePeriod?.end , 'yyyy-MM-dd')
     } 
-    // if(repairPeriod){
-    //   data.repair_start = this.datepipe.transform(repairPeriod?.start , 'yyyy-MM-dd')
-    //   data.repair_end = this.datepipe.transform(repairPeriod?.end , 'yyyy-MM-dd')
-    // }
     if(repairInDock){
       data.repair_in_dock_start = this.datepipe.transform(repairInDock?.start , 'yyyy-MM-dd')
       data.repair_in_dock_end = this.datepipe.transform(repairInDock?.end , 'yyyy-MM-dd')

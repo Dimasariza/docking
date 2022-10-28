@@ -1,3 +1,16 @@
+<!-- <div class="container">
+  <div class="row">
+     <div class='col-sm-6'>
+        <input type='text' class="form-control" id='datetimepicker4' />
+     </div>
+     <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker4').datetimepicker();
+        });
+     </script>
+  </div>
+</div> -->
+
 <nb-card>
     <h5 class="m-4">Tasks | Mine</h5>
     <div style="overflow: auto; width: 100%;">
@@ -9,8 +22,11 @@
           <ng-container [nbTreeGridColumnDef]="'icon'">
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 120px;">Job No</th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded">
-              </ngx-fs-icon>
+              <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+              </nb-tree-grid-row-toggle>
+              <ng-template #fileIcon>
+                <nb-icon icon="file-text-outline"></nb-icon>
+              </ng-template>
               {{row?.data?.jobNumber}}
             </td>
           </ng-container>
@@ -87,9 +103,9 @@
       <nb-card-header class="d-flex justify-content-between w-100" >
           <h5>Project List</h5>
           <button nbButton outline size="small" status="primary" (click)="addProjectDial()" >Add Project</button>
-        </nb-card-header>
+      </nb-card-header>
 
-      <ngx-datatable [class]="'bootstrap'" [rows]="projectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default>
+      <ngx-datatable [class]="'bootstrap'" [rows]="projectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default style="background-color: transparent;">
           <ngx-datatable-column [name]="'Project name'" prop="kapal" width="100px">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <a class="text-primary text-decoration-none" 

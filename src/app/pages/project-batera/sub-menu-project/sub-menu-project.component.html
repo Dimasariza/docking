@@ -5,7 +5,7 @@
         <h5>{{shipName}}</h5>
         <div>
             <div *ngFor = "let button of menuButton">
-                <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" nbButton status="primary" class="mx-1" outline size="small">
+                <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" [disabled]="!button?.disabled" nbButton status="primary" class="mx-1" outline size="small">
                     <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
                     {{button.text}}
                 </button>
@@ -71,7 +71,11 @@
                 <ng-container [nbTreeGridColumnDef]="'jobNumber'">
                   <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 100px">Job No.</th>
                   <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                    <ngx-fs-icon [kind]="row.data.kind" [expanded]="row.expanded"></ngx-fs-icon>
+                    <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                    </nb-tree-grid-row-toggle>
+                    <ng-template #fileIcon>
+                      <nb-icon icon="file-text-outline"></nb-icon>
+                    </ng-template>
                     {{row.data.jobNumber}}
                   </td>
                 </ng-container>

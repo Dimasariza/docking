@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { FsIconComponent } from '../report-batera/work-progress/work-progress.component';
 import { ProjectBateraComponent } from './project-batera.component';
 import { ProjectDataComponent } from './project-data/project-data.component';
 import { SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
@@ -26,7 +25,6 @@ export class ProjectBateraRoutingModule { }
 export const routedComponents = [
   ProjectBateraComponent,
   SubMenuProjectComponent,
-  FsIconComponent,
   WorkAreaComponent,
   ProjectDataComponent,
   TableDataComponent

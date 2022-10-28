@@ -1,6 +1,7 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';  
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NbDateService } from '@nebular/theme';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../../report-batera/report-batera.service';
@@ -17,11 +18,14 @@ export class WorkAreaComponent implements OnInit {
               private currencyPipe : CurrencyPipe,
               private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
+              protected dateService: NbDateService<Date>,
               @Inject(MAT_DIALOG_DATA) public data: any,
-  ) {}
+  ) {
+    this.min = this.dateService.addMonth(this.dateService.today(), 0);
+  }
 
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-
+  min : Date
   responsible = []
   workAreaContainer : any = []
   modelData : any = {}
@@ -32,49 +36,61 @@ export class WorkAreaComponent implements OnInit {
   unitPriceLabel : string = null
   usedCurrency : string
   unitType
+  disabledChild : boolean = false
 
   ngOnInit(){
-    this.workAreaContainer = this.data.work.work_area
     const data = this.data?.data?.data
+    console.log(this.data)
     const parentId = data?.id.toString().split('')
+    this.disabledChild = parentId?.length > 1 ? true : false
+    this.usedCurrency = this.data.work.mata_uang
     switch (this.data.dial) {
       case 'Add':
+        this.workAreaContainer = this.data.work.work_area
         this.unitType = this.FNCOL.jobUnit
         this.unitPriceLabel = 'Price Budget'
         this.getUserProfile()
         break;
       case 'Add Variant' :
+        this.workAreaContainer = this.data.work.work_area
         this.unitType = this.FNCOL.jobUnit
         this.unitPriceLabel = 'Price Add On'
         this.getUserProfile()
         break;
       case 'Add Sub':
+        this.workAreaContainer = this.data.work.work_area
         this.unitType = this.FNCOL.subJobUnit
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
         this.unitPriceLabel = 'Price Budget'
+        // this.workAreaDatas(parentId, data)
         this.getUserProfile()
       break;
       case 'Add Sub Variant' :
+        this.workAreaContainer = this.data.work.variant_work
         this.unitType = this.FNCOL.subJobUnit
         this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
         this.unitPriceLabel = 'Price Add On'
         this.getUserProfile()
       break;
       case 'Update' :
+        this.workAreaContainer = this.data.work.work_area
         this.unitPriceLabel = 'Price Budget'
         this.workAreaDatas(parentId, data)
         this.getUserProfile()
       break;
       case 'Edit Variant' :
+        this.workAreaContainer = this.data.work.variant_work
         this.unitPriceLabel = 'Price Add On'
         this.workAreaDatas(parentId, data)
         this.getUserProfile()
       break;
       case 'Work Progress':
+        this.workAreaContainer = this.data.work.work_area
         this.unitPriceLabel = 'Price Actual'
         this.workAreaDatas(parentId, data)
       break;
       case 'Update Load Details':
+        this.workAreaContainer = this.data.work.work_area
         this.unitPriceLabel = 'Price Contract'
         this.workAreaDatas(parentId, data)
       break;
@@ -102,8 +118,10 @@ export class WorkAreaComponent implements OnInit {
     this.disabledJob = true
     this.unitPrice = this.modelData?.[this.unitPriceLabel]
     this.totalPrice = this.unitPrice ? this.unitPrice * this.modelData.volume : 0
-    // this.unitPrice = this.currencyPipe.transform(unitPrice, 'Rp ')
-    // this.totalPrice = this.currencyPipe.transform(totalPrice, 'Rp ')
+    this.unitPrice = this.currencyPipe.transform(this.unitPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0]
+    this.totalPrice = this.currencyPipe.transform(this.totalPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0] 
+    const original = this.unitPrice.split(' ')[1].split('.')[0].replace(',', '')
+    this.originalUnitPrice = parseInt(original)
   }
   
   unitPriceAmount(e, volume){
@@ -158,10 +176,10 @@ export class WorkAreaComponent implements OnInit {
     return data.map((w, i) => {
       if (parentIndex.length > 1 && i == parentIndex[0]) {
         parentIndex = parentIndex.slice(1)
-        return {...w, items: this.addSubJobData(w.items, newData, parentIndex), type: 'kategori'}
+        return {...w, items: this.addSubJobData(w.items, newData, parentIndex)}
       } else if(i == parentIndex[0]) {
         if (!w.items) w.items = []          
-        return {...w, items: [...w.items, {...newData, id: w.id.toString()+w.items.length.toString()}], type: 'kategori'}
+        return {...w, items: [...w.items, {...newData, id: w.id.toString()+w.items.length.toString()}]}
       }
       return w
     })
@@ -169,18 +187,17 @@ export class WorkAreaComponent implements OnInit {
 
   addWorkArea(data){
     const submitData = data.value
-    submitData[this.unitPriceLabel] = this.originalUnitPrice
     this.workAreaContainer === null ||
     this.workAreaContainer === undefined ||
     this.workAreaContainer[0] === null ? this.workAreaContainer = [] : null
-    let work_area = [
+    submitData[this.unitPriceLabel] = this.originalUnitPrice
+    const work_area = [
       ...this.workAreaContainer,
       {
-      ...submitData , 
       ...this.reconstructData(submitData),
       id: this.workAreaContainer.length, 
-      type : "pekerjaan",
-      status : 'Not Started',
+      status : {name : 'Not Started', id : 0},
+      progress : 0
     }]
     this.uploadData(work_area)
   }
@@ -188,10 +205,10 @@ export class WorkAreaComponent implements OnInit {
   updateWorkArea(newData){
     const submitData = newData.value
     const reconstructData = {
-      ...submitData,
       ...this.reconstructData(submitData),
       last_update : new Date()
     }
+    submitData[this.unitPriceLabel] = this.originalUnitPrice
     const data = this.data?.data?.data
     const parentId = data?.id.toString().split('')
     const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentId, reconstructData)
@@ -200,10 +217,12 @@ export class WorkAreaComponent implements OnInit {
 
   addSubJob(newData){
     const submitData = newData.value
-    const reconstructData = {...submitData, 
+    const reconstructData = { 
       ...this.reconstructData(submitData),
-      type : "pekerjaan",
+      status : {name : 'Not Started', id : 0},
+      progress : 0
     } 
+    submitData[this.unitPriceLabel] = this.originalUnitPrice
     const data = this.data?.data?.data
     const parentId = data?.id.toString().split('')
     const work_area = this.addSubJobData(this.workAreaContainer, reconstructData, parentId)

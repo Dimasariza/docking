@@ -8,6 +8,9 @@ import { WorkAreaComponent } from '../work-area/work-area.component';
 import { ProjectDataComponent } from '../project-data/project-data.component';
 import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
+import { TenderBateraService } from '../../tender-batera/tender-batera.service';
+import { take } from 'rxjs/operators';
+import { TrackingBateraService } from '../../tracking-batera/tracking-batera.service';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -16,7 +19,8 @@ const menuButton = [
   {
     position: 'top',
     icon: 'compass-outline',
-    text: 'Monitoring'
+    text: 'Monitoring',
+    disabled : ''
   },
   {
     position: 'bottom',
@@ -48,6 +52,7 @@ export class SubMenuProjectComponent implements OnInit {
                 private dialog : MatDialog,
                 private router : Router,
                 private projectService : ProjectBateraService,
+                private tenderService : TenderBateraService,
                 public currency : CurrencyPipe,
                 public convertDate : DatePipe,
                 public FNCOL : FunctionCollection,
@@ -57,6 +62,7 @@ export class SubMenuProjectComponent implements OnInit {
   id_proyek : any
   projectData : any
   reportData : any
+  progressData : any
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
@@ -67,22 +73,31 @@ export class SubMenuProjectComponent implements OnInit {
       this.projectData = data
       const {work_area, kapal, tahun} = data
       this.shipName = kapal.nama_kapal + " -DD- " + tahun
-
       work_area === null || 
       work_area[0] === null ||
       work_area === undefined ||
       work_area.length === 0 ? null : 
+      this.regroupData(false)
+    })
 
-      this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
-        const {volume, 'Price Budget' : budgetPrice} = work 
-        const currency = data.mata_uang
-        const workItem = {
-          'Unit Price Budget' : this.currency.transform(budgetPrice, this.FNCOL.convertCurrency(currency)),
-          'Total Price Budget' : this.currency.transform(budgetPrice * volume, this.FNCOL.convertCurrency(currency)),
-        }
-        return this.FNCOL.populateData(work, workItem) 
-      }) as TreeNode<FSEntry>[] 
-    )})
+    this.tenderService.getProjectSummary("", "", "", "")
+    .subscribe(({data} : any) => {
+      this.progressData = data.find(tender => tender.id_proyek === parseInt(this.id_proyek))
+      menuButton[0].disabled = this.progressData
+    })
+  }
+
+  regroupData(expand){
+    const {work_area, kapal, tahun, mata_uang} = this.projectData
+    this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
+      const {volume, 'Price Budget' : budgetPrice} = work 
+      const currency = mata_uang
+      const workItem = {
+        'Unit Price Budget' : this.currency.transform(budgetPrice, this.FNCOL.convertCurrency(currency)),
+        'Total Price Budget' : this.currency.transform(budgetPrice * volume, this.FNCOL.convertCurrency(currency)),
+      }
+      return this.FNCOL.populateData(work, workItem, expand) 
+    }) as TreeNode<FSEntry>[])
   }
 
   orderOriginal = (a: KeyValue<number,string>, b: KeyValue<number,string>): number => {
@@ -103,10 +118,10 @@ export class SubMenuProjectComponent implements OnInit {
           type : 'text',
           value: this.FNCOL.convertPhase(phase) 
         },
-        "Selected Yard": {
-          type : 'text',
-          value : selected_yard
-        },
+        // "Selected Yard": {
+        //   type : 'text',
+        //   value : selected_yard
+        // },
         "Base Currency": {
           type : 'text',
           value : mata_uang
@@ -174,7 +189,12 @@ export class SubMenuProjectComponent implements OnInit {
         reloadPage = this.addWorkAreaDial()
       break;
       case 'Expand All' :
-        console.log("expand")
+        menuButton[2].text = "Unexpand"
+        this.regroupData(true)
+      break;
+      case 'Unexpand' :
+        menuButton[2].text = "Expand All"
+        this.regroupData(false)
       break;
       case 'Monitoring' :
         this.router.navigateByUrl('/pages/report-batera/' + this.id_proyek)

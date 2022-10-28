@@ -82,7 +82,7 @@ export class ProjectBateraComponent {
   collectData(){
     this.workAreaContainer = []
     const buildEmpty = () => this.dataSource = this.dataSourceBuilder.create([]);
-    const collectProject = this.projectDatas
+    this.projectDatas
     .filter((project, id) => {
       this.projectDatas[id].phase = this.FNCOL.phasesStatus(this.projectDatas[id].phase)
       if(project.id_proyek === this.sortByProject) return project
@@ -102,7 +102,6 @@ export class ProjectBateraComponent {
           item['cust'] = this.shipManagement
           if(this.sortByStatus === 'all' && this.sortByResponsible === 'all') 
           this.workAreaContainer.push(item);
-
           if(typeof(this.sortByResponsible) === 'number')
           if(item.responsible.id === this.sortByResponsible) 
           this.workAreaContainer.push(item);
@@ -113,7 +112,7 @@ export class ProjectBateraComponent {
     })
 
     if(!this.workAreaContainer.length) buildEmpty();
-    else this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work => this.FNCOL.populateData(work, {})));
+    else this.dataSource = this.dataSourceBuilder.create(this.workAreaContainer.map(work => this.FNCOL.populateData(work, {}, false)));
   }
 
   clickAction(btn, data){
