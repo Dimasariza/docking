@@ -13,9 +13,7 @@ export class FunctionCollection {
     jobUnit = ["Lumpsum"]
     subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
     status = ["Not Started", "In Progress", "Done", "Canceled"]
-
     Phase: ['requisition','in_progress', 'evaluasi','finish']
-    phase: ['Requisition','In Progress', 'Evaluation','Finish']
     BaseCurrency: ['IDR', 'EURO', 'US']
 
     convertPhase(phase) {
@@ -48,7 +46,6 @@ export class FunctionCollection {
         })
         .filter(f => f != null)
     }
-
     
     updateWorkAreaData = (data, parentIndex, newData) => {
         return data.map((w, i) => {
@@ -63,13 +60,15 @@ export class FunctionCollection {
         return w
         })
     }
-
-    populateData = (work, workItem) => {  
+    
+    populateData = (work, workItem, expand) => {  
         const {unit, category, start, end, responsible, status, last_update, rank}= work  
         return {
           data: {
             ...work,
             ...workItem,
+            start : new Date(start),
+            end : new Date(end),
             Start : this.datePipe.transform(start, 'dd-MM-yyyy'),
             Stop : this.datePipe.transform(end, 'dd-MM-yyyy'),
             Unit : unit?.name,
@@ -82,7 +81,8 @@ export class FunctionCollection {
           },
           children: 
           work === null || work === undefined ? null :
-          work.items?.length ? work.items.map(child => this.populateData(child, workItem)) : []
+          work.items?.length ? work.items.map(child => this.populateData(child, workItem, expand)) : [],
+          expanded : expand
         }
     }
 
