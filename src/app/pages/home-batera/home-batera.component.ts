@@ -62,10 +62,11 @@ export class HomeBateraComponent implements OnInit {
         const projectId = project.id_proyek
         return {id_kapal, head, phase, projectId}
       })
+      setTimeout(() => this.generateData(), 1500);
     })
   }
   
-  ngAfterViewChecked(){
+  generateData(){
     if(this.shipData.length === 0 || !this.progressData) return;
     this.shipData.map((ship, id) => {
       this.progressData.forEach(project => {

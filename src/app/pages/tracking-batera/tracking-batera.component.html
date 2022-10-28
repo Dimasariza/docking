@@ -8,11 +8,12 @@
 
     <nb-card-body>
         <ngx-datatable
-            class="bootstrap"
+            [class]="'bootstrap'"
             [rows]="trackingData"
             [count]="trackingData"
             columnMode="force"
-            default>
+            default
+            style="background-color: transparent;">
             <ngx-datatable-column name="Ship Name" prop="nama_kapal" routeLink="/">
                 <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
                     <a class="text-primary text-decoration-none" 
@@ -34,6 +35,13 @@
             <ngx-datatable-column name="Periode">
                 <ng-template let-row="row" ngx-datatable-cell-template>
                         {{row.start | date:'shortDate'}} - {{row.end | date:'shortDate'}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Gant Chart">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button nbButton size="tiny" status='primary' outline >
+                        Show Gant Chart
+                    </button>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable> 
@@ -68,7 +76,8 @@
                     [rows]="tasks"
                     [count]="tasks.length"
                     [scrollbarH]="true"
-                    default>
+                    default
+                    style="background-color: transparent;">
                     <ngx-datatable-column name="#" [width]="8">
                         <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
                             {{rowIndex+1}}
