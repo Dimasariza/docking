@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe, KeyValue } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { ProjectBateraService } from '../project-batera.service';
@@ -11,6 +11,7 @@ import { FunctionCollection } from '../../function-collection-batera/function-co
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { take } from 'rxjs/operators';
 import { TrackingBateraService } from '../../tracking-batera/tracking-batera.service';
+import { TableDataComponent } from './table-data/table-data.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -108,7 +109,11 @@ export class SubMenuProjectComponent implements OnInit {
   reconstruction(data){
     const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day,
       off_hire_start, off_hire_end , repair_start, repair_end, repair_in_dock_start, repair_in_dock_end, repair_period} = data
-    const convertDate = (date) => this.convertDate.transform(date, 'dd-MM-yyyy')
+    const convertDate = (date, amount) => {
+      date = new Date(date)
+      date.setDate(date.getDate() + amount)
+      return this.convertDate.transform(date, 'dd-MM-yyyy') 
+    }
     return {
         "Vessel": {
           type : 'text',
@@ -128,7 +133,7 @@ export class SubMenuProjectComponent implements OnInit {
         },
         "Off Hire Period": {
           type : 'text',
-          value: `(${off_hire_period} Days) ${convertDate(off_hire_start)} to ${convertDate(off_hire_end)}`  
+          value: `(${off_hire_period + off_hire_deviasi} Days) ${convertDate(off_hire_start, 0)} to ${convertDate(off_hire_end, off_hire_deviasi)}`  
         },
         "- Deviation": {
           type : 'date',
@@ -144,11 +149,11 @@ export class SubMenuProjectComponent implements OnInit {
         }, 
         "Repair Period": {
           type: 'text',
-          value : `(${repair_period} Days) ${convertDate(repair_start)} to ${convertDate(repair_end)}`
+          value : `(${repair_period + repair_additional_day} Days) ${convertDate(repair_start, 0)} to ${convertDate(repair_end, repair_additional_day)}`
         },
         "- In Dock": {
           type : 'text',
-          value : `(${repair_in_dock_period} Days) ${convertDate(repair_in_dock_start)} to ${convertDate(repair_in_dock_end)}`
+          value : `(${repair_in_dock_period} Days) ${convertDate(repair_in_dock_start, 0)} to ${convertDate(repair_in_dock_end, 0)}`
         },
         "- Additional Days": {
           type : 'date',
@@ -156,6 +161,9 @@ export class SubMenuProjectComponent implements OnInit {
         } 
     }
   }
+
+
+  @ViewChild(TableDataComponent) tableData : TableDataComponent
 
   headColumns = ['Job', 'Departement', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Budget', 'Total Price Budget', 'Category', 'Remarks']
   defaultColumns = ['jobName', 'departement', 'Start', 'Stop', 'volume', 'Unit', 'Unit Price Budget','Total Price Budget', 'Category', 'remarks'];
@@ -184,40 +192,53 @@ export class SubMenuProjectComponent implements OnInit {
 
   buttonAction(e, data){
     let reloadPage ;
+    const reload = () => {
+      return reloadPage.componentInstance.onSuccess.asObservable().subscribe(() => {
+        this.ngOnInit()
+      })
+    }
     switch(e) {
       case 'Add Job':
-        reloadPage = this.addWorkAreaDial()
+        reloadPage = this.addWorkAreaDial();
+        reload();
+        this.tableData.ngOnInit();
       break;
       case 'Expand All' :
-        menuButton[2].text = "Unexpand"
-        this.regroupData(true)
+        menuButton[2].text = "Unexpand";
+        this.regroupData(true);
       break;
       case 'Unexpand' :
-        menuButton[2].text = "Expand All"
-        this.regroupData(false)
+        menuButton[2].text = "Expand All";
+        this.regroupData(false);
       break;
       case 'Monitoring' :
-        this.router.navigateByUrl('/pages/report-batera/' + this.id_proyek)
+        this.router.navigateByUrl('/pages/report-batera/' + this.id_proyek);
       break;
       case 'update project' :
-        reloadPage = this.updateProjectDial()
+        reloadPage = this.updateProjectDial();
+        reload();
+        this.tableData.ngOnInit();
       break;
       case 'add sub job' :
-        reloadPage = this.addSubJobDial(data)
+        reloadPage = this.addSubJobDial(data);
+        reload();
+        this.tableData.ngOnInit();
       break;
       case 'update job' :
-        reloadPage = this.updateWorkAreaDial(data)
+        reloadPage = this.updateWorkAreaDial(data);
+        reload();
+        this.tableData.ngOnInit();
       break;
       case 'delete job':
-        reloadPage = this.deleteJob(data)
+        reloadPage = this.deleteJob(data);
+        reload();
+        this.tableData.ngOnInit();
       break;
       case 'Refresh' :
-        this.ngOnInit()
+        this.ngOnInit();
+        this.tableData.ngOnInit();
       break;
     }
-    reloadPage.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.ngOnInit()
-    })
   }
 
   updateProjectDial(){

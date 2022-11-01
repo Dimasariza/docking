@@ -1,20 +1,7 @@
-<!-- <div class="container">
-  <div class="row">
-     <div class='col-sm-6'>
-        <input type='text' class="form-control" id='datetimepicker4' />
-     </div>
-     <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker4').datetimepicker();
-        });
-     </script>
-  </div>
-</div> -->
-
 <nb-card>
     <h5 class="m-4">Tasks | Mine</h5>
     <div style="overflow: auto; width: 100%;">
-      <div style="width: 1424px;">
+      <div style="width: 1424px; max-height: 500px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
           <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
           <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>

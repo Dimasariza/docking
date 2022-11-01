@@ -1,6 +1,6 @@
 <nb-card >
   <nb-card-header class="d-flex justify-content-between">
-    <span>{{data.dial}} Project</span>
+    <strong>{{data.dial}} Project</strong>
     <button nbButton status="danger" size="tiny" (click)="close()">
       <nb-icon icon="close-outline"></nb-icon>
     </button>
@@ -36,7 +36,7 @@
       <div class="right_site col-6">
         <label for="Off Hire Period" class="d-block text-muted">Off Hire Period</label>
         <nb-rangepicker #offHirePeriodDate ></nb-rangepicker>  
-        <input fieldSize="small" class="w-100" type="date" required nbInput shape="rectangle" placeholder="Pick Date"  name="offHirePeriod" #offHirePeriod (ngModel)="offHirePeriod">
+        <input fieldSize="small" class="w-100" type="text" required nbInput shape="rectangle" placeholder="Pick Date" [nbDatepicker]="offHirePeriodDate" name="offHirePeriod" #offHirePeriod (ngModel)="offHirePeriod">
         <label for="Deviation" class="d-block text-muted">- Deviation</label>
         <input type="number" class="w-100" nbInput required fieldSize="small" placeholder="Add Deviation Days" name="off_hire_deviasi" #deviation [ngModel]="projectData?.off_hire_deviasi">
         <label for="Charter Rate" class="d-block text-muted" >- Charter Rate</label>

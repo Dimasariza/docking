@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-lg-7 col-md-12 col-sm-12">
-                <ngx-table-data [tableData]="projectData"></ngx-table-data>
+                <ngx-table-data [tableData]="projectData" (reloadPage)="ngOnInit()"></ngx-table-data>
             </div>
         </div>
     </nb-card-body>

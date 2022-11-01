@@ -98,16 +98,15 @@ export class ProjectBateraComponent {
       const {work_area : work, name : projectName} = project
       if(work === null || work === undefined || !work.length || work[0] === null) return;
       work.forEach(item => {
+          const due = new Date(item.end)
+          const currentDate = new Date()
+          currentDate.setDate(currentDate.getDate() + 30) 
+          if(currentDate < due) return
           item['projectName'] = projectName
           item['cust'] = this.shipManagement
-          if(this.sortByStatus === 'all' && this.sortByResponsible === 'all') 
           this.workAreaContainer.push(item);
-          if(typeof(this.sortByResponsible) === 'number')
-          if(item.responsible.id === this.sortByResponsible) 
-          this.workAreaContainer.push(item);
-          if(typeof(this.sortByStatus) === 'number') 
-          if(item?.status?.id === this.sortByStatus) 
-          this.workAreaContainer.push(item);
+          if(this.sortByStatus !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({status}) => status?.id === this.sortByStatus)
+          if(this.sortByResponsible !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({responsible}) => responsible?.id === this.sortByResponsible)
       })
     })
 
