@@ -46,6 +46,9 @@ export class PdfGeneratorBateraComponent implements OnInit {
     });
   }
 
+  /*
+  * This use of this function is to create pdf based on jobs
+  */
   async generatePDFBasedOnJob(projectData, data){
     // Document head
     const shipname = projectData.kapal.nama_kapal
@@ -167,7 +170,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
   jobCollection : any = []
   variantCollection : any = []
   regroupJobData(data, jobDetails){
-    data.map(job => {
+    const jobDatas =  data.map(job => {
       const {jobNumber, jobName, rank, unit, category, progress, remarks, items} = job
       const contentData = {
         layout: {
@@ -204,6 +207,10 @@ export class PdfGeneratorBateraComponent implements OnInit {
     })  
   }
 
+  /*
+  * The use of this function is to create pdf based on all projects summary
+  */
+
   async generatePDFBasedOnProject(projectDetail, workProject, yardDatas){
     // Document head
     const {proyek : project, variant_work, id_tender} = projectDetail
@@ -218,24 +225,126 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const summaryHead = this.getSummmaryHead(projectDetail, workProject, yardDatas)
     const projectSummary = await this.getProjectSummay(projectDetail, workProject, yardDatas)
     const priceSummary = this.getPriceSummary(projectDetail, workProject, yardDatas)
+    const costDetails = this.getCostDetails(projectDetail, workProject, yardDatas)
     this.regroupJobData(work_area, 'work_area')
     this.regroupJobData(variant_work, 'variant_work')
+    const footer = (currentPage, pageCount, pageSize) => {
+      return { text : currentPage, alignment : 'right', fontSize : 8, margin : [12,12]}
+    }
     const content = [
       projectHead,
-      {text : "Summary" ,fontSize : 12, bold : true, color: '#047886'},
+      {
+        layout: {
+          hLineWidth: (i, node) => {
+            if(i === 0) return 1; 
+            if(i === node.table.body.length) return 3
+          return 0},
+          vLineWidth: () => 1,
+          vLineColor: () => '#aaa',
+          hLineColor: (i, node) => {
+            if(i === 0) return '#aaa'; 
+            if(i === node.table.body.length) return '#047886'
+          return 'fff'},
+          paddingLeft: (i) => 5,
+          paddingRight: (i, node) => 5,
+        },
+        table: {
+          widths: [ '*', '*' ],  
+          body: [
+            [
+              {
+                columns : [
+                  { width: '*', text: 'IDR', fontSize: 12, color : '#047886'},
+                  { width: '*', text: 'Estimate At Completion', fontSize: 10, style : {alignment : 'right'}},
+                ]
+              },
+              {
+                columns : [
+                  { width: '*', text: 'ETD', fontSize: 12, color : '#047886'},
+                  { width: '*', text: 'Planned', style : {alignment : 'right', fontSize: 10}},
+                ]
+              },
+            ],
+            [
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+            ],
+            [
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+            ],
+            [
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+              {
+                columns : [
+                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
+                  { width: 'auto', text: '|', fontSize: 8},
+                  { width: '*', text: 'Right Side', fontSize: 8},
+                ]
+              },
+            ],
+          ]
+        }
+      },
+      {text : "Summary" ,fontSize : 12, bold : true, color: '#047886', margin : [0, 10, 0, 0]},
       summaryHead,
-      // {columns : [
-        ...projectSummary,
-        ...priceSummary,
-      // ]},
+      ...projectSummary,
+      ...priceSummary,
+      {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
+      {text : "Cost Details" ,fontSize : 12, bold : true, color: '#047886'},
+      ...priceSummary,
+      {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
       this.dataHeading(),
       ...this.jobCollection,
+      {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Variant Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
       this.dataHeading(),
       ...this.variantCollection,
+      {
+        layout: 'noBorders',
+        margin : [0 , 3],
+        table: {
+          headerRows: 1,
+          widths: [ 'auto', 'auto' ],  
+          body: [[
+            { svg : this.pieChartProgress()},
+            { svg : this.barChartPrice()},
+          ]]
+        }
+      }
     ]
-    pdfMake.createPdf({content}).open();  
+    pdfMake.createPdf({footer, content}).open();  
   }
 
   getSummmaryHead(projectDetail, workProject, yardDatas){
@@ -447,6 +556,84 @@ export class PdfGeneratorBateraComponent implements OnInit {
       }]
   }
 
+
+  getCostDetails(projectDetail, workProject, yardDatas) {
+    console.log("get cost detials")
+  }
+
+  /*
+  * Pie Chart Variables
+  */
+
+  pieChartProgress(){
+    const done = 10 * 31.42 / 100
+    const cancelled = 30 * 31.42 / 100
+    const notStarted = 50 * 31.42 / 100
+    const amountCompleted = 10
+    return `
+    <svg height="200" width="150" viewBox="0 0 20 30">
+      <g>
+        <circle r='10' cx="10" cy="10" fill="red" opacity='0.65'/>
+        <circle r='5' cx="10" cy="10" fill="transparent" stroke="green" transform="rotate(-90) translate(-20)" opacity='0.65' stroke-width="10" stroke-dasharray="${notStarted} 31.42"  />
+        <circle r='5' cx="10" cy="10" fill="transparent" stroke="purple" transform="rotate(-90) translate(-20)" opacity='0.65' stroke-width="10" stroke-dasharray="${cancelled} 31.42" />
+        <circle r='5' cx="10" cy="10" fill="transparent" stroke="blue" transform="rotate(-90) translate(-20)" opacity='0.65' stroke-width="10" stroke-dasharray="${done} 31.42" />
+        <circle r='5' cx="10" cy="10" fill="white" />
+      </g>
+      <g>
+        <circle r='0.3' cx="1" cy="22.6" fill="red" />
+        <text x="1.8" y="23" font-size="1px">In Progress (${amountCompleted})</text>
+        <circle r='0.3' cx="12" cy="22.6" fill="green" />
+        <text x="12.8" y="23" font-size="1px">Not Started (${amountCompleted})</text>
+        <circle r='0.3' cx="12" cy="24" fill="purple" />
+        <text x="12.8" y="24.4" font-size="1px">Cancelled (${amountCompleted})</text>
+        <circle r='0.3' cx="1" cy="24" fill="blue" />
+        <text x="1.8" y="24.4" font-size="1px">Done (${amountCompleted})</text>
+      </g>
+    </svg>
+    `
+  }
+
+  barChartPrice(){
+    const price = 100000
+    const budget = 10
+    const contract = 15
+    const actual = 20
+    return `
+      <svg height="200" width="300" viewBox="0 0 20 30">
+        <g transform="translate(1, 1) scale(1.1)" >
+          <line x1="0" y1="0" x2="31" y2="0" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="2" x2="31" y2="2" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="4" x2="31" y2="4" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="6" x2="31" y2="6" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="8" x2="31" y2="8" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="10" x2="31" y2="10" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="12" x2="31" y2="12" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="14" x2="31" y2="14" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="16" x2="31" y2="16" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="18" x2="31" y2="18" stroke-dasharray=".5, .5" style="stroke:rgba(0,0,0, .2);stroke-width:.08" />
+          <line x1="0" y1="20" x2="31" y2="20" style="stroke:rgba(0,0,0, .5);stroke-width:.1" />
+          <line x1="0" y1="0" x2="0" y2="20" style="stroke:rgba(0,0,0, .5);stroke-width:.2" />
+          <rect x="-3" width="5" height="${budget}" style="fill:rgba(0,0,255, .1);stroke-width:.1;stroke:rgba(0,0,255,.3)" transform="rotate(180) translate(-5, -20)" />
+          <rect x="-13" width="5" height="${contract}" style="fill:rgba(0,255,0, .1);stroke-width:.1;stroke:rgba(0,255,0,.3)" transform="rotate(180) translate(-5, -20)" />
+          <rect x="-23" width="5" height="${actual}" style="fill:rgba(255,0,0, .1);stroke-width:.1;stroke:rgba(255,0,0,.3)" transform="rotate(180) translate(-5, -20)" />
+          <text x="3.6" y="21" font-size="1px">Budget</text>
+          <text x="13.5" y="21" font-size="1px">Contract</text>
+          <text x="24" y="21" font-size="1px">Actual</text>
+          <text x="-6" y="18.4" font-size="1px">${price }</text>
+          <text x="-6" y="16.4" font-size="1px">${price * 2}</text>
+          <text x="-6" y="14.4" font-size="1px">${price * 4}</text>
+          <text x="-6" y="12.4" font-size="1px">${price * 6}</text>
+          <text x="-6" y="10.4" font-size="1px">${price * 8}</text>
+          <text x="-6" y="8.4" font-size="1px">${price * 10}</text>
+          <text x="-6" y="6.4" font-size="1px">${price * 12}</text>
+          <text x="-6" y="4.4" font-size="1px">${price * 14}</text>
+          <text x="-6" y="2.4" font-size="1px">${price * 16}</text>
+          <text x="-6" y="0.4" font-size="1px">${price * 18}</text>
+        </g>
+      </svg>
+    `
+  }
+      
   buttons = [
     {desc : 'show'},
     {desc : 'download'}
