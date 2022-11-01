@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { NbButtonModule, NbCardModule, NbIconModule } from '@nebular/theme';
+import { NbButtonGroupModule, NbButtonModule, NbCardModule, NbIconModule } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TrackingBateraRoutingModule } from './tracking-batera.routing.module';
@@ -14,6 +14,7 @@ import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
     NbIconModule,
     NbButtonModule,
     NgxDatatableModule,
+    NbButtonGroupModule
   ],
   exports: [],
   declarations: [

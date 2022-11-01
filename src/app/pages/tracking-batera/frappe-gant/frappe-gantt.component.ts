@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, OnInit, Output, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ViewChild, ElementRef, OnInit, Output, Input, OnChanges, SimpleChanges, EventEmitter } from '@angular/core';
 import Gantt from './lib'
 
 export interface Task {
@@ -31,12 +31,11 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
 
     gantt: any;// gantt object
     ngOnInit() {
-        this.gantt = new Gantt('#gantt', this.tasks, {});        
+        console.log(this.tasks)   
+        this.gantt = new Gantt('#gantt', this.tasks, {});     
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        // console.log(changes);
-        
         const {showSCurve, viewMode} = changes
 
         if (showSCurve && showSCurve.previousValue != showSCurve.currentValue) {

@@ -97,7 +97,6 @@ export class TenderBateraComponent {
     this.dataSource = this.dataSourceBuilder.create([]) :
     this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
       const {volume, 'Price Contract' : contractPrice} = work
-      console.log(currency)
       const workItem = {
         "Unit Price Contract" : this.currency.transform(contractPrice, this.FNCOL.convertCurrency(currency)),
         "Total Price Contract" : this.currency.transform(contractPrice * volume, this.FNCOL.convertCurrency(currency))

@@ -1,9 +1,11 @@
 <nb-card>
     <nb-card-header>
-        <button nbButton *ngFor="let button of topButton" status="primary" size="small" shape="rectangle" class="mx-1" outline>
-            <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
-            {{button.desc}}
-        </button>
+        <nb-button-group (valueChange)="vesselFilter($event)">
+            <button *ngFor="let button of topButton;" shape="rectangle" [pressed]="button.desc === 'Default'" nbButtonToggle [value]="button">
+                <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
+                {{button.desc}}
+            </button>
+        </nb-button-group>
     </nb-card-header>
 
     <nb-card-body>
@@ -37,10 +39,10 @@
                         {{row.start | date:'shortDate'}} - {{row.end | date:'shortDate'}}
                 </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Gant Chart">
+            <ngx-datatable-column name="">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-                    <button nbButton size="tiny" status='primary' outline >
-                        Show Gant Chart
+                    <button nbButton size="tiny" status='primary' outline (click)="showGantChart(row)">
+                         Gant Chart
                     </button>
                 </ng-template>
             </ngx-datatable-column>
