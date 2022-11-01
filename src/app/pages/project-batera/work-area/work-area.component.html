@@ -35,10 +35,10 @@
                 </div>
                 <span class="p-2 d-block">Start</span>
                 <input [nbDatepicker]="startdatepicker" nbInput fullWidth fieldSize="small" required placeholder="Start Date" [ngModel]="modelData?.start" name="start" #startDate>
-                <nb-datepicker #startdatepicker [min]="min"></nb-datepicker>
+                <nb-datepicker #startdatepicker [min]="data.dial === 'Update' ? null : min"></nb-datepicker>
                 <span class="p-2 d-block">End</span>
                 <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small" required placeholder="End Date" [ngModel]="modelData?.end" name="end" #endDate>
-                <nb-datepicker #enddatepicker [min]="min"></nb-datepicker>
+                <nb-datepicker #enddatepicker [min]="data.dial === 'Update' ? null : min"></nb-datepicker>
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Volume</span>

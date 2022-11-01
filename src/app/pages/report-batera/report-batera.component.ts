@@ -57,7 +57,10 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     this.dialog.open(ProjectStatusComponent, {
       disableClose : true, 
       autoFocus:true, 
-      data : this.projectData
+      data : {
+        variant_work : this.projectData.variant_work,
+        project : this.subProjectData
+      }
     })
   }
 

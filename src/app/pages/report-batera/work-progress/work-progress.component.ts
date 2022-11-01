@@ -12,7 +12,6 @@ import { ProjectBateraService } from '../../project-batera/project-batera.servic
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
-import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
 
 interface TreeNode<T> {}
@@ -52,7 +51,6 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
               private activatedRoute : ActivatedRoute,
               private subMenuProject : SubMenuProjectComponent,
               private projectService : ProjectBateraService,
-              private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
               public pdfExporter : PdfGeneratorBateraComponent,
               public currency : CurrencyPipe,
@@ -60,7 +58,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     ) {
   }
 
-  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'volume', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
+  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'volume', 'Unit', 'Unit Price Budget', 'Total Price Budget' ];
   allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -130,10 +128,10 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   regroupTableData(expand){
     this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
       const currency = this.workProgressData.mata_uang
-      const {'Price Actual' : unitPrice, volume} = work  
+      const {'Price Budget' : unitPrice, volume} = work  
       const workItem = {
-        'Unit Price Actual' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
-        'Total Price Actual' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
+        'Unit Price Budget' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
+        'Total Price Budget' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
       }
       return this.FNCOL.populateData(work, workItem, expand)
     }) as TreeNode<FSEntry>[])

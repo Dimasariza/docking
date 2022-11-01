@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 
 @Component({
   selector: 'ngx-project-status',
@@ -10,85 +11,92 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 export class ProjectStatusComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<ProjectStatusComponent>,
               private datePipe : DatePipe,
+              private FNCOL : FunctionCollection,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) { }
   
   statusColumn: string[] = ['name', 'c_1', 'c_2', 'c_3', 'c_4', 'c_5' ,'c_6'];
   completionColumn : string[] = ['name', 'c_1', 'c_2', 'c_3', 'c_4'];
-  status = ["Not Started", "In Progress", "Done", "Canceled"]
-  category = ["Owner Exp-Supplies", "Services", "Class", "Others", "Owner Canceled Job" ,"Yard cost", "Yard cancelled jobs"]
+  progressData : any []
+  completionData : any []
+  baseCurrency : any
 
-  progressData : any [] = [
-    {name: 'Critical', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
-    {name: 'High', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
-    {name: 'Medium', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
-    {name: 'Low', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
-    {name: 'Total', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
-  ];
-  
-  completionData = [
-    {name: 'OE-Supplies', percentage: 0, complete: 0, progress : 0, total : 0},
-    {name: 'OE-Service', percentage: 0, complete: 0, progress : 0, total : 0},
-    {name: 'OE-Class', percentage: 0, complete: 0, progress : 0, total : 0},
-    {name: 'OE-Other', percentage: 0, complete:  0, progress : 0, total : 0},
-    {name: 'OE-Cancelled', percentage: 0, complete:  0, progress : 0, total : 0},
-    {name: 'YE-Cost', percentage: 0, complete:  0, progress : 0, total : 0},
-    {name: 'YE-Cancelled', percentage: 0, complete:  0, progress : 0, total : 0},
-  ];
+  initData(){
+    this.progressData = [
+      {name: 'Critical', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
+      {name: 'High', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
+      {name: 'Medium', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
+      {name: 'Low', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
+      {name: 'Total', notStart: 0, progress: 0 , done : 0, cancel : 0, delay: 0, all : 0},
+    ];
+    
+    this.completionData = [
+      {name: 'OE-Supplies', percentage: 0, complete: 0, totalJob : 0, value : 0},
+      {name: 'OE-Service', percentage: 0, complete: 0, totalJob : 0, value : 0},
+      {name: 'OE-Class', percentage: 0, complete: 0, totalJob : 0, value : 0},
+      {name: 'OE-Other', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'OE-Additional Job', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'OE-Cancelled', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'Amortization Job', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'Depreciation Job', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'YE-Cost', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'YE-Cancelled', percentage: 0, complete:  0, totalJob : 0, value : 0},
+    ];
+  }
 
   ngOnInit(): void {
-    console.log(this.data)
-    this.data?.work_area === null ||
-    this.data?.work_area === undefined ||
-    this.data?.work_area[0] === null ? null :
-    this.reGroupData(this.data.work_area)
+    this.initData();
+    const {variant_work, project} = this.data
+    const regroupData = [...project.work_area, ...variant_work]
+    this.baseCurrency = this.FNCOL.convertCurrency(project.mata_uang)
+    regroupData === null || regroupData === undefined ? 
+    null : this.reGroupData(regroupData)
   }
 
   reGroupData(work_area){
-    work_area.map(job => {
-      console.log(job)
-      const id = job?.rank?.id
-      const status = job?.status?.name
+    console.log(work_area)
+    work_area.map((job, index) => {
+      const rankId = job?.rank?.id
+      const status = job?.status?.id
       const endDate = this.datePipe.transform(job.end, 'yyyy-MM-dd')
       const currDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
-      if(endDate < currDate){
-        this.progressData[id].delay++
-      } 
-      if(status == 'In Progress'){
-        this.progressData[id].progress++
-        this.progressData[this.progressData.length - 1].progress++
-      } else if(status == 'Done'){
-        this.progressData[id].done++
-        this.progressData[this.progressData.length - 1].done++
-      } else if(status == 'Canceled'){
-        this.progressData[id].cancel++
-        this.progressData[this.progressData.length - 1].cancel++
+
+      if(endDate < currDate) this.progressData[rankId].delay++ ;
+      const position = this.progressData.length - 1
+      const allAmount = (index) => this.progressData[index].all++;
+      if(status == 1){
+        this.progressData[rankId].progress++;
+        this.progressData[position].progress++;
+        allAmount(position);
+        allAmount(rankId);
+      } else if(status == 2){
+        this.progressData[rankId].done++;
+        this.progressData[position].done++;
+        allAmount(position);
+        allAmount(rankId);
+      } else if(status == 3){
+        this.progressData[rankId].cancel++;
+        this.progressData[position].cancel++;
+        allAmount(position);
+        allAmount(rankId);
       } else {
-        this.progressData[id].notStart++
-        this.progressData[this.progressData.length - 1].notStart++
+        this.progressData[rankId].notStart++;
+        this.progressData[position].notStart++;
+        allAmount(position);
+        allAmount(rankId);
       }
 
-      job?.items === null ||
-      job?.items === undefined ||
-      job?.items.length === 0 ? null :
-      job?.items.map(item => this.reGroupData([item]))
-
-      const category = job.category.name
-      if(category == 'Owner Exp-Supplies'){
-        this.completionData[id].progress = job.progress
-      } else if(category == 'Services'){
-        this.completionData[id].progress = job.progress
-      } else if(category == 'Class'){
-        this.completionData[id].progress = job.progress
-      } else if( category == "Others"){
-        this.completionData[id].progress = job.progress
-      } else if ("Owner Canceled Job") {
-        this.completionData[id].progress = job.progress
-      } else if("Yard cost") {
-        this.completionData[id].progress = job.progress
-      } else if("Yard cancelled jobs"){
-        this.completionData[id].progress = job.progress
-      }
+      const category = job.category.id
+      this.FNCOL.category.map((item, index) => {
+        if(category === index) {
+          this.completionData[index].percentage += job?.progress;
+          this.completionData[index].totalJob++;
+          const {'Price Actual' : priceActual , 'Price Contract' : priceContract}  = job
+          if(status === 2) this.completionData[index].complete++;
+          if(!priceActual) return
+          this.completionData[index].value += priceActual + priceContract;
+        }
+      })
 
     })
   }

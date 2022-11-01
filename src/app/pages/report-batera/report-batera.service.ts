@@ -59,4 +59,9 @@ export class ReportBateraService {
             {headers : headers}
         )
     }
+
+    addWorkProgress(body){
+        const url = this.apiUrl + '/report/progress'
+        return this.httpClient.post(url, body)
+    }
 }

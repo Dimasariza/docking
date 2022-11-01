@@ -20,35 +20,35 @@
             </ng-container>
 
             <ng-container matColumnDef="c_1">
-                <th mat-header-cell *matHeaderCellDef> Not Started </th>
-                <td mat-cell *matCellDef="let element ;let i = index"> {{element?.notStart}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Not Started </th>
+                <td mat-cell *matCellDef="let element ;let i = index" class="text-center"> {{element?.notStart}} </td>
             </ng-container>
 
             <ng-container matColumnDef="c_2">
-                <th mat-header-cell *matHeaderCellDef> In Progress </th>
-                <td mat-cell *matCellDef="let element">{{element.progress}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> In Progress </th>
+                <td mat-cell *matCellDef="let element" class="text-center">{{element.progress}} </td>
             </ng-container>
 
             <ng-container matColumnDef="c_3">
-                <th mat-header-cell *matHeaderCellDef> Done </th>
-                <td mat-cell *matCellDef="let element"> {{element.done}}  </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Done </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.done}}  </td>
             </ng-container>
 
             <ng-container matColumnDef="c_4">
-                <th mat-header-cell *matHeaderCellDef> Canceled </th>
-                <td mat-cell *matCellDef="let element"> {{element.cancel}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Canceled </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.cancel}} </td>
             </ng-container>
 
             
             <ng-container matColumnDef="c_5">
-                <th mat-header-cell *matHeaderCellDef> Delay </th>
-                <td mat-cell *matCellDef="let element"> {{element.delay}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Delay </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.delay}} </td>
             </ng-container>
 
             
             <ng-container matColumnDef="c_6">
-                <th mat-header-cell *matHeaderCellDef> All </th>
-                <td mat-cell *matCellDef="let element"> {{element.all}} </td>
+                <th mat-header-cell *matHeaderCellDef class="text-center"> All </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.all}} </td>
             </ng-container>
 
         </table>
@@ -65,43 +65,26 @@
             </ng-container>
           
             <ng-container matColumnDef="c_1">
-              <th mat-header-cell *matHeaderCellDef> Percentage </th>
-              <td mat-cell *matCellDef="let element"> {{element?.percentage}} </td>
+              <th mat-header-cell *matHeaderCellDef  class="text-center"> Percentage </th>
+              <td mat-cell *matCellDef="let element" class="text-center"> {{element?.percentage || '0'}} </td>
             </ng-container>
-
                       
             <ng-container matColumnDef="c_2">
-                <th mat-header-cell *matHeaderCellDef> Current Job Completion </th>
-                <td mat-cell *matCellDef="let element"> {{element.complete}} </td>
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Current Job Completion </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.complete || '0'}} </td>
             </ng-container>
 
                       
             <ng-container matColumnDef="c_3">
-                <th mat-header-cell *matHeaderCellDef> Total Job </th>
-                <td mat-cell *matCellDef="let element"> {{element.progress}} </td>
-              </ng-container>
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Total Job </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.totalJob || '0'}} </td>
+            </ng-container>
 
-                        
             <ng-container matColumnDef="c_4">
-                <th mat-header-cell *matHeaderCellDef> Total Value Completion </th>
-                <td mat-cell *matCellDef="let element"> Rp {{element.total}} </td>
-              </ng-container>
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Total Value Completion </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{baseCurrency}} {{element.value || '0'}} </td>
+            </ng-container>
 
           </table>
     </nb-card-body>
 </nb-card>
-
-
-<!-- <ngx-datatable 
-[class]="'bootstrap'" 
-[rows]="projectStatus" 
-[count]="projectStatus.length"   
-[scrollbarH]="true"
-[columnMode]="'force'"
-default >
-    <ngx-datatable-column [name]="'No'">
-        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-            {{rowIndex+1}}
-        </ng-template>
-    </ngx-datatable-column>
-</ngx-datatable> -->

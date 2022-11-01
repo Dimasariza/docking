@@ -41,7 +41,7 @@ export class TableDataComponent implements OnChanges, OnInit {
   ngOnChanges(changes: SimpleChanges): void {
     const start = 2
     if(!this.tableData?.work_area) return
-    this.progressData[0].budget = this.tableData?.off_hire_period + ' Days'
+    this.progressData[0].budget = this.tableData?.off_hire_period + this.tableData?.off_hire_deviasi + ' Days'
     this.tableData?.work_area.forEach(work => {
         const {'Price Budget' : budget ,'Price Actual' : actual, 'Price Contract' : contract, category} = work
         this.progressData[category.id + start].budget += parseInt(budget) 
