@@ -40,13 +40,13 @@ export class TableDataComponent implements OnChanges, OnInit {
 
   ngOnChanges(changes: SimpleChanges): void {
     const start = 2
-    if(!this.tableData?.work_area) return
+    if(!this.tableData?.work_area || this.tableData.work_area[0] === null) return
     this.progressData[0].budget = this.tableData?.off_hire_period + this.tableData?.off_hire_deviasi + ' Days'
     this.tableData?.work_area.forEach(work => {
-        const {'Price Budget' : budget ,'Price Actual' : actual, 'Price Contract' : contract, category} = work
-        this.progressData[category.id + start].budget += parseInt(budget) 
-        this.progressData[category.id + start].contract += parseInt(contract)
-        this.progressData[category.id + start].actual += parseInt(actual)
+        const {'Price Budget' : budget ,'Price Actual' : actual, 'Price Contract' : contract, category, volume} = work
+        this.progressData[category + start].budget += parseInt(budget) * volume
+        this.progressData[category + start].contract += parseInt(contract) * volume
+        this.progressData[category + start].actual += parseInt(actual) * volume
       });
       
       for(let i = start ; i <= 5 ; i++) {
