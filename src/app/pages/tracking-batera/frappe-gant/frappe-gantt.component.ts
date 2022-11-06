@@ -31,7 +31,6 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
 
     gantt: any;// gantt object
     ngOnInit() {
-        console.log(this.tasks)   
         this.gantt = new Gantt('#gantt', this.tasks, {});     
     }
 

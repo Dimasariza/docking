@@ -20,13 +20,14 @@ export class TrackingBateraComponent implements OnInit {
 
   @ViewChild(FrappeGanttComponent)  gantChart : FrappeGanttComponent
   public trackingData : any 
-  chartTask : Task[] = []
+  chartTask : any [] = []
 
-  tasks: Task[] = [] 
+  tasks: any [] = []
+  // =
   // [
   //   {
   //       id: 'Task 1',
-  //       name: 'Redesign website',
+  //       name: 'Redesign website 1',
   //       start: '2016-1-11',
   //       end: '2016-1-21',
   //       price: 500,
@@ -95,33 +96,34 @@ export class TrackingBateraComponent implements OnInit {
     .find(({proyek}) => proyek.id_proyek === id_proyek)
     const task = [
       ...chartTask.proyek.work_area,
-      ...chartTask.variant_work
+      // ...chartTask.variant_work
     ]
     let jobContainer = new Array
     const regroupData = (task) => {
       task.map(work => {
-        console.log(work)
-        const {jobName, jobNumber, start, end, 'Price Budget' : priceBudget, progress, items} = work
+        const {jobName, start, end, 'Price Budget' : priceBudget = 0, progress, 'Price Contract' : priceContract = 0, items, id} = work
+        const parentIndex = id.toString().split('').map(number => parseInt(number))
+        parentIndex.pop()
+        const dependenciesId =
+        parentIndex.length ? parentIndex.join('') : null
         const jobItem = {
-          id: this.tasks.length,
-          name: jobNumber,
+          id : id.toString(),
+          name: jobName,
           price: 100,
           start, end,
           progress_log: [
               {progress : 10, date: '2016-1-15'},
               {progress : 20, date: '2016-1-21'},
           ],
-          dependencies: items?.length ? [this.tasks.length - 1] : null,
+          dependencies:  [dependenciesId]
         }
-        this.tasks.push(jobItem)
         jobContainer.push(jobItem)
-        items ? regroupData(items) : null
+        if(this.tasks.length < jobContainer.length) this.tasks.push(jobItem);
+        items?.length ? regroupData(items) : null
       })
+      return jobContainer
     }
-    regroupData(task)
-
-    console.log(jobContainer)
-    this.tasks = jobContainer
+    this.tasks = regroupData(task)
     this.gantChart.ngOnInit()
   }
 

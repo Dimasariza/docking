@@ -57,7 +57,7 @@
                 <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
                 {{button.desc}}
             </button>
-            <button nbButton status="primary" size="small" (click)="curve.checked=!curve.checked" class="mx-1" outline>
+            <button nbButton status="primary" size="small" (click)="curve.checked=!curve.checked" class="mx-1" outline [disabled]="!tasks.length">
                 <input #curve type="checkbox" style="visibility: hidden;" class="position-absolute">
                 <nb-icon icon="activity-outline" pack="eva"></nb-icon>
                 S Curve

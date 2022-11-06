@@ -19,6 +19,7 @@ const VIEW_MODE = {
 
 export default class Gantt {
     constructor(wrapper, tasks, options) {
+        if(!tasks.length) return
         this.setup_wrapper(wrapper);
         this.setup_options(options);
         this.setup_tasks(tasks);
@@ -76,12 +77,12 @@ export default class Gantt {
 
     setup_options(options) {
         const default_options = {
-            header_height: 50,
+            header_height: 50.5,
             column_width: 30,
             showSCurve: false,
             step: 24,
             view_modes: [...Object.values(VIEW_MODE)],
-            bar_height: 20,
+            bar_height: 19.565,
             bar_corner_radius: 3,
             arrow_curve: 5,
             padding: 18,
@@ -95,9 +96,9 @@ export default class Gantt {
     }
 
     setup_tasks(tasks) {
+        if(!tasks.length) return
         //weight
         this.total_price = tasks.map(task => task.price ?? 0).reduce((p, c) => p+c)
-        console.log(this.total_price);
         // prepare tasks
         this.tasks = tasks.map((task, i) => {
             // convert to Date objects
@@ -395,7 +396,7 @@ export default class Gantt {
 
     make_grid_header() {
         const header_width = this.dates.length * this.options.column_width;
-        const header_height = this.options.header_height + 10;
+        const header_height = this.options.header_height + 9;
         createSVG('rect', {
             x: 0,
             y: 0,
