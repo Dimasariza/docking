@@ -1,13 +1,17 @@
-import { DatePipe } from "@angular/common";
-import { Injectable, NgModule } from "@angular/core";
+import { CurrencyPipe, DatePipe } from "@angular/common";
+import { Component, Injectable } from "@angular/core";
 
 @Injectable({
     providedIn: 'root'
 })
+@Component({
+  selector: 'ngx-function-batera',
+  template : `<div> Function </div>`
+})
 export class FunctionCollection {
     constructor (public datePipe : DatePipe,
+                public currency : CurrencyPipe
       ){}
-
     category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Depreciation Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]
     jobUnit = ["Lumpsum"]
@@ -46,38 +50,56 @@ export class FunctionCollection {
         })
         .filter(f => f != null)
     }
-    
-    updateWorkAreaData = (data, parentIndex, newData) => {
+
+    addSubJobData = (data, newData, parentIndex) => {
+      parentIndex= parentIndex?.toString().split('')
+      return data.map((w, i) => {
+        if (parentIndex.length > 1 && i == parentIndex[0]) {
+          parentIndex = parentIndex.slice(1)
+          return {...w, items: this.addSubJobData(w.items, newData, parentIndex)}
+        } else if(i == parentIndex[0]) {
+          if (!w.items) w.items = []          
+          return {...w, items: [...w.items, {...newData}]}
+        }
+        return w
+      })
+    }
+
+    updateWorkAreaData =  (data, parentIndex, newData) => {
+        parentIndex = parentIndex?.toString().split('')
         return data.map((w, i) => {
         if (parentIndex.length > 1 && i == parentIndex[0]) {
             parentIndex = parentIndex.slice(1)
             return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
         } else if(i == parentIndex[0]) {
             let item
-            w?.items ? item = w.items : item = null
+            w?.items ? item = w.items : item = []
             return {...w, ...newData, items : item}
         }
         return w
         })
     }
     
-    populateData = (work, workItem, expand) => {  
-        const {unit, category, start, end, responsible, status, last_update, rank}= work  
+    populateData = (work, workItem, expand) => { 
+        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, 'Price Budget' : budgetPrice }= work  
+        const parentId = id.toString().split('')
+        let useUnit = parentId.length == 1 ? this.jobUnit : this.subJobUnit
         return {
           data: {
             ...work,
-            ...workItem,
             start : new Date(start),
             end : new Date(end),
             Start : this.datePipe.transform(start, 'dd-MM-yyyy'),
             Stop : this.datePipe.transform(end, 'dd-MM-yyyy'),
-            Unit : unit?.name,
-            Category : category?.name,
+            Unit : useUnit[unit],
+            Category : this.category[category],
             Responsible : responsible?.name,
-            Status : status?.name,
+            Status : this.status[status],
             kind : work.items?.length ? 'dir' : 'doc',  
-            Rank : rank?.name,
-            update : this.datePipe.transform(last_update, 'dd-MM-yyyy'),
+            Update : this.datePipe.transform(lastUpdate, 'dd-MM-yyyy'),
+            Volume : volume,
+            [workItem[1]] : this.currency.transform(budgetPrice, this.convertCurrency(workItem[0])),
+            [workItem[2]] : this.currency.transform(budgetPrice * volume, this.convertCurrency(workItem[0])),
           },
           children: 
           work === null || work === undefined ? null :
@@ -89,16 +111,16 @@ export class FunctionCollection {
     rankColor(rank){
         let rankStatus 
         switch (rank){
-          case "Critical" :
+          case 0 :
             rankStatus = "maroon"
           break
-          case "High" :
+          case 1 :
             rankStatus = "red"
           break
-          case "Medium" :
+          case 2 :
             rankStatus = "yellow"
           break
-          case "Low":
+          case 3:
             rankStatus = "green"
           break
           default :
@@ -145,3 +167,4 @@ export class FunctionCollection {
       else return b;
     }
 }
+
