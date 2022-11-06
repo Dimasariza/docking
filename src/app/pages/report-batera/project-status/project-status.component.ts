@@ -41,23 +41,27 @@ export class ProjectStatusComponent implements OnInit {
       {name: 'Depreciation Job', percentage: 0, complete:  0, totalJob : 0, value : 0},
       {name: 'YE-Cost', percentage: 0, complete:  0, totalJob : 0, value : 0},
       {name: 'YE-Cancelled', percentage: 0, complete:  0, totalJob : 0, value : 0},
+      {name: 'Grand Total', percentage: 0, complete:  0, totalJob : 0, value : 0},
     ];
   }
 
+  isFalsy = (value) => !value
+
   ngOnInit(): void {
     this.initData();
-    const {variant_work, project} = this.data
+    let {variant_work, project} = this.data
+    let {work_area, mata_uang} = project
+    if(this.isFalsy(work_area) || this.isFalsy(work_area[0])) work_area = []
+    if(this.isFalsy(variant_work) || this.isFalsy(variant_work[0])) variant_work = []
     const regroupData = [...project.work_area, ...variant_work]
-    this.baseCurrency = this.FNCOL.convertCurrency(project.mata_uang)
-    regroupData === null || regroupData === undefined ? 
-    null : this.reGroupData(regroupData)
+    this.baseCurrency = this.FNCOL.convertCurrency(mata_uang)
+    if(!this.isFalsy(regroupData)) this.reGroupData(regroupData)
   }
 
   reGroupData(work_area){
-    console.log(work_area)
-    work_area.map((job, index) => {
-      const rankId = job?.rank?.id
-      const status = job?.status?.id
+    work_area.forEach(job => {
+      const rankId = job?.rank
+      const status = job?.status
       const endDate = this.datePipe.transform(job.end, 'yyyy-MM-dd')
       const currDate = this.datePipe.transform(new Date(), 'yyyy-MM-dd')
 
@@ -86,19 +90,27 @@ export class ProjectStatusComponent implements OnInit {
         allAmount(rankId);
       }
 
-      const category = job.category.id
-      this.FNCOL.category.map((item, index) => {
-        if(category === index) {
-          this.completionData[index].percentage += job?.progress;
+      const category = job.category
+      for(let [index] of this.FNCOL.category.entries()) {
+        if(index === category) {
           this.completionData[index].totalJob++;
-          const {'Price Actual' : priceActual , 'Price Contract' : priceContract}  = job
+          this.completionData[index].percentage += job?.progress;
+          this.completionData[index].percentage /= this.completionData[index].totalJob
+          const {'Price Budget' : priceBudget = 0 , 'Price Contract' : priceContract = 0, 'Price Add On' : priceAddOn = 0}  = job;
           if(status === 2) this.completionData[index].complete++;
-          if(!priceActual) return
-          this.completionData[index].value += priceActual + priceContract;
+          if(!priceBudget) continue;
+          this.completionData[index].value += parseInt(priceBudget) + parseInt(priceContract) + parseInt(priceAddOn);
         }
-      })
-
+      }
     })
+
+    const completion = this.completionData.length - 1
+    for(let i = 0 ; i < completion ; i++) {
+      this.completionData[completion].percentage += this.completionData[i].percentage / completion
+      this.completionData[completion].complete += this.completionData[i].complete
+      this.completionData[completion].totalJob += this.completionData[i].totalJob
+      this.completionData[completion].value += this.completionData[i].value
+    }
   }
 
   close(){ this.dialogRef.close();}
