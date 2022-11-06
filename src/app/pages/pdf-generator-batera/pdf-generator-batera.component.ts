@@ -170,8 +170,14 @@ export class PdfGeneratorBateraComponent implements OnInit {
   jobCollection : any = []
   variantCollection : any = []
   regroupJobData(data, jobDetails){
+    if(data === null) return
     const jobDatas =  data.map(job => {
-      const {jobNumber, jobName, rank, unit, category, progress, remarks, items} = job
+      const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id} = job
+      const parentId = id.toString().split('')
+      let useUnit =
+      parentId.length === 1 
+      ? this.FNCOL.jobUnit
+      : this.FNCOL.subJobUnit
       const contentData = {
         layout: {
           hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 0 : 1,
@@ -188,9 +194,9 @@ export class PdfGeneratorBateraComponent implements OnInit {
             [
               { text : jobNumber, fontSize : 9,}, 
               { text : jobName, fontSize : 9,}, 
-              { text : rank.name, fontSize : 9,}, 
-              { text : unit.name, fontSize : 9,},   
-              { text : category.name, fontSize : 9,}, 
+              { text : this.FNCOL.rank[rank], fontSize : 9,}, 
+              { text : useUnit[unit] , fontSize : 9,},   
+              { text : this.FNCOL.category[category] , fontSize : 9,}, 
               { text : progress, fontSize : 9,}, 
             ],
             [ 
@@ -226,6 +232,8 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const projectSummary = await this.getProjectSummay(projectDetail, workProject, yardDatas)
     const priceSummary = this.getPriceSummary(projectDetail, workProject, yardDatas)
     const costDetails = this.getCostDetails(projectDetail, workProject, yardDatas)
+    const cardProject = this.cardProjectSummary(projectDetail, workProject, yardDatas)
+
     this.regroupJobData(work_area, 'work_area')
     this.regroupJobData(variant_work, 'variant_work')
     const footer = (currentPage, pageCount, pageSize) => {
@@ -233,96 +241,14 @@ export class PdfGeneratorBateraComponent implements OnInit {
     }
     const content = [
       projectHead,
-      {
-        layout: {
-          hLineWidth: (i, node) => {
-            if(i === 0) return 1; 
-            if(i === node.table.body.length) return 3
-          return 0},
-          vLineWidth: () => 1,
-          vLineColor: () => '#aaa',
-          hLineColor: (i, node) => {
-            if(i === 0) return '#aaa'; 
-            if(i === node.table.body.length) return '#047886'
-          return 'fff'},
-          paddingLeft: (i) => 5,
-          paddingRight: (i, node) => 5,
-        },
-        table: {
-          widths: [ '*', '*' ],  
-          body: [
-            [
-              {
-                columns : [
-                  { width: '*', text: 'IDR', fontSize: 12, color : '#047886'},
-                  { width: '*', text: 'Estimate At Completion', fontSize: 10, style : {alignment : 'right'}},
-                ]
-              },
-              {
-                columns : [
-                  { width: '*', text: 'ETD', fontSize: 12, color : '#047886'},
-                  { width: '*', text: 'Planned', style : {alignment : 'right', fontSize: 10}},
-                ]
-              },
-            ],
-            [
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-            ],
-            [
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-            ],
-            [
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-              {
-                columns : [
-                  { width: '*', text: 'Left Side', fontSize: 8, bold : true},
-                  { width: 'auto', text: '|', fontSize: 8},
-                  { width: '*', text: 'Right Side', fontSize: 8},
-                ]
-              },
-            ],
-          ]
-        }
-      },
+      cardProject,
       {text : "Summary" ,fontSize : 12, bold : true, color: '#047886', margin : [0, 10, 0, 0]},
       summaryHead,
       ...projectSummary,
       ...priceSummary,
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Cost Details" ,fontSize : 12, bold : true, color: '#047886'},
-      ...priceSummary,
+      ...costDetails,
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
       this.dataHeading(),
@@ -345,6 +271,111 @@ export class PdfGeneratorBateraComponent implements OnInit {
       }
     ]
     pdfMake.createPdf({footer, content}).open();  
+  }
+
+  cardProjectSummary(projectDetail, workProject, yardDatas) {
+    return {
+      layout: {
+        hLineWidth: (i, node) => {
+          if(i === 0) return 1; 
+          if(i === node.table.body.length) return 3
+        return 0},
+        vLineWidth: () => 1,
+        vLineColor: () => '#aaa',
+        hLineColor: (i, node) => {
+          if(i === 0) return '#aaa'; 
+          if(i === node.table.body.length) return '#047886'
+        return 'fff'},
+        paddingLeft: (i) => 5,
+        paddingRight: (i, node) => 5,
+      },
+      table: {
+        widths: [ '*', '*' ],  
+        body: [
+          [
+            {
+              columns : [
+                { width: '*', text: 'IDR', fontSize: 12, color : '#047886'},
+                { width: '*', text: 'Estimate At Completion', fontSize: 10, style : {alignment : 'right'}},
+              ]
+            },
+            {
+              columns : [
+                { width: '*', text: 'ETD', fontSize: 12, color : '#047886'},
+                { width: '*', text: 'Planned', style : {alignment : 'right', fontSize: 10}},
+              ]
+            },
+          ],
+          [
+            {
+              columns : [
+                { width: '*', text: '3,596,085,724', fontSize: 10, bold : true, color : '#047886', alignment : 'center'},
+                { width: 'auto', text: '|', fontSize: 10, alignment : 'center'},
+                {
+                  columns : [
+                    { width: 'auto', text: '-3.36% ', fontSize: 10, color : 'green', margin : [4, 0]},
+                    { width: 'auto', text: '(125.158.000)', fontSize: 6, color : 'gray', margin : [0, 3]},
+                  ]
+                }
+              ]
+            },
+            {
+              columns : [
+                { width: '*', text: '4,596,085,724', fontSize: 10, bold : true, color : '#047886', alignment : 'center'},
+                { width: 'auto', text: '|', fontSize: 10, alignment : 'center'},
+                { width: '*', text: '-4.36%', fontSize: 10, color : 'green', alignment : 'center'},
+              ]
+            },
+          ],
+          [
+            {
+              columns : [
+                { width: '*', text: 'Owner', fontSize: 8, bold : true},
+                { width: 'auto', text: ':', fontSize: 8, bold : true, margin : [4, 0]},
+                { width: '*', text: '796,464,600', fontSize: 8, bold : true},
+                { width: 'auto', text: '|', fontSize: 8},
+                {
+                  columns : [
+                    { width: 'auto', text: '0% ', fontSize: 8, color : 'green', margin : [2, 0]},
+                    { width: 'auto', text: '(0)', fontSize: 6, color : 'gray', margin : [0, 2]},
+                  ]
+                }
+              ]
+            },
+            {
+              columns : [
+                { width: '*', text: 'Planned', fontSize: 8, bold : true},
+                { width: 'auto', text: ':', fontSize: 8, margin : [4, 0]},
+                { width: '*', text: '30.08.2022', fontSize: 8},
+              ]
+            },
+          ],
+          [
+            {
+              columns : [
+                { width: '*', text: 'Yard', fontSize: 8, bold : true},
+                { width: 'auto', text: ':', fontSize: 8, bold : true, margin : [4, 0]},
+                { width: '*', text: '2,799,464,600', fontSize: 8, bold : true},
+                { width: 'auto', text: '|', fontSize: 8},
+                {
+                  columns : [
+                    { width: 'auto', text: '-4.280% ', fontSize: 8, color : 'green', margin : [2, 0]},
+                    { width: 'auto', text: '(125.198.000)', fontSize: 6, color : 'gray', margin : [0, 2]},
+                  ]
+                }
+              ]
+            },
+            {
+              columns : [
+                { width: '*', text: 'Delayed Critical Jobs', fontSize: 8, bold : true},
+                { width: 'auto', text: ':', fontSize: 8, margin : [4, 0]},
+                { width: '*', text: '0', fontSize: 8},
+              ]
+            },
+          ],
+        ]
+      }
+    }
   }
 
   getSummmaryHead(projectDetail, workProject, yardDatas){
@@ -556,9 +587,55 @@ export class PdfGeneratorBateraComponent implements OnInit {
       }]
   }
 
-
   getCostDetails(projectDetail, workProject, yardDatas) {
-    console.log("get cost detials")
+    return [
+      {
+        layout: 'lightHorizontalLines',
+        margin : [0 , 3],
+        table: {
+          headerRows: 1,
+          widths: [ '*', '*', '*', '*', '*', '*', 'auto' ],  
+          body: [
+            [ 
+              { text :'Yard Cost', fontSize : 10, bold : true}, 
+              { text :'Budget', fontSize : 10, bold : true}, 
+              { text :'Contract', fontSize : 10, bold : true}, 
+              { text :'Actual', fontSize : 10, bold : true},
+              { text :'Added', fontSize : 10, bold : true},
+              { text :'Cancelled', fontSize : 10, bold : true},
+              { text :'Progress Accumulated', fontSize : 10, bold : true},
+            ],
+            [ 
+              { text :'General Service', fontSize : 10, bold : true}, 
+              { text :'0', fontSize : 10}, 
+              { text :'331,276,612', fontSize : 10}, 
+              { text :'331,276,612', fontSize : 10},
+              { text :'331,276,612', fontSize : 10},
+              { text :'331,276,612', fontSize : 10},
+              { text :'24%', fontSize : 10},
+            ],
+            [ 
+              { text :'Sum', fontSize : 10, bold : true}, 
+              { text :'0', fontSize : 10}, 
+              { text :'331,276,612', fontSize : 10}, 
+              { text :'331,276,612', fontSize : 10},
+              { text :'331,276,612', fontSize : 10},
+              { text :'331,276,612', fontSize : 10},
+              { text :'24%', fontSize : 10},
+            ],
+          ]
+        }
+      },
+      {text : "EXPECTED", fontSize: 10, bold : true},
+      {
+        columns : [
+          { width: 'auto', text: 'TOTAL YARD', fontSize: 8},
+          { width: 'auto', text: '2,796,222', fontSize: 8, margin : [4, 0]},
+        ]
+      },
+      {text : "RISKS", fontSize: 10, bold : true},
+      {text : "No Risks registered", fontSize: 8},
+    ]
   }
 
   /*
