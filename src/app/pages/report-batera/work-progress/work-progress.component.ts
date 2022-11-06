@@ -19,6 +19,14 @@ interface FSEntry {}
 
 const useButtons = [
   {
+    icon: 'person-add-outline',
+    desc: 'Add Suplier'
+  },
+  {
+    icon: 'person-done-outline',
+    desc: 'Update Suplier'
+  },
+  {
   icon: 'refresh',
   desc: 'Refresh'
   }, 
@@ -34,10 +42,7 @@ const useButtons = [
     icon: 'paper-plane-outline',
     desc: 'Send Notification'
   }, 
-  {
-    icon: 'person-add-outline',
-    desc: 'Add Suplier'
-  }]
+]
 
 @Component({
   providers : [SubMenuProjectComponent],
@@ -58,8 +63,8 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     ) {
   }
 
-  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Last Update', 'volume', 'Unit', 'Unit Price Budget', 'Total Price Budget' ];
-  allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'edit' ];
+  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Update', 'Volume', 'Unit', 'Unit Price Budget', 'Total Price Budget' ];
+  allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'suplier', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
@@ -74,6 +79,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   @Input() workProgressData : any = ""
+  @Input() suplierData : any [] = ['Data Not Available']
   useButtons = useButtons
   projectId : any
   subscription : Subscription [] = []
@@ -106,6 +112,9 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       case 'Add Suplier' :
         this.addJobSuplier()
         break;
+      case 'Update Suplier' :
+        this.addJobSuplier()
+        break;
       case 'Export to Excel':
         this.excelService.reconstructJobsToExcel(this.workProgressData.work_area)
         this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
@@ -113,26 +122,22 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       case 'Send Notification' :
         break
       case 'Expand' :
-        useButtons[2].desc = 'Unexpand'
-        useButtons[2].icon = 'arrow-ios-forward-outline'
+        useButtons[4].desc = 'Unexpand'
+        useButtons[4].icon = 'arrow-ios-forward-outline'
         this.regroupTableData(true)
         break;
       case 'Unexpand' :
-        useButtons[2].desc = 'Expand'
-        useButtons[2].icon = 'arrow-ios-downward-outline'
+        useButtons[4].desc = 'Expand'
+        useButtons[4].icon = 'arrow-ios-downward-outline'
         this.regroupTableData(false)
         break;
     }
   }
 
   regroupTableData(expand){
-    this.dataSource = this.dataSourceBuilder.create(this.workProgressData.work_area.map(work => {
-      const currency = this.workProgressData.mata_uang
-      const {'Price Budget' : unitPrice, volume} = work  
-      const workItem = {
-        'Unit Price Budget' : this.currency.transform(unitPrice, this.FNCOL.convertCurrency(currency)),
-        'Total Price Budget' : this.currency.transform(unitPrice * volume, this.FNCOL.convertCurrency(currency))
-      }
+    const {work_area, mata_uang } = this.workProgressData
+    this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
+      const workItem = [mata_uang, 'Unit Price Budget', 'Total Price Budget']
       return this.FNCOL.populateData(work, workItem, expand)
     }) as TreeNode<FSEntry>[])
   }
@@ -149,16 +154,22 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
 
   approvedData(newData, approve) {
     newData.map(work => {
-      const postData = { ...work, ...approve}
-      const parentIndex = work.id.toString().split('')
-      this.workProgressData.work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentIndex, postData)
-      work?.items ? this.approvedData(work.items, approve) : 
-      this.updateWorkApproval(this.workProgressData.work_area)
+      this.workProgressData.work_area 
+      = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, work.id, {...work, ...approve})
+      work?.items.length
+      ? this.approvedData(work.items, approve) 
+      : this.updateWorkApproval(this.workProgressData.work_area)
     })
+  }
+
+  chooseSuplier(parentId ,value){
+    const work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentId, {suplierId : value.id_supplier})
+    // suplier job ??
   }
 
   @Output() reloadPage = new EventEmitter<string>();
   updateWorkApproval(work_area){
+    console.log(work_area)
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
     .subscribe(() =>{
@@ -179,7 +190,6 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       autoFocus : true,
       data : row,
     })
-    this.destroyDialog(dialogRef)
   }
 
   updateWorkProgress(row){

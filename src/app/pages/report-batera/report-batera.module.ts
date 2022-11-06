@@ -29,6 +29,12 @@ import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
 import { JobSuplierComponent } from './job-suplier/job-suplier.component';
 
+import {MatDatepickerModule, MatDateRangeInput, MatRangeDateSelectionModel} from '@angular/material/datepicker';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatNativeDateModule } from '@angular/material/core';
+
 
 @NgModule({
   declarations: [

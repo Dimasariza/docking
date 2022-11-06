@@ -31,10 +31,10 @@
             <ngx-pic></ngx-pic>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress (reloadPage)="ngOnInit()" [workProgressData]="subProjectData"></ngx-work-progress>
+            <ngx-work-progress (reloadPage)="ngOnInit()" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work (reloadPage)="ngOnInit()" [variantWorkData]="projectData" ></ngx-variant-work>
+            <ngx-variant-work (reloadPage)="ngOnInit()" [variantWorkData]="projectData" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
             <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
@@ -47,9 +47,5 @@
         </nb-tab>
       </nb-tabset>
 </nb-card>
-
-
-
-
 
 

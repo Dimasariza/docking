@@ -15,10 +15,10 @@
             <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.yardApproval" (click)="approvedByYard([row.data])" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                    <button class="btn btn-sm mx-2 bg-transparent" [disabled]="row.data?.yardApproval" (click)="approvedByYard([row.data])" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
                         <nb-icon [ngStyle]="{'color': row.data?.yardApproval ? 'green' : 'grey'}" [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
                     </button>
-                    <button class="btn btn-light btn-sm mx-2" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner([row.data])" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
+                    <button class="btn btn-sm mx-2 bg-transparent" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner([row.data])" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
                         <nb-icon [ngStyle]="{'color': row.data?.ownerApproval ? 'green' : 'grey'}" [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
                     </button>
                 </td>
@@ -43,16 +43,14 @@
                 </td>
             </ng-container>
             
-
-            <!-- <ng-container [nbTreeGridColumnDef]="'Comment'">
-                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Comment</th>
+            <ng-container [nbTreeGridColumnDef]="'suplier'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <button class="btn btn-light btn-sm">
-                        <nb-icon icon="file-text-outline"></nb-icon>
-                    </button>
+                    <nb-select placeholder="Suplier" size="small" fullWidth class="w-100" >
+                        <nb-option *ngFor="let value of suplierData; let id=index;" [value]="value">{{value?.nama_supplier}}</nb-option>
+                    </nb-select>
                 </td>
-            </ng-container> -->
-
+            </ng-container>
                         
             <ng-container [nbTreeGridColumnDef]="'edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>

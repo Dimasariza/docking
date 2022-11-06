@@ -9,8 +9,6 @@ import { ProjectDataComponent } from '../project-data/project-data.component';
 import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
-import { take } from 'rxjs/operators';
-import { TrackingBateraService } from '../../tracking-batera/tracking-batera.service';
 import { TableDataComponent } from './table-data/table-data.component';
 
 interface TreeNode<T> {}
@@ -89,14 +87,9 @@ export class SubMenuProjectComponent implements OnInit {
   }
 
   regroupData(expand){
-    const {work_area, kapal, tahun, mata_uang} = this.projectData
+    const {work_area, mata_uang} = this.projectData
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
-      const {volume, 'Price Budget' : budgetPrice} = work 
-      const currency = mata_uang
-      const workItem = {
-        'Unit Price Budget' : this.currency.transform(budgetPrice, this.FNCOL.convertCurrency(currency)),
-        'Total Price Budget' : this.currency.transform(budgetPrice * volume, this.FNCOL.convertCurrency(currency)),
-      }
+      const workItem = [mata_uang, 'Unit Price Budget', 'Total Price Budget']
       return this.FNCOL.populateData(work, workItem, expand) 
     }) as TreeNode<FSEntry>[])
   }
@@ -192,16 +185,10 @@ export class SubMenuProjectComponent implements OnInit {
 
   buttonAction(e, data){
     let reloadPage ;
-    const reload = () => {
-      return reloadPage.componentInstance.onSuccess.asObservable().subscribe(() => {
-        this.ngOnInit()
-      })
-    }
+
     switch(e) {
       case 'Add Job':
-        reloadPage = this.addWorkAreaDial();
-        reload();
-        this.tableData.ngOnInit();
+        this.addWorkAreaDial();
       break;
       case 'Expand All' :
         menuButton[2].text = "Unexpand";
@@ -216,27 +203,18 @@ export class SubMenuProjectComponent implements OnInit {
       break;
       case 'update project' :
         reloadPage = this.updateProjectDial();
-        reload();
-        this.tableData.ngOnInit();
       break;
       case 'add sub job' :
         reloadPage = this.addSubJobDial(data);
-        reload();
-        this.tableData.ngOnInit();
       break;
       case 'update job' :
         reloadPage = this.updateWorkAreaDial(data);
-        reload();
-        this.tableData.ngOnInit();
       break;
       case 'delete job':
         reloadPage = this.deleteJob(data);
-        reload();
-        this.tableData.ngOnInit();
       break;
       case 'Refresh' :
         this.ngOnInit();
-        this.tableData.ngOnInit();
       break;
     }
   }
@@ -250,11 +228,10 @@ export class SubMenuProjectComponent implements OnInit {
         project : this.projectData,
       }
     })  
-    return dialog
+    this.reload(dialog) 
   }
 
   addWorkAreaDial(){
-    console.log(this.projectData)
     const dialog = this.dialog.open(WorkAreaComponent, {
       disableClose : true,
       autoFocus:true, 
@@ -264,7 +241,7 @@ export class SubMenuProjectComponent implements OnInit {
         work : this.projectData
       }
     }) 
-    return dialog   
+    this.reload(dialog) 
   }
   
   addSubJobDial(row){    
@@ -278,7 +255,7 @@ export class SubMenuProjectComponent implements OnInit {
         work : this.projectData
       }
     })
-    return dialog
+    this.reload(dialog) 
   }
 
   updateWorkAreaDial(row){
@@ -291,7 +268,7 @@ export class SubMenuProjectComponent implements OnInit {
         data : row,
         work : this.projectData
       }});
-    return dialog
+    this.reload(dialog) 
   };
 
   deleteJob(row) {
@@ -304,7 +281,14 @@ export class SubMenuProjectComponent implements OnInit {
         work_area : this.projectData.work_area,
         parentId : row.data.id
       }});
-    return dialog
+    this.reload(dialog) 
+  }
+
+  reload(reloadPage) {
+    reloadPage.componentInstance.onSuccess.asObservable().subscribe(() => {
+      this.ngOnInit()
+      this.tableData.ngOnInit();
+    })
   }
 }
 

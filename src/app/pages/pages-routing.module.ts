@@ -45,6 +45,11 @@ const routes: Routes = [{
       loadChildren: () => import('./pdf-generator-batera/pdf-generator.module')
         .then(m => m.PdfGeneratorModule),
     },
+    {
+      path: 'function',
+      loadChildren: () => import('./function-collection-batera/function-collection.module')
+        .then(m => m.FunctionCollecetionModule),
+    },
     // {
     //   path: 'dashboard',
     //   component: ECommerceComponent,

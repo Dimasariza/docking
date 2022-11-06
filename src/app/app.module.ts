@@ -23,6 +23,7 @@ import {
 import { AuthInterceptor } from './http-interceptors/auth-interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
+import { parseISO } from 'date-fns'
  
 @NgModule({
   declarations: [AppComponent],
@@ -43,7 +44,9 @@ import { NbDateFnsDateModule } from '@nebular/date-fns';
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
     NbDatepickerModule.forRoot(),
-    NbDateFnsDateModule.forRoot({format : 'dd.MM.yyyy'})
+    NbDateFnsDateModule.forRoot({
+      format : 'dd.MM.yyyy',
+    })   
   ],
   providers: [
 

@@ -90,7 +90,7 @@
                 <ng-container [nbTreeGridColumnDef]="'rank'">
                     <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                      <nb-icon icon="alert-circle-outline" [nbPopover]="row?.data?.rank?.name" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : FNCOL.rankColor(row.data['rank']?.name)}"></nb-icon>
+                      <nb-icon icon="alert-circle-outline" [nbPopover]="row?.data?.rank?.name" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"></nb-icon>
                     </td>
                 </ng-container>
 

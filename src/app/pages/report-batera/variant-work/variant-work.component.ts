@@ -2,15 +2,25 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { ExportToExcel } from '../../function-collection-batera/export-excel';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
+import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
 import { ReportBateraService } from '../report-batera.service';
 
 interface TreeNode<T> {}
 interface FSEntry {}
 const useButtons = [
+  {
+    icon: 'person-add-outline',
+    desc: 'Add Suplier'
+  },
+  {
+    icon: 'person-done-outline',
+    desc: 'Update Suplier'
+  },
   {
   icon: 'refresh',
   desc: 'Refresh'
@@ -45,14 +55,17 @@ export class VariantWorkComponent implements OnChanges {
               private subMenuProject : SubMenuProjectComponent,
               private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
+              public excelService : ExportToExcel,
   ) { }
 
   useButtons = useButtons
-  defaultColumns = ['Start', 'Stop', 'Responsible', 'Last Change', 'Vol', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
-  allColumns = ['jobName', '%', ...this.defaultColumns, 'Approved' , 'edit'];
+  defaultColumns = ['Start', 'Stop', 'Responsible', 'Update', 'Volume', 'Unit', 'Unit Price Add On', 'Total Price Add On' ];
+  allColumns = ['jobName', '%', ...this.defaultColumns, 'Approved', 'suplier' , 'edit'];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
+  @Input() suplierData : any [] = ['Data Not Available']
+
 
   updateSort(sortRequest: NbSortRequest): void {
     return  this.subMenuProject.updateSort(sortRequest)
@@ -65,29 +78,23 @@ export class VariantWorkComponent implements OnChanges {
   }
 
   @Input() variantWorkData : any = ""
-  shipYard : boolean = false
-  shipOwner : boolean = false
+  @Input() workProgressData : any
   projectId : string
   
+  isFalsy = (value) => !value
+
   ngOnChanges(){
     this.projectId = this.activeRoute.snapshot.paramMap.get('id')
-    this.variantWorkData?.variant_work === null ||
-    this.variantWorkData?.variant_work === undefined ||
-    this.variantWorkData?.variant_work[0] === null ? null :
+    if(!this.variantWorkData) return
+    this.variantWorkData['mata_uang'] = this.workProgressData.mata_uang
+    const {variant_work} = this.variantWorkData
+    if(this.isFalsy(variant_work) || this.isFalsy(variant_work[0])) return
     this.regroupData(false)
   }
 
   regroupData(expand){
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => {
-      const { departement, unitPriceAddOn, totalPriceAddOn, variantRemarks, status, updated_at} = work 
-      const workItem = {
-        "Dept": departement,
-        "Unit Price Add On": unitPriceAddOn,
-        "Total Price Add On" : totalPriceAddOn,
-        "Remarks" : variantRemarks,
-        "Status" : status,
-        "Last Change" : updated_at,
-      }
+      const workItem = [this.workProgressData.mata_uang, 'Unit Price Budget', 'Total Price Budget']
       return this.FNCOL.populateData(work, workItem, expand)
     }))
   }
@@ -101,14 +108,21 @@ export class VariantWorkComponent implements OnChanges {
         this.reloadPage.emit('complete')
       break;
       case 'Expand' :
-        useButtons[2].desc = "Unexpand"
-        useButtons[2].icon = 'arrow-ios-forward-outline'
+        useButtons[4].desc = "Unexpand"
+        useButtons[4].icon = 'arrow-ios-forward-outline'
         this.regroupData(true)
       break;
       case 'Unexpand' :
-        useButtons[2].desc = "Expand"
-        useButtons[2].icon = 'arrow-ios-downward-outline'
+        useButtons[4].desc = "Expand"
+        useButtons[4].icon = 'arrow-ios-downward-outline'
         this.regroupData(false)
+      break;
+      case 'Add Suplier' :
+      this.addJobSuplier()
+      break;
+      case 'Export to Excel' :
+      this.excelService.reconstructJobsToExcel(this.variantWorkData.variant_work)
+      this.excelService.exportAsExcelFile(this.excelService.excelData, this.variantWorkData?.head)
       break;
     }
   }
@@ -159,6 +173,16 @@ export class VariantWorkComponent implements OnChanges {
       this.reloadPage.emit('complete')
     });
   }
+
+  addJobSuplier(){
+    const dialogRef = this.dialog.open(JobSuplierComponent, {
+      autoFocus : true,
+      disableClose : true,
+    })
+    // this.destroyDialog(dialogRef)
+  }
+
+
   approvedByYard(newData){
     const yardApproval = {yardApproval : true}
     this.approvedData(newData, yardApproval)
@@ -171,11 +195,11 @@ export class VariantWorkComponent implements OnChanges {
 
   approvedData(newData, approve) {
     newData.map(work => {
-      const postData = { ...work, ...approve}
-      const parentIndex = work.id.toString().split('')
-      this.variantWorkData.variant_work = this.FNCOL.updateWorkAreaData(this.variantWorkData.variant_work, parentIndex, postData)
-      work?.items ? this.approvedData(work.items, approve) : 
-      this.updateVariantWork(this.variantWorkData.variant_work)
+      this.variantWorkData.variant_work 
+      = this.FNCOL.updateWorkAreaData(this.variantWorkData.variant_work, work.id, { ...work, ...approve})
+      work?.items?.length 
+      ? this.approvedData(work.items, approve) 
+      : this.updateVariantWork(this.variantWorkData.variant_work)
     })
   }
 

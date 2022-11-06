@@ -1,6 +1,6 @@
 <nb-card fullWidth>
     <nb-card-header class="d-flex justify-content-between">
-        <span><strong>{{data.data.jobNumber}} . {{data.data.Job}} </strong></span> 
+        <span><strong>{{data.data.jobNumber}} . {{data.data.jobName}} </strong></span> 
         <button nbButton status="danger" size="tiny" (click)="close()">
             <nb-icon icon="close-outline"></nb-icon>
         </button>   
@@ -18,7 +18,7 @@
                 <div class="col-3">
                     <span class="d-block text-info">{{data.data.Start}}</span>
                     <span class="d-block text-info">{{data.data.Stop}}</span>
-                    <span class="d-block text-info">{{data.data.Responsible.name}}</span>
+                    <span class="d-block text-info">{{data.data.responsible.name}}</span>
                     <span class="d-block text-info">KM Abusamah</span>
                 </div>
                 <div class="col-3">
@@ -26,14 +26,13 @@
                     <span class="d-block">Last change data</span>
                 </div>
                 <div class="col-3">
-                    <span class="d-block text-info">{{data.data.status || ''}}</span>
                     <span class="d-block text-info">
                         <nb-progress-bar [value]="data.data.progress" status="primary" [displayValue]="true"></nb-progress-bar>
                     </span>
-                    <span class="d-block text-info">{{data.data?.['Last Change'] | date : 'medium'}}</span>
+                    <span class="d-block text-info">{{data.data?.lastUpdate | date : 'medium' || 'No Update'}}</span>
                 </div>
             </div>
-            <textarea fullWidth rows="7" readonly nbInput [placeholder]="data.data.Remarks" name="description" class="my-2"></textarea>
+            <textarea fullWidth rows="7" readonly nbInput [placeholder]="data.data.remarks" name="description" class="my-2"></textarea>
             <div class="w-100 text-right">
                 <button nbButton size="tiny" ghost (click)="extendPanel()">
                     {{expandText}}

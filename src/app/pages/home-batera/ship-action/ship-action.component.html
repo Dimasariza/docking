@@ -13,7 +13,7 @@
         <form [formGroup]="addShipForm" (ngSubmit)="submit(addShipForm, shipData.dial)" >
             <div class="form-group">
                 <label for="name">Name</label>
-                <input formControlName="name" id="name" type="text" class="form-control" #name (ngModel)="name"  required>
+                <input formControlName="name" nbInput fullWidth type="text" class="form-control" #name (ngModel)="name"  required>
                 <div *ngIf="name.invalid && (name.dirty || name.touched)" class="alert">
                     <div *ngIf="name.errors?.['required']">
                         Name is required.

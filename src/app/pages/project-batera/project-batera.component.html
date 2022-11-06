@@ -44,7 +44,7 @@
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              {{row?.data?.status?.name || '-'}}
+              {{FNCOL.status[row?.data?.status]  || '-'}}
             </td>
           </ng-container>
 

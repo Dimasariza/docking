@@ -1,6 +1,8 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';  
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { NbDateFnsDateModule, NbDateFnsDateService } from '@nebular/date-fns';
 import { NbDateService } from '@nebular/theme';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
@@ -18,18 +20,17 @@ export class WorkAreaComponent implements OnInit {
               private currencyPipe : CurrencyPipe,
               private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
-              protected dateService: NbDateService<Date>,
+              // protected dateService: NbDateService<Date>,
               @Inject(MAT_DIALOG_DATA) public data: any,
   ) {
-    this.min = this.dateService.addMonth(this.dateService.today(), 0);
+    // this.min = this.dateService.addMonth(this.dateService.today(), 0);
   }
 
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  min : Date
+  // min : Date
   responsible = []
   workAreaContainer : any = []
   modelData : any = {}
-  disabledJob : boolean = false
   totalPrice : any = 0
   unitPrice : any 
   originalUnitPrice : any = 0 
@@ -39,60 +40,48 @@ export class WorkAreaComponent implements OnInit {
   disabledChild : boolean = false
 
   ngOnInit(){
-    const data = this.data?.data?.data
-    console.log(this.data)
-    const parentId = data?.id.toString().split('')
-    this.disabledChild = parentId?.length > 1 ? true : false
     this.usedCurrency = this.data.work.mata_uang
+    const data = this.data?.data?.data
+    const parentId = data?.id.toString().split('')
+    this.disabledChild = parentId?.length > 1 ? true : false;
     switch (this.data.dial) {
       case 'Add':
-        this.workAreaContainer = this.data.work.work_area
-        this.unitType = this.FNCOL.jobUnit
-        this.unitPriceLabel = 'Price Budget'
-        this.getUserProfile()
+        this.getUserProfile();
+        this.unitPriceLabel = 'Price Budget';
+        this.workAreaCondition('work area');
         break;
       case 'Add Variant' :
-        this.workAreaContainer = this.data.work.work_area
-        this.unitType = this.FNCOL.jobUnit
-        this.unitPriceLabel = 'Price Add On'
-        this.getUserProfile()
+        this.getUserProfile();
+        this.unitPriceLabel = 'Price Add On';
+        this.workAreaCondition('work area');
         break;
       case 'Add Sub':
-        this.workAreaContainer = this.data.work.work_area
-        this.unitType = this.FNCOL.subJobUnit
-        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
-        this.unitPriceLabel = 'Price Budget'
-        // this.workAreaDatas(parentId, data)
-        this.getUserProfile()
+        this.unitPriceLabel = 'Price Budget';
+        this.addSubJobData(data);
+        this.workAreaCondition('work area');
       break;
       case 'Add Sub Variant' :
-        this.workAreaContainer = this.data.work.variant_work
-        this.unitType = this.FNCOL.subJobUnit
-        this.modelData['head'] = `${data.jobNumber}. ${data.jobName}` 
-        this.unitPriceLabel = 'Price Add On'
-        this.getUserProfile()
+        this.unitPriceLabel = 'Price Add On';
+        this.addSubJobData(data);
+        this.workAreaCondition('variant work');
       break;
       case 'Update' :
-        this.workAreaContainer = this.data.work.work_area
-        this.unitPriceLabel = 'Price Budget'
-        this.workAreaDatas(parentId, data)
-        this.getUserProfile()
-      break;
-      case 'Edit Variant' :
-        this.workAreaContainer = this.data.work.variant_work
-        this.unitPriceLabel = 'Price Add On'
-        this.workAreaDatas(parentId, data)
-        this.getUserProfile()
-      break;
       case 'Work Progress':
-        this.workAreaContainer = this.data.work.work_area
-        this.unitPriceLabel = 'Price Actual'
-        this.workAreaDatas(parentId, data)
+        if(!this.disabledChild) this.getUserProfile()
+        this.unitPriceLabel = 'Price Budget';
+        this.updateWorkAreaDatas(data)
+        this.workAreaCondition('work area');
       break;
       case 'Update Load Details':
-        this.workAreaContainer = this.data.work.work_area
-        this.unitPriceLabel = 'Price Contract'
-        this.workAreaDatas(parentId, data)
+        if(this.disabledChild) this.getUserProfile()
+        this.unitPriceLabel = 'Price Contract';
+        this.updateWorkAreaDatas(data)
+        this.workAreaCondition('work area');
+      case 'Edit Variant' :
+        if(this.disabledChild) this.getUserProfile()
+        this.unitPriceLabel = 'Price Add On';
+        this.updateWorkAreaDatas(data)
+        this.workAreaCondition('variant work');
       break;
     }
   }
@@ -108,22 +97,44 @@ export class WorkAreaComponent implements OnInit {
       }});
     });
   }
-  
-  workAreaDatas(parentId, data){
-    parentId.length === 1 ?
-    this.unitType = this.FNCOL.jobUnit :
-    this.unitType = this.FNCOL.subJobUnit
-    this.modelData = this.data.data.data
-    this.modelData['head'] = `${data.jobNumber}. ${data.jobName}`
-    this.disabledJob = true
-    this.unitPrice = this.modelData?.[this.unitPriceLabel]
-    this.totalPrice = this.unitPrice ? this.unitPrice * this.modelData.volume : 0
-    this.unitPrice = this.currencyPipe.transform(this.unitPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0]
-    this.totalPrice = this.currencyPipe.transform(this.totalPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0] 
-    const original = this.unitPrice.split(' ')[1].split('.')[0].replace(',', '')
-    this.originalUnitPrice = parseInt(original)
+
+  workAreaCondition(conds){
+    switch (conds) {
+      case 'work area' :
+      this.workAreaContainer = this.data.work.work_area
+      this.unitTypeUsed()
+      break;
+      case 'variant work' :
+      this.workAreaContainer = this.data.work.variant_work
+      this.unitTypeUsed()
+      break;
+    }
+  }
+
+  unitTypeUsed() : any {
+    if(!this.disabledChild) this.unitType = this.FNCOL.jobUnit;
+    else this.unitType = this.FNCOL.subJobUnit;
   }
   
+  updateWorkAreaDatas(data){
+    this.modelData = data
+    const {[this.unitPriceLabel] : unitPrice, jobName, jobNumber, volume} = data
+    this.modelData['head'] = `${jobNumber}. ${jobName}`
+    this.unitPrice = unitPrice
+    if(!unitPrice) return  
+    this.originalUnitPrice = unitPrice
+    this.totalPrice = unitPrice * volume
+    this.unitPrice = this.currencyPipe.transform(this.unitPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0] 
+    this.totalPrice = this.currencyPipe.transform(this.totalPrice, this.FNCOL.convertCurrency(this.usedCurrency)).split('.')[0] 
+  }
+
+  addSubJobData(data) {
+    const {jobNumber, jobName, responsible, id, rank, items, category} = data
+    this.modelData = {responsible, id, rank, items, category}
+    this.modelData['head'] = `${jobNumber}. ${jobName}`
+    this.disabledChild = true
+  }
+
   unitPriceAmount(e, volume){
     e = e.replace(/\D/g, '')
     if(!e.length) return  
@@ -156,77 +167,89 @@ export class WorkAreaComponent implements OnInit {
     }
   }
 
-  reconstructData(reData){
-    if(typeof(reData.category) === 'number'){
-      reData.category = {name : this.FNCOL.category[reData.category] ,id : reData.category}
-    }
-    if(typeof(reData.rank) === 'number'){
-      reData.rank = {name : this.FNCOL.rank[reData.rank] ,id : reData.rank}
-    }
-    if(typeof(reData.unit) === 'number'){
-      reData.unit = {name : this.unitType[reData.unit] ,id : reData.unit}
-    }
-    if(typeof(reData?.status) === 'number'){
-      reData.status = {name : this.FNCOL.status[reData.status] ,id : reData.status}
-    }
-    return reData
-  }
-
-  addSubJobData = (data, newData, parentIndex) => {
-    return data.map((w, i) => {
-      if (parentIndex.length > 1 && i == parentIndex[0]) {
-        parentIndex = parentIndex.slice(1)
-        return {...w, items: this.addSubJobData(w.items, newData, parentIndex)}
-      } else if(i == parentIndex[0]) {
-        if (!w.items) w.items = []          
-        return {...w, items: [...w.items, {...newData, id: w.id.toString()+w.items.length.toString()}]}
-      }
-      return w
-    })
-  }
-
   addWorkArea(data){
-    const submitData = data.value
-    this.workAreaContainer === null ||
-    this.workAreaContainer === undefined ||
-    this.workAreaContainer[0] === null ? this.workAreaContainer = [] : null
-    submitData[this.unitPriceLabel] = this.originalUnitPrice
+    const isFalsy = (value) => !value
+    if(isFalsy(this.workAreaContainer) || isFalsy(this.workAreaContainer[0])) this.workAreaContainer = [];
     const work_area = [
       ...this.workAreaContainer,
       {
-      ...this.reconstructData(submitData),
-      id: this.workAreaContainer.length, 
-      status : {name : 'Not Started', id : 0},
-      progress : 0
-    }]
-    this.uploadData(work_area)
-  }
-  
-  updateWorkArea(newData){
-    const submitData = newData.value
-    const reconstructData = {
-      ...this.reconstructData(submitData),
-      last_update : new Date()
-    }
-    submitData[this.unitPriceLabel] = this.originalUnitPrice
-    const data = this.data?.data?.data
-    const parentId = data?.id.toString().split('')
-    const work_area = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentId, reconstructData)
+        ...data.value,
+        id: this.workAreaContainer.length, 
+        status : 0,
+        progress : 0,
+        createdAt : new Date(),
+        items : [],
+        [this.unitPriceLabel] : parseInt(this.originalUnitPrice)
+      }
+    ]
     this.uploadData(work_area)
   }
 
   addSubJob(newData){
-    const submitData = newData.value
+    const id = this.modelData.id.toString() + this.modelData.items.length.toString()
     const reconstructData = { 
-      ...this.reconstructData(submitData),
-      status : {name : 'Not Started', id : 0},
-      progress : 0
+      ...newData.value,
+      [this.unitPriceLabel] : parseInt(this.originalUnitPrice),
+      status : 0,
+      progress : 0,
+      createdAt : new Date(),
+      id
     } 
-    submitData[this.unitPriceLabel] = this.originalUnitPrice
-    const data = this.data?.data?.data
-    const parentId = data?.id.toString().split('')
-    const work_area = this.addSubJobData(this.workAreaContainer, reconstructData, parentId)
-    this.uploadData(work_area)
+    this.workAreaContainer =  this.FNCOL.addSubJobData(this.workAreaContainer , reconstructData, this.modelData.id)
+    this.calculateProgress(id)
+  }
+
+  updateWorkArea(newData){
+    const submitData = newData.value
+    const parentId = this.modelData?.id.toString().split('')
+    const reconstructData = {
+      progress : this.modelData.progress,
+      ...submitData,
+      lastUpdate : new Date(),
+      [this.unitPriceLabel] : parseInt(this.originalUnitPrice)
+    }
+    this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, this.modelData?.id, reconstructData);
+    if(parentId?.length == 1) {
+      this.rebindingStatusData([this.modelData], submitData); 
+      this.uploadData(this.workAreaContainer)
+    }
+    else if(this.modelData.progress !== reconstructData.progress) {
+      const postBody = {
+        id_proyek : this.data.id,
+        progress : submitData.progress
+      }
+      let progressId = this.modelData.progressId || []
+      this.projectSerivce.updateProgress(postBody)
+      .subscribe(({data} : any) => {
+        progressId.push(data.id_proyek_report_progress_pekerjaan)
+        this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, this.modelData?.id, {progressId});
+        this.calculateProgress(this.modelData.id);
+      })
+    }
+  }
+
+  rebindingStatusData(newData, submitData) {
+    newData.forEach(work => {
+      const {category = this.modelData.category, rank = this.modelData.rank, responsible = this.modelData.responsible, status = this.modelData.status} = submitData;
+      const dataItems = {category, rank, responsible, status};
+      this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, work?.id, dataItems);
+      if(work?.items?.length) this.rebindingStatusData(work.items , submitData);
+    })
+  }
+
+  calculateProgress(parentId) {
+    parentId = parentId.toString().split('')
+    parentId.pop()
+    parentId = parentId.join('')
+    let totalProgress = 0;
+    const work = this.workAreaContainer
+    .find(work => [work.id === parentId])
+    work.items.map(work => totalProgress += work.progress)
+    totalProgress = totalProgress / work.items?.length
+    this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentId, { progress : totalProgress.toFixed(3) });
+    parentId.length > 1 
+    ? this.calculateProgress(parentId) 
+    : this.uploadData(this.workAreaContainer)
   }
 
   uploadData(work_area){

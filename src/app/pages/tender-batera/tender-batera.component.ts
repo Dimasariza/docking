@@ -96,11 +96,7 @@ export class TenderBateraComponent {
     workArea === undefined ? 
     this.dataSource = this.dataSourceBuilder.create([]) :
     this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
-      const {volume, 'Price Contract' : contractPrice} = work
-      const workItem = {
-        "Unit Price Contract" : this.currency.transform(contractPrice, this.FNCOL.convertCurrency(currency)),
-        "Total Price Contract" : this.currency.transform(contractPrice * volume, this.FNCOL.convertCurrency(currency))
-      }
+      const workItem = [currency, 'Unit Price Contract', 'Total Price Contract']
       return this.FNCOL.populateData(work, workItem, false)
     }) as TreeNode<FSEntry>[])
     this.loadYardData()

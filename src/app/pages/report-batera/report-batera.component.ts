@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -27,6 +28,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   subProjectData : any
   yardDatas : any
   subscription : Subscription[] = []
+  dataSuplier : any
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -43,6 +45,9 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
       this.subProjectData = data
       this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
     })
+
+    const _subs3 = this.reportBateraService.getSuplier()
+    .subscribe(({data} : any) => this.dataSuplier = data)
 
     this.subscription.push(_subs1)
     this.subscription.push(_subs2)

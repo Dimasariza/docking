@@ -31,6 +31,15 @@ export class ReportBateraService {
         return this.httpClient.post(url, body)
     }
 
+    getSuplier(page = '', per_page = '', q = ''){
+        const url = this.apiUrl + "/supplier"
+        let queryParams = new HttpParams();
+        queryParams = queryParams.append("page", page)
+                                .append("per_page", per_page)
+                                .append("q", q)
+        return this.httpClient.get(url, {params : queryParams})
+    }
+
     addDocument(body){
         const url = this.apiUrl + "/report/detail"
         return this.httpClient.post(url, body)

@@ -95,19 +95,27 @@ export class ProjectBateraComponent {
         name : `${kapal.nama_kapal} - DD - ${tahun}`
       }})
     .filter(project => {
-      const {work_area : work, name : projectName} = project
-      if(work === null || work === undefined || !work.length || work[0] === null) return;
+      const {work_area, name : projectName} = project
+      const isFalsy = (value) => !value
+      if(isFalsy(work_area) || isFalsy(work_area[0])) return;
+      const reconstructData = (work) => {
+        return work.map(item => {
+          work = {...item, projectName, cust : this.shipManagement} 
+          if(item.items?.length) work = { ...work, items : reconstructData(item.items)}
+          return work
+        })
+      }
+      const work = reconstructData(work_area)
       work.forEach(item => {
           const due = new Date(item.end)
           const currentDate = new Date()
           currentDate.setDate(currentDate.getDate() + 30) 
           if(currentDate < due) return
-          item['projectName'] = projectName
-          item['cust'] = this.shipManagement
           this.workAreaContainer.push(item);
-          if(this.sortByStatus !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({status}) => status?.id === this.sortByStatus)
-          if(this.sortByResponsible !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({responsible}) => responsible?.id === this.sortByResponsible)
+          if(this.sortByStatus !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({status}) => status === this.sortByStatus)  
+          if(this.sortByResponsible !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({responsible}) => responsible.id === this.sortByResponsible)
       })
+
     })
 
     if(!this.workAreaContainer.length) buildEmpty();

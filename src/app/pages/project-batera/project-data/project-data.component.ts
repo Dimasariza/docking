@@ -24,7 +24,8 @@ export class ProjectDataComponent implements OnInit {
   triggerButton(){
     console.log('buttonClicked')
   }
-constructor(  protected dateService: NbDateService<Date>,
+
+  constructor(  protected dateService: NbDateService<Date>,
               private dialogRef: MatDialogRef<ProjectDataComponent>,
               private homeService : HomeBateraService,
               private profileService : ProfileBateraService,

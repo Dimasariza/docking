@@ -1,4 +1,3 @@
-import { CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -10,7 +9,6 @@ import { NbAlertModule,
   NbDatepickerModule, 
   NbIconModule, 
   NbInputModule, 
-  NbLayoutModule, 
   NbListModule, 
   NbOptionModule, 
   NbPopoverModule, 
@@ -18,7 +16,6 @@ import { NbAlertModule,
   NbSelectModule, 
   NbTagModule, 
   NbTreeGridModule } from '@nebular/theme';
-import { NumberCardModule } from '@swimlane/ngx-charts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
 import { ProjectBateraRoutingModule, routedComponents } from './project-batera-routing.module';
@@ -38,17 +35,14 @@ import { WorkAreaComponent } from './work-area/work-area.component';
     NbSelectModule,
     NbButtonModule,
     NbListModule,
-    // NumberCardModule,
     NbPopoverModule,
     NbSearchModule,
     NbAlertModule,
     NbTreeGridModule,
-    // NbLayoutModule,
     NbDatepickerModule,
     MatDialogModule,
     NbTagModule,
     FormsModule,
-    NbDateFnsDateModule,
     MatTableModule,
   ],
   entryComponents: [
@@ -58,7 +52,6 @@ import { WorkAreaComponent } from './work-area/work-area.component';
   declarations: [
     ...routedComponents,
   ],
-  providers : [CurrencyPipe],
 })
 export class ProjectBateraModule{ 
 }

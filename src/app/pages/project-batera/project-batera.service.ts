@@ -56,4 +56,8 @@ export class ProjectBateraService {
     return this.httpClient.post(url, body)
   }
 
+  updateProgress(body){
+    const url = this.apiUrl + "/report/progress"
+    return this.httpClient.post(url, body)
+  }
 }

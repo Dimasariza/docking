@@ -4,6 +4,8 @@ import { NbMenuModule } from '@nebular/theme';
 import { ThemeModule } from '../@theme/theme.module';
 import { PagesComponent } from './pages.component';
 import { PagesRoutingModule } from './pages-routing.module';
+import { CurrencyPipe } from '@angular/common';
+import { FunctionCollection } from './function-collection-batera/function-collection.component';
 
 @NgModule({
   imports: [
@@ -14,6 +16,7 @@ import { PagesRoutingModule } from './pages-routing.module';
     // ECommerceModule,
     // MiscellaneousModule,
   ],
+  providers : [CurrencyPipe],
   declarations: [
     PagesComponent,
   ],
