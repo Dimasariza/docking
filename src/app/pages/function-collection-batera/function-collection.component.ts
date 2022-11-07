@@ -1,5 +1,6 @@
 import { CurrencyPipe, DatePipe } from "@angular/common";
 import { Component, Injectable } from "@angular/core";
+import { ProjectBateraService } from "../project-batera/project-batera.service";
 
 @Injectable({
     providedIn: 'root'
@@ -9,8 +10,9 @@ import { Component, Injectable } from "@angular/core";
   template : `<div> Function </div>`
 })
 export class FunctionCollection {
-    constructor (public datePipe : DatePipe,
-                public currency : CurrencyPipe
+    constructor ( public datePipe : DatePipe,
+                  public currency : CurrencyPipe,
+                  public projectService : ProjectBateraService, 
       ){}
     category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Depreciation Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]
@@ -19,6 +21,7 @@ export class FunctionCollection {
     status = ["Not Started", "In Progress", "Done", "Canceled"]
     Phase: ['requisition','in_progress', 'evaluasi','finish']
     BaseCurrency: ['IDR', 'EURO', 'US']
+    // workAreaContainer : any
 
     convertPhase(phase) {
       switch(phase){
@@ -159,6 +162,26 @@ export class FunctionCollection {
         break;
       }
       return curr
+    }
+
+    calculateProgress(parentId, workAreaContainer, projectId) {
+      parentId = parentId.toString().split('')
+      parentId.pop()
+      parentId = parentId.join('')
+      let totalProgress = 0;
+      const work = workAreaContainer
+      .find(work => [work.id === parentId])
+      work.items.map(work => totalProgress += work.progress)
+      totalProgress = totalProgress / work.items?.length
+      workAreaContainer = this.updateWorkAreaData(workAreaContainer, parentId, { progress : totalProgress.toFixed(3) });
+      parentId.length > 1 
+      ? this.calculateProgress(parentId, workAreaContainer, projectId) 
+      : this.uploadWorkArea(workAreaContainer, projectId)
+    }
+
+    uploadWorkArea(workAreaContainer, projectId){
+      this.projectService.workArea({work_area : workAreaContainer}, projectId)
+      .subscribe((res) => console.log(res) )
     }
 
     minimal( a, b) {

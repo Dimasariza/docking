@@ -553,22 +553,29 @@ export class PdfGeneratorBateraComponent implements OnInit {
               '', ''
             ],
             [ 
+              { text :'Owner Additional Job', fontSize : 10, bold : true, color : '#FF0000'}, 
+              { text :'', fontSize : 10, colSpan : 2},
+              '', ''
+            ],
+            [ 
               { text :'Owner Canceled Jobs', fontSize : 10, bold : true}, 
               { text :'', fontSize : 10, colSpan : 2},
               '', ''
             ],
             [ 
-              { text :'Owner Additional Cost', fontSize : 10, bold : true, color : '#FF0000'}, 
-              { text :'', fontSize : 10, colSpan : 2},
-              '', ''
+              { text :'Amortization Job', fontSize : 10, bold : true}, 
+              { text :'Dok Pantai Lamongan', fontSize : 10}, 
+              { text :'State', fontSize : 10, bold : true}, 
+              { text :'Pending', fontSize : 10},
+            ],
+            [ 
+              { text :'Depreciation Job', fontSize : 10, bold : true}, 
+              { text :'0', fontSize : 10}, 
+              { text :'0', fontSize : 10, bold : true}, 
+              { text :'0', fontSize : 10},
             ],
             [ 
               { text :'Yard Cost', fontSize : 10, bold : true}, 
-              { text :'', fontSize : 10, colSpan : 2},
-              '', ''
-            ],
-            [ 
-              { text :'- Yard Additional Cost', fontSize : 10, bold : true}, 
               { text :'', fontSize : 10, colSpan : 2},
               '', ''
             ],
@@ -587,7 +594,25 @@ export class PdfGeneratorBateraComponent implements OnInit {
       }]
   }
 
+
+  // Cost details
   getCostDetails(projectDetail, workProject, yardDatas) {
+    console.log(projectDetail)
+    console.log(workProject)
+    const {work_area} = workProject
+    const constDetails =  work_area.map(job => {
+      const {jobName, 'Price Budget': priceBudget = 0, 'Price Contract' : priceContract = 0, 'Price Actual' : priceActual = 0, 'Price Add On' : priceAddOn = 0, progress, category} = job
+      console.log('create pdf')
+      return [
+        { text : jobName, fontSize : 9, bold : true}, 
+        { text : priceBudget, fontSize : 9}, 
+        { text : priceContract, fontSize : 9}, 
+        { text : priceActual, fontSize : 9},
+        { text : priceAddOn, fontSize : 9},
+        { text : category, fontSize : 9},
+        { text : progress, fontSize : 9},
+      ]
+    })
     return [
       {
         layout: 'lightHorizontalLines',
@@ -597,43 +622,28 @@ export class PdfGeneratorBateraComponent implements OnInit {
           widths: [ '*', '*', '*', '*', '*', '*', 'auto' ],  
           body: [
             [ 
-              { text :'Yard Cost', fontSize : 10, bold : true}, 
-              { text :'Budget', fontSize : 10, bold : true}, 
-              { text :'Contract', fontSize : 10, bold : true}, 
-              { text :'Actual', fontSize : 10, bold : true},
-              { text :'Added', fontSize : 10, bold : true},
-              { text :'Cancelled', fontSize : 10, bold : true},
-              { text :'Progress Accumulated', fontSize : 10, bold : true},
+              { text :'Yard Cost', fontSize : 9, bold : true}, 
+              { text :'Budget', fontSize : 9, bold : true}, 
+              { text :'Contract', fontSize : 9, bold : true}, 
+              { text :'Actual', fontSize : 9, bold : true},
+              { text :'Added', fontSize : 9, bold : true},
+              { text :'Cancelled', fontSize : 9, bold : true},
+              { text :'Progress Accumulated', fontSize : 9, bold : true},
             ],
-            [ 
-              { text :'General Service', fontSize : 10, bold : true}, 
-              { text :'0', fontSize : 10}, 
-              { text :'331,276,612', fontSize : 10}, 
-              { text :'331,276,612', fontSize : 10},
-              { text :'331,276,612', fontSize : 10},
-              { text :'331,276,612', fontSize : 10},
-              { text :'24%', fontSize : 10},
-            ],
-            [ 
-              { text :'Sum', fontSize : 10, bold : true}, 
-              { text :'0', fontSize : 10}, 
-              { text :'331,276,612', fontSize : 10}, 
-              { text :'331,276,612', fontSize : 10},
-              { text :'331,276,612', fontSize : 10},
-              { text :'331,276,612', fontSize : 10},
-              { text :'24%', fontSize : 10},
-            ],
+            ...constDetails
           ]
         }
       },
-      {text : "EXPECTED", fontSize: 10, bold : true},
+
+      {text : "EXPECTED", fontSize: 9, bold : true},
       {
         columns : [
           { width: 'auto', text: 'TOTAL YARD', fontSize: 8},
           { width: 'auto', text: '2,796,222', fontSize: 8, margin : [4, 0]},
         ]
       },
-      {text : "RISKS", fontSize: 10, bold : true},
+
+      {text : "RISKS", fontSize: 9, bold : true},
       {text : "No Risks registered", fontSize: 8},
     ]
   }
