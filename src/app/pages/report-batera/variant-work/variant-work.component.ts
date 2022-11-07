@@ -80,21 +80,22 @@ export class VariantWorkComponent implements OnChanges {
   @Input() variantWorkData : any = ""
   @Input() workProgressData : any
   projectId : string
+  basedCurrency : any
   
   isFalsy = (value) => !value
 
   ngOnChanges(){
     this.projectId = this.activeRoute.snapshot.paramMap.get('id')
     if(!this.variantWorkData) return
-    this.variantWorkData['mata_uang'] = this.workProgressData.mata_uang
     const {variant_work} = this.variantWorkData
     if(this.isFalsy(variant_work) || this.isFalsy(variant_work[0])) return
+    this.basedCurrency = this.variantWorkData['mata_uang']
     this.regroupData(false)
   }
 
   regroupData(expand){
     this.dataSource = this.dataSourceBuilder.create(this.variantWorkData?.variant_work.map(work => {
-      const workItem = [this.workProgressData.mata_uang, 'Unit Price Budget', 'Total Price Budget']
+      const workItem = [this.basedCurrency, 'Unit Price Budget', 'Total Price Budget']
       return this.FNCOL.populateData(work, workItem, expand)
     }))
   }
@@ -121,8 +122,9 @@ export class VariantWorkComponent implements OnChanges {
       this.addJobSuplier()
       break;
       case 'Export to Excel' :
-      this.excelService.reconstructJobsToExcel(this.variantWorkData.variant_work)
-      this.excelService.exportAsExcelFile(this.excelService.excelData, this.variantWorkData?.head)
+      this.excelService.excelData = []
+      this.excelService.reconstructJobsToExcel(this.variantWorkData.variant_work) 
+      this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
       break;
     }
   }

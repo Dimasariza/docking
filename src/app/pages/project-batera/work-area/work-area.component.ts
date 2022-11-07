@@ -236,7 +236,7 @@ export class WorkAreaComponent implements OnInit {
       if(work?.items?.length) this.rebindingStatusData(work.items , submitData);
     })
   }
-
+  // calculatProgress(parentId, workareacontainer, this.data.id)
   calculateProgress(parentId) {
     parentId = parentId.toString().split('')
     parentId.pop()

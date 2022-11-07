@@ -38,7 +38,8 @@
 
             <ng-container [nbTreeGridColumnDef]="'%'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                <td nbTreeGridCell *nbTreeGridCellDef="let row"
+                [nbPopover]="row.data.progress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                     <nb-progress-bar [value]="row.data.progress" [displayValue]="true" status="primary"></nb-progress-bar>
                 </td>
             </ng-container>
@@ -78,7 +79,8 @@
                 <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
                 {{column}}
                 </th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                <td nbTreeGridCell *nbTreeGridCellDef="let row"
+                [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                     {{row.data[column] || '-'}}</td>
             </ng-container>
         </table>    

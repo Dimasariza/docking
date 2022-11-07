@@ -116,6 +116,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         this.addJobSuplier()
         break;
       case 'Export to Excel':
+        this.excelService.excelData = []
         this.excelService.reconstructJobsToExcel(this.workProgressData.work_area)
         this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
         break

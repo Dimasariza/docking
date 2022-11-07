@@ -2,7 +2,7 @@
     <nb-card-header class="d-flex justify-content-between">
         <div>
             <strong>{{data.dial}} Job </strong>
-            <span class="text-primary">: {{modelData?.['head']}}</span>
+            <span *ngIf=" !(data.dial == 'Add' || data.dial =='Add Variant') " class="text-primary">: {{modelData?.['head']}}</span>
         </div>
         <button nbButton status="danger" size="tiny" (click)="close()">
             <nb-icon icon="close-outline" size="medium"></nb-icon>
@@ -15,12 +15,12 @@
                 <div *ngIf="data.dial !== 'Work Progress' && data.dial !== 'Edit Variant' ">
                     <span class="p-2 d-block"><strong>Job Number</strong></span>
                     <input type="text" nbInput fullWidth placeholder="Job Number" fieldSize="small" required #jobNumber="ngModel" name="jobNumber" [ngModel]="modelData.jobNumber" >
-                    <!-- <div *ngIf="jobNumber.invalid && (jobNumber.dirty || jobNumber.touched)"
+                    <div *ngIf="jobNumber.invalid && (jobNumber.dirty || jobNumber.touched)"
                     class="danger text-danger">
                         <div *ngIf="jobNumber.errors?.['required']">
                         Job Number is required.
                         </div>
-                    </div> -->
+                    </div>
                     <span class="p-2 d-block"><strong>Job</strong></span>
                     <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required [ngModel]="modelData?.jobName" #pekerjaan name="jobName" >
                 </div>

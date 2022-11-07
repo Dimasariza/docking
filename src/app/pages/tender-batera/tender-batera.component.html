@@ -81,7 +81,9 @@
             <ng-container [nbTreeGridColumnDef]="'rank'">
               <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 50px"></th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" >
-                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"></nb-icon>
+                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"
+                [nbPopover]="FNCOL.rank[row.data.rank]" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                ></nb-icon>
               </td>
             </ng-container>
             <ng-container [nbTreeGridColumnDef]="'Approve'">
@@ -93,8 +95,9 @@
                 </div>
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                <button class="text-center" nbButton ghost (click)="approvedByYard([row.data])">
-                  <nb-icon [ngStyle]="{'color': row.data?.tenderApproval ? 'green' : 'grey'}" [icon]="row.data?.tenderApproval ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"></nb-icon>
+                <button class="text-center" nbButton ghost (click)="approvedByYard([row.data])" nbPopover="Approved by Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                  <nb-icon [ngStyle]="{'color': row.data?.tenderApproval ? 'green' : 'grey'}" [icon]="row.data?.tenderApproval ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"
+                  ></nb-icon>
                 </button>
               </td>
             </ng-container>
@@ -102,7 +105,7 @@
             <ng-container [nbTreeGridColumnDef]="'Edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px"></th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editLoadDetails(row)">
+                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editLoadDetails(row)" nbPopover="Edit" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                       <nb-icon icon="edit-outline" status="primary"></nb-icon>
                   </button>
                 </td>
@@ -118,7 +121,7 @@
                           [nbTreeGridColumnDef]="column"
                           [showOn]="getShowOn(index)">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">{{headColumns[index]}}</th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top">{{row.data[column] || '-'}}</td>
             </ng-container>
           </table>
         </div>
