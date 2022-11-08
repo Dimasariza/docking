@@ -21,7 +21,6 @@ export class FunctionCollection {
     status = ["Not Started", "In Progress", "Done", "Canceled"]
     Phase: ['requisition','in_progress', 'evaluasi','finish']
     BaseCurrency: ['IDR', 'EURO', 'US']
-    // workAreaContainer : any
 
     convertPhase(phase) {
       switch(phase){
@@ -84,7 +83,7 @@ export class FunctionCollection {
     }
     
     populateData = (work, workItem, expand) => { 
-        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, 'Price Budget' : budgetPrice }= work  
+        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, 'Price Budget' : budgetPrice, progress }= work  
         const parentId = id.toString().split('')
         let useUnit = parentId.length == 1 ? this.jobUnit : this.subJobUnit
         return {
@@ -152,36 +151,31 @@ export class FunctionCollection {
     convertCurrency(curr) {
       switch(curr) {
         case 'IDR':
-          curr = 'Rp '
+          curr = 'Rp ';
         break;
         case 'EURO':
-          curr = '€ '
+          curr = '€ ';
         break;
         case 'US':
-          curr = '$ '
+          curr = '$ ';
         break;
       }
       return curr
     }
 
-    calculateProgress(parentId, workAreaContainer, projectId) {
-      parentId = parentId.toString().split('')
-      parentId.pop()
-      parentId = parentId.join('')
+    calculateProgress(parentId, work) {
+      parentId = parentId.toString().split('');
+      parentId.pop();
+      parentId = parentId.join('').replace(',', '');;
       let totalProgress = 0;
-      const work = workAreaContainer
-      .find(work => [work.id === parentId])
-      work.items.map(work => totalProgress += work.progress)
-      totalProgress = totalProgress / work.items?.length
-      workAreaContainer = this.updateWorkAreaData(workAreaContainer, parentId, { progress : totalProgress.toFixed(3) });
-      parentId.length > 1 
-      ? this.calculateProgress(parentId, workAreaContainer, projectId) 
-      : this.uploadWorkArea(workAreaContainer, projectId)
-    }
-
-    uploadWorkArea(workAreaContainer, projectId){
-      this.projectService.workArea({work_area : workAreaContainer}, projectId)
-      .subscribe((res) => console.log(res) )
+      const works = work.find(work => [work.id === parentId]);
+      works?.items.map(work => totalProgress += work.progress);
+      totalProgress = totalProgress / works.items?.length;
+      if(Number(totalProgress) === totalProgress && totalProgress % 1 !== 0)
+      totalProgress = parseFloat(totalProgress?.toFixed(3));
+      work = this.updateWorkAreaData(work, parentId, {progress : totalProgress});
+      if(parentId.length > 1) this.calculateProgress(parentId, work);
+      else return work
     }
 
     minimal( a, b) {

@@ -1,7 +1,12 @@
 import { DatePipe } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Injectable, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
+
+
+@Injectable({
+  providedIn: 'root'
+})
 
 @Component({
   selector: 'ngx-project-status',
@@ -46,7 +51,6 @@ export class ProjectStatusComponent implements OnInit {
   }
 
   isFalsy = (value) => !value
-
   ngOnInit(): void {
     this.initData();
     let {variant_work, project} = this.data
@@ -113,7 +117,7 @@ export class ProjectStatusComponent implements OnInit {
     }
   }
 
-  close(){ this.dialogRef.close();}
+  close(){ this.dialogRef.close()}
 }
 
 

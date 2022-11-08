@@ -67,8 +67,9 @@ export class DeleteDialogComponent implements OnInit {
   }
 
   deleteJob(){
-    const parentId = this.deleteData.parentId
-    const work_area = this.FNCOL.reconstructData(this.deleteData.work_area, parentId)
+    let parentId = this.deleteData.parentId
+    let work_area = this.FNCOL.reconstructData(this.deleteData.work_area, parentId)
+    work_area = this.FNCOL.calculateProgress(parentId, work_area)
     if (work_area.length === 0 || work_area === undefined) return [null]
     else return work_area
   }

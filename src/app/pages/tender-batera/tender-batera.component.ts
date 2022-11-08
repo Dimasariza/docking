@@ -44,7 +44,7 @@ export class TenderBateraComponent {
     return  this.subMenuProject.updateSort(sortRequest)
   }
   getSortDirection(column: string): NbSortDirection {
-    return this.subMenuProject.getSortDirection(column)
+    return this.subMenuProject.getSortDirection(column);
   }
   getShowOn(index: number) {
     return this.subMenuProject.getShowOn(index)

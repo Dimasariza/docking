@@ -42,6 +42,7 @@ export class WorkAreaComponent implements OnInit {
   ngOnInit(){
     this.usedCurrency = this.data.work.mata_uang
     const data = this.data?.data?.data
+    console.log(data)
     const parentId = data?.id.toString().split('')
     this.disabledChild = parentId?.length > 1 ? true : false;
     switch (this.data.dial) {
@@ -49,12 +50,12 @@ export class WorkAreaComponent implements OnInit {
         this.getUserProfile();
         this.unitPriceLabel = 'Price Budget';
         this.workAreaCondition('work area');
-        break;
+      break;
       case 'Add Variant' :
         this.getUserProfile();
         this.unitPriceLabel = 'Price Add On';
         this.workAreaCondition('work area');
-        break;
+      break;
       case 'Add Sub':
         this.unitPriceLabel = 'Price Budget';
         this.addSubJobData(data);
@@ -65,7 +66,7 @@ export class WorkAreaComponent implements OnInit {
         this.addSubJobData(data);
         this.workAreaCondition('variant work');
       break;
-      case 'Update' :
+      case 'Update' : 
       case 'Work Progress':
         if(!this.disabledChild) this.getUserProfile()
         this.unitPriceLabel = 'Price Budget';
@@ -77,8 +78,9 @@ export class WorkAreaComponent implements OnInit {
         this.unitPriceLabel = 'Price Contract';
         this.updateWorkAreaDatas(data)
         this.workAreaCondition('work area');
+      break;
       case 'Edit Variant' :
-        if(this.disabledChild) this.getUserProfile()
+        if(this.disabledChild) this.getUserProfile();
         this.unitPriceLabel = 'Price Add On';
         this.updateWorkAreaDatas(data)
         this.workAreaCondition('variant work');
@@ -196,7 +198,8 @@ export class WorkAreaComponent implements OnInit {
       id
     } 
     this.workAreaContainer =  this.FNCOL.addSubJobData(this.workAreaContainer , reconstructData, this.modelData.id)
-    this.calculateProgress(id)
+    const work_area = this.FNCOL.calculateProgress(id, this.workAreaContainer)
+    console.log(work_area)
   }
 
   updateWorkArea(newData){
@@ -223,7 +226,8 @@ export class WorkAreaComponent implements OnInit {
       .subscribe(({data} : any) => {
         progressId.push(data.id_proyek_report_progress_pekerjaan)
         this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, this.modelData?.id, {progressId});
-        this.calculateProgress(this.modelData.id);
+        const work_area = this.FNCOL.calculateProgress(parentId, this.workAreaContainer)
+        this.uploadData(work_area)
       })
     }
   }
@@ -235,21 +239,6 @@ export class WorkAreaComponent implements OnInit {
       this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, work?.id, dataItems);
       if(work?.items?.length) this.rebindingStatusData(work.items , submitData);
     })
-  }
-  // calculatProgress(parentId, workareacontainer, this.data.id)
-  calculateProgress(parentId) {
-    parentId = parentId.toString().split('')
-    parentId.pop()
-    parentId = parentId.join('')
-    let totalProgress = 0;
-    const work = this.workAreaContainer
-    .find(work => [work.id === parentId])
-    work.items.map(work => totalProgress += work.progress)
-    totalProgress = totalProgress / work.items?.length
-    this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentId, { progress : totalProgress.toFixed(3) });
-    parentId.length > 1 
-    ? this.calculateProgress(parentId) 
-    : this.uploadData(this.workAreaContainer)
   }
 
   uploadData(work_area){

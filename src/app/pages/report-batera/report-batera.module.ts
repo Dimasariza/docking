@@ -48,7 +48,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     VariantWorkComponent,
     LetterMenuComponent,
   ],
-  entryComponents: [ LetterDocComponent, ProjectStatusComponent],
+  entryComponents: [ LetterDocComponent],
   imports: [
     CommonModule,
     NgxDatatableModule,
