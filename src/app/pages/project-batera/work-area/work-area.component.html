@@ -72,9 +72,8 @@
         </div> 
         <span class="d-block my-1">Remarks</span>
         <textarea rows="3" nbInput fullWidth name="remarks" #remarks [ngModel]="modelData?.remarks"></textarea>
-        <button type="submit" nbButton status="success" class="m-2"  fullWidth>Submit</button>
+        <button type="submit" nbButton status="success" class="m-2" [disabled]="!addWorkAreas.form.valid" fullWidth>Submit</button>
     </form>
     </nb-card-body>
 </nb-card>
 
-<!-- [disabled]="!addWorkAreas.form.valid" -->

@@ -7,7 +7,7 @@
     </button>
 </div>
 <div style="overflow: auto; width: 100%;">
-    <div style="width: 2600px;">
+    <div style="width: 2900px;">
         <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
             <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
             <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
@@ -47,27 +47,31 @@
             <ng-container [nbTreeGridColumnDef]="'suplier'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <nb-select placeholder="Suplier" size="small" fullWidth class="w-100" >
-                        <nb-option *ngFor="let value of suplierData; let id=index;" [value]="value">{{value?.nama_supplier}}</nb-option>
+                    <nb-select *ngIf="parentIndex(row)" [placeholder]=" row.data?.suplier?.name || 'Suplier' " size="small" fullWidth class="w-100">
+                        <nb-option *ngFor="let value of suplierData; let id=index;" (click)="chooseSuplier(row.data?.id,value)" [value]="value">{{value?.nama_supplier}}</nb-option>
                     </nb-select>
                 </td>
             </ng-container>
                         
             <ng-container [nbTreeGridColumnDef]="'edit'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="">
                     <div class="d-flex">
                         <button nbButton size="small" class="btn-sm text-center" outline (click)="addSubVariantDial(row)"
                         nbPopover="Add Sub Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">  
                             <nb-icon icon="plus-outline" status="primary"></nb-icon>
                         </button>
-                        <button nbButton size="small" class="text-center mx-4" outline (click)="updateVariantDial(row)"
+                        <button nbButton size="small" class="text-center text-center mx-2" outline (click)="updateVariantDial(row)"
                         nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                             <nb-icon icon="edit-outline" status="primary"></nb-icon>
                         </button>
-                        <button nbButton size="small" class="btn-sm text-center" outline (click)="deleteVariant(row)"
+                        <button nbButton size="small" class="btn-sm text-center mr-2" outline (click)="deleteVariant(row)"
                         nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
                             <nb-icon icon="trash-outline" status="danger"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="generatePDF(row)" *ngIf="parentIndex(row)"
+                        nbPopover="Export To PDF" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="file-outline" status="primary"></nb-icon>
                         </button>
                     </div>
                 </td>

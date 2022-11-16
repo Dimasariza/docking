@@ -5,6 +5,7 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { ExportToExcel } from '../../function-collection-batera/export-excel';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-dialog.component';
+import { PdfGeneratorBateraComponent } from '../../pdf-generator-batera/pdf-generator-batera.component';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
@@ -56,6 +57,7 @@ export class VariantWorkComponent implements OnChanges {
               private reportService : ReportBateraService,
               public FNCOL : FunctionCollection,
               public excelService : ExportToExcel,
+              public pdfExporter : PdfGeneratorBateraComponent
   ) { }
 
   useButtons = useButtons
@@ -83,6 +85,15 @@ export class VariantWorkComponent implements OnChanges {
   basedCurrency : any
   
   isFalsy = (value) => !value
+
+  parentIndex(row){
+    const parentIndex = row.data.id.toString().split('')
+    if(parentIndex.length == 1) return true
+  }
+
+  generatePDF(row){
+    this.pdfExporter.generatePDFBasedOnJob(this.workProgressData, row.data)
+  }
 
   ngOnChanges(){
     this.projectId = this.activeRoute.snapshot.paramMap.get('id')
@@ -217,7 +228,16 @@ export class VariantWorkComponent implements OnChanges {
       }});
     return dialog
   }
-  
+
+  chooseSuplier(parentId ,value){
+    const suplier = {
+      id : value.id_supplier,
+      name : value.nama_supplier
+    }
+    const variant_work = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentId, {suplier})
+    this.updateVariantWork(variant_work)
+  }
+
   @Output() reloadPage = new EventEmitter<string>();
   updateVariantWork(variant_work){
     this.reportService.updateVarianWork({variant_work}, this.variantWorkData.id_proyek)

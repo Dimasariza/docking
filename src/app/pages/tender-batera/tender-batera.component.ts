@@ -12,7 +12,6 @@ import { WorkAreaComponent } from '../project-batera/work-area/work-area.compone
 import { ContractActionComponent } from './contract-action/contract-action.component';
 import { TenderBateraService } from './tender-batera.service'
 
-interface TreeNode<T> {}
 interface FSEntry{}
 
 @Component({
@@ -53,17 +52,18 @@ export class TenderBateraComponent {
     fileInput.click()
   }
 
+  projectData : any = []
   tenderData : any = []
-  projectData
-  tenderCollection : any = []
-  projectId : any
+  currentProject : any
   tenderId : any
   dataTable : object = {}
-  selectedYard : any
   approvalStatus = ["All","Critical","High","Medium","Low"]
   selectedText = "Select"
   workAreaContainer
-  currentProjectId
+  usedCurrency
+  responsible : any
+
+  isFalsy = (value) => !value
 
   ngOnInit(): void {
     this.projectService.getDataProjects()
@@ -71,73 +71,61 @@ export class TenderBateraComponent {
       this.projectData =
       data.map(item => ({
         workArea : item.work_area,
-        offHire : item.off_hire_period,
-        offHireCost : item.off_hire_rate_per_day,
-        ownerCost : item.off_hire_bunker_per_day,
+        offHire : parseInt(item.off_hire_period),
+        offHireCost : parseInt(item.off_hire_rate_per_day),
+        ownerCost : parseInt(item.off_hire_bunker_per_day),
         projectId : item.id_proyek,
         shipName : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
         currency : item.mata_uang
       }))
     })
+
+    this.profileService.getUserData(1, 10)
+    .subscribe(({data} : any) => this.responsible = data)    
   }
 
-  getProject(id){
-    this.currentProjectId = id
-    this.selectedYard = null
+  getProject(project){
     this.displayTender = null
-    const {workArea, projectId, currency, offHire, offHireCost, ownerCost} = this.projectData[id]
+    this.currentProject = this.projectData.find(p => p.projectId == project.projectId)
+    const {workArea, currency} = this.currentProject
+    this.usedCurrency = currency
     this.workAreaContainer = workArea
-    this.projectId = projectId
-    this.projectData['currency'] = currency
-    this.projectData['offHire'] = offHire
-    this.projectData['offHireCost'] = offHireCost
-    this.projectData['ownerCost'] = ownerCost
-    workArea === null ||
-    workArea === undefined ? 
-    this.dataSource = this.dataSourceBuilder.create([]) :
+    if(this.isFalsy(workArea) || this.isFalsy(workArea[0])) this.dataSource = this.dataSourceBuilder.create([]) 
+    if(!this.isFalsy(workArea) || !this.isFalsy(workArea[0]))
     this.dataSource = this.dataSourceBuilder.create(workArea.map(work => {
-      const workItem = [currency, 'Unit Price Contract', 'Total Price Contract']
+      const workItem = [currency, 'Price Contract']
       return this.FNCOL.populateData(work, workItem, false)
-    }) as TreeNode<FSEntry>[])
+    }))
     this.loadYardData()
   }
 
   loadYardData(){
-    let selectedYard
-    this.selectedText = "Select"
-    this.tenderService.getProjectSummary('', '', '','')
+    this.tenderService.getProjectSummary()
     .subscribe(({data} : any) => {
-      this.tenderData = data
-      this.tenderCollection = data.map(tender => tender.id_tender)
-      if(data.length) getProjectTender()
+      if(data.length) getProjectTender(data)
       if(!data.length) getAllTender('all')
     })
 
-    const getProjectTender = () => {
-      selectedYard = this.tenderData.find(yard => yard.id_proyek === this.projectId)
+    const getProjectTender = (tender) => {
+      let selectedYard = tender.find(yard => yard.id_proyek === this.currentProject.projectId)
       if(selectedYard) {
         this.selectedText = "Unselect"
         this.tenderService.getDataTenderPerId(selectedYard?.id_tender)
         .subscribe(({data} : any) => {
-          this.selectedYard = data
           this.tenderId = selectedYard?.id_tender
           this.renderYard(data)
         })
       } 
-      else {
-        getAllTender('other')
-      }
+      else getAllTender('other')
     }
 
     const getAllTender = (conds) => {
+      this.selectedText = "Select"
+      let tenderId = this.tenderData.map(tender => tender.id_tender)
       this.tenderService.getDataTender(10, "all")
       .subscribe(({data} : any) => {
-        if(conds == 'other') {
-          this.tenderData = data.filter(tender => !this.tenderCollection.includes(tender.id_tender))
-        }
-        if(conds == 'all') {
-          this.tenderData = data
-        }
+        if(conds == 'other') this.tenderData = data.filter(tender => !tenderId.includes(tender.id_tender))
+        if(conds == 'all') this.tenderData = data
       })
     }
   }
@@ -145,40 +133,26 @@ export class TenderBateraComponent {
   getYard(id){
     const {id_tender} = this.tenderData[id]
     this.tenderId = id_tender
-    this.selectedYard = this.tenderData[id] 
     this.renderYard(this.tenderData[id])
   }
   
   displayTender
   renderYard(tender){
     const {general_diskon_persen, additional_diskon, nama_galangan, sum_internal_adjusment} = tender
-    this.displayTender = tender
     this.tenderId = tender?.id_tender
-
-    this.profileService.getUserPerId(tender.id_user)
-    .subscribe(({data} : any) => this.displayTender.responsible = data.nama_lengkap)
-
-    const offHire = this.projectData['offHire']
-    const currency = this.projectData['currency']
-    const offHireCost = parseInt(this.projectData['offHireCost'])
-    const ownerCost = parseInt(this.projectData['ownerCost'])
-
+    this.displayTender = tender
+    this.displayTender.responsible = this.responsible.find(resp => resp.id_user == tender.id_user)
+    const {offHire, offHireCost, ownerCost} = this.currentProject
     this.dataTable = {
       'Yard' : nama_galangan,
-      'Currency': currency,
+      'Currency': this.usedCurrency,
       'Offhire Repair Period (In Dock)': offHire,
-      'Offhire Cost': this.currency.transform(offHireCost, this.FNCOL.convertCurrency(currency)),
-      'Owner Cost': this.currency.transform(ownerCost, this.FNCOL.convertCurrency(currency)),
-      'Owner Total Cost': this.currency.transform(offHireCost + ownerCost, this.FNCOL.convertCurrency(currency)),
-      'Sum Internal Adjusment': this.currency.transform(sum_internal_adjusment, this.FNCOL.convertCurrency(currency)), 
-      'General Discount': {
-        discount : general_diskon_persen,
-        'after' : this.currency.transform(general_diskon_persen * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(currency))
-      },
-      'Additional Discount': {
-        discount : additional_diskon,
-        'after' : this.currency.transform(additional_diskon * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(currency))
-      }
+      'Offhire Cost': this.currency.transform(offHireCost, this.FNCOL.convertCurrency(this.usedCurrency)),
+      'Owner Cost': this.currency.transform(ownerCost, this.FNCOL.convertCurrency(this.usedCurrency)),
+      'Owner Total Cost': this.currency.transform(offHireCost + ownerCost, this.FNCOL.convertCurrency(this.usedCurrency)),
+      'Sum Internal Adjusment': this.currency.transform(sum_internal_adjusment, this.FNCOL.convertCurrency(this.usedCurrency)), 
+      'General Discount': `(${general_diskon_persen} %) ${this.currency.transform(general_diskon_persen * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(this.usedCurrency))}`,
+      'Additional Discount': `(${additional_diskon} %) ${this.currency.transform(additional_diskon * (offHireCost + ownerCost) / 100, this.FNCOL.convertCurrency(this.usedCurrency))}`,
     }
   }
 
@@ -188,13 +162,19 @@ export class TenderBateraComponent {
       autoFocus:true, 
       data : {
         dial : 'Update Load Details',
-        id : this.projectId,
+        id : this.currentProject.projectId,
         data : row,
-        work : {work_area : this.workAreaContainer}
+        work : {
+          work_area : this.workAreaContainer,
+          mata_uang : this.usedCurrency
+        }
       }
     })    
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
+      setTimeout(() => {
+        this.getProject(this.currentProject)
+      }, 1000);
     })
   }
 
@@ -204,11 +184,11 @@ export class TenderBateraComponent {
       autoFocus : true,
       data : {
         dial : 'Add',
-        projectId :  this.projectId,
       }
     })
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
-      this.ngOnInit()
+      this.ngOnInit();
+      this.loadYardData();
     });
   }
   
@@ -218,52 +198,63 @@ export class TenderBateraComponent {
       autoFocus : true,
       data : {
         dial : 'Update',
-        projectId :  this.projectId,
+        projectId :  this.currentProject.projectId,
         data : this.displayTender
       }
     })
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
+      this.loadYardData();
     });
   }
 
-  approveStatus(newData){
-    const ownerApproval = {ownerApproval : true}
-    this.approvedData(newData, ownerApproval)
+  approveByRank(id) {
+    const tenderApproval = {tenderApproval : true}
+    this.workAreaContainer.forEach(work => {
+      if(id == 0) this.approvedData([work], tenderApproval)
+      if(id != 0 && id - 1 == work.rank) this.approvedData([work], tenderApproval)
+    })
+    this.updateWorkApproval(this.workAreaContainer)
   }
 
   approvedByYard(newData){
     const tenderApproval = {tenderApproval : true}
     this.approvedData(newData, tenderApproval)
+    this.updateWorkApproval(this.workAreaContainer)
   }
 
   approvedData(newData, approve) {
     newData.map(work => {
       const postData = { ...work, ...approve}
-      const parentIndex = work.id.toString().split('')
-      this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, parentIndex, postData)
-      work?.items ? this.approvedData(work.items, approve) : 
-      this.updateWorkApproval(this.workAreaContainer)
+      this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, work.id, postData)
+      if(work?.items?.length) this.approvedData(work.items, approve) 
     })
   }
 
   updateWorkApproval(work_area){
-    this.projectService.workArea({work_area}, this.projectId)
+    this.projectService.workArea({work_area}, this.currentProject.projectId)
     .pipe(take(1))
-    .subscribe((res) => {
+    .subscribe(({status} : any) => {
       this.ngOnInit()
+      setTimeout(() => {
+        this.getProject(this.currentProject)
+      }, 1000);
     })
-    this.getProject(this.currentProjectId)
   }
 
   chooseTender(){
     if(this.selectedText == 'Select') {
-      this.tenderService.selectTender(this.projectId, this.tenderId)
-      .subscribe(res => console.log(res))
+      this.tenderService.selectTender(this.currentProject.projectId, this.tenderId)
+      .subscribe(() =>{
+        this.selectedText = 'Unselect'
+      })
     }
     if(this.selectedText == 'Unselect') {
       this.tenderService.unselectTender(this.tenderId)
-      .subscribe(res => console.log(res))
+      .subscribe(() => {
+        this.selectedText = 'Select'
+        this.loadYardData()
+      })
     }
   }
 

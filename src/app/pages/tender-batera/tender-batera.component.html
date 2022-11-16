@@ -1,67 +1,56 @@
 <nb-card class="p-3">  
   <div class="row">
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
-          <div>
-            <span class="d-block label">Project Name</span>  
-            <nb-select placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
-              <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(id)" #projectNameVal>{{value.shipName}}</nb-option>
-            </nb-select>
-            <span class="d-block label">Yard Name</span>
-            <nb-select [placeholder]="selectedYard?.nama_galangan || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="!projectId || selectedText == 'Unselect'" #selectYard class="m-1">
-              <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
-            </nb-select>
-            <span class="d-block label">Yard Location</span> 
-            <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data not available'}}</span>
-            <span class="d-block label">Responsible</span>
-            <span class="d-block text-capitalize">{{displayTender?.responsible || 'Data not available'}}</span>
-            <span class="d-block label">Contract Number</span> 
-            <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data not available'}}</span>
-            <span class="d-block label">Yard Quote</span> 
-            <span class="d-block text-capitalize">{{displayTender?.yard_total_quote || 'Data not available'}}</span>
-            <span class="d-block label">Comment</span>
-            <p class="d-block">{{displayTender?.komentar || 'Data not available'}}</p>
-          </div>
-        </div>
-    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <span class="d-block label">Project Name</span>  
+        <nb-select placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+          <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(value)" #projectNameVal>{{value.shipName}}</nb-option>
+        </nb-select>
+        <span class="d-block label">Yard Name</span>
+        <nb-select [placeholder]="displayTender?.nama_galangan || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="!currentProject || selectedText == 'Unselect'" #selectYard class="m-1">
+          <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
+        </nb-select>
+        <span class="d-block label">Yard Location</span> 
+        <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data not available'}}</span>
+        <span class="d-block label">Responsible</span>
+        <span class="d-block text-capitalize">{{displayTender?.responsible?.nama_lengkap || 'Data not available'}}</span>
+        <span class="d-block label">Contract Number</span> 
+        <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data not available'}}</span>
+        <span class="d-block label">Yard Quote</span> 
+        <span class="d-block text-capitalize">{{displayTender?.yard_total_quote || 'Data not available'}}</span>
+        <span class="d-block label">Comment</span>
+        <p class="d-block">{{displayTender?.komentar || 'Data not available'}}</p>
+    </div>
 
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
       <div class="my-2">
-        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()">Add Yard</button>
+        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()" >Add Yard</button>
         <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!displayTender">Update Yard</button>
         <button nbButton size="tiny" class="mx-1" status="warning"  (click)="chooseTender()" outline [disabled]="!displayTender">{{selectedText}} Yard</button>
         <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!displayTender">Delete Yard</button>
       </div>
 
-      <nb-card class="p-3" *ngIf=" selectedYard ">
+      <nb-card class="p-3" *ngIf="displayTender">
           <div *ngFor="let item of objectKeys(dataTable)">
-            <div *ngIf="item != 'General Discount'&& item !='Additional Discount' else discount " class="row" >
+            <div class="row">
               <div class="col-6"><strong>{{item}}</strong></div>
               <div class="">:</div>
               <div class="col text-capitalize text-right">{{dataTable?.[item]}}</div>
             </div>
-            <ng-template #discount>
-              <div class="row">
-                <strong class="col-6">{{item}} </strong>
-                <div class="">:</div>
-                <div class="col text-right">({{dataTable?.[item].discount}} %) {{dataTable?.[item].after}}  </div>
-              </div>
-            </ng-template>
           </div>
-          <!-- <div class="text-center mt-3">
-            <button nbButton class="mx-1" status="primary" outline size="small">Preview</button>
-          </div> -->
       </nb-card>
     </div>
   </div>
 </nb-card>
 
+
+
+
+
+
 <nb-accordion>
   <nb-accordion-item>
     <nb-accordion-item-header >Load Details</nb-accordion-item-header>
     <nb-accordion-item-body>
-      <!-- <button nbButton class="m-1" status="primary" outline type="button" size="small" (click)="triggerSelectFile(addFromFile)">
-        Add From File
-      <input type="file" style="display: none;" #addFromFile>
-      </button> -->
       <div style="overflow: auto; width: 100%;">
         <div style="width: 1524px;">
           <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
@@ -89,8 +78,8 @@
             <ng-container [nbTreeGridColumnDef]="'Approve'">
               <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
                 <div class="text-center">
-                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #approval (ngModel)="approval" name="approvalStatus" class="m-1">
-                    <nb-option *ngFor="let value of approvalStatus; let id=index;" [value]="approvalStatus[id]" (click)="approveStatus(id)">{{value}}</nb-option>
+                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #approval (ngModel)="approval" [disabled]="!currentProject" name="approvalStatus" class="m-1">
+                    <nb-option *ngFor="let value of approvalStatus; let id=index;" [value]="approvalStatus[id]" (click)="approveByRank(id)">{{value}}</nb-option>
                   </nb-select>
                 </div>
               </th>
@@ -110,12 +99,6 @@
                   </button>
                 </td>
             </ng-container>
-
-            <ng-container [nbTreeGridColumnDef]="'Resp'">
-              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px">Resp</th>
-              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">{{row.data?.responsible?.name}}
-              </td>
-          </ng-container>
 
             <ng-container *ngFor="let column of defaultColumns; let index = index"
                           [nbTreeGridColumnDef]="column"

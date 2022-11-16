@@ -48,16 +48,16 @@
 
             <ng-container [nbTreeGridColumnDef]="'%'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
-                <td nbTreeGridCell *nbTreeGridCellDef="let row"
-                [nbPopover]="row.data?.progress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
-                    <nb-progress-bar [value]="row.data.progress || 0" [displayValue]="true" status="primary"></nb-progress-bar>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-progress-bar [value]="row.data.progress || 0" [displayValue]="true"
+                    [nbPopover]="row.data?.progress || '0'" nbPopoverTrigger="hint" nbPopoverPlacement="top" status="primary"></nb-progress-bar>
                 </td>
             </ng-container>
 
             <ng-container [nbTreeGridColumnDef]="'suplier'">
                 <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
-                    <nb-select placeholder="Suplier" size="small" fullWidth class="w-100">
+                    <nb-select *ngIf="parentIndex(row)" [placeholder]=" row.data?.suplier?.name || 'Suplier' " size="small" fullWidth class="w-100">
                         <nb-option *ngFor="let value of suplierData; let id=index;" (click)="chooseSuplier(row.data?.id,value)" [value]="value">{{value?.nama_supplier}}</nb-option>
                     </nb-select>
                 </td>

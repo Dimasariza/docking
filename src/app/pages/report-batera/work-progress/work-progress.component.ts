@@ -1,8 +1,8 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
-import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { NbDateService, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { ExportToExcel } from '../../function-collection-batera/export-excel';
@@ -12,6 +12,7 @@ import { ProjectBateraService } from '../../project-batera/project-batera.servic
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
+import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
 
 interface TreeNode<T> {}
@@ -59,7 +60,9 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
               public FNCOL : FunctionCollection,
               public pdfExporter : PdfGeneratorBateraComponent,
               public currency : CurrencyPipe,
-              public excelService : ExportToExcel
+              public excelService : ExportToExcel,
+              public reportService : ReportBateraService,
+              public dateService : DatePipe,
     ) {
   }
 
@@ -80,19 +83,21 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
 
   @Input() workProgressData : any = ""
   @Input() suplierData : any [] = ['Data Not Available']
+  @Input() projectData : any
   useButtons = useButtons
   projectId : any
   subscription : Subscription [] = []
+  @Output() reloadPage = new EventEmitter<string>();
+  @Output() alertStatus = new EventEmitter<string>();
   
   ngOnInit(){}
+
+  isFalsy = (value) => !value
 
   ngOnChanges(){
     this.projectId = this.activatedRoute.snapshot.paramMap.get('id')
     const work_area = this.workProgressData?.work_area
-    work_area === null ||
-    work_area === undefined ||
-    work_area[0] === null ? null : 
-    this.regroupTableData(false)
+    if(!this.isFalsy(work_area)) this.regroupTableData(false)
   }
 
   parentIndex(row){
@@ -121,6 +126,8 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
         break
       case 'Send Notification' :
+        this.sendEmailNotification()
+
         break
       case 'Expand' :
         useButtons[4].desc = 'Unexpand'
@@ -164,13 +171,73 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   }
 
   chooseSuplier(parentId ,value){
-    const work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentId, {suplierId : value.id_supplier})
-    // suplier job ??
+    const suplier = {
+      id : value.id_supplier,
+      name : value.nama_supplier
+    }
+    const work_area = this.FNCOL.updateWorkAreaData(this.workProgressData.work_area, parentId, {suplier})
+    this.updateWorkApproval(work_area)
   }
 
-  @Output() reloadPage = new EventEmitter<string>();
+  reconstructEmailData(work_area) {
+    work_area = work_area.map(work => {
+      let {jobNumber, jobName, progress ,start, end, volume, unit, 'Price Budget' : unit_price = 0, id, items} = work 
+      if(progress === null || progress === undefined) progress = 0
+      const index = id.toString().split('')
+      let useUnit = index.length == 1 
+      ? this.FNCOL.jobUnit 
+      : this.FNCOL.subJobUnit
+      const newData = {
+        job_no : jobNumber,
+        job_name : jobName,
+        progress,
+        start : this.dateService.transform(start, 'dd-MM-yyyy') ,
+        end : this.dateService.transform(end, 'dd-MM-yyyy'),
+        volume,
+        unit : useUnit[unit],
+        unit_price : this.currency.transform(unit_price,  this.FNCOL.convertCurrency(this.projectData.proyek.mata_uang)),
+        total_price : this.currency.transform(unit_price * volume,  this.FNCOL.convertCurrency(this.projectData.proyek.mata_uang))
+      }
+      if(items?.length) return [newData, ...this.reconstructEmailData(items)]
+      else return newData
+    })
+    return work_area
+  }
+
+  sendEmailNotification() {
+    const {perusahaan, proyek} = this.projectData
+    const {tahun, kapal} = proyek
+    const work_progress = this.reconstructEmailData(this.workProgressData.work_area) 
+    const workContainer = new Array
+    const pushData = (work_area) => {
+      work_area.forEach(work => {
+        if(!work.length) workContainer.push(work)
+        if(work.length) pushData(work)
+      })
+    }
+    pushData(work_progress)
+    
+    const postBody = {
+      shipyard : {
+        nama_user : "Roganda Dimas Ariza",
+        nama_perusahaan : perusahaan.profile_nama_perusahaan ,
+        email : "dimas.ariza20@gmail.com"
+      },
+      no_docking : kapal.nama_kapal + ' -DD- ' + tahun,
+      work_progress : workContainer
+    }
+    this.alertStatus.emit('send_email')
+    const _subs = this.reportService.sendNotification(postBody)
+    .pipe(take(1))
+    .subscribe(({status} : any) => {
+      if(status == 'ok') this.alertStatus.emit('success')
+    },
+    err => console.log(err))
+    this.subscription.push(_subs)
+
+  }
+
   updateWorkApproval(work_area){
-    console.log(work_area)
     this.projectService.workArea({work_area}, this.projectId)
     .pipe(take(1))
     .subscribe(() =>{

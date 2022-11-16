@@ -42,7 +42,6 @@ export class WorkAreaComponent implements OnInit {
   ngOnInit(){
     this.usedCurrency = this.data.work.mata_uang
     const data = this.data?.data?.data
-    console.log(data)
     const parentId = data?.id.toString().split('')
     this.disabledChild = parentId?.length > 1 ? true : false;
     switch (this.data.dial) {
@@ -70,7 +69,7 @@ export class WorkAreaComponent implements OnInit {
       case 'Work Progress':
         if(!this.disabledChild) this.getUserProfile()
         this.unitPriceLabel = 'Price Budget';
-        this.updateWorkAreaDatas(data)
+        this.updateWorkAreaDatas(data);  
         this.workAreaCondition('work area');
       break;
       case 'Update Load Details':
@@ -199,7 +198,7 @@ export class WorkAreaComponent implements OnInit {
     } 
     this.workAreaContainer =  this.FNCOL.addSubJobData(this.workAreaContainer , reconstructData, this.modelData.id)
     const work_area = this.FNCOL.calculateProgress(id, this.workAreaContainer)
-    console.log(work_area)
+    this.uploadData(work_area)
   }
 
   updateWorkArea(newData){
@@ -230,6 +229,7 @@ export class WorkAreaComponent implements OnInit {
         this.uploadData(work_area)
       })
     }
+    else (this.uploadData(this.workAreaContainer))
   }
 
   rebindingStatusData(newData, submitData) {

@@ -9,7 +9,7 @@ export class TenderBateraService {
     constructor (private httpClient : HttpClient,){}
     public apiUrl = environment.apiUrl
     
-    getDataTender(page, status){    
+    getDataTender(page : any = "", status : any = ""){    
         const url = this.apiUrl + "/tender"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
@@ -27,7 +27,7 @@ export class TenderBateraService {
         return this.httpClient.get(url)
     }
 
-    getProjectSummary(page, per_page, q, status){
+    getProjectSummary(page : any = '', per_page : any = '', q : any = '', status : any = ''){
         const url = this.apiUrl + "/report/proyek"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
