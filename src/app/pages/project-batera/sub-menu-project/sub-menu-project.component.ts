@@ -10,6 +10,7 @@ import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-di
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { TableDataComponent } from './table-data/table-data.component';
+import { SelectControlValueAccessor } from '@angular/forms';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -42,6 +43,7 @@ const menuButton = [
 @Component({
   selector: 'ngx-sub-menu-project',
   templateUrl: './sub-menu-project.component.html',
+  styleUrls : ['../../home-batera/home.component.scss']
 })
 
 export class SubMenuProjectComponent implements OnInit {
@@ -62,6 +64,7 @@ export class SubMenuProjectComponent implements OnInit {
   projectData : any
   reportData : any
   progressData : any
+  alertConds 
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
@@ -89,7 +92,7 @@ export class SubMenuProjectComponent implements OnInit {
   regroupData(expand){
     const {work_area, mata_uang} = this.projectData
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
-      const workItem = [mata_uang, 'Unit Price Budget', 'Total Price Budget']
+      const workItem = [mata_uang, 'Price Budget']
       return this.FNCOL.populateData(work, workItem, expand) 
     }) as TreeNode<FSEntry>[])
   }
@@ -100,7 +103,7 @@ export class SubMenuProjectComponent implements OnInit {
   objectKeys = Object.keys;
 
   reconstruction(data){
-    const { kapal, phase, selected_yard, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day,
+    const { kapal, phase, mata_uang, off_hire_period, off_hire_deviasi, off_hire_rate_per_day, off_hire_bunker_per_day, repair_in_dock_period, repair_additional_day,
       off_hire_start, off_hire_end , repair_start, repair_end, repair_in_dock_start, repair_in_dock_end, repair_period} = data
     const convertDate = (date, amount) => {
       date = new Date(date)
@@ -108,50 +111,16 @@ export class SubMenuProjectComponent implements OnInit {
       return this.convertDate.transform(date, 'dd-MM-yyyy') 
     }
     return {
-        "Vessel": {
-          type : 'text',
-          value : kapal.nama_kapal
-        },
-        "Phase": {
-          type : 'text',
-          value: this.FNCOL.convertPhase(phase) 
-        },
-        // "Selected Yard": {
-        //   type : 'text',
-        //   value : selected_yard
-        // },
-        "Base Currency": {
-          type : 'text',
-          value : mata_uang
-        },
-        "Off Hire Period": {
-          type : 'text',
-          value: `(${off_hire_period + off_hire_deviasi} Days) ${convertDate(off_hire_start, 0)} to ${convertDate(off_hire_end, off_hire_deviasi)}`  
-        },
-        "- Deviation": {
-          type : 'date',
-          value: off_hire_deviasi
-        },
-        "- Charter Rate": {
-          type : 'text',
-          value: this.currency.transform(off_hire_rate_per_day, this.FNCOL.convertCurrency(mata_uang)) 
-        } ,
-        "- Bunker": {
-          type : 'text',
-          value: this.currency.transform(off_hire_bunker_per_day, this.FNCOL.convertCurrency(mata_uang)) 
-        }, 
-        "Repair Period": {
-          type: 'text',
-          value : `(${repair_period + repair_additional_day} Days) ${convertDate(repair_start, 0)} to ${convertDate(repair_end, repair_additional_day)}`
-        },
-        "- In Dock": {
-          type : 'text',
-          value : `(${repair_in_dock_period} Days) ${convertDate(repair_in_dock_start, 0)} to ${convertDate(repair_in_dock_end, 0)}`
-        },
-        "- Additional Days": {
-          type : 'date',
-          value : repair_additional_day 
-        } 
+        "Vessel": kapal.nama_kapal,
+        "Phase": this.FNCOL.convertPhase(phase),
+        "Base Currency":  mata_uang,
+        "Off Hire Period": `(${off_hire_period + off_hire_deviasi} Days) ${convertDate(off_hire_start, 0)} to ${convertDate(off_hire_end, off_hire_deviasi)}`  ,
+        "- Deviation": `${off_hire_deviasi} Days`,
+        "- Charter Rate": this.currency.transform(off_hire_rate_per_day, this.FNCOL.convertCurrency(mata_uang)) ,
+        "- Bunker":  this.currency.transform(off_hire_bunker_per_day, this.FNCOL.convertCurrency(mata_uang)) , 
+        "Repair Period": `(${repair_period + repair_additional_day} Days) ${convertDate(repair_start, 0)} to ${convertDate(repair_end, repair_additional_day)}`,
+        "- In Dock": `(${repair_in_dock_period} Days) ${convertDate(repair_in_dock_start, 0)} to ${convertDate(repair_in_dock_end, 0)}`,
+        "- Additional Days":  `${repair_additional_day} Days` 
     }
   }
 
@@ -242,6 +211,8 @@ export class SubMenuProjectComponent implements OnInit {
       }
     }) 
     this.reload(dialog) 
+    const msg = 'The job has been added'
+    this.alertStatus('success', msg)
   }
   
   addSubJobDial(row){    
@@ -282,6 +253,15 @@ export class SubMenuProjectComponent implements OnInit {
         parentId : row.data.id
       }});
     this.reload(dialog) 
+  }
+
+  alertStatus (status, msg) {
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : true}
+    }, 1000);
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : false}
+    }, 5000);
   }
 
   reload(reloadPage) {

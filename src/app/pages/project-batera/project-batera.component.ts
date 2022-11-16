@@ -15,6 +15,7 @@ interface FSEntry {}
   providers : [SubMenuProjectComponent],
   selector: 'ngx-project-batera',
   templateUrl: './project-batera.component.html',
+  styleUrls : ['../home-batera/home.component.scss']
 })
 export class ProjectBateraComponent {
   constructor(private dialog : MatDialog,
@@ -61,6 +62,8 @@ export class ProjectBateraComponent {
   sortByProject : any = "all"
   sortByStatus : any = "all"
   sortByResponsible : any = "all" 
+
+  alertConds = {status : 'success', msg : 'project has been added', conds : true}
 
   ngOnInit() {
     this.profileService.getCompanyProfile()

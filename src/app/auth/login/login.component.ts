@@ -31,8 +31,6 @@ export class NgxLoginComponent extends NbLoginComponent {
       password: this.user.password, 
       remember: this.rememberMe
     }).subscribe((result: NbAuthResult) => {
-      console.log(result);
-      
       this.submitted = false;
 
       if (result.isSuccess()) {

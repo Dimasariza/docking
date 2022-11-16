@@ -31,10 +31,10 @@
             <ngx-pic></ngx-pic>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress (reloadPage)="ngOnInit()" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-work-progress>
+            <ngx-work-progress (reloadPage)="ngOnInit()" [projectData]="projectData" [workProgressData]="subProjectData" (alertStatus)="allertStatus($event)" [suplierData]="dataSuplier"></ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work (reloadPage)="ngOnInit()" [variantWorkData]="projectData" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-variant-work>
+            <ngx-variant-work (reloadPage)="ngOnInit()" (alertStatus)="allertStatus($event)" [variantWorkData]="projectData" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
             <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
@@ -48,4 +48,11 @@
       </nb-tabset>
 </nb-card>
 
-
+<nb-card style="position: absolute; width : 20%; bottom: 1.2rem; right:-30rem;" [ngClass]="alertConds?.conds ? 'active' : ''" >
+    <nb-alert accent="success" class="bg-transparent"> 
+      <div class="d-flex align-items-center mt-2">
+        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        {{alertConds?.msg}}
+      </div>
+    </nb-alert>
+</nb-card>  

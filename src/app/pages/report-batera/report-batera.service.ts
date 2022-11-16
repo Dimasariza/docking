@@ -61,12 +61,9 @@ export class ReportBateraService {
     }
 
     sendNotification(body) {
-        const url = "https://formspree.io/f/xvoywpnp"
+        const url = this.apiUrl + "/email/work_progress"
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.httpClient.post(url, 
-            {name : body.sender, replyto : body.receiver, message : body.message}, 
-            {headers : headers}
-        )
+        return this.httpClient.post(url, body)
     }
 
     addWorkProgress(body){

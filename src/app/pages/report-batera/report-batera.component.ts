@@ -13,6 +13,7 @@ import { ReportBateraService } from './report-batera.service';
 @Component({
   selector: 'ngx-report-batera',
   templateUrl: './report-batera.component.html',
+  styleUrls : ['../home-batera/home.component.scss']
 })
 export class ReportBateraComponent implements OnInit, OnDestroy  {
   constructor(private reportBateraService : ReportBateraService,
@@ -29,6 +30,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   yardDatas : any
   subscription : Subscription[] = []
   dataSuplier : any
+  alertConds 
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -71,6 +73,17 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
 
   exportToPDF(){
     this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas)
+  }
+
+  allertStatus (status) {
+    if(status === 'send_email') {
+      console.log('send email')
+    }
+    
+    this.alertConds = { status, msg : 'email has been send', conds : true}
+    setTimeout(() => {
+      this.alertConds = {...this.alertConds, conds : false}
+    }, 5000);
   }
 
   ngOnDestroy(): void {

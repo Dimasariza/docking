@@ -3,6 +3,7 @@ import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { NbAccordionModule, 
+  NbAlertModule, 
   NbButtonModule, 
   NbCardModule, 
   NbDatepickerModule, 
@@ -69,6 +70,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     NbAccordionModule,
     NbIconModule,
     MatTableModule,
+    NbAlertModule
   ],
   providers : [CurrencyPipe]
 })

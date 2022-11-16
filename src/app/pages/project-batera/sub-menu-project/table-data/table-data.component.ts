@@ -43,7 +43,7 @@ export class TableDataComponent implements OnChanges, OnInit {
     if(!this.tableData?.work_area || this.tableData.work_area[0] === null) return
     this.progressData[0].budget = this.tableData?.off_hire_period + this.tableData?.off_hire_deviasi + ' Days'
     this.tableData?.work_area.forEach(work => {
-        const {'Price Budget' : budget ,'Price Actual' : actual, 'Price Contract' : contract, category, volume} = work
+        const {'Price Budget' : budget = 0,'Price Actual' : actual = 0, 'Price Contract' : contract = 0, category, volume} = work
         this.progressData[category + start].budget += parseInt(budget) * volume
         this.progressData[category + start].contract += parseInt(contract) * volume
         this.progressData[category + start].actual += parseInt(actual) * volume
@@ -51,7 +51,7 @@ export class TableDataComponent implements OnChanges, OnInit {
       
       for(let i = start ; i <= 5 ; i++) {
         this.progressData[1].budget += this.progressData[i].budget
-        this.progressData[1].contract += this.progressData[i].contract
+        this.progressData[1].contract += this.progressData[i].contract 
         this.progressData[1].actual += this.progressData[i].actual
       }
 
@@ -68,5 +68,7 @@ export class TableDataComponent implements OnChanges, OnInit {
         this.progressData[i].actual = this.currency.transform(this.progressData[i].actual, usedCurrency)
       }
   }
+
+
 
 }

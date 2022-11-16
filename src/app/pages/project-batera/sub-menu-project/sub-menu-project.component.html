@@ -26,18 +26,9 @@
                 </div>
                 
                 <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
-                    <div *ngIf="reportData[item.value].type === 'text';">
-                        <div class="row my-2">
-                          <div class="col-5"><strong>{{item.value}}</strong></div>
-                          <div class="col-7" [ngClass]="reportData[item.value]?.value ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value]?.value || 'Data Not Availlable'}}</div>
-                        </div>
-                    </div>
-                    
-                    <div *ngIf="reportData[item.value].type === 'date';">
-                        <div class="row my-2">
-                          <div class="col-5"><strong>{{item.value}} </strong></div>
-                          <div class="col-4">{{reportData[item.value]?.value || 'Data Not Availlable'}}  Days</div>
-                        </div>
+                    <div class="row my-2">
+                        <div class="col-5"><strong>{{item.value}}</strong></div>
+                        <div class="col-7" [ngClass]="reportData[item.value] ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value] || 'Data Not Availlable'}}</div>
                     </div>
                 </div>
             </div>
@@ -50,6 +41,14 @@
 </nb-card>
 
 
+<nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem" [ngClass]="alertConds?.conds ? 'active' : ''" >
+    <nb-alert accent="success" class="bg-transparent"> 
+      <div class="d-flex align-items-center mt-2">
+        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        {{alertConds?.msg}}
+      </div>
+    </nb-alert>
+</nb-card>  
 
 
 <nb-card>
@@ -124,3 +123,5 @@
         </div>
     </div>
 </nb-card>
+
+

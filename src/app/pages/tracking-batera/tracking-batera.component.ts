@@ -23,57 +23,6 @@ export class TrackingBateraComponent implements OnInit {
   chartTask : any [] = []
 
   tasks: any [] = []
-  // =
-  // [
-  //   {
-  //       id: 'Task 1',
-  //       name: 'Redesign website 1',
-  //       start: '2016-1-11',
-  //       end: '2016-1-21',
-  //       price: 500,
-  //       progress_log: [
-  //           {progress: 10, date: '2016-1-12'},
-  //           {progress: 50, date: '2016-1-15'},
-  //           {progress: 100, date: '2016-1-30'},
-  //       ],
-  //       // dependencies: 'Task 2, Task 3',
-  //   },
-  //   {
-  //       id: 'Task 2',
-  //       name: 'Redesign website 2',
-  //       start: '2016-1-21',
-  //       end: '2016-1-25',
-  //       price: 300,
-  //       progress_log: [
-  //           {progress: 100, date: '2016-1-24'}
-  //       ],
-  //       dependencies: 'Task 1',
-  //   },
-  //   {
-  //       id: 'Task 3',
-  //       name: 'Redesign website 3',
-  //       start: '2016-1-25',
-  //       end: '2016-1-31',
-  //       price: 200,
-  //       progress_log: [
-  //           {progress: 100, date: '2016-1-31'},
-  //       ],
-  //       dependencies: 'Task 2',
-  //   },
-  //   {
-  //       id: 'Task 4',
-  //       name: 'Redesign website',
-  //       start: '2016-1-11',
-  //       end: '2016-1-21',
-  //       price: 100,
-  //       progress_log: [
-  //           {progress: 50, date: '2016-1-15'},
-  //           {progress: 100, date: '2016-1-21'},
-  //       ],
-  //       // dependencies: 'Task 2, Task 3',
-  //   },
-  // ]
-  // // series: ApexAxisChartSeries
 
   ngOnInit(): void {
     this.tenderService.getProjectSummary("", "", "", "")

@@ -65,7 +65,7 @@
         </div>
         <div>
             <input #viewMode type="text" style="visibility: hidden;" class="position-absolute">
-            <button *ngFor="let button of rightButton" (click)="viewMode.value=button" nbButton status="primary" class="mx-1" outline size="tiny">
+            <button *ngFor="let button of rightButton" (click)="viewMode.value=button" nbButton status="primary" class="mx-1" outline size="tiny" [disabled]="!tasks.length">
                 {{button}}
             </button>
         </div>

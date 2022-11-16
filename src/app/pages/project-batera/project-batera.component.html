@@ -168,4 +168,12 @@
         </ngx-datatable>
       </nb-card-body>
     </nb-card>
-    
+
+<nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem;" [ngClass]="alertConds?.conds ? 'active' : ''" >
+    <nb-alert accent="success" class="bg-transparent"> 
+      <div class="d-flex align-items-center mt-2">
+        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        {{alertConds?.msg}}
+      </div>
+    </nb-alert>
+</nb-card>  

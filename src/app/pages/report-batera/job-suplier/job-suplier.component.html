@@ -9,15 +9,15 @@
         <form action="" #suplierForm="ngForm" (ngSubmit)="onSubmit(suplierForm)">
             <div class="">
                 <span class="d-block">Suplier Name</span>
-                <input type="text" nbInput ngModel placeholder="Name" name="nama_supplier" #name>
+                <input type="text" required nbInput ngModel placeholder="Name" name="nama_supplier" #name>
                 <span class="d-block">Suplier Address</span>
-                <textarea name="alamat" rows="5" fullWidth ngModel nbInput #address placeholder="Supplier Address"></textarea>
+                <textarea name="alamat" required rows="5" fullWidth ngModel nbInput #address placeholder="Supplier Address"></textarea>
                 <span class="d-block">Suplier Email</span>
-                <input type="text" nbInput ngModel placeholder="Email" name="email" #email>
+                <input type="text" required nbInput ngModel placeholder="Email" name="email" #email>
                 <span class="d-block">Suplier Mobile Number</span>
-                <input type="text" nbInput ngModel placeholder="Mobile Number" name="no_hp" #mobile_no>
+                <input type="text" required nbInput ngModel placeholder="Mobile Number" name="no_hp" #mobile_no>
             </div>
-            <button nbButton status="success" class="my-2" type="submit" fullWidth>
+            <button nbButton status="success" [disabled]="!suplierForm.form.valid" class="my-2" type="submit" fullWidth>
                 Submit
             </button>
         </form>

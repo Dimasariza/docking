@@ -83,7 +83,7 @@ export class FunctionCollection {
     }
     
     populateData = (work, workItem, expand) => { 
-        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, 'Price Budget' : budgetPrice, progress }= work  
+        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, [workItem[1]] : unitPrice } = work  
         const parentId = id.toString().split('')
         let useUnit = parentId.length == 1 ? this.jobUnit : this.subJobUnit
         return {
@@ -100,8 +100,8 @@ export class FunctionCollection {
             kind : work.items?.length ? 'dir' : 'doc',  
             Update : this.datePipe.transform(lastUpdate, 'dd-MM-yyyy'),
             Volume : volume,
-            [workItem[1]] : this.currency.transform(budgetPrice, this.convertCurrency(workItem[0])),
-            [workItem[2]] : this.currency.transform(budgetPrice * volume, this.convertCurrency(workItem[0])),
+            [`Unit ${workItem[1]}`] : this.currency.transform(unitPrice, this.convertCurrency(workItem[0])),
+            [`Total ${workItem[1]}`] : this.currency.transform(unitPrice * volume, this.convertCurrency(workItem[0])),
           },
           children: 
           work === null || work === undefined ? null :
@@ -168,7 +168,7 @@ export class FunctionCollection {
       parentId.pop();
       parentId = parentId.join('').replace(',', '');;
       let totalProgress = 0;
-      const works = work.find(work => [work.id === parentId]);
+      const works = work.find(w => w.id.toString() === parentId.toString() );
       works?.items.map(work => totalProgress += work.progress);
       totalProgress = totalProgress / works.items?.length;
       if(Number(totalProgress) === totalProgress && totalProgress % 1 !== 0)

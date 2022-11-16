@@ -113,9 +113,10 @@ export class ProjectStatusComponent implements OnInit {
       this.completionData[completion].percentage += this.completionData[i].percentage / completion
       this.completionData[completion].complete += this.completionData[i].complete
       this.completionData[completion].totalJob += this.completionData[i].totalJob
-      this.completionData[completion].value += this.completionData[i].value
+      this.completionData[completion].value += this.completionData[i].value 
     }
-  }
+    this.completionData[completion].percentage = this.completionData[completion].percentage.toFixed(3)
+   }
 
   close(){ this.dialogRef.close()}
 }
