@@ -9,7 +9,7 @@ export class ProfileBateraService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl
 
-  getUserData(page, per_page, q, role, status) {
+  getUserData(page : any = '', per_page : any = '', q : any = '', role : any = '', status : any = '') {
     const url = this.apiUrl + "/user"
     let queryParams = new HttpParams();
     queryParams = queryParams.append("page", page)

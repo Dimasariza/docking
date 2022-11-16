@@ -25,10 +25,10 @@
           <div class="p-5">
             <h6 style="color: rgb(0, 208, 208);">{{item.nama_kapal}}</h6>
             <div class="back-card--desc mt-5" *ngIf="item?.head">
-              <h2>5%</h2>
+              <h2>{{item?.progress}} %</h2>
               <span class="font-weight-bolder">Status : {{item?.phase || ''}}</span> <br>
               <span class="font-weight-bolder">
-                <a class="text-decoration-none" [routerLink]="['/pages/report-batera', item.projectId]">{{item?.head || ''}}</a>
+                <a class="text-decoration-none" [routerLink]="['/pages/report-batera', item.id_proyek]">{{item?.head || ''}}</a>
               </span>
             </div>
           </div>
@@ -46,4 +46,13 @@
     </nb-card>
   </div>
 </div>
+
+<nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem;" [ngClass]="alertConds?.conds ? 'active' : ''" >
+  <nb-alert [accent]="alertConds?.status" class="bg-transparent"> 
+    <div class="d-flex align-items-center mt-2">
+      <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+      {{alertConds?.msg}}
+    </div>
+  </nb-alert>
+</nb-card>  
 

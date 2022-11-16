@@ -8,17 +8,16 @@ import { take } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
+  styleUrls : ['./home.component.scss']
 })
 export class HomeBateraComponent implements OnInit {
   constructor(private homeservice:HomeBateraService,
               private dialog : MatDialog,
               private tenderService : TenderBateraService,
-              private router : Router,
               private FNCOL : FunctionCollection,
   ){}
     
@@ -28,10 +27,13 @@ export class HomeBateraComponent implements OnInit {
   subscription : Subscription
   progressData : any
   role : string
+  alertConds
 
   toggleView(id) {
     this.shipData[id].flipped = !this.shipData[id].flipped
   }
+
+  isFalsy = (value) => !value
 
   ngOnInit() {
     this.homeservice.getUserLogin()
@@ -56,11 +58,17 @@ export class HomeBateraComponent implements OnInit {
     .subscribe(({data} : any) => { 
       this.progressData = data
       .map(project => {
-        const {kapal, tahun, phase, work_area} = project.proyek
-        const {id_kapal, nama_kapal} = kapal
-        const head = `${nama_kapal} - DD - ${tahun}`
-        const projectId = project.id_proyek
-        return {id_kapal, head, phase, projectId}
+        let {variant_work, id_proyek} = project;
+        let {kapal, tahun, phase, work_area} = project.proyek;
+        const {id_kapal, nama_kapal} = kapal;
+        const head = `${nama_kapal} - DD - ${tahun}`;
+        if(this.isFalsy(variant_work)) variant_work = [];
+        if(this.isFalsy(work_area)) work_area = [];
+        const workProgress = [...variant_work, ...work_area];
+        let progress = 0;
+        workProgress.map(job => progress += parseFloat(job.progress));
+        progress = progress / workProgress.length;
+        return {id_kapal, head, phase, id_proyek, progress};
       })
       setTimeout(() => this.generateData(), 1500);
     })
@@ -70,11 +78,8 @@ export class HomeBateraComponent implements OnInit {
     if(this.shipData.length === 0 || !this.progressData) return;
     this.shipData.map((ship, id) => {
       this.progressData.forEach(project => {
-        const {phase, head, projectId} = project
         if(project.id_kapal === ship.id_kapal) {
-            this.shipData[id]['phase'] = this.FNCOL.convertPhase(phase)
-            this.shipData[id]['head'] = head
-            this.shipData[id]['projectId'] = projectId
+            this.shipData[id] = {...this.shipData[id], ...project, phase : this.FNCOL.convertPhase(project.phase)};
         }
       })
     })
@@ -118,7 +123,17 @@ export class HomeBateraComponent implements OnInit {
   reloadPage(dialog){
     return dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
       this.ngOnInit()
+      this.alertCard('success', 'The ship has been added')
     });
+  }
+
+  alertCard(status, msg) {
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : true}
+    }, 1000);
+    setTimeout(() => {
+      this.alertConds = {...this.alertConds, conds : false}
+    }, 5000);
   }
 
   // ngOnDestroy(): void {

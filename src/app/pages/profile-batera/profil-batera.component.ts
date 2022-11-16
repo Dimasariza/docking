@@ -42,7 +42,6 @@ export class ProfilBateraComponent implements OnInit {
     this.changeProfile()
     this.pofileService.updateCompanyProfile(formValue.value)
     .subscribe(res => {
-      console.log(res)
     })
   }
 
@@ -68,7 +67,6 @@ export class ProfilBateraComponent implements OnInit {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
-        console.log(res)
       }
     })
     // this.subscription.push(_subs)
