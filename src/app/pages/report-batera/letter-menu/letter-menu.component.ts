@@ -84,6 +84,10 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
     this.subscription.push(_subs)
   }
 
+  sendEmail(row) {
+    console.log(row)
+  }
+
   ngOnDestroy(): void {
     this.subscription.forEach(subs => subs.unsubscribe())
   }

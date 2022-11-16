@@ -40,18 +40,21 @@ export class LetterDocComponent implements OnInit, OnDestroy {
     }
   }
 
-  public fileName : any = ""
+  public document : any = ""
   onFileChange(res){
     const formData = new FormData();
     const file = res.target?.files[0];
-    file?.name ? this.fileName = file.name : null
+    const ext = file.type.split("/")[1]
     formData.append('dokumen', file);
     const _subs = this.reportService.addAttachment(formData)
     .subscribe((res) => {
       if (res.type === HttpEventType.UploadProgress) {
-        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %');
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
+        this.document = res.body
+        this.document = this.document.data
+        console.log(this.document)
       }
     })
     this.subscription.push(_subs)
@@ -63,7 +66,7 @@ export class LetterDocComponent implements OnInit, OnDestroy {
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
       id_proyek : this.data.id,
-      dokumen : this.fileName
+      id_attachment : this.document.id_attachment
     }
     this.submitLetter(postBody)
   }
@@ -74,7 +77,7 @@ export class LetterDocComponent implements OnInit, OnDestroy {
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
       id_proyek : this.data.id,
-      dokumen : this.fileName
+      dokumen : this.document
     }
     this.submitLetter(postBody)
   }
@@ -85,7 +88,7 @@ export class LetterDocComponent implements OnInit, OnDestroy {
       tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
       type : this.data.dial,
       id_proyek : this.data.id,
-      dokumen : this.fileName
+      dokumen : this.document
     }
     this.submitLetter(postBody)
   }
