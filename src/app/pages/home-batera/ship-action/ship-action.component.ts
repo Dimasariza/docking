@@ -11,10 +11,9 @@ import { HomeBateraService } from '../home-batera.service';
 })
 export class ShipActionComponent implements OnInit {
   onSuccess : EventEmitter<any> = new EventEmitter<any>()
-  constructor(
-    private homeservice: HomeBateraService,
-    private dialogRef: MatDialogRef<ShipActionComponent>,
-    @Inject(MAT_DIALOG_DATA) public shipData: any
+  constructor(private homeservice: HomeBateraService,
+              private dialogRef: MatDialogRef<ShipActionComponent>,
+              @Inject(MAT_DIALOG_DATA) public shipData: any
     ){ 
   }
 
@@ -26,9 +25,15 @@ export class ShipActionComponent implements OnInit {
     file: new FormControl('', [Validators.required]),
     fileSource: new FormControl('', [Validators.required])
   });
-      
-  public formIsValid : boolean = true
-     
+
+  get vessel () {
+    return this.addShipForm.get('name')
+  }
+
+  get file () {
+    return this.addShipForm.get('file')
+  }
+
   public viewImageLink : any
   onFileChange(res) {
     const file = res.target.files[0];
@@ -54,7 +59,6 @@ export class ShipActionComponent implements OnInit {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
-        this.formIsValid = false
         this.uploadImageUrl = res
         this.uploadImageUrl = this.uploadImageUrl.body.data.file
       }
@@ -76,10 +80,11 @@ export class ShipActionComponent implements OnInit {
       })
     } else if (dial == "Update") {
       this.homeservice.updateShip(this.shipData.id, postBody)
-      .subscribe( (res) => {
+      .subscribe( () => {
         this.onSuccess.emit()
         this.close()
-      })
+      },
+      err => console.log(err))
     }
   }
 

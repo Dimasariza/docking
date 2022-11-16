@@ -31,7 +31,7 @@
                     <span class="col-12">Drop Your Image Here</span>
                 </div>
             </div>
-            <button class="text-center" nbButton status="success" type="submit" [disabled]="formIsValid">Submit</button>
+            <button class="text-center" nbButton status="success" type="submit" [disabled]="!(vessel.valid && file.valid)">Submit</button>
         </form>
     </nb-card-body>
 </nb-card>
