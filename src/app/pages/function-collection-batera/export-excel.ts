@@ -2,6 +2,7 @@ import { Injectable, Pipe, PipeTransform } from "@angular/core";
 import * as XLSX from 'xlsx/xlsx.mjs';
 import * as FileSaver from 'file-saver';
 import { DatePipe } from "@angular/common";
+import { FunctionCollection } from "./function-collection.component";
 
 const EXCEL_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8';
 const EXCEL_EXTENSION = '.xlsx';
@@ -9,21 +10,29 @@ const EXCEL_EXTENSION = '.xlsx';
     providedIn: 'root'
 })
 export class ExportToExcel{
-    constructor(public datePipe : DatePipe){}
+    constructor(public datePipe : DatePipe,
+                private FNCOL : FunctionCollection
+        ){}
     public excelData : any [] = [] 
     public reconstructJobsToExcel(datas) {
         datas.map(job => {
-            const {jobNumber, jobName, start, end, category, status, unit, responsible, rank, items} = job
+            const {jobNumber, jobName, start, end, category, status, unit, responsible, rank, items, progress, remarks, id} = job
+            const parentId = id.toString().split('')
+            let useUnit = parentId?.length == 1 
+            ? this.FNCOL.jobUnit 
+            : this.FNCOL.subJobUnit
             this.excelData.push({
                 "Job Number" : jobNumber,
                 "Job Name" : jobName,
                 Start : this.datePipe.transform(start, 'dd-MM-yyyy'),
                 Stop : this.datePipe.transform(end, 'dd-MM-yyyy'),
-                Unit : unit?.name,
-                Category : category?.name,
+                Unit : useUnit[unit],
+                Category : this.FNCOL.category[category] ,
                 Responsible : responsible?.name,
-                Status : status?.name,
-                Priority : rank?.name,
+                Status : this.FNCOL.status[status],
+                Priority : this.FNCOL.rank[rank],
+                Percentage : progress,
+                remarks
             })
             items?.length ? this.reconstructJobsToExcel(items) : null
         })
