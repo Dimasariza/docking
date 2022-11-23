@@ -69,15 +69,17 @@ export class TenderBateraComponent {
     this.projectService.getDataProjects()
     .subscribe(({data} : any) => {
       this.projectData =
-      data.map(item => ({
-        workArea : item.work_area,
-        offHire : parseInt(item.off_hire_period),
-        offHireCost : parseInt(item.off_hire_rate_per_day),
-        ownerCost : parseInt(item.off_hire_bunker_per_day),
-        projectId : item.id_proyek,
-        shipName : item.kapal.nama_kapal + ' -DD- ' + item.tahun,
-        currency : item.mata_uang
-      }))
+      data.map(i => {
+        const {work_area, off_hire_period, off_hire_bunker_per_day, off_hire_rate_per_day, tahun, id_proyek, mata_uang, status, kapal : {nama_kapal}} = i
+        return {
+        workArea : work_area,
+        offHire : parseInt(off_hire_period),
+        offHireCost : parseInt(off_hire_rate_per_day),
+        ownerCost : parseInt(off_hire_bunker_per_day),
+        projectId : id_proyek,
+        shipName : `${nama_kapal} -DD- ${tahun} ${this.FNCOL.convertStatus(status)}`,
+        currency : mata_uang
+      }})
     })
 
     this.profileService.getUserData(1, 10)

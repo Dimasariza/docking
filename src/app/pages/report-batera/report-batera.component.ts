@@ -4,7 +4,9 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
+import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generator-batera.component';
+import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { ProjectStatusComponent } from './project-status/project-status.component';
@@ -21,7 +23,9 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private activatedRoute : ActivatedRoute,
               private projectService : ProjectBateraService,
               private pdfExporter : PdfGeneratorBateraComponent,
-              private tenderService : TenderBateraService
+              private tenderService : TenderBateraService,
+              private profileService : ProfileBateraService,
+              private FNCOL : FunctionCollection
     ) {
   }
 
@@ -31,6 +35,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   subscription : Subscription[] = []
   dataSuplier : any
   alertConds 
+  picData : any
+  companyProfile : any
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -45,14 +51,27 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     .pipe(take(1))
     .subscribe(({data} : any) => {
       this.subProjectData = data
-      this.subProjectData['head'] = `${data.kapal.nama_kapal}-DD-${data.tahun}`
+      const {kapal : {nama_kapal}, tahun, status} = data
+      this.subProjectData['head'] = `${nama_kapal}-DD-${tahun} ${this.FNCOL.convertStatus(status)}`
     })
 
     const _subs3 = this.reportBateraService.getSuplier()
+    .pipe(take(1))
     .subscribe(({data} : any) => this.dataSuplier = data)
+
+    const _subs4 = this.profileService.getUserData(1, 10)
+    .pipe(take(1))
+    .subscribe(({data} : any) => this.picData = data)
+
+    const _subs5 = this.profileService.getCompanyProfile()
+    .pipe(take(1))
+    .subscribe(({data} : any) => this.companyProfile = data)
 
     this.subscription.push(_subs1)
     this.subscription.push(_subs2)
+    this.subscription.push(_subs3)
+    this.subscription.push(_subs4)
+    this.subscription.push(_subs5)
   }
 
   yardData(id): void {

@@ -39,34 +39,40 @@ export class TableDataComponent implements OnChanges, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    const start = 2
+    const start = 2;
+    const dataLength = this.progressData?.length - start;
     if(!this.tableData?.work_area || this.tableData.work_area[0] === null) return
-    this.progressData[0].budget = this.tableData?.off_hire_period + this.tableData?.off_hire_deviasi + ' Days'
-    this.tableData?.work_area.forEach(work => {
-        const {'Price Budget' : budget = 0,'Price Actual' : actual = 0, 'Price Contract' : contract = 0, category, volume} = work
-        this.progressData[category + start].budget += parseInt(budget) * volume
-        this.progressData[category + start].contract += parseInt(contract) * volume
-        this.progressData[category + start].actual += parseInt(actual) * volume
+    this.progressData[0].budget = this.tableData?.off_hire_period + this.tableData?.off_hire_deviasi + ' Days';
+
+      this.tableData?.work_area.forEach(work => {
+        const {'Price Budget' : budget = 0,'Price Actual' : actual = 0, 'Price Contract' : contract = 0, category = 0, volume = 0} = work;
+        this.progressData[category + start].budget += parseInt(budget) * volume;
+        this.progressData[category + start].contract += parseInt(contract) * volume;
+        this.progressData[category + start].actual += parseInt(actual) * volume;
       });
       
       for(let i = start ; i <= 5 ; i++) {
-        this.progressData[1].budget += this.progressData[i].budget
-        this.progressData[1].contract += this.progressData[i].contract 
-        this.progressData[1].actual += this.progressData[i].actual
+        this.progressData[1].budget += this.progressData[i].budget;
+        this.progressData[1].contract += this.progressData[i].contract;
+        this.progressData[1].actual += this.progressData[i].actual;
       }
 
-      const usedCurrency = this.FNCOL.convertCurrency(this.tableData.mata_uang)
+      const usedCurrency = this.FNCOL.convertCurrency(this.tableData.mata_uang);
       for(let i = start ; i <= 11 ; i++) {
-        this.progressData[12].budget += this.progressData[i].budget
-        this.progressData[12].contract += this.progressData[i].contract
-        this.progressData[12].actual += this.progressData[i].actual
+        this.progressData[dataLength].budget += this.progressData[i].budget;
+        this.progressData[dataLength].contract += this.progressData[i].contract;
+        this.progressData[dataLength].actual += this.progressData[i].actual;
       }
-      for(let i = 1 ; i <= 12 ; i++) {
-        if(this.progressData[i].budget == 0 || this.progressData[i].contract == 0 || this.progressData[i].actual == 0) continue
-        this.progressData[i].budget = this.currency.transform(this.progressData[i].budget, usedCurrency)
-        this.progressData[i].contract = this.currency.transform(this.progressData[i].contract, usedCurrency)
-        this.progressData[i].actual = this.currency.transform(this.progressData[i].actual, usedCurrency)
+
+      const convertCurrency = (price) => {
+        for(let i = 1; i <= dataLength; i++) {
+          if(this.progressData[i][price] == 0) continue;
+          this.progressData[i][price] = this.currency.transform(this.progressData[i][price], usedCurrency);
+        }
       }
+      convertCurrency('budget')
+      convertCurrency('contract')
+      convertCurrency('actual')
   }
 
 

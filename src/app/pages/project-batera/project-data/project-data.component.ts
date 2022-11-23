@@ -16,15 +16,6 @@ export class ProjectDataComponent implements OnInit {
   min 
   max
 
-
-  testtrigger(button : HTMLInputElement){
-    button.click()
-  }
-
-  triggerButton(){
-    console.log('buttonClicked')
-  }
-
   constructor(  protected dateService: NbDateService<Date>,
               private dialogRef: MatDialogRef<ProjectDataComponent>,
               private homeService : HomeBateraService,
@@ -48,6 +39,8 @@ export class ProjectDataComponent implements OnInit {
     responsible : null,
     shipManagement : null
   } 
+
+  typeOfDocking = ['normal', 'standard', 'emergency']
 
   public projectData : any = {}
   disabledData : boolean = false

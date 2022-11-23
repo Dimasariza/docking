@@ -28,22 +28,64 @@
 <nb-card>
       <nb-tabset fullWidth>
         <nb-tab tabTitle="PIC" >
-            <ngx-pic></ngx-pic>
+            <ngx-pic [picData]="picData"></ngx-pic>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress (reloadPage)="ngOnInit()" [projectData]="projectData" [workProgressData]="subProjectData" (alertStatus)="allertStatus($event)" [suplierData]="dataSuplier"></ngx-work-progress>
+            <ngx-work-progress 
+            (reloadPage)="ngOnInit()" 
+            [projectData]="projectData" 
+            [workProgressData]="subProjectData" 
+            (alertStatus)="allertStatus($event)" 
+            [suplierData]="dataSuplier"
+            [companyProfile]="companyProfile"
+            [picData]="picData" 
+            >
+        </ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work (reloadPage)="ngOnInit()" (alertStatus)="allertStatus($event)" [variantWorkData]="projectData" [workProgressData]="subProjectData" [suplierData]="dataSuplier"></ngx-variant-work>
+            <ngx-variant-work 
+            (reloadPage)="ngOnInit()" 
+            (alertStatus)="allertStatus($event)" 
+            [variantWorkData]="projectData" 
+            [workProgressData]="subProjectData" 
+            [suplierData]="dataSuplier"
+            [companyProfile]="companyProfile"
+            [picData]="picData" 
+            >
+        </ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
-            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'bast'"></ngx-bast>
+            <ngx-bast 
+            (reloadPage)="ngOnInit()" 
+            [projectData]="projectData" 
+            [workProgressData]="subProjectData" 
+            [picData]="picData" 
+            [typeMenu]="'bast'"
+            [companyProfile]="companyProfile"
+            >
+        </ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Surat Teguran">
-            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'surat_teguran'"></ngx-bast>
+            <ngx-bast 
+            (reloadPage)="ngOnInit()" 
+            [projectData]="projectData" 
+            [workProgressData]="subProjectData" 
+            [picData]="picData" 
+            [typeMenu]="'surat_teguran'"
+            [companyProfile]="companyProfile"
+            >
+        </ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Close Out Report (COR)">
-            <ngx-bast (reloadPage)="ngOnInit()" [typeMenu]="'close_out_report'"></ngx-bast>
+            <ngx-bast 
+            (reloadPage)="ngOnInit()" 
+            [projectData]="projectData" 
+            [workProgressData]="subProjectData" 
+            [picData]="picData" 
+            [typeMenu]="'close_out_report'"
+            [companyProfile]="companyProfile"
+            >
+        </ngx-bast>
         </nb-tab>
       </nb-tabset>
 </nb-card>

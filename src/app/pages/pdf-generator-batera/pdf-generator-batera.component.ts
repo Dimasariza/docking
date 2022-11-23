@@ -1,9 +1,9 @@
-import { DatePipe } from '@angular/common';
+import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, Injectable, OnInit } from '@angular/core';
 import pdfMake from "pdfmake/build/pdfmake";  
 import pdfFonts from "pdfmake/build/vfs_fonts";  
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
-import { ProjectStatusComponent } from '../report-batera/project-status/project-status.component';
+import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 pdfMake.vfs = pdfFonts.pdfMake.vfs; 
 
 @Injectable({
@@ -15,7 +15,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 })
 export class PdfGeneratorBateraComponent implements OnInit {
   constructor(private FNCOL : FunctionCollection,
-              private datePipe : DatePipe
+              private profileService : ProfileBateraService,
+              private currency : CurrencyPipe
   ) { }
 
   ngOnInit(): void {}
@@ -43,8 +44,13 @@ export class PdfGeneratorBateraComponent implements OnInit {
   /*
   * This use of this function is to create pdf based on jobs
   */
+
+  text(t: any = '', fs: any = 10, c: any = '#000', b: any = false, m: any = 0) {
+    return {text : t, fontSize : fs, color : c, bold : b, margin : m} 
+  }
+
   async generatePDFBasedOnJob(projectData, data){
-    // Document head
+    // Document head  
     const shipname = projectData.kapal.nama_kapal
     const head = shipname + ' -DD- ' + projectData.tahun
     const {jobNumber, jobName} = data
@@ -52,7 +58,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const projectHead = await this.projectHead(head, job)
 
     // Document job details
-    this.regroupJobData(data.items, 'work_area')
+    this.regroupJobData(data?.items, 'work_area')
     const content = [
       projectHead,
       ...this.projectDetails({...data, shipname}),
@@ -63,69 +69,39 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   async projectHead(head, job){
-    const url = await this.getBase64ImageFromURL('./assets/images/Logo/Logo Sikomodo.jpeg')
-    return {
-        columns : [
-          [
-            {  
-              text: head,  
-              fontSize: 16,  
-              color: '#222',
-              margin : [0 , 10, 0, 6],
-            }, 
-            {  
-              text: job,  
-              fontSize: 12,  
-              color: '#047886',
-              margin : [0 , 6],
-            }, 
-          ],
-          {
-            image : url,
-            fit: [80, 80],
-            alignment : 'right'
-          },
-        ],
-      }
+    const image = await this.getBase64ImageFromURL('./assets/images/Logo/Logo Sikomodo.jpeg')
+    const headText = [
+      {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
+      {text : job, fontSize : 12, color : '#047886', margin : [0 , 6]},
+    ]
+    const logo = {image, fit :[80, 80], alignment : 'right'}
+    return { columns : [headText, logo] }
   }
 
   projectDetails(data){
-    const {Status, rank, responsible, shipname, remarks} = data
+    const {Status, rank, responsible, shipname, remarks, Start, Stop} = data
+    let body = [
+      ['Vessel', shipname, 'Responsible', responsible.name],
+      ['Start Date', Start, 'End Date', Stop],
+      ['Status', Status, 'Priority', this.FNCOL.rank[rank]]
+    ]
+    body = body.map(i => i.map((item, id) => {
+      if(id % 2 == 1) return this.text(item)
+      if(id % 2 == 0) return this.text(item , ...Array(2), true) 
+    }))
     return [
         {
         layout: 'noBorders',
         margin : [0 , 6],
         table: {
-          headerRows: 1,
           widths: [ '*', '*', '*', '*'],  
-    
-          body: [
-            [ 
-              { text :'Vessel', fontSize : 10, bold : true}, 
-              { text : shipname, fontSize : 10}, 
-              { text :'Responsible', fontSize : 10, bold : true}, 
-              { text : responsible.name, fontSize : 10},
-            ],
-            [ 
-              { text :'Start Date', fontSize : 10, bold : true}, 
-              { text : data?.Start, fontSize : 10}, 
-              { text :'End Date', fontSize : 10, bold : true}, 
-              { text : data?.Stop, fontSize : 10},  
-            ],
-            [ 
-              { text :'Status', fontSize : 10, bold : true}, 
-              { text : Status, fontSize : 10}, 
-              { text :'Priority', fontSize : 10, bold : true}, 
-              { text : rank.name, fontSize : 10},  
-            ],
-          ]
+          body
         }
       },
       {
         layout: 'noBorders',
         margin : [0 , 3],
         table: {
-          headerRows: 1,
           widths: ['*'],  
           body: [
             [ 
@@ -141,22 +117,14 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   dataHeading() {
+    let text = ['Job Number', 'Item Name', 'Priority', 'Type', 'Category', '%']
+    const body = text.map(item =>  [this.text(item, ...Array(2), true)])
     return {
       layout: 'lightHorizontalLines',
       margin : [0 , 3],
       table: {
-        headerRows: 1,
-        widths: [ 60, 180, '*', 60, 60, 30],  
-        body: [
-          [ 
-            { text :'Job Number', fontSize : 10, bold : true}, 
-            { text :'Item Name', fontSize : 10, bold : true}, 
-            { text :'Priority', fontSize : 10, bold : true}, 
-            { text :'Type', fontSize : 10, bold : true},
-            { text :'Category', fontSize : 10, bold : true}, 
-            { text :'%', fontSize : 10, bold : true}, 
-          ],
-        ]
+        widths: [ 60, 180, '*', 60, 60, 30 ],  
+        body : [body]
       }
     }
   }
@@ -373,6 +341,11 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   getSummmaryHead(projectDetail, workProject, yardDatas){
+    console.log(projectDetail)
+    console.log(workProject)
+    let user;
+    this.profileService.getUserPerId(workProject.id_user)
+    .subscribe(({data} : any) => user = data)
     return [
     {
       layout: 'noBorders',
@@ -431,7 +404,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
         table: {
           headerRows: 1,
           widths: [ '*', '*', '*'],  
-    
           body: [
             [ 
               { text :'Vessel', fontSize : 10, bold : true}, 
@@ -454,7 +426,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
               ''
             ],           
             [ 
-              { text :'Off Hire Period', fontSize : 10, bold : true}, 
+              { text :'Status', fontSize : 10, bold : true}, 
               { text : status, fontSize : 10, colSpan : 2}, 
               ''
             ],
@@ -470,13 +442,13 @@ export class PdfGeneratorBateraComponent implements OnInit {
             ],            
             [ 
               { text :'- Rate', fontSize : 10, bold : true}, 
-              { text : off_hire_rate_per_day, fontSize : 10, }, 
-              { text : `${this.FNCOL.convertCurrency(mata_uang)} ${off_hire_rate_per_day * off_hire_period}`, fontSize : 10, },
+              { text : this.currency.transform(off_hire_rate_per_day, this.FNCOL.convertCurrency(mata_uang)) , fontSize : 10 },
+              { text : this.currency.transform(off_hire_rate_per_day * off_hire_period, this.FNCOL.convertCurrency(mata_uang)) , fontSize : 10 },
             ],               
             [ 
-              { text :'- Bunker', fontSize : 10, bold : true}, 
-              { text : off_hire_bunker_per_day, fontSize : 10, }, 
-              { text : `${this.FNCOL.convertCurrency(mata_uang)} ${off_hire_bunker_per_day * off_hire_period}`, fontSize : 10, },
+              { text :'- Bunker', fontSize : 10, bold : true},  
+              { text : this.currency.transform(off_hire_bunker_per_day, this.FNCOL.convertCurrency(mata_uang)) , fontSize : 10 },
+              { text : this.currency.transform(off_hire_bunker_per_day * off_hire_period, this.FNCOL.convertCurrency(mata_uang)) , fontSize : 10 },
             ],                
             [ 
               { text :'Repair Period', fontSize : 10, bold : true}, 
@@ -616,7 +588,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const {work_area} = workProject
     const constDetails =  work_area.map(job => {
       const {jobName, 'Price Budget': priceBudget = 0, 'Price Contract' : priceContract = 0, 'Price Actual' : priceActual = 0, 'Price Add On' : priceAddOn = 0, progress, category} = job
-      console.log('create pdf')
       return [
         { text : jobName, fontSize : 9, bold : true}, 
         { text : priceBudget, fontSize : 9}, 
@@ -663,13 +634,41 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
 
-  progressData : any []
-  completionData : any []
-  baseCurrency : any
-  data
 
   isFalsy = (value) => !value
   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   /*
   * Pie Chart Variables
   */
@@ -741,11 +740,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
       </svg>
     `
   }
-      
-  buttons = [
-    {desc : 'show'},
-    {desc : 'download'}
-  ]
+
 }
 
 

@@ -187,10 +187,11 @@ export class WorkAreaComponent implements OnInit {
   }
 
   addSubJob(newData){
-    const id = this.modelData.id.toString() + this.modelData.items.length.toString()
+    const id = this.modelData.id.toString() + this.modelData?.items.length.toString()
     const reconstructData = { 
       ...newData.value,
       [this.unitPriceLabel] : parseInt(this.originalUnitPrice),
+      items : [],
       status : 0,
       progress : 0,
       createdAt : new Date(),

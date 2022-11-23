@@ -89,7 +89,12 @@
                 <ng-container [nbTreeGridColumnDef]="'rank'">
                     <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row">
-                      <nb-icon icon="alert-circle-outline" [nbPopover]="row?.data?.rank?.name" nbPopoverTrigger="hint" nbPopoverPlacement="top" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"></nb-icon>
+                      <nb-icon icon="alert-circle-outline" 
+                      [nbPopover]="FNCOL?.rank[row?.data?.rank]" 
+                      nbPopoverTrigger="hint" 
+                      nbPopoverPlacement="top" 
+                      [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"
+                      ></nb-icon>
                     </td>
                 </ng-container>
 
@@ -116,7 +121,12 @@
                 <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
                     <div *ngIf="!addSubJob">
                         <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{headColumns[index]}}</th>
-                        <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-capitalize">{{row.data[column] || '-'}}</td>
+                        <td nbTreeGridCell 
+                        *nbTreeGridCellDef="let row" 
+                        class="text-capitalize" 
+                        [nbPopover]="row.data.jobName" 
+                        nbPopoverTrigger="hint" 
+                        nbPopoverPlacement="top">{{row.data[column] || '-'}}</td>
                     </div>
                 </ng-container>
             </table>

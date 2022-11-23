@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Inject, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { MatDialog, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -29,6 +29,10 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
 
   @Input() typeMenu : any
   @Output() reloadPage = new EventEmitter<string>();
+  @Input() projectData : any
+  @Input() workProgressData
+  @Input() picData
+  @Input() companyProfile
   buttons = buttons
   menuData : any = []
   pojectId : any
@@ -41,14 +45,8 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
     .pipe(take(1))
     .subscribe(({data} : any) => {
       if(!data.length) return; 
-      this.menuData = data.map(data => {
-        const {perihal, tgl, nama_pengirim, created_by, keterangan} = data
-        return { 
-          perihal ,tgl, nama_pengirim, created_by, keterangan
-        }
-      })
+      this.menuData = data
     })
-
     this.subscription.push(_subs)
   }
 
@@ -85,7 +83,28 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
   }
 
   sendEmail(row) {
-    console.log(row)
+    const {kapal, tahun} = this.workProgressData
+    const postBody = this.picData.map(resp => ({
+      shipyard : {
+        nama_user : resp.nama_lengkap,
+        nama_perusahaan : this.companyProfile.profile_nama_perusahaan,
+        email : resp.email
+      },
+      no_docking : kapal.nama_kapal + ' -DD- ' + tahun,
+      [this.typeMenu] : [
+        {
+          title : row.perihal,
+          sender : row.nama_pengirim,
+          date : row.tgl,
+          remarks : row.keterangan
+        }
+      ]
+    }))
+
+    postBody.forEach(body => {
+      this.reportService.sendLetterEmail(body, this.typeMenu)
+      .subscribe(res => console.log(res), err => console.log(err))
+    })
   }
 
   ngOnDestroy(): void {

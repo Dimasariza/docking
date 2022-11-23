@@ -66,7 +66,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     ) {
   }
 
-  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Update', 'Volume', 'Unit', 'Unit Price Budget', 'Total Price Budget' ];
+  defaultColumns = ['Responsible', 'Status', 'Start', 'Stop', 'Update', 'Volume', 'Unit', 'Unit Price Actual', 'Total Price Actual' ];
   allColumns = ['jobName' ,'rank' ,'%' , ...this.defaultColumns, 'Approved', 'suplier', 'edit' ];
   dataSource: NbTreeGridDataSource<FSEntry>;
   sortColumn: string;
@@ -84,11 +84,13 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   @Input() workProgressData : any = ""
   @Input() suplierData : any [] = ['Data Not Available']
   @Input() projectData : any
+  @Input() companyProfile : any
+  @Input() picData : any
+  @Output() reloadPage = new EventEmitter<string>();
+  @Output() alertStatus = new EventEmitter<string>();
   useButtons = useButtons
   projectId : any
   subscription : Subscription [] = []
-  @Output() reloadPage = new EventEmitter<string>();
-  @Output() alertStatus = new EventEmitter<string>();
   
   ngOnInit(){}
 
@@ -118,7 +120,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
         this.addJobSuplier()
         break;
       case 'Update Suplier' :
-        this.addJobSuplier()
+        this.updateJobSuplier()
         break;
       case 'Export to Excel':
         this.excelService.excelData = []
@@ -145,7 +147,7 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   regroupTableData(expand){
     const {work_area, mata_uang } = this.workProgressData
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
-      const workItem = [mata_uang, 'Unit Price Budget', 'Total Price Budget']
+      const workItem = [mata_uang, 'Price Actual']
       return this.FNCOL.populateData(work, workItem, expand)
     }) as TreeNode<FSEntry>[])
   }
@@ -217,24 +219,27 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     }
     pushData(work_progress)
     
-    const postBody = {
+    const postBody = this.picData.map(resp => ({
       shipyard : {
-        nama_user : "Roganda Dimas Ariza",
+        nama_user : resp.nama_lengkap,
         nama_perusahaan : perusahaan.profile_nama_perusahaan ,
-        email : "dimas.ariza20@gmail.com"
+        email : resp.email
       },
       no_docking : kapal.nama_kapal + ' -DD- ' + tahun,
       work_progress : workContainer
-    }
-    this.alertStatus.emit('send_email')
-    const _subs = this.reportService.sendNotification(postBody)
-    .pipe(take(1))
-    .subscribe(({status} : any) => {
-      if(status == 'ok') this.alertStatus.emit('success')
-    },
-    err => console.log(err))
-    this.subscription.push(_subs)
+    }))
 
+    this.alertStatus.emit('send_email')
+
+    postBody.forEach(body => {
+      const _subs = this.reportService.sendWorkProgressEmail(body)
+      .pipe(take(1))
+      .subscribe(({status} : any) => {
+        if(status == 'ok') this.alertStatus.emit('success')
+      },
+      () => this.alertStatus.emit('error'))
+      this.subscription.push(_subs)
+    })
   }
 
   updateWorkApproval(work_area){
@@ -249,6 +254,19 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     const dialogRef = this.dialog.open(JobSuplierComponent, {
       autoFocus : true,
       disableClose : true,
+      data : {dial : 'Add'}
+    })
+    this.destroyDialog(dialogRef)
+  }
+
+  updateJobSuplier(){
+    const dialogRef = this.dialog.open(JobSuplierComponent, {
+      autoFocus : true,
+      disableClose : true,
+      data : { 
+        dial : 'Update',
+        suplier : this.suplierData
+      }
     })
     this.destroyDialog(dialogRef)
   }

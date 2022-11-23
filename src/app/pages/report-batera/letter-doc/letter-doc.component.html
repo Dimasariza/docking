@@ -17,7 +17,7 @@
             <input [nbDatepicker]="datePicker" nbInput required fullWidth fieldSize="small" placeholder="Pick Date" ngModel name="tgl" #date>
             <nb-datepicker #datePicker></nb-datepicker>
             <span class="d-block">Remarks</span>
-            <textarea class="d-block" rows="4" fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
+            <textarea class="d-block" rows="4" required fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
             <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="triggerSelectFile(addFromFile)">
                 Add File
                 <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen" (change)="onFileChange($event)">

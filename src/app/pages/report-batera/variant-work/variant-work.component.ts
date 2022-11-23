@@ -81,6 +81,8 @@ export class VariantWorkComponent implements OnChanges {
 
   @Input() variantWorkData : any = ""
   @Input() workProgressData : any
+  @Input() companyProfile : any
+  @Input() picData : any
   projectId : string
   basedCurrency : any
   
@@ -132,6 +134,9 @@ export class VariantWorkComponent implements OnChanges {
       case 'Add Suplier' :
       this.addJobSuplier()
       break;
+      case 'Update Suplier' :
+        this.updateJobSuplier()
+        break;
       case 'Export to Excel' :
       this.excelService.excelData = []
       this.excelService.reconstructJobsToExcel(this.variantWorkData.variant_work) 
@@ -191,6 +196,19 @@ export class VariantWorkComponent implements OnChanges {
     const dialogRef = this.dialog.open(JobSuplierComponent, {
       autoFocus : true,
       disableClose : true,
+      data : {dial : 'Add'}
+    })
+    // this.destroyDialog(dialogRef)
+  }
+
+  updateJobSuplier(){
+    const dialogRef = this.dialog.open(JobSuplierComponent, {
+      autoFocus : true,
+      disableClose : true,
+      data : {
+        dial : 'Update',
+        suplier : this.suplierData
+      }
     })
     // this.destroyDialog(dialogRef)
   }

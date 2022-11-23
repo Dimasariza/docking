@@ -10,7 +10,6 @@ import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-di
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { TableDataComponent } from './table-data/table-data.component';
-import { SelectControlValueAccessor } from '@angular/forms';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -66,6 +65,8 @@ export class SubMenuProjectComponent implements OnInit {
   progressData : any
   alertConds 
 
+  isFalsy = v => !v
+
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id')
     this.id_proyek = id
@@ -73,18 +74,15 @@ export class SubMenuProjectComponent implements OnInit {
     .subscribe(({data} : any) => {
       this.reportData = this.reconstruction(data)
       this.projectData = data
-      const {work_area, kapal, tahun} = data
-      this.shipName = kapal.nama_kapal + " -DD- " + tahun
-      work_area === null || 
-      work_area[0] === null ||
-      work_area === undefined ||
-      work_area.length === 0 ? null : 
+      const {work_area, kapal : {nama_kapal}, tahun, status} = data
+      this.shipName = `${nama_kapal} -DD- ${tahun} ${this.FNCOL.convertStatus(status)}`
+      if(this.isFalsy(!work_area || !work_area[0])) 
       this.regroupData(false)
     })
 
-    this.tenderService.getProjectSummary("", "", "", "")
+    this.tenderService.getProjectSummary()
     .subscribe(({data} : any) => {
-      this.progressData = data.find(tender => tender.id_proyek === parseInt(this.id_proyek))
+      this.progressData = data.find(t => t.id_proyek == parseInt(this.id_proyek))
       menuButton[0].disabled = this.progressData
     })
   }
@@ -154,7 +152,6 @@ export class SubMenuProjectComponent implements OnInit {
 
   buttonAction(e, data){
     let reloadPage ;
-
     switch(e) {
       case 'Add Job':
         this.addWorkAreaDial();
@@ -210,9 +207,13 @@ export class SubMenuProjectComponent implements OnInit {
         work : this.projectData
       }
     }) 
-    this.reload(dialog) 
-    const msg = 'The job has been added'
-    this.alertStatus('success', msg)
+    dialog.componentInstance.onSuccess.asObservable()
+    .subscribe(() => {
+      this.ngOnInit()
+      this.tableData.ngOnInit();
+      const msg = 'The job has been added'
+      this.alertStatus('success', msg)
+    })
   }
   
   addSubJobDial(row){    
@@ -226,7 +227,14 @@ export class SubMenuProjectComponent implements OnInit {
         work : this.projectData
       }
     })
-    this.reload(dialog) 
+    dialog.componentInstance.onSuccess.asObservable()
+    .subscribe(() => {
+      this.ngOnInit()
+      this.tableData.ngOnInit();
+      const msg = 'The job has been added';
+      this.alertStatus('success', msg)
+    })
+    // this.reload(dialog) 
   }
 
   updateWorkAreaDial(row){

@@ -11,12 +11,8 @@ export class PicComponent implements OnInit{
     private profileService : ProfileBateraService,
     ){
   }
-  picData : any
+  @Input() picData : any
   ngOnInit(): void {
-    this.profileService.getUserData(1, 10, '', '', '')
-    .subscribe(({data} : any) => {
-      this.picData = data
-    })
   }
 }
 

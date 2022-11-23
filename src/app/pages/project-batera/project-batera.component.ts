@@ -63,22 +63,20 @@ export class ProjectBateraComponent {
   sortByStatus : any = "all"
   sortByResponsible : any = "all" 
 
-  alertConds = {status : 'success', msg : 'project has been added', conds : true}
+  alertConds
 
   ngOnInit() {
     this.profileService.getCompanyProfile()
-    .subscribe(({data} : any) => {
-      this.shipManagement = data.profile_merk_perusahaan
-    })
+    .subscribe(({data} : any) => this.shipManagement = data.profile_merk_perusahaan)
 
     this.projectService.getDataProjects()
     .subscribe(({data} : any) => {
       if(!data.length || data === null) return;
       this.projectDatas = data
-      this.collectData() 
+      this.collectData()  
     });
 
-    this.profileService.getUserData(1, 10,'', '', '')
+    this.profileService.getUserData(1, 10)
     .subscribe(({data} : any) => this.responsible = data)
   }
 
@@ -103,13 +101,15 @@ export class ProjectBateraComponent {
       if(isFalsy(work_area) || isFalsy(work_area[0])) return;
       const reconstructData = (work) => {
         return work.map(item => {
-          work = {...item, projectName, cust : this.shipManagement} 
+          const end = item?.end ? item.end : null 
+          work = {...item, end, projectName, cust : this.shipManagement} 
           if(item.items?.length) work = { ...work, items : reconstructData(item.items)}
           return work
         })
       }
       const work = reconstructData(work_area)
       work.forEach(item => {
+          if(!item.end) return;
           const due = new Date(item.end)
           const currentDate = new Date()
           currentDate.setDate(currentDate.getDate() + 30) 
@@ -147,6 +147,8 @@ export class ProjectBateraComponent {
     });
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
+      const msg = 'Project has been added'
+      this.alertStatus('success' , msg)
     });
   }
 
@@ -161,7 +163,19 @@ export class ProjectBateraComponent {
     });
     dialog.componentInstance.onSuccess.asObservable().subscribe(() => {
       this.ngOnInit()
+      this.ngOnInit()
+      const msg = 'Project has been deleted'
+      this.alertStatus('success' , msg)
     });
+  }
+
+  alertStatus (status, msg) {
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : true}
+    }, 1000);
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : false}
+    }, 5000);
   }
 }
 

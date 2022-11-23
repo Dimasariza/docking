@@ -40,6 +40,11 @@ export class ReportBateraService {
         return this.httpClient.get(url, {params : queryParams})
     }
 
+    updateSuplier(body) {
+        const url = this.apiUrl + "/supplier" + body.id_supplier
+        return this.httpClient.get(url)
+    }
+
     addDocument(body){
         const url = this.apiUrl + "/report/detail"
         return this.httpClient.post(url, body)
@@ -60,14 +65,28 @@ export class ReportBateraService {
         return this.httpClient.get(url, {params : queryParams})
     }
 
-    sendNotification(body) {
+    sendWorkProgressEmail(body) {
         const url = this.apiUrl + "/email/work_progress"
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
         return this.httpClient.post(url, body)
+    }
+    
+    sendWorkVariantEmail(body) {
+        const url = this.apiUrl + "/email/work_variant"
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.httpClient.post(url, body)
+    }
+
+    sendLetterEmail(body, typeMenu) {
+        const url = this.apiUrl + "/email/" + typeMenu
+        const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+        return this.httpClient.post(url, body, {headers : headers})
     }
 
     addWorkProgress(body){
         const url = this.apiUrl + '/report/progress'
         return this.httpClient.post(url, body)
     }
+
+
 }

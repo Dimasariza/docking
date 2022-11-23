@@ -67,7 +67,7 @@
           <ng-container [nbTreeGridColumnDef]="'due'">
             <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 250px;">Due</th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
-              {{row?.data?.end | date : 'medium'}}
+              {{ row?.data?.end | date : 'medium' }}
             </td>
           </ng-container>
 
@@ -98,7 +98,7 @@
               <a class="text-primary text-decoration-none" 
               style="cursor: pointer;" 
               [routerLink]="['./sub-menu-project', row.id_proyek]"
-              [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}}</a>
+              [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}} {{ FNCOL.convertStatus(row.status) }}</a>
            </ng-template>
           </ngx-datatable-column>
 

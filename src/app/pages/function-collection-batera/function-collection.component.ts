@@ -148,6 +148,21 @@ export class FunctionCollection {
         return status
     }
 
+    convertStatus (stat) {
+      switch(stat) {
+        case 'normal' :
+          stat = 'IN'
+        break;
+        case 'standard':
+          stat = 'SP'
+        break;
+        case 'emergency':
+          stat = 'ESC'
+        break;
+      }
+      return stat
+    }
+
     convertCurrency(curr) {
       switch(curr) {
         case 'IDR':
@@ -169,13 +184,14 @@ export class FunctionCollection {
       parentId = parentId.join('').replace(',', '');;
       let totalProgress = 0;
       const works = work.find(w => w.id.toString() === parentId.toString() );
-      works?.items.map(work => totalProgress += work.progress);
-      totalProgress = totalProgress / works.items?.length;
+      works?.items.forEach(work => totalProgress += work.progress);
+      totalProgress = totalProgress / works?.items?.length;
       if(Number(totalProgress) === totalProgress && totalProgress % 1 !== 0)
       totalProgress = parseFloat(totalProgress?.toFixed(3));
       work = this.updateWorkAreaData(work, parentId, {progress : totalProgress});
+      parentId = parentId.toString().split('')
       if(parentId.length > 1) this.calculateProgress(parentId, work);
-      else return work
+      return work
     }
 
     minimal( a, b) {

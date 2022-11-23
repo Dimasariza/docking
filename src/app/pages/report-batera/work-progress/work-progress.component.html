@@ -84,7 +84,8 @@
                 {{column}}
                 </th>
                 <td nbTreeGridCell *nbTreeGridCellDef="let row"
-                [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                >
                     {{row.data[column] || '-'}}
                 </td>
             </ng-container>
