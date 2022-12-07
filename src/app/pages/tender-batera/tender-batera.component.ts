@@ -5,6 +5,7 @@ import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSou
 import { take } from 'rxjs/operators';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../project-batera/sub-menu-project/sub-menu-project.component';
@@ -28,7 +29,8 @@ export class TenderBateraComponent {
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
               public currency : CurrencyPipe,
-              public FNCOL : FunctionCollection
+              public FNCOL : FunctionCollection,
+              private homeService : HomeBateraService
   ) {}
 
   headColumns = ['Job', 'Dept', 'Start', 'Stop', 'Vol', 'Unit', 'Unit Price Contract', 'Total Price Contract', 'Category', 'Remarks' ]
@@ -82,8 +84,13 @@ export class TenderBateraComponent {
       }})
     })
 
-    this.profileService.getUserData(1, 10)
-    .subscribe(({data} : any) => this.responsible = data)    
+    this.homeService.getUserLogin()
+    .subscribe(({data} : any) => {
+      const {role} = data
+      if(role == 'admin')
+      this.profileService.getUserData(1, 10)
+      .subscribe(({data} : any) => this.responsible = data)    
+    })
   }
 
   getProject(project){
@@ -143,6 +150,7 @@ export class TenderBateraComponent {
     const {general_diskon_persen, additional_diskon, nama_galangan, sum_internal_adjusment} = tender
     this.tenderId = tender?.id_tender
     this.displayTender = tender
+    // if()
     this.displayTender.responsible = this.responsible.find(resp => resp.id_user == tender.id_user)
     const {offHire, offHireCost, ownerCost} = this.currentProject
     this.dataTable = {
