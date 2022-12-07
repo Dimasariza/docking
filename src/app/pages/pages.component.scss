@@ -8,6 +8,10 @@
   --font-blue : rgb(12, 162, 255);
 }
 
+.disabled {
+  pointer-events: none;
+}
+
 @include nb-install-component() {
 
   ::ng-deep router-outlet + * {

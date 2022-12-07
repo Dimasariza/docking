@@ -138,9 +138,7 @@ export class VariantWorkComponent implements OnChanges {
         this.updateJobSuplier()
         break;
       case 'Export to Excel' :
-      this.excelService.excelData = []
-      this.excelService.reconstructJobsToExcel(this.variantWorkData.variant_work) 
-      this.excelService.exportAsExcelFile(this.excelService.excelData, this.workProgressData?.head)
+        this.excelService.exportToExcel(this.workProgressData, 'variant_work')
       break;
     }
   }

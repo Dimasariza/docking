@@ -14,6 +14,14 @@ export class HomeBateraService {
     return this.httpClient.get(url)
   }
 
+  getUserProfilePict(img) {
+    const url = this.apiUrl + '/file/show/' + img
+    let httpHeaders = new HttpHeaders();
+    httpHeaders = httpHeaders.append("Access-Control-Allow-Origin", "*")
+                              .append("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
+    return this.httpClient.get(url, {headers : httpHeaders})
+  }
+  
   getAllShip(){
     const url = this.apiUrl + "/home/kapal"
     const httpHeaders = new HttpHeaders();

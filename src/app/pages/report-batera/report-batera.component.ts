@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generator-batera.component';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
@@ -25,7 +26,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private pdfExporter : PdfGeneratorBateraComponent,
               private tenderService : TenderBateraService,
               private profileService : ProfileBateraService,
-              private FNCOL : FunctionCollection
+              private FNCOL : FunctionCollection,
+              private homeservice : HomeBateraService
     ) {
   }
 
@@ -37,6 +39,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   alertConds 
   picData : any
   companyProfile : any
+  userRole
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -45,6 +48,16 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     .subscribe(({data} : any) => {
       this.projectData = data
       this.yardData(data.id_tender)
+    })
+
+    this.homeservice.getUserLogin()
+    .pipe(take(1))
+    .subscribe(({data} : any) => {
+      const {role} = data
+      if(role === 'admin')
+      this.profileService.getUserData(1, 10)
+      .pipe(take(1))
+      .subscribe(({data} : any) => this.picData = data)
     })
 
     const _subs2 = this.projectService.getSubProjectData(id) 
@@ -59,10 +72,6 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     .pipe(take(1))
     .subscribe(({data} : any) => this.dataSuplier = data)
 
-    const _subs4 = this.profileService.getUserData(1, 10)
-    .pipe(take(1))
-    .subscribe(({data} : any) => this.picData = data)
-
     const _subs5 = this.profileService.getCompanyProfile()
     .pipe(take(1))
     .subscribe(({data} : any) => this.companyProfile = data)
@@ -70,7 +79,6 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     this.subscription.push(_subs1)
     this.subscription.push(_subs2)
     this.subscription.push(_subs3)
-    this.subscription.push(_subs4)
     this.subscription.push(_subs5)
   }
 

@@ -12,7 +12,7 @@ import { TenderBateraService } from '../tender-batera/tender-batera.service';
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
-  styleUrls : ['./home.component.scss']
+  styleUrls : ['./home.component.scss', '../../pages/pages.component.scss']
 })
 export class HomeBateraComponent implements OnInit {
   constructor(private homeservice:HomeBateraService,
@@ -26,7 +26,7 @@ export class HomeBateraComponent implements OnInit {
   flipped : any = []
   subscription : Subscription
   progressData : any
-  role : string
+  userRole : string
   alertConds
 
   toggleView(id) {
@@ -38,7 +38,7 @@ export class HomeBateraComponent implements OnInit {
   ngOnInit() {
     this.homeservice.getUserLogin()
     .pipe(take(1))
-    .subscribe(({data} : any) => this.role = data.role)
+    .subscribe(({data} : any) => this.userRole = data.role)
 
     this.homeservice.getAllShip()
     .pipe(take(1))
@@ -73,7 +73,20 @@ export class HomeBateraComponent implements OnInit {
       setTimeout(() => this.generateData(), 1500);
     })
   }
-  
+
+  userLoginRole (role) {
+    switch (role) {
+      case 'admin' :
+      return true
+      case 'shipmanager' :
+      return true
+      case 'shipyard' :
+      return false
+      case 'director' :
+      return false
+    }
+  }
+
   generateData(){
     if(this.shipData.length === 0 || !this.progressData) return;
     this.shipData.map((ship, id) => {

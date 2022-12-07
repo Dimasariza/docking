@@ -14,6 +14,13 @@ export class ExportToExcel{
                 private FNCOL : FunctionCollection
         ){}
     public excelData : any [] = [] 
+
+    public exportToExcel(workProgressData, work) {
+        this.excelData = []
+        this.reconstructJobsToExcel(workProgressData[work])
+        this.exportAsExcelFile(this.excelData, workProgressData?.head)
+    }
+
     public reconstructJobsToExcel(datas) {
         datas.map(job => {
             const {jobNumber, jobName, start, end, category, status, unit, responsible, rank, items, progress, remarks, id} = job
@@ -50,7 +57,4 @@ export class ExportToExcel{
         FileSaver.saveAs(data, fileName + '_BATERA_' + new Date().getTime() + EXCEL_EXTENSION)
     }
 
-    exportToExcel(){
-        
-    }
 }

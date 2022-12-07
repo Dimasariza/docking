@@ -3,6 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
+import { HomeBateraService } from '../home-batera/home-batera.service';
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from './project-batera.service';
 import { ProjectDataComponent } from './project-data/project-data.component';
@@ -24,6 +25,7 @@ export class ProjectBateraComponent {
               private profileService : ProfileBateraService,
               private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               public FNCOL : FunctionCollection,
+              private homeService : HomeBateraService
     ) {
   }
 
@@ -62,6 +64,7 @@ export class ProjectBateraComponent {
   sortByProject : any = "all"
   sortByStatus : any = "all"
   sortByResponsible : any = "all" 
+  userRole : any
 
   alertConds
 
@@ -76,8 +79,24 @@ export class ProjectBateraComponent {
       this.collectData()  
     });
 
-    this.profileService.getUserData(1, 10)
-    .subscribe(({data} : any) => this.responsible = data)
+    this.homeService.getUserLogin()
+    .subscribe(({data : {role}} : any) => this.userLoginRole(role))
+  }
+
+  userLoginRole (role) {
+    this.userRole = role
+    switch (role) {
+      case 'admin' :
+      this.profileService.getUserData(1, 10)
+      .subscribe(({data} : any) => this.responsible = data)
+      return true
+      case 'shipmanager' :
+      return true
+      case 'shipyard' :
+      return false
+      case 'director' :
+      return false
+    }
   }
 
   collectData(){

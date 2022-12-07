@@ -24,7 +24,10 @@
                 <nb-option (click)="sortByProject = 'all'; collectData()">
                   All Projects
                 </nb-option>
-                <nb-option *ngFor="let project of projectDatas;let id = index;" [value]="project" (click)="sortByProject = project.id_proyek; collectData()">
+                <nb-option *ngFor="let project of projectDatas;let id = index;" 
+                [value]="project" 
+                (click)="sortByProject = project.id_proyek; collectData()"
+                >
                   {{project.kapal?.nama_kapal}} -DD- {{project.tahun}}
                 </nb-option>
               </nb-select>
@@ -40,7 +43,10 @@
                 <nb-option (click)="sortByStatus ='all'; collectData()">
                   All Statuses
                 </nb-option>
-                <nb-option *ngFor="let stat of this.FNCOL.status;let id = index;" [value]="stat" (click)="sortByStatus = id; collectData()">{{stat}}</nb-option>
+                <nb-option *ngFor="let stat of this.FNCOL.status;let id = index;" 
+                [value]="stat" 
+                (click)="sortByStatus = id; collectData()"
+                >{{stat}}</nb-option>
               </nb-select>
             </th>
             <td nbTreeGridCell *nbTreeGridCellDef="let row">
@@ -54,7 +60,9 @@
                 <nb-option (click)="sortByResponsible = 'all'; collectData()">
                   All Responsibles  
                 </nb-option>
-                <nb-option *ngFor="let resp of responsible; let id = index;" [value]="resp" (click)="sortByResponsible = resp.id_user ;collectData()">
+                <nb-option *ngFor="let resp of responsible; let id = index;" 
+                [value]="resp" 
+                (click)="sortByResponsible = resp.id_user ;collectData()">
                   {{resp.username}}
                 </nb-option>
               </nb-select>
@@ -71,8 +79,12 @@
             </td>
           </ng-container>
 
-          <ng-container *ngFor="let column of columnContents; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
-              <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+          <ng-container *ngFor="let column of columnContents; let index = index" 
+          [nbTreeGridColumnDef]="column" 
+          [showOn]="getShowOn(index)">
+              <th nbTreeGridHeaderCell 
+              [nbSortHeader]="getSortDirection(column)" 
+              *nbTreeGridHeaderCellDef>
                 {{columnHead[index]}}
               </th>
               <td nbTreeGridCell *nbTreeGridCellDef="let row">
@@ -89,15 +101,35 @@
     <nb-card-body>
       <nb-card-header class="d-flex justify-content-between w-100" >
           <h5>Project List</h5>
-          <button nbButton outline size="small" status="primary" (click)="addProjectDial()" >Add Project</button>
+          <button 
+          nbButton 
+          outline 
+          size="small" 
+          status="primary" 
+          (click)="addProjectDial()" 
+          [disabled] = '!userLoginRole(userRole)'
+          >Add Project</button>
       </nb-card-header>
 
-      <ngx-datatable [class]="'bootstrap'" [rows]="projectDatas" [scrollbarH]="true" [columnMode]="'force'" class="row" [rowHeight]="'auto'" default style="background-color: transparent;">
-          <ngx-datatable-column [name]="'Project name'" prop="kapal" width="100px">
+      <ngx-datatable [class]="'bootstrap'" 
+      [rows]="projectDatas" 
+      [scrollbarH]="true" 
+      [columnMode]="'force'" 
+      class="row" 
+      [rowHeight]="'auto'" 
+      default 
+      style="background-color: transparent;">
+          <ngx-datatable-column 
+          [name]="'Project name'" 
+          prop="kapal" 
+          width="100px">
             <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
               <a class="text-primary text-decoration-none" 
               style="cursor: pointer;" 
               [routerLink]="['./sub-menu-project', row.id_proyek]"
+              [ngStyle]=" {'pointer-events' : userLoginRole(userRole)
+              ? 'all' 
+              : 'none'} "
               [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}} {{ FNCOL.convertStatus(row.status) }}</a>
            </ng-template>
           </ngx-datatable-column>
@@ -110,7 +142,17 @@
           
           <ngx-datatable-column name="" >
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <button *ngFor="let button of shortCut" class="mx-1" nbButton size="small" ghost (click)="clickAction(button.menu, row)" [nbPopover]="button.menu" nbPopoverTrigger="hover" nbPopoverPlacement="top">
+              <button *ngFor="let button of shortCut" 
+              class="mx-1" 
+              nbButton 
+              size="small" 
+              ghost 
+              (click)="clickAction(button.menu, row)" 
+              [nbPopover]="button.menu" 
+              nbPopoverTrigger="hover" 
+              nbPopoverPlacement="top"
+              disabled = "!userLoginRole(userRole)"
+              >
                 <nb-icon [icon]="button.icon" status="danger"></nb-icon>
               </button>
             </ng-template>  
@@ -118,28 +160,36 @@
 
           <ngx-datatable-column [name]="'R'" width="30">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon [ngStyle]="{'color': row.phase[0] ? 'green' : 'red'}" [icon]="row.phase[0] ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              <nb-icon 
+              [ngStyle]="{'color': row.phase[0] ? 'green' : 'red'}" 
+              [icon]="row.phase[0] ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
           
           <ngx-datatable-column [name]="'P'" width="30">
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon [ngStyle]="{'color': row.phase[1] ? 'green' : 'red'}" [icon]="row.phase[1] ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              <nb-icon 
+              [ngStyle]="{'color': row.phase[1] ? 'green' : 'red'}" 
+              [icon]="row.phase[1] ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
           
           <ngx-datatable-column [name]="'E'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon [ngStyle]="{'color': row.phase[2] ? 'green' : 'red'}" [icon]="row.phase[2] ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              <nb-icon 
+              [ngStyle]="{'color': row.phase[2] ? 'green' : 'red'}" 
+              [icon]="row.phase[2] ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
           
           <ngx-datatable-column [name]="'F'" width="30" >
             <ng-template let-row="row" ngx-datatable-cell-template>
-              <nb-icon [ngStyle]="{'color': row.phase[3] ? 'green' : 'red'}" [icon]="row.phase[3] ? 'checkmark-square-2-outline' : 'close-square-outline'">
+              <nb-icon 
+              [ngStyle]="{'color': row.phase[3] ? 'green' : 'red'}" 
+              [icon]="row.phase[3] ? 'checkmark-square-2-outline' : 'close-square-outline'">
               </nb-icon>
             </ng-template>  
           </ngx-datatable-column>
@@ -156,23 +206,18 @@
             </ng-template> 
           </ngx-datatable-column>
 
-          <!-- <ngx-datatable-column [name]="''" width="50">
-            <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
-              <button nbButton size="small" ghost (click)="deleteProject(row)"
-              nbPopover="Delete Project" nbPopoverTrigger="hover" nbPopoverPlacement="top">
-                <nb-icon icon="trash-2-outline" status="danger"></nb-icon>
-              </button>
-            </ng-template>
-          </ngx-datatable-column> -->
-
         </ngx-datatable>
       </nb-card-body>
     </nb-card>
 
-<nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem;" [ngClass]="alertConds?.conds ? 'active' : ''" >
+<nb-card *ngIf="alertConds?.conds" 
+style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem;" 
+[ngClass]="alertConds?.conds ? 'active' : ''" >
     <nb-alert accent="success" class="bg-transparent"> 
       <div class="d-flex align-items-center mt-2">
-        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        <nb-icon icon="checkmark-circle-2-outline" 
+        [status]="alertConds?.status" 
+        class="check_icon mx-2"></nb-icon> 
         {{alertConds?.msg}}
       </div>
     </nb-alert>
