@@ -58,7 +58,17 @@
     <nb-card-body>
         <div class="d-flex justify-content-between">
             <h6>User Account</h6>
-            <button outline nbButton status="primary" size="small" (click)="addNewUserDial()">Add User</button>
+            <div class="d-flex align-items-center">
+                <nb-select size="small" placeholder="User Activation" class="w-100">
+                    <nb-option *ngFor="let activated of ['All', 'Active' , 'Suspend'] ;let id = index;" 
+                    [value]="activated" 
+                    (click)="sortUserActivated(activated)"
+                    >
+                    {{activated}}
+                    </nb-option>
+                  </nb-select>
+                <button outline nbButton status="primary" size="small" (click)="addNewUserDial()">Add User</button>
+            </div>
         </div>
 
         <ngx-datatable 

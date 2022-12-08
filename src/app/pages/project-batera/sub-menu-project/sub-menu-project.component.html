@@ -5,7 +5,13 @@
         <h5>{{shipName}}</h5>
         <div>
             <div *ngFor = "let button of menuButton">
-                <button *ngIf = "button.position === 'top'" (click)="buttonAction(button.text)" [disabled]="!button?.disabled" nbButton status="primary" class="mx-1" outline size="small">
+                <button *ngIf = "button.position === 'top'" 
+                (click)="buttonAction(button.text)" 
+                [disabled]="!button?.disabled" 
+                nbButton status="primary" 
+                class="mx-1" 
+                outline 
+                size="small">
                     <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
                     {{button.text}}
                 </button>
@@ -22,13 +28,19 @@
             <div class="col-lg-5 col-md-12 col-sm-12" *ngIf="reportData">
                 <div class="d-flex justify-content-between">
                     <h6>Summary</h6>
-                    <button nbButton status="primary" size="small" (click)="buttonAction('update project')">Update</button>
+                    <button nbButton 
+                    status="primary" 
+                    size="small" 
+                    (click)="buttonAction('update project')"
+                    >Update</button>
                 </div>
                 
                 <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
                     <div class="row my-2">
                         <div class="col-5"><strong>{{item.value}}</strong></div>
-                        <div class="col-7" [ngClass]="reportData[item.value] ? 'font-weight-normal' : 'font-weight-lighter text-muted'">{{reportData[item.value] || 'Data Not Availlable'}}</div>
+                        <div class="col-7" 
+                        [ngClass]="reportData[item.value] ? 'font-weight-normal' : 'font-weight-lighter text-muted'"
+                        >{{reportData[item.value] || 'Data Not Availlable'}}</div>
                     </div>
                 </div>
             </div>
@@ -44,7 +56,9 @@
 <nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem" [ngClass]="alertConds?.conds ? 'active' : ''" >
     <nb-alert accent="success" class="bg-transparent"> 
       <div class="d-flex align-items-center mt-2">
-        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        <nb-icon icon="checkmark-circle-2-outline" 
+        [status]="alertConds?.status" 
+        class="check_icon mx-2"></nb-icon> 
         {{alertConds?.msg}}
       </div>
     </nb-alert>
@@ -54,7 +68,13 @@
 <nb-card>
     <div class="d-flex" >
         <div *ngFor = "let button of menuButton" class="mx-1 my-3">
-            <button *ngIf = "button.position === 'bottom'" (click)="buttonAction(button.text)" nbButton status="primary" class="mx-1" outline size="small">
+            <button *ngIf = "button.position === 'bottom'" 
+            (click)="buttonAction(button.text)" 
+            nbButton 
+            status="primary" 
+            class="mx-1" 
+            outline 
+            size="small">
                 {{button.text}}
             </button>
         </div>
@@ -102,23 +122,43 @@
                     <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
                     <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
                         <div class="d-flex">
-                            <button nbButton size="small" class="btn-sm text-center" outline (click)="buttonAction('add sub job' ,row)"
-                            nbPopover="Add Sub Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">  
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('add sub job' ,row)"
+                            nbPopover="Add Sub Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">  
                                 <nb-icon icon="plus-outline" status="primary"></nb-icon>
                             </button>
-                            <button nbButton size="small" class="text-center mx-4" outline (click)="buttonAction('update job', row)"
-                            nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <button nbButton 
+                            size="small" 
+                            class="text-center mx-4" 
+                            outline 
+                            (click)="buttonAction('update job', row)"
+                            nbPopover="Edit Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
                                 <nb-icon icon="edit-outline" status="primary"></nb-icon>
                             </button>
-                            <button nbButton size="small" class="btn-sm text-center" outline (click)="buttonAction('delete job', row)"
-                            nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('delete job', row)"
+                            nbPopover="Delete Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
                                 <nb-icon icon="trash-outline" status="danger"></nb-icon>
                             </button>
                         </div>
                     </td>
                 </ng-container>
             
-                <ng-container *ngFor="let column of defaultColumns; let index = index" [nbTreeGridColumnDef]="column" [showOn]="getShowOn(index)">
+                <ng-container *ngFor="let column of defaultColumns; let index = index" 
+                [nbTreeGridColumnDef]="column" 
+                [showOn]="getShowOn(index)">
                     <div *ngIf="!addSubJob">
                         <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{headColumns[index]}}</th>
                         <td nbTreeGridCell 

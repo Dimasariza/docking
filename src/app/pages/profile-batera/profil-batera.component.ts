@@ -17,14 +17,16 @@ export class ProfilBateraComponent implements OnInit {
   ) {}
 
   userData : any;
-  companyData : any
+  unSortUserData : any;
+  companyData : any;
   changeText : string  = 'CHANGE PROFILE'
   formCondition = true
 
   ngOnInit(){
-    this.pofileService.getUserData(1, 10, '', '', '')
+    this.pofileService.getUserData(1, 10)
       .subscribe(({data} : any) => {
-        this.userData = data
+        this.unSortUserData = data;
+        this.userData = data;
     }); 
 
     this.pofileService.getCompanyProfile()
@@ -41,8 +43,18 @@ export class ProfilBateraComponent implements OnInit {
   updateCompanyProfile(formValue){
     this.changeProfile()
     this.pofileService.updateCompanyProfile(formValue.value)
-    .subscribe(res => {
+    .subscribe(() => {
     })
+  }
+
+  sortUserActivated(user) {
+    console.log(this.unSortUserData)
+    if(user == 'All') 
+      this.userData = this.unSortUserData
+    else if (user == 'Active') 
+      this.userData = this.unSortUserData.filter(user => user.status === 'active')
+    else if (user == 'Suspend') 
+      this.userData = this.unSortUserData.filter(user => user.status === 'suspend')
   }
 
   // changeLogoDial(){
