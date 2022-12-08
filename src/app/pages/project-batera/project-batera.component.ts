@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
+import { Subscription } from 'rxjs';
+import { take } from 'rxjs/operators';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { DeleteDialogComponent } from '../home-batera/delete-dialog/delete-dialog.component';
 import { HomeBateraService } from '../home-batera/home-batera.service';
@@ -18,14 +20,13 @@ interface FSEntry {}
   templateUrl: './project-batera.component.html',
   styleUrls : ['../home-batera/home.component.scss']
 })
-export class ProjectBateraComponent {
+export class ProjectBateraComponent implements OnInit, OnDestroy {
   constructor(private dialog : MatDialog,
               private projectService:ProjectBateraService,
               private subMenuProject : SubMenuProjectComponent,
               private profileService : ProfileBateraService,
               private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
               public FNCOL : FunctionCollection,
-              private homeService : HomeBateraService
     ) {
   }
 
@@ -65,6 +66,8 @@ export class ProjectBateraComponent {
   sortByStatus : any = "all"
   sortByResponsible : any = "all" 
   userRole : any
+  subscription : Subscription [] = []
+
 
   alertConds
 
@@ -79,23 +82,32 @@ export class ProjectBateraComponent {
       this.collectData()  
     });
 
-    this.homeService.getUserLogin()
-    .subscribe(({data : {role}} : any) => this.userLoginRole(role))
+    const _subs = this.projectService.getUserLogin()
+    .pipe(take(1))
+    .subscribe(({data : {role}} : any) => this.userRole = role)
+    this.subscription.push(_subs)
+
+    this.userLoginRole(this.userRole)
   }
 
   userLoginRole (role) {
-    this.userRole = role
     switch (role) {
       case 'admin' :
-      this.profileService.getUserData(1, 10)
+      const _subs = this.profileService.getUserData(1, 10)
+      .pipe(take(1))
       .subscribe(({data} : any) => this.responsible = data)
-      return true
+      this.subscription.push(_subs)
+      this.userRole = true
+      break;
       case 'shipmanager' :
-      return true
+      this.userRole = true
+      break;
       case 'shipyard' :
-      return false
+      this.userRole = false
+      break;
       case 'director' :
-      return false
+      this.userRole = false
+      break;
     }
   }
 
@@ -195,6 +207,10 @@ export class ProjectBateraComponent {
     setTimeout(() => {
       this.alertConds = {status, msg, conds : false}
     }, 5000);
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.forEach(subs => subs.unsubscribe())
   }
 }
 

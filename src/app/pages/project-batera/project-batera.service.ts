@@ -9,6 +9,11 @@ import { id } from '@swimlane/ngx-charts';
 export class ProjectBateraService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl
+
+  getUserLogin(){
+    const url = this.apiUrl + "/auth/profile"
+    return this.httpClient.get(url)
+  }
   
   public getDataProjects(){
     const url = this.apiUrl + "/proyek"

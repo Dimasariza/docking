@@ -107,7 +107,7 @@
           size="small" 
           status="primary" 
           (click)="addProjectDial()" 
-          [disabled] = '!userLoginRole(userRole)'
+          [disabled] = '!userRole'
           >Add Project</button>
       </nb-card-header>
 
@@ -127,7 +127,7 @@
               <a class="text-primary text-decoration-none" 
               style="cursor: pointer;" 
               [routerLink]="['./sub-menu-project', row.id_proyek]"
-              [ngStyle]=" {'pointer-events' : userLoginRole(userRole)
+              [ngStyle]=" {'pointer-events' : userRole
               ? 'all' 
               : 'none'} "
               [data] = 'row'>{{row.kapal.nama_kapal}}-DD-{{row.tahun}} {{ FNCOL.convertStatus(row.status) }}</a>
@@ -151,7 +151,7 @@
               [nbPopover]="button.menu" 
               nbPopoverTrigger="hover" 
               nbPopoverPlacement="top"
-              disabled = "!userLoginRole(userRole)"
+              [disabled] = "!userRole"
               >
                 <nb-icon [icon]="button.icon" status="danger"></nb-icon>
               </button>
