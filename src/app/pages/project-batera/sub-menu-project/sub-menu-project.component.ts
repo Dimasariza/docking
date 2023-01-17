@@ -10,6 +10,8 @@ import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-di
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { TableDataComponent } from './table-data/table-data.component';
+import * as XLSX from 'xlsx';
+import { TrackingBateraComponent } from '../../tracking-batera/tracking-batera.component';
 
 interface TreeNode<T> {}
 interface FSEntry {}
@@ -36,6 +38,10 @@ const menuButton = [
   {
     position: 'bottom',
     text: 'Show Contract'
+  },
+  {
+    position: 'bottom',
+    text: 'Import'
   }
 ]
 
@@ -64,6 +70,7 @@ export class SubMenuProjectComponent implements OnInit {
   reportData : any
   progressData : any
   alertConds 
+  convertedToJSON;
 
   isFalsy = v => !v
 
@@ -150,7 +157,7 @@ export class SubMenuProjectComponent implements OnInit {
     return minWithForMultipleColumns + (nextColumnStep * index);
   }
 
-  buttonAction(e, data){
+  buttonAction(e, data, id){
     let reloadPage ;
     switch(e) {
       case 'Add Job':
@@ -181,6 +188,9 @@ export class SubMenuProjectComponent implements OnInit {
       break;
       case 'Refresh' :
         this.ngOnInit();
+      break;
+      case 'Import' :
+        this.importBtn(id);
       break;
     }
   }
@@ -270,6 +280,87 @@ export class SubMenuProjectComponent implements OnInit {
     setTimeout(() => {
       this.alertConds = {status, msg, conds : false}
     }, 5000);
+  }
+
+  importBtn(fileInput: HTMLInputElement) {
+    fileInput.click()
+  }
+
+  importExcelFIle(event) {
+    const selectedFile = event.target.files[0];
+    const fileReader = new FileReader();
+    fileReader.readAsBinaryString(selectedFile);
+    fileReader.onload = (event : any) => {
+      let binaryData = event.target.result;
+      let workBook = XLSX.read(binaryData, {type : 'binary'});
+      const data = XLSX.utils.sheet_to_json(workBook.Sheets['WORK ORDER']);
+      this.jobDataHierarchy(data) 
+    }
+  }
+  
+  jobDataHierarchy(data : any) {
+    const dataFormExcel = data.map(job => {
+      const {
+      ["Job Number"] : jobNumber, 
+      ["Job Name"] : jobName, 
+      Start,
+      Stop,
+      Unit,
+      Category,
+      Responsible,
+      Status,
+      Priority,
+      Percentage,
+      remarks
+    } = job
+    return {
+      jobNumber, 
+      jobName, 
+      start : Start, 
+      stop : Stop, 
+      unit : Unit, 
+      category : Category, 
+      responsible : Responsible,
+      status : Status,
+      priority : Priority,
+      percentage : Percentage,
+      remarks
+    }
+    })
+
+    const reconstructData = (data, parentIndex) => {
+      parentIndex = parentIndex?.toString().split('.')
+        return data.map((w, i) => {
+          if (parentIndex.length > 1 && i == parentIndex[0]) {
+            parentIndex = parentIndex.slice(1)
+            return {...w, items: reconstructData(w.items, parentIndex)}
+          } else if(i == parentIndex[0]) {
+            return null
+          }
+          return w
+        })
+        .filter(f => f != null)
+    }
+
+    let workContainer = []
+    dataFormExcel.map(job => {
+      const jobNumber = job.jobNumber.split(".");
+      if(jobNumber.length == 1) {
+        const id = this.projectData.work_area.length
+        job = {
+          ...job,
+          id,
+          items : []
+        }
+        workContainer.push(job)
+      } else if (jobNumber.length > 1) {
+        workContainer = reconstructData(workContainer, jobNumber)
+      }
+    })
+    this.projectData.work_area.push(...workContainer)
+    const work_area = this.projectData.work_area
+    this.projectService.workArea({work_area}, this.projectData.id_proyek)
+    .subscribe(res => this.ngOnInit())
   }
 
   reload(reloadPage) {

@@ -52,7 +52,7 @@
     </nb-card-body>
 </nb-card>
 
-
+<!-- 
 <nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem" [ngClass]="alertConds?.conds ? 'active' : ''" >
     <nb-alert accent="success" class="bg-transparent"> 
       <div class="d-flex align-items-center mt-2">
@@ -62,14 +62,14 @@
         {{alertConds?.msg}}
       </div>
     </nb-alert>
-</nb-card>  
+</nb-card>   -->
 
 
 <nb-card>
     <div class="d-flex" >
         <div *ngFor = "let button of menuButton" class="mx-1 my-3">
             <button *ngIf = "button.position === 'bottom'" 
-            (click)="buttonAction(button.text)" 
+            (click)="buttonAction(button.text, undefined, importExcel)" 
             nbButton 
             status="primary" 
             class="mx-1" 
@@ -79,7 +79,23 @@
             </button>
         </div>
     </div>
+    <input type="file" style="display: none;" #importExcel (change)="importExcelFIle($event)">
     <h6 class="mx-3">Work Area</h6>
+    <div>
+        <label 
+        class="search-label" 
+        style="margin: 1rem 1rem;" 
+        for="search" >Search:</label>
+        <input 
+        nbInput 
+        [nbFilterInput]="dataSource" 
+        id="search"
+        placeholder="Search Job"
+        fieldSize="small"
+        class="search-input"
+        style="margin: 1rem 1rem;"
+        >
+    </div>
     <!-- <h6 class="mx-3" style="color: burlywood;">Work Area</h6> -->
     <div style="overflow: auto; width: 100%;">
         <div style="width: 2000px;">

@@ -1,5 +1,5 @@
 import { CurrencyPipe, DatePipe } from '@angular/common';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbDateService, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
@@ -11,6 +11,7 @@ import { PdfGeneratorBateraComponent } from '../../pdf-generator-batera/pdf-gene
 import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { SubMenuProjectComponent } from '../../project-batera/sub-menu-project/sub-menu-project.component';
 import { WorkAreaComponent } from '../../project-batera/work-area/work-area.component';
+import { BarProgressComponent } from '../bar-progress/bar-progress.component';
 import { JobSuplierComponent } from '../job-suplier/job-suplier.component';
 import { ReportBateraService } from '../report-batera.service';
 import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.component';
@@ -81,16 +82,17 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
     return this.subMenuProject.getShowOn(index)
   }
 
-  @Input() workProgressData : any = ""
-  @Input() suplierData : any [] = ['Data Not Available']
-  @Input() projectData : any
-  @Input() companyProfile : any
-  @Input() picData : any
+  @Input() workProgressData : any = "";
+  @Input() suplierData : any [] = ['Data Not Available'];
+  @Input() projectData : any;
+  @Input() companyProfile : any;
+  @Input() picData : any;
   @Output() reloadPage = new EventEmitter<string>();
   @Output() alertStatus = new EventEmitter<string>();
-  useButtons = useButtons
-  projectId : any
-  subscription : Subscription [] = []
+  useButtons = useButtons;
+  projectId : any;
+  subscription : Subscription [] = [];
+  editableRow : any = "notEdited";
   
   ngOnInit(){}
 
@@ -181,7 +183,18 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
 
   reconstructEmailData(work_area) {
     work_area = work_area.map(work => {
-      let {jobNumber, jobName, progress ,start, end, volume, unit, 'Price Budget' : unit_price = 0, id, items} = work 
+      let {
+        jobNumber, 
+        jobName, 
+        progress,
+        start, 
+        end, 
+        volume, 
+        unit, 
+        'Price Budget' : unit_price = 0, 
+        id, 
+        items
+      } = work 
       if(progress === null || progress === undefined) progress = 0
       const index = id.toString().split('')
       let useUnit = index.length == 1 
@@ -237,6 +250,30 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
       },
       () => this.alertStatus.emit('error'))
       this.subscription.push(_subs)
+    })
+  }
+
+  updateProgressOnBar(data) {
+    if(!data.data?.items.length)  
+    this.editableRow = data.data.id
+  }
+
+  updateBarProgress(datas, progress) {
+    this.editableRow = "save";
+    const {data : {id}, data} = datas
+    data.progress = parseInt(progress.target.value);
+    const work_area = this.FNCOL.updateWorkAreaData( this.workProgressData.work_area, id , data );
+    this.workProgressData.work_area = this.FNCOL.calculateProgress( id, work_area )
+
+    this.ngOnChanges()
+  }
+
+  saveProgress(){
+    this.editableRow = 'notEdited';
+    this.projectService.workArea( {work_area : this.workProgressData.work_area}, this.projectId)
+    .pipe(take(1))
+    .subscribe(() => {
+      this.reloadPage.emit('complete')
     })
   }
 

@@ -14,7 +14,7 @@ export class FunctionCollection {
                   public currency : CurrencyPipe,
                   public projectService : ProjectBateraService, 
       ){}
-    category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Depreciation Job", "Yard Cost", "Yard Cancelled Job"]
+    category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]
     jobUnit = ["Lumpsum"]
     subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]
@@ -41,6 +41,7 @@ export class FunctionCollection {
     }
 
     reconstructData = (data, parentIndex) => {
+      parentIndex = parentIndex?.toString().split('')
         return data.map((w, i) => {
           if (parentIndex.length > 1 && i == parentIndex[0]) {
             parentIndex = parentIndex.slice(1)
@@ -177,7 +178,7 @@ export class FunctionCollection {
       }
       return curr
     }
-
+    
     calculateProgress(parentId, work) {
       parentId = parentId.toString().split('');
       parentId.pop();

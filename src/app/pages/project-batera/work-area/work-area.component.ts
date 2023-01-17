@@ -1,9 +1,6 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, EventEmitter, Inject, OnInit } from '@angular/core';  
-import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { NbDateFnsDateModule, NbDateFnsDateService } from '@nebular/date-fns';
-import { NbDateService } from '@nebular/theme';
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
 import { ReportBateraService } from '../../report-batera/report-batera.service';

@@ -47,7 +47,7 @@ export class ExportToExcel{
 
     public exportAsExcelFile(json : any[], excelFileName: string) : void{
         const worksheet : XLSX.WorkSheet = XLSX.utils.json_to_sheet(json)
-        const woorkbook : XLSX.WoorkBook = {Sheets : {'data' : worksheet}, SheetNames : ['data']}
+        const woorkbook : XLSX.WoorkBook = {Sheets : {'data' : worksheet}, SheetNames : ['WORK ORDER']}
         const excelBuffer : any = XLSX.write(woorkbook, {bookType : 'xlsx', type : 'array' });
         this.saveAsExcelFile(excelBuffer, excelFileName)
     }
