@@ -498,7 +498,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
       ],
-      [ 
+      [  
         { text :'- Services', fontSize : 10, bold : true}, 
         { text : 0, fontSize : 10},
         { text : 0, fontSize : 10}, 

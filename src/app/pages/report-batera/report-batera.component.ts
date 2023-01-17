@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -10,6 +10,7 @@ import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generat
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
+import { TrackingBateraComponent } from '../tracking-batera/tracking-batera.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
 
@@ -27,7 +28,9 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private tenderService : TenderBateraService,
               private profileService : ProfileBateraService,
               private FNCOL : FunctionCollection,
-              private homeservice : HomeBateraService
+              private homeservice : HomeBateraService,
+              private trackingComponent : TrackingBateraComponent,
+
     ) {
   }
 
@@ -40,6 +43,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   picData : any
   companyProfile : any
   userRole
+  public context: CanvasRenderingContext2D;
   
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id')
@@ -98,8 +102,12 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     })
   }
 
+  
+
   exportToPDF(){
-    this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas)
+    const data = 1
+    this.trackingComponent.showGantChart(data)
+    this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas);
   }
 
   allertStatus (status) {
