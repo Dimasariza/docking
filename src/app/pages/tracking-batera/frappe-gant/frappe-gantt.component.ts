@@ -57,4 +57,11 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
             this.gantt.toggle_scurve()
         }
     }
+
+    exportToSvg() {
+        // this.gantt.export();
+        console.log("export frappe")
+    }
+
+
 }

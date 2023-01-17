@@ -4,13 +4,26 @@
             <div class="d-flex">
             <h3>{{subProjectData?.head}}</h3>
                 <div>
-                    <button nbButton status="primary" class="mx-4" outline size="tiny" (click)="projectStatusDial()">
-                        <nb-icon icon="info-outline" pack="eva"></nb-icon>
+                    <button 
+                    nbButton 
+                    status="primary" 
+                    class="mx-4" 
+                    outline 
+                    size="tiny" 
+                    (click)="projectStatusDial()">
+                        <nb-icon 
+                        icon="info-outline" 
+                        pack="eva"></nb-icon>
                     </button>
                 </div>
             </div>
             <div>
-                <button nbButton status="primary" class="mx-2" outline size="tiny" (click)="exportToPDF()">
+                <button nbButton 
+                status="primary" 
+                class="mx-2" 
+                outline 
+                size="tiny" 
+                (click)="exportToPDF()">
                     <nb-icon icon="file-outline" pack="eva"></nb-icon>
                     Export To PDF
                 </button>
@@ -40,7 +53,7 @@
             [companyProfile]="companyProfile"
             [picData]="picData" 
             >
-        </ngx-work-progress>
+            </ngx-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
             <ngx-variant-work 
@@ -52,7 +65,7 @@
             [companyProfile]="companyProfile"
             [picData]="picData" 
             >
-        </ngx-variant-work>
+            </ngx-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
             <ngx-bast 
@@ -63,7 +76,7 @@
             [typeMenu]="'bast'"
             [companyProfile]="companyProfile"
             >
-        </ngx-bast>
+            </ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Surat Teguran">
             <ngx-bast 
@@ -74,7 +87,7 @@
             [typeMenu]="'surat_teguran'"
             [companyProfile]="companyProfile"
             >
-        </ngx-bast>
+            </ngx-bast>
         </nb-tab>
         <nb-tab tabTitle="Close Out Report (COR)">
             <ngx-bast 
@@ -90,10 +103,14 @@
       </nb-tabset>
 </nb-card>
 
-<nb-card style="position: absolute; width : 20%; bottom: 1.2rem; right:-30rem;" [ngClass]="alertConds?.conds ? 'active' : ''" >
-    <nb-alert accent="success" class="bg-transparent"> 
+<nb-card style="position: absolute; width : 20%; bottom: 1.2rem; right:-30rem;" 
+[ngClass]="alertConds?.conds ? 'active' : ''" >
+    <nb-alert accent="success" 
+    class="bg-transparent"> 
       <div class="d-flex align-items-center mt-2">
-        <nb-icon icon="checkmark-circle-2-outline" [status]="alertConds?.status" class="check_icon mx-2"></nb-icon> 
+        <nb-icon icon="checkmark-circle-2-outline" 
+        [status]="alertConds?.status" 
+        class="check_icon mx-2"></nb-icon> 
         {{alertConds?.msg}}
       </div>
     </nb-alert>

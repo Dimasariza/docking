@@ -18,7 +18,7 @@ export class ShipActionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
+  } 
 
   addShipForm = new FormGroup({
     name: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -37,7 +37,7 @@ export class ShipActionComponent implements OnInit {
   public viewImageLink : any
   onFileChange(res) {
     const file = res.target.files[0];
-    if (res.target.files.length > 0) {
+    if (res.target.files.length > 0) { 
       this.addShipForm.patchValue({
         fileSource: file
       });

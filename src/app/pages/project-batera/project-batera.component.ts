@@ -47,6 +47,7 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
     // {icon : 'book-outline', menu : ''},
     {icon : 'trash-2-outline', menu : 'Delete Project'},
     {icon : 'checkmark-square', menu : 'Approval'},
+    {icon : 'copy-outline', menu : 'Copy Project'},
     // {icon : 'archive-outline', menu : ''},
   ]
 
@@ -116,7 +117,10 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
     const buildEmpty = () => this.dataSource = this.dataSourceBuilder.create([]);
     this.projectDatas
     .filter((project, id) => {
-      this.projectDatas[id].phase = this.FNCOL.phasesStatus(this.projectDatas[id].phase)
+      this.projectDatas[id].phase = {
+        id : this.projectDatas[id].phase,
+        stat : this.FNCOL.phasesStatus(this.projectDatas[id].phase)
+      } 
       if(project.id_proyek === this.sortByProject) return project
       if(this.sortByProject === 'all') return project
     })
@@ -149,7 +153,6 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
           if(this.sortByStatus !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({status}) => status === this.sortByStatus)  
           if(this.sortByResponsible !== 'all') this.workAreaContainer = this.workAreaContainer.filter(({responsible}) => responsible.id === this.sortByResponsible)
       })
-
     })
 
     if(!this.workAreaContainer.length) buildEmpty();
@@ -163,6 +166,9 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
       break;
       case 'Approval':
         console.log("Approve")
+      break;
+      case 'Copy Project' :
+        this.copyProjectFile(data)
       break;
     }
   }
@@ -207,6 +213,15 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
     setTimeout(() => {
       this.alertConds = {status, msg, conds : false}
     }, 5000);
+  }
+
+  copyProjectFile(data) {
+    data = {
+      ...data,
+      phase : data.phase.id
+    }
+    this.projectService.addDataProject(data)
+    .subscribe(res => this.ngOnInit());
   }
 
   ngOnDestroy(): void {

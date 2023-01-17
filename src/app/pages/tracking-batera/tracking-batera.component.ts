@@ -1,22 +1,21 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { Task } from './frappe-gant/lib';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
 
+
+@Injectable({ providedIn: 'root' })
 @Component({
   selector: 'ngx-tracking-batera',
   templateUrl: './tracking-batera.component.html',
   styleUrls: ['./tracking-batera.component.scss']
 })
 export class TrackingBateraComponent implements OnInit {
-
   constructor(private tenderService : TenderBateraService,
               private route : Router,
               public FNCOL : FunctionCollection,
-              
-  ) { }
+  ) {  }
 
   @ViewChild(FrappeGanttComponent)  gantChart : FrappeGanttComponent
   public trackingData : any 
@@ -37,9 +36,10 @@ export class TrackingBateraComponent implements OnInit {
         id_proyek
       }))
     })
-  } 
+  }
 
   showGantChart(data) {
+    console.log(data)
     const {id_proyek} = data
     const chartTask = this.chartTask
     .find(({proyek}) => proyek.id_proyek === id_proyek)
@@ -74,6 +74,11 @@ export class TrackingBateraComponent implements OnInit {
     }
     this.tasks = regroupData(task)
     this.gantChart.ngOnInit()
+  }
+
+  exportToSvg(){
+    this.gantChart.exportToSvg();
+    // console.log("export")
   }
 
   topButton : any = [

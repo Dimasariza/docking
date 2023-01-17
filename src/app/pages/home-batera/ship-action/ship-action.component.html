@@ -20,6 +20,46 @@
                     </div>
                 </div>
             </div>
+
+            <div class="form-group">
+                <label for="breadth">Breadth</label>
+                <input formControlName="breadth" nbInput fullWidth type="text" class="form-control" #breadth (ngModel)="breadth"  required>
+                <div *ngIf="breadth.invalid && (breadth.dirty || breadth.touched)" class="alert">
+                    <div *ngIf="breadth.errors?.['required']">
+                        Breadth is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="draught">Draught</label>
+                <input formControlName="draught" nbInput fullWidth type="text" class="form-control" #draught (ngModel)="draught"  required>
+                <div *ngIf="draught.invalid && (draught.dirty || draught.touched)" class="alert">
+                    <div *ngIf="draught.errors?.['required']">
+                        Draught is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="draft">Draft</label>
+                <input formControlName="draft" nbInput fullWidth type="text" class="form-control" #draft (ngModel)="draft"  required>
+                <div *ngIf="draft.invalid && (draft.dirty || draft.touched)" class="alert">
+                    <div *ngIf="draft.errors?.['required']">
+                        Draft is required.
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="loa">LOA</label>
+                <input formControlName="loa" nbInput fullWidth type="text" class="form-control" #loa (ngModel)="loa"  required>
+                <div *ngIf="loa.invalid && (loa.dirty || loa.touched)" class="alert">
+                    <div *ngIf="loa.errors?.['required']">
+                        LOA is required.
+                    </div>
+                </div>
+            </div>
             
             <div class="form-group">
                 <label for="file">Image</label>

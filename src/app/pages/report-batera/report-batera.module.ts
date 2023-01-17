@@ -35,6 +35,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatNativeDateModule } from '@angular/material/core';
+import { BarProgressComponent } from './bar-progress/bar-progress.component';
 
 
 @NgModule({
@@ -48,6 +49,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     ProjectStatusComponent,
     VariantWorkComponent,
     LetterMenuComponent,
+    BarProgressComponent
   ],
   entryComponents: [ LetterDocComponent],
   imports: [
