@@ -14,7 +14,7 @@ export class FunctionCollection {
                   public currency : CurrencyPipe,
                   public projectService : ProjectBateraService, 
       ){}
-    category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Amortization Job", "Yard Cost", "Yard Cancelled Job"]
+    category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Variant Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]
     jobUnit = ["Lumpsum"]
     subJobUnit = ["Ls", "m2", "m3", "kg", "pcs", "Mtr (meter length)", "Hours", "times", "unit", "unit.Hours", "shift", "Days", "kWh.Days", "Lines.Days", "Person.Days"]

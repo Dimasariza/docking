@@ -117,13 +117,13 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   dataHeading() {
-    let text = ['Job Number', 'Item Name', 'Priority', 'Type', 'Category', '%']
+    let text = ['Job Number', 'Item Name', 'Priority', 'Type', 'Category', '%', "Start"]
     const body = text.map(item =>  [this.text(item, ...Array(2), true)])
     return {
       layout: 'lightHorizontalLines',
       margin : [0 , 3],
       table: {
-        widths: [ 60, 180, '*', 60, 60, 30 ],  
+        widths: [ 60, 120, '*', 60, 60, 30 , 60],  
         body : [body]
       }
     }
@@ -134,7 +134,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
   regroupJobData(data, jobDetails){
     if(data === null) return
     const jobDatas =  data.map(job => {
-      const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id} = job
+      const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id, start} = job
       const parentId = id.toString().split('')
       let useUnit =
       parentId.length === 1 
@@ -151,7 +151,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
         margin : [0 , 3],
         table: {
           headerRows: 1,
-          widths: [ 60, 180, '*', 60, 60, 30],  
+          widths: [ 60, 120, '*', 60, 60, 30, 60],  
           body: [
             [
               { text : jobNumber, fontSize : 9,}, 
@@ -160,15 +160,16 @@ export class PdfGeneratorBateraComponent implements OnInit {
               { text : useUnit[unit] , fontSize : 9,},   
               { text : this.FNCOL.category[category] , fontSize : 9,}, 
               { text : progress, fontSize : 9,}, 
+              { text : start, fontSize : 9,}, 
             ],
             [ 
               { text :'Description', fontSize : 9, bold : true}, 
               { text :remarks , fontSize : 9, colSpan : 5}, 
-              '', '', '', '',
+              '', '', '', '', ''
             ],
           ]
         }
-      }
+      };
     if(jobDetails === 'work_area') this.jobCollection.push(contentData);
     if(jobDetails === 'variant_work') this.variantCollection.push(contentData);
     items?.length ? this.regroupJobData(items, jobDetails) : null
@@ -209,6 +210,11 @@ export class PdfGeneratorBateraComponent implements OnInit {
       summaryHead,
       ...projectSummary,
       ...priceSummary,
+      {text : "S-Curve" ,fontSize : 12, bold : true, color: '#047886', margin : [0, 1000, 0, 0]},
+      {
+        image : gantChart,
+        width : 500
+      },
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Cost Details" ,fontSize : 12, bold : true, color: '#047886'},
       ...costDetails,
@@ -232,10 +238,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
           ]]
         }
       },
-      {
-        image : gantChart,
-        width : 500
-      }
     ]
     pdfMake.createPdf({footer, content}).open();  
   }
@@ -534,13 +536,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
         { text : 0, fontSize : 10},
       ],
       [ 
-        { text :'Amortization Job', fontSize : 10, bold : true}, 
-        { text : 0, fontSize : 10},
-        { text : 0, fontSize : 10}, 
-        { text : 0, fontSize : 10},
-      ],
-      [ 
-        { text :'Depreciation Job', fontSize : 10, bold : true}, 
+        { text :'Variant Job', fontSize : 10, bold : true}, 
         { text : 0, fontSize : 10},
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
