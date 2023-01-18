@@ -69,6 +69,7 @@
     "file-saver": "^2.0.5",
     "flatpickr": "^4.6.13",
     "frappe-gantt": "^0.6.1",
+    "html2canvas": "^1.4.1",
     "intl": "1.2.5",
     "ionicons": "2.0.1",
     "karma-jasmine-html-reporter": "^2.0.0",

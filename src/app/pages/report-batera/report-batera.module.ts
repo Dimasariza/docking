@@ -30,13 +30,8 @@ import { VariantWorkComponent } from './variant-work/variant-work.component';
 import { LetterMenuComponent } from './letter-menu/letter-menu.component';
 import { JobSuplierComponent } from './job-suplier/job-suplier.component';
 
-import {MatDatepickerModule, MatDateRangeInput, MatRangeDateSelectionModel} from '@angular/material/datepicker';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatTooltipModule } from '@angular/material/tooltip';
-import { MatNativeDateModule } from '@angular/material/core';
 import { BarProgressComponent } from './bar-progress/bar-progress.component';
-
+import { FrappeGanttModule } from '../tracking-batera/frappe-gant/frappe-gantt.module';
 
 @NgModule({
   declarations: [
@@ -49,7 +44,7 @@ import { BarProgressComponent } from './bar-progress/bar-progress.component';
     ProjectStatusComponent,
     VariantWorkComponent,
     LetterMenuComponent,
-    BarProgressComponent
+    BarProgressComponent,
   ],
   entryComponents: [ LetterDocComponent],
   imports: [
@@ -72,10 +67,11 @@ import { BarProgressComponent } from './bar-progress/bar-progress.component';
     NbAccordionModule,
     NbIconModule,
     MatTableModule,
-    NbAlertModule
+    NbAlertModule,
+    FrappeGanttModule
   ],
   providers : [CurrencyPipe]
 })
-export class ReportBateraModule {
 
+export class ReportBateraModule {
  }

@@ -179,7 +179,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
   * The use of this function is to create pdf based on all projects summary
   */
 
-  async generatePDFBasedOnProject(projectDetail, workProject, yardDatas){
+  async generatePDFBasedOnProject(projectDetail, workProject, yardDatas, ganttChart){
     // Document head
     const {proyek : project, variant_work, id_tender} = projectDetail
     const {work_area} = workProject
@@ -230,6 +230,10 @@ export class PdfGeneratorBateraComponent implements OnInit {
             {svg : this.barChartPrice()},
           ]]
         }
+      },
+      {
+        image : ganttChart,
+        width : 500
       }
     ]
     pdfMake.createPdf({footer, content}).open();  

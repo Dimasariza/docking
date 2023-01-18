@@ -4,7 +4,8 @@ import { NbButtonGroupModule, NbButtonModule, NbCardModule, NbIconModule } from 
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TrackingBateraRoutingModule } from './tracking-batera.routing.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
+import { FrappeGanttModule } from './frappe-gant/frappe-gantt.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -14,12 +15,13 @@ import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
     NbIconModule,
     NbButtonModule,
     NgxDatatableModule,
-    NbButtonGroupModule
+    NbButtonGroupModule,
+    FrappeGanttModule,
+    CommonModule
   ],
-  exports: [],
+  exports: [  ],
   declarations: [
     ...routedComponents,
-    FrappeGanttComponent
   ],
 })
 export class TrackingBateraModule { }

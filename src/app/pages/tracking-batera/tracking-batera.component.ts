@@ -1,9 +1,7 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
-
 
 @Injectable({ providedIn: 'root' })
 @Component({
@@ -13,16 +11,14 @@ import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
 })
 export class TrackingBateraComponent implements OnInit {
   constructor(private tenderService : TenderBateraService,
-              private route : Router,
               public FNCOL : FunctionCollection,
   ) {  }
 
-  @ViewChild(FrappeGanttComponent)  gantChart : FrappeGanttComponent
   public trackingData : any 
   chartTask : any [] = []
-
   tasks: any [] = []
-
+  @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
+  
   ngOnInit(): void {
     this.tenderService.getProjectSummary("", "", "", "")
     .subscribe(({data} : any) => {
@@ -39,13 +35,13 @@ export class TrackingBateraComponent implements OnInit {
   }
 
   showGantChart(data) {
-    console.log(data)
     const {id_proyek} = data
     const chartTask = this.chartTask
     .find(({proyek}) => proyek.id_proyek === id_proyek)
+    const workArea = chartTask.proyek.work_area.length ? chartTask.proyek.work_area : []
+    const variantWork = chartTask.variant_work.length ? chartTask.variant_work : [] 
     const task = [
-      ...chartTask.proyek.work_area,
-      // ...chartTask.variant_work
+      ...workArea, ...variantWork
     ]
     let jobContainer = new Array
     const regroupData = (task) => {
@@ -76,11 +72,6 @@ export class TrackingBateraComponent implements OnInit {
     this.gantChart.ngOnInit()
   }
 
-  exportToSvg(){
-    this.gantChart.exportToSvg();
-    // console.log("export")
-  }
-
   topButton : any = [
     {icon : 'grid-outline', desc : 'Default'},
     {icon : 'star-outline', desc : 'All Assets'},
@@ -94,14 +85,6 @@ export class TrackingBateraComponent implements OnInit {
   ]
 
   rightButton : any = ['Day', 'Week', 'Month', 'Year']
-
-  clickButton(desc){
-    switch(desc){
-      case 'Export to PDF':
-        this.navigateToPdf()
-        break
-    }
-  }
 
   vesselFilter(e){
     const {desc} = e[0]
@@ -118,8 +101,5 @@ export class TrackingBateraComponent implements OnInit {
     }
   }
 
-  navigateToPdf(){
-    this.route.navigateByUrl('/pages/export-pdf')
-  }
 
 }

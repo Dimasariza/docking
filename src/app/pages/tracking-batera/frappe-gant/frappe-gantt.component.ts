@@ -58,10 +58,5 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
         }
     }
 
-    exportToSvg() {
-        // this.gantt.export();
-        console.log("export frappe")
-    }
-
 
 }

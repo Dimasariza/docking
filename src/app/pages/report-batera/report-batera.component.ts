@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
@@ -10,9 +10,15 @@ import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generat
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
+import { FrappeGanttComponent } from '../tracking-batera/frappe-gant/frappe-gantt.component';
 import { TrackingBateraComponent } from '../tracking-batera/tracking-batera.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
+import html2canvas from 'html2canvas'
+import pdfMake from "pdfmake/build/pdfmake";  
+import pdfFonts from "pdfmake/build/vfs_fonts";  
+pdfMake.vfs = pdfFonts.pdfMake.vfs; 
+
 
 @Component({
   selector: 'ngx-report-batera',
@@ -29,8 +35,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private profileService : ProfileBateraService,
               private FNCOL : FunctionCollection,
               private homeservice : HomeBateraService,
-              private trackingComponent : TrackingBateraComponent,
-
+              private trackingComponent : TrackingBateraComponent
     ) {
   }
 
@@ -42,7 +47,9 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   alertConds 
   picData : any
   companyProfile : any
-  userRole
+  userRole;
+  tasks = [];
+
   public context: CanvasRenderingContext2D;
   
   ngOnInit(): void {
@@ -67,6 +74,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     const _subs2 = this.projectService.getSubProjectData(id) 
     .pipe(take(1))
     .subscribe(({data} : any) => {
+      this.defineTasks(data)
       this.subProjectData = data
       const {kapal : {nama_kapal}, tahun, status} = data
       this.subProjectData['head'] = `${nama_kapal}-DD-${tahun} ${this.FNCOL.convertStatus(status)}`
@@ -76,14 +84,29 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     .pipe(take(1))
     .subscribe(({data} : any) => this.dataSuplier = data)
 
-    const _subs5 = this.profileService.getCompanyProfile()
+    const _subs4 = this.profileService.getCompanyProfile()
     .pipe(take(1))
     .subscribe(({data} : any) => this.companyProfile = data)
 
     this.subscription.push(_subs1)
     this.subscription.push(_subs2)
     this.subscription.push(_subs3)
-    this.subscription.push(_subs5)
+    this.subscription.push(_subs4)
+  }
+
+  defineTasks (data) {
+    const {work_area} = data;
+    this.tasks = work_area.map(work => {
+      return {
+        name : work.jobName,
+        price : 100,
+        start : work.start,
+        end : work.end,
+        progress_log: [
+          {progress : 10, date: '2016-1-15'},
+          {progress : 20, date: '2016-1-21'},
+        ],
+      }})
   }
 
   yardData(id): void {
@@ -102,12 +125,19 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     })
   }
 
-  
+  @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
 
   exportToPDF(){
-    const data = 1
-    this.trackingComponent.showGantChart(data)
-    this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas);
+    this.gantChart.ngOnInit()
+
+    const element = document.getElementById("exportGanttChart")
+    html2canvas(element).then((canvas) => {
+      const imgData = canvas.toDataURL('image/jpeg');
+      // pdfMake.createPdf(documentDefenition).download("output.pdf")
+      this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas, imgData);
+    })
+
+    
   }
 
   allertStatus (status) {
