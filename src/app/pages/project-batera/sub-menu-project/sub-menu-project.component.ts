@@ -10,7 +10,7 @@ import { DeleteDialogComponent } from '../../home-batera/delete-dialog/delete-di
 import { FunctionCollection } from '../../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../../tender-batera/tender-batera.service';
 import { TableDataComponent } from './table-data/table-data.component';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import { TrackingBateraComponent } from '../../tracking-batera/tracking-batera.component';
 
 interface TreeNode<T> {}
