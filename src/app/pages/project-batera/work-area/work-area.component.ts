@@ -229,7 +229,7 @@ export class WorkAreaComponent implements OnInit {
     }
     else (this.uploadData(this.workAreaContainer))
   }
-
+ 
   rebindingStatusData(newData, submitData) {
     newData.forEach(work => {
       const {category = this.modelData.category, rank = this.modelData.rank, responsible = this.modelData.responsible, status = this.modelData.status} = submitData;

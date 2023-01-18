@@ -342,23 +342,29 @@ export class SubMenuProjectComponent implements OnInit {
         .filter(f => f != null)
     }
 
-    let workContainer = []
+    const work_area = this.projectData.work_area ? this.projectData.work_area : []
     dataFormExcel.map(job => {
       const jobNumber = job.jobNumber.split(".");
       if(jobNumber.length == 1) {
-        const id = this.projectData.work_area.length
+        const id = work_area.length
         job = {
           ...job,
           id,
           items : []
         }
-        workContainer.push(job)
-      } else if (jobNumber.length > 1) {
-        workContainer = reconstructData(workContainer, jobNumber)
-      }
+        work_area.push(job);
+        this.projectData.work_area = work_area
+      } 
+      // else if (jobNumber.length > 1) {
+      //   workContainer = reconstructData(workContainer, jobNumber)
+      // }
     })
-    this.projectData.work_area.push(...workContainer)
-    const work_area = this.projectData.work_area
+    // this.projectData.work_area.push(...workContainer)
+    // dataFormExcel.map((job, id) => {
+    //   const {jobNumber} = job
+    //   const splitNumber = jobNumber.split(".")
+
+    // })
     this.projectService.workArea({work_area}, this.projectData.id_proyek)
     .subscribe(res => this.ngOnInit())
   }
