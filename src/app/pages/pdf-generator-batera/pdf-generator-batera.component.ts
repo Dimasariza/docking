@@ -57,6 +57,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const job = jobNumber + '.' + jobName
     const projectHead = await this.projectHead(head, job)
 
+    this.jobCollection.length = 0
     // Document job details
     this.regroupJobData(data?.items, 'work_area')
     const content = [
@@ -134,9 +135,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
   regroupJobData(data, jobDetails){
     if(data === null) return
 
-    this.jobCollection.length = 0
-    this.variantCollection.length = 0
-
     const jobDatas =  data.map(job => {
       const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id} = job
       const parentId = id.toString().split('')
@@ -199,6 +197,9 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const priceSummary = this.getPriceSummary(projectDetail, workProject, yardDatas)
     const costDetails = this.getCostDetails(projectDetail, workProject, yardDatas)
     const cardProject = this.cardProjectSummary(projectDetail, workProject, yardDatas)
+
+    this.jobCollection.length = 0
+    this.variantCollection.length = 0
 
     this.regroupJobData(work_area, 'work_area')
     this.regroupJobData(variant_work, 'variant_work')
