@@ -82,6 +82,7 @@ export class SubMenuProjectComponent implements OnInit {
       this.reportData = this.reconstruction(data)
       this.projectData = data
       const {work_area, kapal : {nama_kapal}, tahun, status} = data
+      console.log(work_area)
       this.shipName = `${nama_kapal} -DD- ${tahun} ${this.FNCOL.convertStatus(status)}`
       if(this.isFalsy(!work_area || !work_area[0])) 
       this.regroupData(false)
@@ -342,7 +343,8 @@ export class SubMenuProjectComponent implements OnInit {
         .filter(f => f != null)
     }
 
-    const work_area = this.projectData.work_area ? this.projectData.work_area : []
+    let work_area;
+    if( !this.projectData.work_area || !this.projectData.work_area[0] ) work_area = []
     dataFormExcel.map(job => {
       const jobNumber = job.jobNumber.split(".");
       if(jobNumber.length == 1) {
