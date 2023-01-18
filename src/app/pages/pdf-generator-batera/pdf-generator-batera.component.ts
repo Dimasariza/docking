@@ -133,6 +133,10 @@ export class PdfGeneratorBateraComponent implements OnInit {
   variantCollection : any = []
   regroupJobData(data, jobDetails){
     if(data === null) return
+
+    this.jobCollection.length = 0
+    this.variantCollection.length = 0
+
     const jobDatas =  data.map(job => {
       const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id} = job
       const parentId = id.toString().split('')
@@ -231,6 +235,9 @@ export class PdfGeneratorBateraComponent implements OnInit {
             {svg : this.barChartPrice()},
           ]]
         }
+      },
+      {
+        text: 'S-Curve', alignment: 'center', style: {bold: true}
       },
       {
         image : gantChart,
@@ -533,14 +540,14 @@ export class PdfGeneratorBateraComponent implements OnInit {
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
       ],
+      // [ 
+      //   { text :'Amortization Job', fontSize : 10, bold : true}, 
+      //   { text : 0, fontSize : 10},
+      //   { text : 0, fontSize : 10}, 
+      //   { text : 0, fontSize : 10},
+      // ],
       [ 
-        { text :'Amortization Job', fontSize : 10, bold : true}, 
-        { text : 0, fontSize : 10},
-        { text : 0, fontSize : 10}, 
-        { text : 0, fontSize : 10},
-      ],
-      [ 
-        { text :'Depreciation Job', fontSize : 10, bold : true}, 
+        { text :'Variant Job', fontSize : 10, bold : true}, 
         { text : 0, fontSize : 10},
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
