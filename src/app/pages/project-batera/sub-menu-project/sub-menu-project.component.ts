@@ -29,15 +29,12 @@ const menuButton = [
   },
   {
     position: 'bottom',
-    text : 'Expand All'
+    text : 'Extend',
+    expand : false
   },
   {
     position: 'bottom',
     text : 'Refresh'
-  },
-  {
-    position: 'bottom',
-    text: 'Show Contract'
   },
   {
     position: 'bottom',
@@ -82,7 +79,6 @@ export class SubMenuProjectComponent implements OnInit {
       this.reportData = this.reconstruction(data)
       this.projectData = data
       const {work_area, kapal : {nama_kapal}, tahun, status} = data
-      console.log(work_area)
       this.shipName = `${nama_kapal} -DD- ${tahun} ${this.FNCOL.convertStatus(status)}`
       if(this.isFalsy(!work_area || !work_area[0])) 
       this.regroupData(false)
@@ -95,8 +91,9 @@ export class SubMenuProjectComponent implements OnInit {
     })
   }
 
-  regroupData(expand){
+    regroupData(expand){
     const {work_area, mata_uang} = this.projectData
+    if(!work_area || !work_area[0]) return
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
       const workItem = [mata_uang, 'Price Budget']
       return this.FNCOL.populateData(work, workItem, expand) 
@@ -164,13 +161,15 @@ export class SubMenuProjectComponent implements OnInit {
       case 'Add Job':
         this.addWorkAreaDial();
       break;
-      case 'Expand All' :
-        menuButton[2].text = "Unexpand";
-        this.regroupData(true);
-      break;
-      case 'Unexpand' :
-        menuButton[2].text = "Expand All";
-        this.regroupData(false);
+      case 'Extend' :
+        const conds = menuButton[2].expand
+        if(!conds) {
+          menuButton[2].expand = true;
+          this.regroupData(true);
+        } else if(conds) {
+          menuButton[2].expand = false;
+          this.regroupData(false);
+        }
       break;
       case 'Monitoring' :
         this.router.navigateByUrl('/pages/report-batera/' + this.id_proyek);

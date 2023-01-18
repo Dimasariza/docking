@@ -85,7 +85,6 @@ export class TrackingBateraComponent implements OnInit {
   leftButton : any = [
     // {icon : 'book-outline', desc : 'Export to PDF'},
     {icon : 'chevron-down-outline', desc : 'Extend'},
-    {icon : 'info-outline', desc : 'Extended Info'}
   ]
 
   rightButton : any = ['Day', 'Week', 'Month', 'Year']
