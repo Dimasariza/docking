@@ -201,6 +201,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const footer = (currentPage, pageCount, pageSize) => {
       return { text : currentPage, alignment : 'right', fontSize : 8, margin : [12,12]}
     }
+    const gantChart = await this.getBase64ImageFromURL('./assets/images/gantchart.png')
     const content = [
       projectHead,
       cardProject,
@@ -232,7 +233,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
         }
       },
       {
-        image : ganttChart,
+        image : gantChart,
         width : 500
       }
     ]

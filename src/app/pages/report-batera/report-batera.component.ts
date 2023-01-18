@@ -107,6 +107,7 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
           {progress : 20, date: '2016-1-21'},
         ],
       }})
+      this.gantChart.ngOnInit()
   }
 
   yardData(id): void {
@@ -128,16 +129,11 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
 
   exportToPDF(){
-    this.gantChart.ngOnInit()
-
     const element = document.getElementById("exportGanttChart")
     html2canvas(element).then((canvas) => {
       const imgData = canvas.toDataURL('image/jpeg');
-      // pdfMake.createPdf(documentDefenition).download("output.pdf")
       this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas, imgData);
     })
-
-    
   }
 
   allertStatus (status) {

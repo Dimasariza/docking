@@ -2,6 +2,10 @@ import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { FunctionCollection } from '../function-collection-batera/function-collection.component';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
 import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
+import html2canvas from 'html2canvas';
+import pdfMake from "pdfmake/build/pdfmake";  
+import pdfFonts from "pdfmake/build/vfs_fonts";  
+pdfMake.vfs = pdfFonts.pdfMake.vfs; 
 
 @Injectable({ providedIn: 'root' })
 @Component({
@@ -85,6 +89,60 @@ export class TrackingBateraComponent implements OnInit {
   ]
 
   rightButton : any = ['Day', 'Week', 'Month', 'Year']
+
+  dailyReport( data ) {
+    const element = document.getElementById("sCurve")
+    html2canvas(element).then((canvas) => {
+      const imgData = canvas.toDataURL('image/jpeg');
+      const head = data.nama_kapal + ' -DD- ' + data.tahun
+      // const {jobNumber, jobName} = data
+      const job = "1" + '.' + "General Service"
+
+      const projectHead = this.projectHead(head, job)
+
+      let documentDefenition = {
+        content : [
+          // projectHead,
+          {
+            image : imgData,
+            width : 500
+          }
+        ]
+      }
+      pdfMake.createPdf(documentDefenition).open()
+    })
+  }
+
+  
+  getBase64ImageFromURL(url) {
+    return new Promise((resolve, reject) => {
+      var img = new Image();
+      img.setAttribute("crossOrigin", "anonymous");
+      img.onload = () => {
+        var canvas = document.createElement("canvas");
+        canvas.width = img.width;
+        canvas.height = img.height;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        var dataURL = canvas.toDataURL("image/png");
+        resolve(dataURL);
+      };
+      img.onerror = error => {
+        reject(error);
+      };
+      img.src = url;
+    });
+  }
+
+  async projectHead(head, job){
+    const image = await this.getBase64ImageFromURL('./assets/images/Logo/gantchart.png')
+    const headText = [
+      {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
+      {text : job, fontSize : 12, color : '#047886', margin : [0 , 6]},
+    ]
+    const logo = {image, fit :[80, 80], alignment : 'right'}
+    return { columns : [headText, logo] }
+  }
 
   vesselFilter(e){
     const {desc} = e[0]
