@@ -57,6 +57,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const job = jobNumber + '.' + jobName
     const projectHead = await this.projectHead(head, job)
 
+    this.jobCollection.length = 0
     // Document job details
     this.regroupJobData(data?.items, 'work_area')
     const content = [
@@ -133,6 +134,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
   variantCollection : any = []
   regroupJobData(data, jobDetails){
     if(data === null) return
+
     const jobDatas =  data.map(job => {
       const {jobNumber, jobName, rank, unit, category, progress, remarks, items, id, start} = job
       const parentId = id.toString().split('')
@@ -197,6 +199,9 @@ export class PdfGeneratorBateraComponent implements OnInit {
     const costDetails = this.getCostDetails(projectDetail, workProject, yardDatas)
     const cardProject = this.cardProjectSummary(projectDetail, workProject, yardDatas)
 
+    this.jobCollection.length = 0
+    this.variantCollection.length = 0
+
     this.regroupJobData(work_area, 'work_area')
     this.regroupJobData(variant_work, 'variant_work')
     const footer = (currentPage, pageCount, pageSize) => {
@@ -238,6 +243,13 @@ export class PdfGeneratorBateraComponent implements OnInit {
           ]]
         }
       },
+      {
+        text: 'S-Curve', alignment: 'center', style: {bold: true}
+      },
+      {
+        image : gantChart,
+        width : 500
+      }
     ]
     pdfMake.createPdf({footer, content}).open();  
   }
@@ -535,6 +547,12 @@ export class PdfGeneratorBateraComponent implements OnInit {
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
       ],
+      // [ 
+      //   { text :'Amortization Job', fontSize : 10, bold : true}, 
+      //   { text : 0, fontSize : 10},
+      //   { text : 0, fontSize : 10}, 
+      //   { text : 0, fontSize : 10},
+      // ],
       [ 
         { text :'Variant Job', fontSize : 10, bold : true}, 
         { text : 0, fontSize : 10},
