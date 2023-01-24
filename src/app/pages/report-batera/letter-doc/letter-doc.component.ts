@@ -27,17 +27,14 @@ export class LetterDocComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   addLetter(data){
-    switch (this.data.dial) {
-      case 'bast' :
-        this.addBastDoc(data)
-      break;
-      case 'surat_teguran' :
-        this.addSuratTeguran(data)
-      break;
-      case 'close_out_report' :
-        this.addCorDoc(data)
-      break;
+    const postBody = {
+      ...data.value,
+      tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
+      type : this.data.dial,
+      id_proyek : this.data.id,
+      id_attachment : this.document.id_attachment
     }
+    this.submitLetter(postBody)
   }
 
   public document : any = ""
@@ -54,43 +51,9 @@ export class LetterDocComponent implements OnInit, OnDestroy {
         console.log("final Response uploading image")
         this.document = res.body
         this.document = this.document.data
-        console.log(this.document)
       }
     })
     this.subscription.push(_subs)
-  }
-
-  addBastDoc(data){
-    const postBody = {
-      ...data.value,
-      tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
-      type : this.data.dial,
-      id_proyek : this.data.id,
-      id_attachment : this.document.id_attachment
-    }
-    this.submitLetter(postBody)
-  }
-
-  addCorDoc(data){
-    const postBody = {
-      ...data.value,
-      tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
-      type : this.data.dial,
-      id_proyek : this.data.id,
-      dokumen : this.document
-    }
-    this.submitLetter(postBody)
-  }
-
-  addSuratTeguran(data){
-    const postBody = {
-      ...data.value,
-      tgl : this.datepipe.transform(data.value?.tgl , 'yyyy-MM-dd'),
-      type : this.data.dial,
-      id_proyek : this.data.id,
-      dokumen : this.document
-    }
-    this.submitLetter(postBody)
   }
 
   submitLetter(postBody){

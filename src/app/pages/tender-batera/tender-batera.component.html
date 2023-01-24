@@ -23,10 +23,11 @@
 
     <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
       <div class="my-2">
-        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="addContractDial()" >Add Yard</button>
-        <button nbButton size="tiny" class="mx-1" status="primary"  (click)="updateContractDial()" [disabled]="!displayTender">Update Yard</button>
-        <button nbButton size="tiny" class="mx-1" status="warning"  (click)="chooseTender()" outline [disabled]="!displayTender">{{selectedText}} Yard</button>
-        <button nbButton size="tiny" class="mx-1" status="danger"  (click)="deleteYard()" outline [disabled]="!displayTender">Delete Yard</button>
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="addContractDial()" >Add Yard</button>
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="updateContractDial()" [disabled]="!displayTender">Update Yard</button>
+        <button nbButton size="tiny" class="m-1" status="warning"  (click)="chooseTender()" outline [disabled]="!displayTender">{{selectedText}} Yard</button>
+        <button nbButton size="tiny" class="m-1" status="danger"  (click)="deleteYard()" outline [disabled]="!displayTender">Delete Yard</button>
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="showContract()" outline [disabled]="!displayTender">Show Contract</button>
       </div>
 
       <nb-card class="p-3" *ngIf="displayTender">
@@ -51,7 +52,6 @@
   <nb-accordion-item>
     <nb-accordion-item-header >
       Load Details
-      <button class="m-2" size="small" status="primary" nbButton>Show Contract</button>
     </nb-accordion-item-header>
     <nb-accordion-item-body>
       <div>

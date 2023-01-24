@@ -188,6 +188,10 @@ export class TenderBateraComponent {
     })
   }
 
+  showContract() {
+    console.log("show contract")
+  }
+
   addContractDial(){
     const dialog = this.dialog.open(ContractActionComponent, {
       disableClose : true,

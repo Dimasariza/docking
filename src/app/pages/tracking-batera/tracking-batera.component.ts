@@ -43,9 +43,10 @@ export class TrackingBateraComponent implements OnInit {
     const chartTask = this.chartTask
     .find(({proyek}) => proyek.id_proyek === id_proyek)
     const workArea = chartTask.proyek.work_area.length ? chartTask.proyek.work_area : []
-    const variantWork = chartTask.variant_work.length ? chartTask.variant_work : [] 
+    // const variantWork = chartTask.variant_work.length ? chartTask.variant_work : [] 
     const task = [
-      ...workArea, ...variantWork
+      ...workArea, 
+      // ...variantWork
     ]
     let jobContainer = new Array
     const regroupData = (task) => {
@@ -89,19 +90,15 @@ export class TrackingBateraComponent implements OnInit {
 
   rightButton : any = ['Day', 'Week', 'Month', 'Year']
 
-  dailyReport( data ) {
+  async dailyReport( data ) {
     const element = document.getElementById("sCurve")
     html2canvas(element).then((canvas) => {
       const imgData = canvas.toDataURL('image/jpeg');
-      const head = data.nama_kapal + ' -DD- ' + data.tahun
-      // const {jobNumber, jobName} = data
-      const job = "1" + '.' + "General Service"
-
-      const projectHead = this.projectHead(head, job)
-
+      const head = data.nama_kapal + ' -DD- ' + data.year
       let documentDefenition = {
         content : [
-          // projectHead,
+          {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
+          {text : "Gant Chart | S Curve", fontSize : 12, color : '#047886', margin : [0 , 6]},
           {
             image : imgData,
             width : 500
@@ -133,14 +130,14 @@ export class TrackingBateraComponent implements OnInit {
     });
   }
 
-  async projectHead(head, job){
-    const image = await this.getBase64ImageFromURL('./assets/images/Logo/gantchart.png')
-    const headText = [
-      {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
-      {text : job, fontSize : 12, color : '#047886', margin : [0 , 6]},
-    ]
+  async projectHead(head){
+    const image = await this.getBase64ImageFromURL('./assets/images/Logo/Logo Sikomodo.jpeg')
+    // const headText = [
+    //   {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
+    // ]
     const logo = {image, fit :[80, 80], alignment : 'right'}
-    return { columns : [headText, logo] }
+    return {...logo}
+    // return { columns : [logo] }
   }
 
   vesselFilter(e){

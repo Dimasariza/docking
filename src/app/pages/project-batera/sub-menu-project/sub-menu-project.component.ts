@@ -94,6 +94,7 @@ export class SubMenuProjectComponent implements OnInit {
     regroupData(expand){
     const {work_area, mata_uang} = this.projectData
     if(!work_area || !work_area[0]) return
+    console.log(work_area)
     this.dataSource = this.dataSourceBuilder.create(work_area.map(work => {
       const workItem = [mata_uang, 'Price Budget']
       return this.FNCOL.populateData(work, workItem, expand) 
@@ -294,80 +295,75 @@ export class SubMenuProjectComponent implements OnInit {
       let binaryData = event.target.result;
       let workBook = XLSX.read(binaryData, {type : 'binary'});
       const data = XLSX.utils.sheet_to_json(workBook.Sheets['WORK ORDER']);
-      this.jobDataHierarchy(data) 
+      console.log(data)
+      this.jobDataHierarchy(data)
     }
   }
   
-  jobDataHierarchy(data : any) {
-    const dataFormExcel = data.map(job => {
-      const {
-      ["Job Number"] : jobNumber, 
-      ["Job Name"] : jobName, 
-      Start,
-      Stop,
-      Unit,
-      Category,
-      Responsible,
-      Status,
-      Priority,
-      Percentage,
-      remarks
-    } = job
-    return {
-      jobNumber, 
-      jobName, 
-      start : Start, 
-      stop : Stop, 
-      unit : Unit, 
-      category : Category, 
-      responsible : Responsible,
-      status : Status,
-      priority : Priority,
-      percentage : Percentage,
-      remarks
+  jobDataHierarchy(workData : any) {
+    let work_area = this.projectData.work_area;
+    if( !this.projectData.work_area || !this.projectData.work_area[0] ) work_area = [];
+
+    const regroupDatas = (allJob, newJob, index) => {
+      const newJobNumber = newJob.jobNumber.toString().split(".");
+      let jobIndex = "";
+      newJobNumber.forEach((val, id) => {
+        if(id > index) return;
+        if(id == 0) jobIndex = val;
+        if(id > 0) jobIndex += "." + val;
+      });
+      const check = allJob.find(j => j.jobNumber == jobIndex)
+      if(!allJob.length) 
+      return [...allJob, {...newJob, items : []}]
+      const jobsLength = allJob[0].jobNumber.split(".").length
+      if(!check && jobsLength == newJobNumber.length)
+      return [...allJob, {...newJob, items : []}]
+      else return allJob.map (jobs => { 
+        if(jobs.jobNumber == jobIndex && index < newJobNumber.length) {
+          index++;  
+          return {...jobs, items : regroupDatas(jobs.items, newJob, index)}
+        } 
+        return jobs
+      })
     }
+
+    workData
+    .forEach(work => {
+      let {["Job Number"] : jobNumber, ["Job Name"] : jobName } = work;
+      jobNumber = jobNumber.toString().split('').filter(n => {
+        if( n == "." || parseInt(n) || n == 0)
+        return n
+      }).join('')
+      work = {jobNumber, jobName}
+      const newJobNumber = jobNumber.split('.')
+      newJobNumber.forEach((d, i) => {
+        work_area = regroupDatas(work_area, work, i);
+      })
     })
 
-    const reconstructData = (data, parentIndex) => {
-      parentIndex = parentIndex?.toString().split('.')
-        return data.map((w, i) => {
-          if (parentIndex.length > 1 && i == parentIndex[0]) {
-            parentIndex = parentIndex.slice(1)
-            return {...w, items: reconstructData(w.items, parentIndex)}
-          } else if(i == parentIndex[0]) {
-            return null
-          }
-          return w
-        })
-        .filter(f => f != null)
-    }
-
-    let work_area;
-    if( !this.projectData.work_area || !this.projectData.work_area[0] ) work_area = []
-    dataFormExcel.map(job => {
-      const jobNumber = job.jobNumber.split(".");
-      if(jobNumber.length == 1) {
-        const id = work_area.length
-        job = {
-          ...job,
-          id,
-          items : []
+    const defineId = (work_area, lastJobId) => {
+      return work_area.map((job, jobId) => {
+        let id;
+        if(!lastJobId) id = jobId.toString()
+        if(lastJobId) id = lastJobId.toString() + "." + jobId.toString();
+        job = {...job, id}
+        if(job.items.length > 0) {
+          lastJobId = job.id
+          job = {...job, items : defineId(job.items, lastJobId)}
+          if(!lastJobId) lastJobId = "" 
+          lastJobId = lastJobId.split(".")
+          lastJobId.pop()
+          lastJobId = lastJobId.join(".")
         }
-        work_area.push(job);
-        this.projectData.work_area = work_area
-      } 
-      // else if (jobNumber.length > 1) {
-      //   workContainer = reconstructData(workContainer, jobNumber)
-      // }
-    })
-    // this.projectData.work_area.push(...workContainer)
-    // dataFormExcel.map((job, id) => {
-    //   const {jobNumber} = job
-    //   const splitNumber = jobNumber.split(".")
-
-    // })
-    this.projectService.workArea({work_area}, this.projectData.id_proyek)
-    .subscribe(res => this.ngOnInit())
+        return job
+      })
+    }
+    work_area = defineId(work_area, "")
+    this.projectData.work_area = work_area
+    console.log(work_area)
+    this.regroupData(false)
+    // this.projectService.workArea({work_area}, this.projectData.id_proyek)
+    // .subscribe(res => this.ngOnInit())
   }
 
   reload(reloadPage) {

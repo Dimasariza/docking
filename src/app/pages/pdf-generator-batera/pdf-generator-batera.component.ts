@@ -16,10 +16,16 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 export class PdfGeneratorBateraComponent implements OnInit {
   constructor(private FNCOL : FunctionCollection,
               private profileService : ProfileBateraService,
-              private currency : CurrencyPipe
+              private currency : CurrencyPipe,
+              private datePipe : DatePipe
   ) { }
 
   ngOnInit(): void {}
+
+  projectData : any;
+  workData : any;
+  yardData : any;
+  ganttChart : any;
 
   getBase64ImageFromURL(url) {
     return new Promise((resolve, reject) => {
@@ -118,7 +124,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   dataHeading() {
-    let text = ['Job Number', 'Item Name', 'Priority', 'Type', 'Category', '%', "Start"]
+    let text = ['Job Number', 'Item Name', 'Priority', 'Unit', 'Category', '%', "Start"]
     const body = text.map(item =>  [this.text(item, ...Array(2), true)])
     return {
       layout: 'lightHorizontalLines',
@@ -162,7 +168,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
               { text : useUnit[unit] , fontSize : 9,},   
               { text : this.FNCOL.category[category] , fontSize : 9,}, 
               { text : progress, fontSize : 9,}, 
-              { text : start, fontSize : 9,}, 
+              { text : this.datePipe.transform(start, 'dd-MM-YYYY') , fontSize : 9,}, 
             ],
             [ 
               { text :'Description', fontSize : 9, bold : true}, 
@@ -182,7 +188,100 @@ export class PdfGeneratorBateraComponent implements OnInit {
   * The use of this function is to create pdf based on all projects summary
   */
 
+  jobBasedOnDate(days) {
+    const {work_area} = this.workData; 
+    return work_area.filter(job => {
+      const {jobNumber, jobName, rank, unit, end, category, progress, start, remarks, id} = job;
+      const parentId = id.toString().split('')
+      let useUnit =
+      parentId.length === 1 
+      ? this.FNCOL.jobUnit
+      : this.FNCOL.subJobUnit
+      const dueDate = new Date(end);
+      dueDate.setDate(dueDate.getDate() + days); 
+      const currentDate = new Date(); 
+      if(currentDate < dueDate) return  {
+        layout: {
+          hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 0 : 1,
+          vLineWidth: () => 0,
+          hLineColor: () => '#aaa',
+          paddingLeft: (i) => i === 0 ? 0 : 8,
+          paddingRight: (i, node) => (i === node.table.widths.length - 1) ? 0 : 8,
+        },
+        margin : [0 , 3],
+        table: {
+          headerRows: 1,
+          widths: [ 60, 120, '*', 60, 60, 30, 60],  
+          body: [
+            [
+              { text : jobNumber, fontSize : 9,}, 
+              { text : jobName, fontSize : 9,}, 
+              { text : this.FNCOL.rank[rank], fontSize : 9,}, 
+              { text : useUnit[unit] , fontSize : 9,},   
+              { text : this.FNCOL.category[category] , fontSize : 9,}, 
+              { text : progress, fontSize : 9,}, 
+              { text : this.datePipe.transform(start, 'dd-MM-YYYY') , fontSize : 9,}, 
+            ],
+            [ 
+              { text :'Description', fontSize : 9, bold : true}, 
+              { text :remarks , fontSize : 9, colSpan : 5}, 
+              '', '', '', '', ''
+            ],
+          ]
+        }
+      };;
+    })
+  }
+
+
+  jobBasedOnProgress(job_progress) {
+    const {work_area} = this.workData; 
+    return work_area.filter(job => {
+      const {jobNumber, jobName, rank, unit, end, category, progress, start, remarks, id} = job;
+      const parentId = id.toString().split('')
+      let useUnit =
+      parentId.length === 1 
+      ? this.FNCOL.jobUnit
+      : this.FNCOL.subJobUnit
+      if(progress == job_progress) return  {
+        layout: {
+          hLineWidth: (i, node) => (i === 0 || i === node.table.body.length) ? 0 : 1,
+          vLineWidth: () => 0,
+          hLineColor: () => '#aaa',
+          paddingLeft: (i) => i === 0 ? 0 : 8,
+          paddingRight: (i, node) => (i === node.table.widths.length - 1) ? 0 : 8,
+        },
+        margin : [0 , 3],
+        table: {
+          headerRows: 1,
+          widths: [ 60, 120, '*', 60, 60, 30, 60],  
+          body: [
+            [
+              { text : jobNumber, fontSize : 9,}, 
+              { text : jobName, fontSize : 9,}, 
+              { text : this.FNCOL.rank[rank], fontSize : 9,}, 
+              { text : useUnit[unit] , fontSize : 9,},   
+              { text : this.FNCOL.category[category] , fontSize : 9,}, 
+              { text : progress, fontSize : 9,}, 
+              { text : this.datePipe.transform(start, 'dd-MM-YYYY') , fontSize : 9,}, 
+            ],
+            [ 
+              { text :'Description', fontSize : 9, bold : true}, 
+              { text :remarks , fontSize : 9, colSpan : 5}, 
+              '', '', '', '', ''
+            ],
+          ]
+        }
+      };;
+    })
+  }
+
   async generatePDFBasedOnProject(projectDetail, workProject, yardDatas, ganttChart){
+    this.projectData = projectDetail;
+    this.workData = workProject;
+    this.yardData = yardDatas;
+    this.ganttChart = ganttChart;
+
     // Document head
     const {proyek : project, variant_work, id_tender} = projectDetail
     const {work_area} = workProject
@@ -204,10 +303,15 @@ export class PdfGeneratorBateraComponent implements OnInit {
 
     this.regroupJobData(work_area, 'work_area')
     this.regroupJobData(variant_work, 'variant_work')
+
     const footer = (currentPage, pageCount, pageSize) => {
       return { text : currentPage, alignment : 'right', fontSize : 8, margin : [12,12]}
     }
-    const gantChart = await this.getBase64ImageFromURL('./assets/images/gantchart.png')
+
+    const dueDate30 = this.jobBasedOnDate(30);
+    const jobThisWeek = this.jobBasedOnDate(7);
+    const completionToDay = this.jobBasedOnProgress(100)
+
     const content = [
       projectHead,
       cardProject,
@@ -217,7 +321,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
       ...priceSummary,
       {text : "S-Curve" ,fontSize : 12, bold : true, color: '#047886', margin : [0, 1000, 0, 0]},
       {
-        image : gantChart,
+        image : ganttChart,
         width : 500
       },
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
@@ -225,8 +329,16 @@ export class PdfGeneratorBateraComponent implements OnInit {
       ...costDetails,
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
+      {text : "Jobs Completion To Day" ,fontSize : 10, bold : true, color: 'black', margin : [0,5,0,10]},
+      // ...completionToDay,
       this.dataHeading(),
       ...this.jobCollection,
+      {text : "Jobs This Week" ,fontSize : 10, bold : true, color: 'black', margin : [0,5,0, 10]},
+      ...jobThisWeek,
+      this.dataHeading(),
+      {text : "Outstanding Jobs" ,fontSize : 10, bold : true, color: 'black', margin : [0,5,0, 10]},
+      ...dueDate30,
+      this.dataHeading(),
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Variant Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
       this.dataHeading(),
@@ -243,13 +355,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
           ]]
         }
       },
-      {
-        text: 'S-Curve', alignment: 'center', style: {bold: true}
-      },
-      {
-        image : gantChart,
-        width : 500
-      }
     ]
     pdfMake.createPdf({footer, content}).open();  
   }
@@ -360,8 +465,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
   }
 
   getSummmaryHead(projectDetail, workProject, yardDatas){
-    console.log(projectDetail)
-    console.log(workProject)
     let user;
     this.profileService.getUserPerId(workProject.id_user)
     .subscribe(({data} : any) => user = data)
@@ -547,12 +650,6 @@ export class PdfGeneratorBateraComponent implements OnInit {
         { text : 0, fontSize : 10}, 
         { text : 0, fontSize : 10},
       ],
-      // [ 
-      //   { text :'Amortization Job', fontSize : 10, bold : true}, 
-      //   { text : 0, fontSize : 10},
-      //   { text : 0, fontSize : 10}, 
-      //   { text : 0, fontSize : 10},
-      // ],
       [ 
         { text :'Variant Job', fontSize : 10, bold : true}, 
         { text : 0, fontSize : 10},

@@ -45,6 +45,8 @@ export class ContractActionComponent  {
     fileInput.click()
   }
 
+
+
   onSubmit(data){
     let body = this.projectComp.checkPostBody(data.value)
     switch (this.data.dial) {
@@ -57,11 +59,11 @@ export class ContractActionComponent  {
     }
   };
 
-  public fileName : any = ""
+  public idAttachment : any = ""
   onFileChange(res){
     const formData = new FormData();
     const file = res.target?.files[0];
-    file?.name ? this.fileName = file.name : null
+    file?.name ? this.idAttachment = file.name : null;
     formData.append('dokumen', file);
     const _subs = this.reportService.addAttachment(formData)
     .subscribe((res) => {
@@ -69,14 +71,18 @@ export class ContractActionComponent  {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
+        this.idAttachment = res
+        this.idAttachment = this.idAttachment.body.data.nama_attachment
       }
     })
   }
 
   addNewContract(body){
+    console.log(body)
+    console.log(this.idAttachment)
     this.tenderService.addTenderContract({
       ...body,
-      dokumen : this.fileName
+      dokumen : this.idAttachment
     })
     .subscribe(res => {
       this.onSuccess.emit()

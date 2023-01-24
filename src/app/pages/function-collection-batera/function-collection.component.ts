@@ -55,13 +55,13 @@ export class FunctionCollection {
     }
 
     addSubJobData = (data, newData, parentIndex) => {
-      parentIndex= parentIndex?.toString().split('')
+      parentIndex = parentIndex?.toString().split('');
       return data.map((w, i) => {
         if (parentIndex.length > 1 && i == parentIndex[0]) {
           parentIndex = parentIndex.slice(1)
           return {...w, items: this.addSubJobData(w.items, newData, parentIndex)}
         } else if(i == parentIndex[0]) {
-          if (!w.items) w.items = []          
+          if (!w.items) w.items = []           
           return {...w, items: [...w.items, {...newData}]}
         }
         return w
@@ -84,8 +84,8 @@ export class FunctionCollection {
     }
     
     populateData = (work, workItem, expand) => { 
-        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, [workItem[1]] : unitPrice } = work  
-        const parentId = id.toString().split('')
+        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, [workItem[1]] : unitPrice } = work 
+        const parentId = id.toString().split('.')
         let useUnit = parentId.length == 1 ? this.jobUnit : this.subJobUnit
         return {
           data: {

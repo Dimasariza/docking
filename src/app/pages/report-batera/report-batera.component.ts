@@ -17,6 +17,7 @@ import { ReportBateraService } from './report-batera.service';
 import html2canvas from 'html2canvas'
 import pdfMake from "pdfmake/build/pdfmake";  
 import pdfFonts from "pdfmake/build/vfs_fonts";  
+import { DatePipe } from '@angular/common';
 pdfMake.vfs = pdfFonts.pdfMake.vfs; 
 
 
@@ -35,7 +36,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
               private profileService : ProfileBateraService,
               private FNCOL : FunctionCollection,
               private homeservice : HomeBateraService,
-              private trackingComponent : TrackingBateraComponent
+              private trackingComponent : TrackingBateraComponent,
+              private datePipe : DatePipe
     ) {
   }
 
@@ -48,7 +50,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   picData : any
   companyProfile : any
   userRole;
-  tasks = [];
+
+  tasks : any = [ ];
 
   public context: CanvasRenderingContext2D;
   
@@ -94,20 +97,23 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     this.subscription.push(_subs4)
   }
 
+  @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
   defineTasks (data) {
     const {work_area} = data;
-    this.tasks = work_area.map(work => {
+    this.tasks = work_area.map(job => {
+      const {start, end, jobName} = job;
       return {
-        name : work.jobName,
-        price : 100,
-        start : work.start,
-        end : work.end,
-        progress_log: [
-          {progress : 10, date: '2016-1-15'},
-          {progress : 20, date: '2016-1-21'},
-        ],
-      }})
-      this.gantChart.ngOnInit()
+      name : jobName,
+      price : 100,
+      start : this.datePipe.transform(start, 'YYYY-MM-dd'),
+      end : this.datePipe.transform(end, 'YYYY-MM-dd'),
+      progress_log: [
+        {progress : 10, date: '2016-1-15'},
+        {progress : 20, date: '2016-1-21'},
+      ],
+      }
+    })
+    
   }
 
   yardData(id): void {
@@ -126,9 +132,8 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     })
   }
 
-  @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
-
   exportToPDF(){
+    this.gantChart.ngOnInit()
     const element = document.getElementById("exportGanttChart")
     html2canvas(element).then((canvas) => {
       const imgData = canvas.toDataURL('image/jpeg');
@@ -151,3 +156,53 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     this.subscription.forEach((subs) => subs.unsubscribe())
   }
 }
+
+
+// [
+//   {
+//     name : 'work.jobName',
+//     price : 100,
+//     start : '2022-11-1',
+//     end : '2022-11-29',
+//     progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//     ],
+//   },{
+//     name : 'work.jobName',
+//     price : 100,
+//     start : '2022-11-1',
+//     end : '2022-11-29',
+//     progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//     ],
+//   },{
+//     name : 'work.jobName',
+//     price : 100,
+//     start : '2022-11-1',
+//     end : '2022-11-29',
+//     progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//     ],
+//   },{
+//     name : 'work.jobName',
+//     price : 100,
+//     start : '2022-11-1',
+//     end : '2022-11-29',
+//     progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//     ],
+//   },{
+//     name : 'work.jobName',
+//     price : 100,
+//     start : '2022-11-1',
+//     end : '2022-11-29',
+//     progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//     ],
+//   }
+// ]

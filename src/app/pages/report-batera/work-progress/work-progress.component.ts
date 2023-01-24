@@ -19,32 +19,6 @@ import { SubMenuReportComponent } from '../sub-menu-report/sub-menu-report.compo
 interface TreeNode<T> {}
 interface FSEntry {}
 
-const useButtons = [
-  {
-    icon: 'person-add-outline',
-    desc: 'Add Suplier'
-  },
-  {
-    icon: 'person-done-outline',
-    desc: 'Update Suplier'
-  },
-  {
-  icon: 'refresh',
-  desc: 'Refresh'
-  }, 
-  {
-    icon: 'external-link',
-    desc: 'Export to Excel'
-  }, 
-  {
-    icon: 'arrow-ios-downward-outline',
-    desc: 'Expand'
-  },
-  {
-    icon: 'paper-plane-outline',
-    desc: 'Send Notification'
-  }, 
-]
 
 @Component({
   providers : [SubMenuProjectComponent],
@@ -89,7 +63,36 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
   @Input() picData : any;
   @Output() reloadPage = new EventEmitter<string>();
   @Output() alertStatus = new EventEmitter<string>();
-  useButtons = useButtons;
+
+
+  useButtons = [
+    {
+      icon: 'person-add-outline',
+      desc: 'Add Suplier'
+    },
+    {
+      icon: 'person-done-outline',
+      desc: 'Update Suplier'
+    },
+    {
+    icon: 'refresh',
+    desc: 'Refresh'
+    }, 
+    {
+      icon: 'external-link',
+      desc: 'Export to Excel'
+    }, 
+    {
+      icon: 'arrow-ios-downward-outline',
+      desc: 'Expand',
+      expand : false
+    },
+    {
+      icon: 'paper-plane-outline',
+      desc: 'Send Notification'
+    }, 
+  ]
+
   projectId : any;
   subscription : Subscription [] = [];
   editableRow : any = "notEdited";
@@ -132,14 +135,16 @@ export class WorkProgressComponent implements OnInit, OnDestroy {
 
         break
       case 'Expand' :
-        useButtons[4].desc = 'Unexpand'
-        useButtons[4].icon = 'arrow-ios-forward-outline'
-        this.regroupTableData(true)
-        break;
-      case 'Unexpand' :
-        useButtons[4].desc = 'Expand'
-        useButtons[4].icon = 'arrow-ios-downward-outline'
-        this.regroupTableData(false)
+        const expand = this.useButtons[4]
+        if(!expand.expand) {
+          this.useButtons[4].expand = true;
+          this.useButtons[4].icon = 'arrow-ios-forward-outline'
+          this.regroupTableData(true)
+        } else if(expand.expand) {
+          this.useButtons[4].expand = false;
+          this.useButtons[4].icon = 'arrow-ios-downward-outline'
+          this.regroupTableData(false)
+        }
         break;
     }
   }
