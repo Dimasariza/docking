@@ -295,7 +295,6 @@ export class SubMenuProjectComponent implements OnInit {
       let binaryData = event.target.result;
       let workBook = XLSX.read(binaryData, {type : 'binary'});
       const data = XLSX.utils.sheet_to_json(workBook.Sheets['WORK ORDER']);
-      console.log(data)
       this.jobDataHierarchy(data)
     }
   }
@@ -329,12 +328,30 @@ export class SubMenuProjectComponent implements OnInit {
 
     workData
     .forEach(work => {
-      let {["Job Number"] : jobNumber, ["Job Name"] : jobName } = work;
+      const convertDate = (date) => {
+        date = date.split('-');
+        return new Date(`${date[1]}/${date[0]}/${date[2]}`)
+      }
+      let {
+        ["Job Number"] : jobNumber, 
+        ["Job Name"] : jobName , 
+        Departement : departement, 
+        Start : start,
+        Stop : end,
+        Vol : volume,
+        Unit : unit,
+        Category : category,
+        Remarks : remarks,
+        Responsible : responsible
+      } = work;
+      if(!jobNumber || !start) return;
       jobNumber = jobNumber.toString().split('').filter(n => {
         if( n == "." || parseInt(n) || n == 0)
         return n
       }).join('')
-      work = {jobNumber, jobName}
+      start = convertDate(start);
+      end = convertDate(end);
+      work = {jobNumber, jobName, departement, start, end, volume, unit, category, remarks, responsible}
       const newJobNumber = jobNumber.split('.')
       newJobNumber.forEach((d, i) => {
         work_area = regroupDatas(work_area, work, i);
@@ -360,10 +377,9 @@ export class SubMenuProjectComponent implements OnInit {
     }
     work_area = defineId(work_area, "")
     this.projectData.work_area = work_area
-    console.log(work_area)
     this.regroupData(false)
-    // this.projectService.workArea({work_area}, this.projectData.id_proyek)
-    // .subscribe(res => this.ngOnInit())
+    this.projectService.workArea({work_area}, this.projectData.id_proyek)
+    .subscribe(res => this.ngOnInit())
   }
 
   reload(reloadPage) {

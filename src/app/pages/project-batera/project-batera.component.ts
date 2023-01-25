@@ -146,7 +146,7 @@ export class ProjectBateraComponent implements OnInit, OnDestroy {
       work.forEach(item => {
           if(!item.end) return;
           const due = new Date(item.end)
-          const currentDate = new Date()
+          const currentDate = new Date() 
           currentDate.setDate(currentDate.getDate() + 30) 
           if(currentDate < due) return
           this.workAreaContainer.push(item);
