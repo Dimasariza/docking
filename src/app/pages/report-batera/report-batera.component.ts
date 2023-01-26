@@ -100,9 +100,12 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
   defineTasks (data) {
     const {work_area} = data;
-    this.tasks = work_area.map(job => {
-      const {start, end, jobName} = job;
-      return {
+    let jobContainer = [];
+
+    const pushJob = (work_area) =>
+    work_area.map(job => {
+      const {start, end, jobName, items} = job;
+      const data = {
       name : jobName,
       price : 100,
       start : this.datePipe.transform(start, 'YYYY-MM-dd'),
@@ -112,8 +115,11 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
         {progress : 20, date: '2016-1-21'},
       ],
       }
+      jobContainer.push(data)
+      if(items.length > 0) pushJob(items)
     })
-    
+    pushJob(work_area)
+    this.tasks = jobContainer;
   }
 
   yardData(id): void {

@@ -367,9 +367,9 @@ export class SubMenuProjectComponent implements OnInit {
         if(job.items.length > 0) {
           lastJobId = job.id
           job = {...job, items : defineId(job.items, lastJobId)}
-          if(!lastJobId) lastJobId = "" 
-          lastJobId = lastJobId.split(".")
-          lastJobId.pop()
+          if(!lastJobId) lastJobId = "";
+          lastJobId = lastJobId.split(".");
+          lastJobId.pop();
           lastJobId = lastJobId.join(".")
         }
         return job

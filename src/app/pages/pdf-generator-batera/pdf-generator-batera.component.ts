@@ -330,7 +330,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},
       {text : "Jobs Summary" ,fontSize : 12, bold : true, color: '#047886'},
       {text : "Jobs Completion To Day" ,fontSize : 10, bold : true, color: 'black', margin : [0,5,0,10]},
-      // ...completionToDay,
+      ...completionToDay,
       this.dataHeading(),
       ...this.jobCollection,
       {text : "Jobs This Week" ,fontSize : 10, bold : true, color: 'black', margin : [0,5,0, 10]},
