@@ -79,7 +79,6 @@ export class ContractActionComponent  {
 
   addNewContract(body){
     console.log(body)
-    console.log(this.idAttachment)
     this.tenderService.addTenderContract({
       ...body,
       dokumen : this.idAttachment

@@ -59,6 +59,7 @@ export class SubMenuProjectComponent implements OnInit {
                 public currency : CurrencyPipe,
                 public convertDate : DatePipe,
                 public FNCOL : FunctionCollection,
+                public datePipe : DatePipe
   ) { }
 
   shipName 
@@ -329,12 +330,18 @@ export class SubMenuProjectComponent implements OnInit {
     workData
     .forEach(work => {
       const convertDate = (date) => {
-        date = date.split('-');
-        return new Date(`${date[1]}/${date[0]}/${date[2]}`)
+        // date = date.split('-');
+        date = new Date(Math.round((date - 25569) * 86400 * 1000));
+        date = this.datePipe.transform(date)
+        return date;
+        // return new Date(`${date[1]}/${date[0]}/${date[2]}`)
       }
+
       let {
         ["Job Number"] : jobNumber, 
         ["Job Name"] : jobName , 
+        ['Unit Price'] : unitPrice,
+        ['Total Price'] : totalPrice,
         Departement : departement, 
         Start : start,
         Stop : end,
@@ -351,7 +358,18 @@ export class SubMenuProjectComponent implements OnInit {
       }).join('')
       start = convertDate(start);
       end = convertDate(end);
-      work = {jobNumber, jobName, departement, start, end, volume, unit, category, remarks, responsible}
+      work = {jobNumber, 
+        jobName, 
+        departement, 
+        start, 
+        end, 
+        volume, 
+        unit, 
+        category, 
+        remarks, 
+        responsible, 
+        'Price Budget' : unitPrice
+      }
       const newJobNumber = jobNumber.split('.')
       newJobNumber.forEach((d, i) => {
         work_area = regroupDatas(work_area, work, i);
@@ -376,6 +394,7 @@ export class SubMenuProjectComponent implements OnInit {
       })
     }
     work_area = defineId(work_area, "")
+    console.log(work_area)
     this.projectData.work_area = work_area
     this.regroupData(false)
     this.projectService.workArea({work_area}, this.projectData.id_proyek)

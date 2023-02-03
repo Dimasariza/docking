@@ -84,7 +84,7 @@ export class FunctionCollection {
     }
     
     populateData = (work, workItem, expand) => { 
-        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, [workItem[1]] : unitPrice } = work 
+        const {unit, category, start, end, responsible, status, lastUpdate, id ,volume, [workItem[1]] : unitPrice = 0} = work 
         const parentId = id.toString().split('.')
         let useUnit = parentId.length == 1 ? this.jobUnit : this.subJobUnit
         return {
