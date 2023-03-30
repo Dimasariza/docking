@@ -67,12 +67,13 @@ export class ContractActionComponent  {
     formData.append('dokumen', file);
     const _subs = this.reportService.addAttachment(formData)
     .subscribe((res) => {
+      console.log(res);
       if (res.type === HttpEventType.UploadProgress) {
         console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
       } else if ( res.type === HttpEventType.Response){
         console.log("final Response uploading image")
         this.idAttachment = res
-        this.idAttachment = this.idAttachment.body.data.nama_attachment
+        this.idAttachment = this.idAttachment.body.data.id_attachment
       }
     })
   }
@@ -81,7 +82,7 @@ export class ContractActionComponent  {
     console.log(body)
     this.tenderService.addTenderContract({
       ...body,
-      dokumen : this.idAttachment
+      id_attachment : this.idAttachment
     })
     .subscribe(res => {
       this.onSuccess.emit()
