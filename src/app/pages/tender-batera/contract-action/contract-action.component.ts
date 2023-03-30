@@ -2,7 +2,6 @@ import { HttpEventType } from '@angular/common/http';
 import { Component, EventEmitter, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ProfileBateraService } from '../../profile-batera/profil-batera.service';
-import { ProjectBateraService } from '../../project-batera/project-batera.service';
 import { ProjectDataComponent } from '../../project-batera/project-data/project-data.component';
 import { ReportBateraService } from '../../report-batera/report-batera.service';
 import { TenderBateraService } from '../tender-batera.service';
@@ -44,8 +43,6 @@ export class ContractActionComponent  {
   triggerSelectFile(fileInput: HTMLInputElement) {
     fileInput.click()
   }
-
-
 
   onSubmit(data){
     let body = this.projectComp.checkPostBody(data.value)
