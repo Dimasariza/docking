@@ -1,0 +1,101 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>{{users.dial}} User</strong>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline"></nb-icon>
+        </button>   
+    </nb-card-header>
+    <nb-card-body>
+    <form #addUserForm="ngForm" (ngSubmit)="onSubmit(addUserForm)" (keyup.enter)="$event.target.value">
+        <div class="d-flex justify-content-center">
+            <picture *ngIf="!avatar_url" class="add_image">
+                <nb-icon icon="plus-outline" class="text-secondary add_icon"></nb-icon>
+                <input type="file" (change)="onFileChange($event)">
+            </picture>
+            <picture *ngIf="avatar_url" class="avatar_image">
+                <img [src]="avatar_url" crossorigin="anonymous">
+                <input type="file"  class="change_image" (change)="onFileChange($event)">
+            </picture>
+        </div>
+        <div class="row">
+            <div class="col-6">
+                <label class="p-2">User name</label> 
+                <input fullWidth type="text" nbInput  placeholder="User Name" class="" id="user_name" fieldSize="small"
+                required [ngModel]="userData?.username" name="username" #userName="ngModel" >
+
+                <div *ngIf="userName.invalid && (userName.dirty || userName.touched)" class="danger text-danger">
+                    <div *ngIf="userName.errors?.['required']">
+                    Name is required.
+                    </div>
+                </div>
+
+                <label class="p-2">Full Name</label>
+                <input fullWidth type="text" nbInput  placeholder="Full Name"  fieldSize="small"
+                required [ngModel]="userData?.nama_lengkap" name="nama_lengkap" #fullName="ngModel">
+                
+                
+                <div *ngIf="users.dial == 'Add' ">
+                    <label class="p-2">Role</label>
+                    <nb-select fullWidth [placeholder]="userData?.role || 'Role'" size="small" status="basic" #role="ngModel" 
+                    required [ngModel]="userData?.role" name="role">
+                        <nb-option [value]="id" *ngFor="let status of userRole; let id=index;">{{status}}</nb-option>
+                    </nb-select>
+                </div>
+
+                <label class="p-2">Title</label>
+                <input fullWidth type="text" nbInput  placeholder="Title" fieldSize="small"
+                required [ngModel]="userData?.jabatan" name="jabatan" #jabatan="ngModel">
+
+                <label class="p-2">Company Name</label>
+                <input fullWidth type="text" nbInput  placeholder="Company Name" id="company" fieldSize="small"
+                required [ngModel]="userData?.departemen" name="departemen" #department="ngModel">
+
+                <div *ngIf="users.dial == 'Update'">
+                    <label class="p-2">Vessel Name</label>
+                    <nb-select fullWidth [placeholder]="userData?.nama_kapal || 'Vessel Name'" size="small" status="basic" #shipName="ngModel" 
+                    required [ngModel]="userData?.nama_kapal" name="nama_kapal">
+                        <nb-option [value]="vessel.nama_kapal" *ngFor="let vessel of vessels; let id=index;">{{vessel.nama_kapal}}</nb-option>
+                    </nb-select>
+                </div>
+            </div>
+            <div class="col-6">
+                <label class="p-2">Status</label>
+                <nb-select fullWidth [placeholder]="userData?.status || 'Status'" size="small" status="basic" #status [ngModel]="userData?.status" name="status">
+                    <nb-option [value]="status" *ngFor="let status of ['active', 'suspend']; let id=index;" class="text-capitalize">{{status}}</nb-option>
+                </nb-select>
+                <label class="p-2">Mobile Number</label>
+                <input fullWidth type="text" nbInput  placeholder="Mobile Number" id="mobile_no" fieldSize="small"
+                required [ngModel]="userData?.no_hp" name="no_hp" #mobileNo="ngModel">
+                <label class="p-2">E-mail</label>
+                <input fullWidth type="text" nbInput  placeholder="E-mail Address" id="useremail" fieldSize="small"
+                required [ngModel]="userData?.email" name="email" #email="ngModel">
+                <label class="p-2">Password</label>
+
+                <div class="d-flex border rounded">
+                    <input fullWidth [type]="passwordFieldType ? 'password' : 'text'"  placeholder="Password" id="password" fieldSize="small" required (ngModel)="password" name="password" #password="ngModel" nbInput fullWidth minlength="5">
+                
+                    <button nbButton size="small" status="basic" class="input-group-text" type="button" (click)="passwordField()">
+                        <nb-icon [icon]="passwordFieldType ? 'eye-outline' : 'eye-off-outline'"></nb-icon>
+                    </button>
+                </div>
+
+                <div *ngIf="password.invalid && (password.dirty || password.touched)" class="danger text-danger">
+                    <div *ngIf="password.errors?.['required']">
+                        Password is required.
+                    </div>
+                    <div *ngIf="password.errors?.['minlength']">
+                        Password must be at least 5 characters long.
+                    </div>
+                </div>
+
+
+ 
+
+            </div>
+        </div>
+        <button type="submit" nbButton status="success" fullWidth [disabled]="!addUserForm.form.valid" class="my-2" >Submit</button>
+    </form>
+    </nb-card-body>
+</nb-card>
+
+

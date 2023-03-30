@@ -1,0 +1,26 @@
+{
+  "report": {
+    "update_progress": {
+      "id_proyek_pekerjaan": 1,
+      "qty": 5,
+      "harga_satuan": 60000,
+      "status": "in_progress"
+    }
+  },
+  "testPutData": {
+    "id_kapal": 2,
+    "id_user": 1,
+    "tahun": "2022",
+    "mata_uang": "IDR",
+    "off_hire_start": "2022-10-02",
+    "off_hire_end": "2022-10-24",
+    "off_hire_deviasi": "3",
+    "off_hire_rate_per_day": "1500000",
+    "off_hire_bunker_per_day": "1250000",
+    "repair_start": "2022-10-13",
+    "repair_end": "2022-10-31",
+    "repair_in_dock_start": "2022-10-24",
+    "repair_in_dock_end": "2022-10-31",
+    "repair_additional_day": "0"
+  }
+}

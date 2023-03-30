@@ -1,11 +1,20 @@
 import { NgModule } from '@angular/core';
 import { NgxEchartsModule } from 'ngx-echarts';
-import { NbCardModule, NbIconModule } from '@nebular/theme';
-
+import { NbAlertModule, 
+  NbButtonModule, 
+  NbCardModule, 
+  NbFormFieldModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbPopoverModule } from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
 import { HomeBateraRoutingModule, routedComponents } from './home-batera-routing.module';
-import { CardTestComponent } from './card-test/card.component';
-import { HomeBateraComponent } from './home-batera.component';
+import { HttpClientModule } from '@angular/common/http';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { ShipActionComponent } from './ship-action/ship-action.component';
+
 
 @NgModule({
   imports: [
@@ -14,13 +23,21 @@ import { HomeBateraComponent } from './home-batera.component';
     NgxEchartsModule,
     NbCardModule,
     NbIconModule,
+    NbButtonModule,
+    NbInputModule,
+    HttpClientModule,
+    MatDialogModule,
+    NbFormFieldModule,
+    FormsModule,
+    CommonModule,
+    ReactiveFormsModule,
+    NbPopoverModule,
+    NbAlertModule,
   ],
+  entryComponents: [ShipActionComponent],
   exports: [],
   declarations: [
     ...routedComponents,
-    CardTestComponent,
-    HomeBateraComponent
-
   ],
 })
 export class HomeBateraModule { }

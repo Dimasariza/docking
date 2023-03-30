@@ -1,15 +1,12 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { CardTestComponent } from './card-test/card.component';
+import { ShipActionComponent } from './ship-action/ship-action.component';
 import { HomeBateraComponent } from './home-batera.component';
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
 
 const routes: Routes = [{
     path: '',
     component: HomeBateraComponent,
-    children: [{
-      path: 'cards',
-      component: CardTestComponent,
-    },]
 }];
 
 @NgModule({
@@ -19,4 +16,7 @@ const routes: Routes = [{
 export class HomeBateraRoutingModule { }
 
 export const routedComponents = [
+  HomeBateraComponent,
+  ShipActionComponent,
+  DeleteDialogComponent
 ];

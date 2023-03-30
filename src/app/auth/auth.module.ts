@@ -15,15 +15,12 @@ import {
   NbInputModule,
   NbLayoutModule,
   NbMenuModule,
-  NbSidebarHeaderComponent,
   NbSidebarModule,
   NbTreeGridModule
 } from '@nebular/theme';
 import { ThemeModule } from '../@theme/theme.module';
 import { DialogAlertComponent, NgxLoginComponent } from './login/login.component';
-import { TablesModule } from '../pages/tables/tables.module';
 import { AuthComponent } from './auth.component';
-import { TreeGridComponent } from '../pages/tables/tree-grid/tree-grid.component';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 
 

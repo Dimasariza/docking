@@ -1,0 +1,24 @@
+<!-- <nb-card>
+    <nb-card-header>
+        <h5><strong>Report Summary</strong></h5>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <div class="col-6">
+                <nb-select placeholder="Project Name" size="small" #projectName (ngModel)="projectName" name="id_proyek" class="w-100">
+                    <nb-option *ngFor="let value of projectDatas; let id=index;" [value]="value" (click)="getProjectSummary(id)" >{{value?.name}}</nb-option>
+                </nb-select>
+            </div>
+            <div class="col-6">
+                <button [disabled]="chooseProject" *ngFor="let button of buttons" (click)="clickAction(button.desc)" nbButton status="primary" class="mx-1" size="small" outline>
+                    {{button.desc}} PDF
+                </button>
+            </div>
+        </div>
+    </nb-card-body>
+
+    <nb-card-body>
+        project
+    </nb-card-body>
+</nb-card> -->
+

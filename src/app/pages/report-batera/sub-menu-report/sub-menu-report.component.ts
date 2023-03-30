@@ -1,78 +1,41 @@
-import { Component } from '@angular/core';
-import { ChartOptions } from '../../charts/apexchart/apexchart.component';
+import { Location } from '@angular/common';
+import { ChangeDetectionStrategy, Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { ActivatedRoute, Route } from '@angular/router';
 
 @Component({
   selector: 'ngx-sub-menu-report',
   templateUrl: './sub-menu-report.component.html',
-  styleUrls: ['./sub-menu-report.component.scss']
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class SubMenuReportComponent   {
-    data = [
-      {title: 'Batera 01', phases: [true, true, false], periode: '12/12/2022'},
-      {title: 'Batera 02', phases: [true, true, false], periode: '12/12/2022'},
-      {title: 'Batera 03', phases: [true, true, false], periode: '12/12/2022'},
-      {title: 'Batera 04', phases: [true, true, false], periode: '12/12/2022'}
-    ]
+
+export class SubMenuReportComponent implements OnInit  {
+  constructor (
+    public activatedRoute : ActivatedRoute,
+    public location : Location,
+    private dialogRef: MatDialogRef<SubMenuReportComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    ) {  }
   
-    chartOptions: Partial<ChartOptions> = {
-      series: [ 
-        {
-          data: [
-            {
-              x: 'Batera 01',
-              y: [
-                new Date('2019-03-02').getTime(),
-                new Date('2019-03-04').getTime()
-              ]
-            },
-            {
-              x: 'Batera 02',
-              y: [
-                new Date('2019-03-04').getTime(),
-                new Date('2019-03-08').getTime()
-              ]
-            },
-            {
-              x: 'Batera 03',
-              y: [
-                new Date('2019-03-08').getTime(),
-                new Date('2019-03-12').getTime()
-              ]
-            },
-            {
-              x: 'Batera 04',
-              y: [
-                new Date('2019-03-12').getTime(),
-                new Date('2019-03-18').getTime()
-              ]
-            }
-          ]
-        }
-      ],
-      chart: {
-        height: 350,
-        type: 'rangeBar'
-      },
-      plotOptions: {
-        bar: {
-          horizontal: true
-        }
-      },
-      xaxis: {
-        type: 'datetime'
-      },
-      yaxis: {
-        show: false
-      },
-      dataLabels: {
-        enabled: true,
-        formatter: function(val, opts) {
-          var label = opts.w.globals.labels[opts.dataPointIndex]
-          // var a = moment(val[0])
-          // var b = moment(val[1])
-          // var diff = b.diff(a, 'days')
-          return label// + ': ' + diff + (diff > 1 ? ' days' : ' day')
-        },
-      }
-    }
+  public subMenuData
+  public work_area 
+  public showActivity : boolean = false
+  public expandText : string = 'Expand'
+  logActivity : any = [1]
+
+  ngOnInit(): void {
+    this.subMenuData = this.location.getState()
+  }
+
+  extendPanel(){
+    this.showActivity = !this.showActivity
+    this.showActivity ? this.expandText = 'Hide' : this.expandText = 'Expand'
+  }
+
+  submitSpesification(data){
+    console.log(data)
+  }
+
+  close(){ this.dialogRef.close()}
 }
+

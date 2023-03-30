@@ -1,14 +1,13 @@
 import { NgModule } from '@angular/core';
-
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TenderBateraRoutingModule } from './tender-batera-routing.module';
 import { NumberCardModule } from '@swimlane/ngx-charts';
-import { NbAlertModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbPopoverModule, NbSearchModule, NbTreeGridModule } from '@nebular/theme';
-import { CardComponent } from './card/card.component';
+import { NbAccordionModule, NbAlertModule, NbButtonModule, NbCardModule, NbDatepickerModule, NbIconModule, NbInputModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTreeGridModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { TablesRoutingModule } from '../tables/tables-routing.module';
-import { FsIconComponent } from './tender-batera.component';
-import { TableComponent } from './table/table.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { ContractActionComponent } from './contract-action/contract-action.component';
+import { FormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -24,13 +23,18 @@ import { TableComponent } from './table/table.component';
     NbButtonModule,
     NbTreeGridModule,
     NbInputModule,
-    TablesRoutingModule,
+    NbAccordionModule,
+    MatDialogModule,
+    NbInputModule,
+    NbOptionModule,
+    NbSelectModule,
+    FormsModule,
+    NbDatepickerModule
   ],
+  entryComponents: [ContractActionComponent],
   declarations: [
     ...routedComponents,
-    CardComponent
   ],
-  providers: [
-  ]
+  providers: [CurrencyPipe]
 })
 export class TenderBateraModule { }

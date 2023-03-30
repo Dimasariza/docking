@@ -1,4 +1,9 @@
+import { HttpEventType } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { HomeBateraService } from '../home-batera/home-batera.service';
+import { ProfileBateraService } from './profil-batera.service';
+import { UserActionComponent } from './user-action/user-action.component';
 
 @Component({
   selector: 'ngx-profil-batera',
@@ -6,43 +11,104 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./profil-batera.component.scss']
 })
 export class ProfilBateraComponent implements OnInit {
+  constructor(private pofileService : ProfileBateraService,
+              private dialog : MatDialog,
+              private homeService : HomeBateraService
+  ) {}
 
-  data = [
-    {
-      "nama pengguna": "Becky Tumewu",
-      "jabatan": "Pembelian & pengadaan",
-      "email": "becky.tumewu@gmail.com",
-      "mobile phone": "+62 857-3195-9259"
-    },
-    {
-      "nama pengguna": "Abrianto Antok",
-      "jabatan": "Teknisi Pengawas Armada",
-      "email": "abrianto.icm@gmail.com",
-      "mobile phone": "+62 857-3195-9258"
-    },
-    {
-      "nama pengguna": "Andre Sebastian",
-      "jabatan": "Pengawas Konstruksi",
-      "email": "andre.sebs@gmail.com",
-      "mobile phone": "+62 857-3195-9257"
-    },
-    {
-      "nama pengguna": "Dimas Awang",
-      "jabatan": "Manager Pengawas Pelayaran",
-      "email": "Dimas.awg@gmail.com",
-      "mobile phone": "+62 857-3195-9256"
-    },
-    {
-      "nama pengguna": "Risky Trianto",
-      "jabatan": "Teknisi Pengawas Armada",
-      "email": "risky.tri@gmail.com",
-      "mobile phone": "+62 857-3195-9255"
-    },
-  ]
+  userData : any;
+  unSortUserData : any;
+  companyData : any;
+  changeText : string  = 'CHANGE PROFILE'
+  formCondition = true
 
-  constructor() { }
+  ngOnInit(){
+    this.pofileService.getUserData(1, 10)
+      .subscribe(({data} : any) => {
+        this.unSortUserData = data;
+        this.userData = data;
+    }); 
 
-  ngOnInit(): void {
+    this.pofileService.getCompanyProfile()
+    .subscribe(({data} : any) => {
+      this.companyData = data 
+    })
   }
 
+  changeProfile(){
+    this.formCondition = !this.formCondition
+    this.changeText = this.formCondition ? 'CHANGE PROFILE' : 'CLOSE'
+  }
+
+  updateCompanyProfile(formValue){
+    this.changeProfile()
+    this.pofileService.updateCompanyProfile(formValue.value)
+    .subscribe(() => {
+    })
+  }
+
+  sortUserActivated(user) {
+    console.log(this.unSortUserData)
+    if(user == 'All') 
+      this.userData = this.unSortUserData
+    else if (user == 'Active') 
+      this.userData = this.unSortUserData.filter(user => user.status === 'active')
+    else if (user == 'Suspend') 
+      this.userData = this.unSortUserData.filter(user => user.status === 'suspend')
+  }
+
+  // changeLogoDial(){
+  //   const dialogRef = this.dialog.open(ChangeLogoComponent)
+  //   dialogRef.componentInstance.onSuccess.asObservable()
+  //   .subscribe(()=> {
+  //     this.ngOnInit()
+  //   });
+  // }
+
+  triggerSelectFile(fileInput: HTMLInputElement) {
+    fileInput.click()
+  }
+
+  onFileChange(res){
+    const formData = new FormData();
+    const file = res.target?.files[0];
+    formData.append('dokumen', file);
+    const _subs = this.homeService.uploadFile(formData)
+    .subscribe((res) => {
+      if (res.type === HttpEventType.UploadProgress) {
+        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+      } else if ( res.type === HttpEventType.Response){
+        console.log("final Response uploading image")
+      }
+    })
+    // this.subscription.push(_subs)
+  }
+
+  addNewUserDial(){
+    const dialogRef = this.dialog.open(UserActionComponent, {
+      disableClose : true, autoFocus:true, 
+      data : {
+        dial : "Add"
+      }
+    })
+    dialogRef.componentInstance.onSuccess.asObservable()
+    .subscribe(()=> {
+      this.ngOnInit()
+    });
+  }
+
+  updateUserDial(row){
+    const dialogRef = this.dialog.open(UserActionComponent, {
+      data : {
+        dial : "Update",
+        data : row
+      }
+    })
+
+    dialogRef.componentInstance.onSuccess.asObservable()
+    .subscribe(()=> {
+      this.ngOnInit()
+    });
+  }
 }
+

@@ -1,9 +1,26 @@
 ::ng-deep .datatable-body-row, .datatable-body-cell {
-    height: 70px !important;
+    height: 37.5px !important;
 }
 
 ::ng-deep .datatable-body-cell-label {
     height: 100%;
     display: flex !important;
     align-items: center !important;
+}
+
+::ng-deep .datatable-header-inner {
+    height: 60px !important;
+    border-top: 1px solid #e8e8e8;
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-even {
+    background-color: transparent !important
+}
+
+::ng-deep .ngx-datatable.bootstrap .datatable-body .datatable-body-row.datatable-row-odd {
+    background-color: transparent !important
+}
+
+.custom {
+    border-right: 1px solid #e8e8e8;
 }

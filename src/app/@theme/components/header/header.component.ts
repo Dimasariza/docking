@@ -5,6 +5,8 @@ import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { HomeBateraService } from '../../../pages/home-batera/home-batera.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'ngx-header',
@@ -26,34 +28,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
       value: 'dark',
       name: 'Dark',
     },
-    {
-      value: 'cosmic',
-      name: 'Cosmic',
-    },
-    {
-      value: 'corporate',
-      name: 'Corporate',
-    },
   ];
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile' }, { title: 'Log out' } ];
+  userMenu = [ { title: 'Profile', link: '/pages/profile-batera' }, { title: 'Log out', link: '/auth/logout' } ];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
-              private userService: UserData,
               private layoutService: LayoutService,
-              private breakpointService: NbMediaBreakpointsService) {
+              private breakpointService: NbMediaBreakpointsService,
+              private homeService : HomeBateraService,
+              private http : HttpClient) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
 
-    this.userService.getUsers()
+    // this.userService.getUsers()
+    //   .pipe(takeUntil(this.destroy$))
+    //   .subscribe((users: any) => this.user = users.nick);
+    
+    this.homeService.getUserLogin()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((users: any) => this.user = users.nick);
+      .subscribe(({data} : any) => {
+        const {nama_lengkap, avatar_url} = data
+        this.user = {
+          name : nama_lengkap,
+          picture : this.homeService.getUserProfilePict(avatar_url)
+        }
+      })
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()

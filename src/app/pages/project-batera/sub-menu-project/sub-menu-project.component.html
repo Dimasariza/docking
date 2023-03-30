@@ -1,253 +1,193 @@
-
-<nb-card>
+<nb-card >
     <nb-card-header>
-    <h5>Batera Ship 01</h5>
-    <div class="my-3">
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="list-outline" pack="eva"></nb-icon>
-            List
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="calendar-outline" pack="eva"></nb-icon>
-            Schedule
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            <nb-icon icon="clipboard-outline" pack="eva"></nb-icon>
-            Gant
-        </button>
+        
+    <div class="d-flex justify-content-between">
+        <h5>{{shipName}}</h5>
+        <div>
+            <div *ngFor = "let button of menuButton">
+                <button *ngIf = "button.position === 'top'" 
+                (click)="buttonAction(button.text)" 
+                [disabled]="!button?.disabled" 
+                nbButton status="primary" 
+                class="mx-1" 
+                outline 
+                size="small">
+                    <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
+                    {{button.text}}
+                </button>
+            </div>
+        </div>
+        
     </div>
+
+
     </nb-card-header>
 
     <nb-card-body>
-        <div class="d-flex">
-            <h6>Summary</h6>
-            <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                <nb-icon icon="settings-outline" pack="eva"></nb-icon>
-            </button>
+        <div class="row">
+            <div class="col-lg-5 col-md-12 col-sm-12" *ngIf="reportData">
+                <div class="d-flex justify-content-between">
+                    <h6>Summary</h6>
+                    <button nbButton 
+                    status="primary" 
+                    size="small" 
+                    (click)="buttonAction('update project')"
+                    >Update</button>
+                </div>
+                
+                <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+                    <div class="row my-2">
+                        <div class="col-5"><strong>{{item.value}}</strong></div>
+                        <div class="col-7" 
+                        [ngClass]="reportData[item.value] ? 'font-weight-normal' : 'font-weight-lighter text-muted'"
+                        >{{reportData[item.value] || 'Data Not Availlable'}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 col-md-12 col-sm-12">
+                <ngx-table-data [tableData]="projectData" (reloadPage)="ngOnInit()"></ngx-table-data>
+            </div>
         </div>
-        <nb-select selected="1" class="" size="tiny">
-            <nb-option value="1">Hide Details</nb-option>
-            <nb-option value="2">Show Details</nb-option>
-        </nb-select>
-
-        <div class="my-4 d-flex">
-            <table style="width: 50%;">
-                <tr>
-                    <td><label for="test-label" class="label">Vessel</label></td>
-                    <td><span>Batera Ship 01</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Phase</label></td>
-                    <td>
-                        <nb-select selected="1" class="" size="tiny">
-                            <nb-option value="1">Repair</nb-option>
-                            <nb-option value="2">On Progress</nb-option>
-                        </nb-select>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Selected Yard</label></td>
-                    <td><span>Batera Yard 01</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Base Currency</label></td>
-                    <td><span>*IDR</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Off Hire Period</label></td>
-                    <td><span>03.02.2019 - 22.02.2019</span></td>
-                    <td>
-                        <span>20 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Deviation</label></td>
-                    <td>
-                        <span>4 Days.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Rate</label></td>
-                    <td>
-                        <span>71050000 per day.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                    <td><span>1.421.000.000</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Bunker</label></td>
-                    <td>
-                        <span>282000000 per day.</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                    <td><span>1.128.000.000</span></td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">Repair Period</label></td>
-                    <td><span>05.02.2019 - 18.02.2019</span></td>
-                    <td>
-                        <span>14 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- In Dock</label></td>
-                    <td><span>06.02.2019 - 13.02.2019</span></td>
-                    <td>
-                        <span>8 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-                <tr>
-                    <td><label for="test-label" class="label">- Additional Days</label></td>
-                    <td>
-                        <span>0 days</span>
-                        <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                            <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                        </button>
-                    </td>
-                </tr>
-            </table>
-
-
-        <table style="width: 50%;">
-            <tr>
-                <th>Totals</th>
-                <th>Budget</th>
-                <th>Contact</th>
-                <th>Actual</th>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Offhire Days</label></td> 
-                <td><span>20</span></td> 
-                <td><span>-</span></td> 
-                <td><span>0</span></td> 
-                <td>                        
-                    <button nbButton status="primary" class="mx-1" outline size="small" ghost>
-                    <nb-icon icon="edit-outline" pack="eva"></nb-icon>
-                </button></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Owner Exp</label></td>
-                <td><span>1.412.000.000</span></td>
-                <td><span>1.412.000.000</span></td>
-                <td><span>0</span></td>
-            </tr> 
-
-            <tr>
-                <td><label for="test-label" class="label">- Supplies</label></td>
-                <td><span>877.000.000</span></td>
-                <td><span>877.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Services</label></td>
-                <td><span>350.000.000</span></td>
-                <td><span>350.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Class</label></td>
-                <td><span>0</span></td>
-                <td><span>0</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">- Other</label></td>
-                <td><span>185.000.000</span></td>
-                <td><span>185.000.000</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label" style="color: burlywood;">Owner Canceled Jobs</label></td>
-                <td><span>-</span></td>
-                <td><span>0</span></td>
-                <td><span>-</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Yard Cost</label></td>
-                <td><span>5.056.566.061</span></td>
-                <td><span>4.541.787.983</span></td>
-                <td><span>0</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Yard Canceled Jobs</label></td>
-                <td><span>-</span></td>
-                <td><span>0</span></td>
-                <td><span>-</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Total Cost</label></td>
-                <td><span>6.468.566.061</span></td>
-                <td><span>5.953.787.983</span></td>
-                <td><span>0</span></td>
-            </tr>
-            
-        </table>
-    </div>
     </nb-card-body>
 </nb-card>
 
-<nb-card>
-    <div class="m-3">
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Export To PDF
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Expand All
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Refresh
-        </button>
-        <button nbButton status="primary" class="mx-1" outline size="small">
-            Show Budget
-        </button>
-        <button nbButton status="success" class="mx-1" outline size="small">
-            Show Contract
-        </button>
-    </div>
+<!-- 
+<nb-card *ngIf="true" style="position: absolute; width : 20%; bottom: 1.2rem; right: -30rem" [ngClass]="alertConds?.conds ? 'active' : ''" >
+    <nb-alert accent="success" class="bg-transparent"> 
+      <div class="d-flex align-items-center mt-2">
+        <nb-icon icon="checkmark-circle-2-outline" 
+        [status]="alertConds?.status" 
+        class="check_icon mx-2"></nb-icon> 
+        {{alertConds?.msg}}
+      </div>
+    </nb-alert>
+</nb-card>   -->
 
-    <h6 class="m-3">Work Area</h6>      
-  
-    <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
-    
-        <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-        <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
-    
-        <ng-container [nbTreeGridColumnDef]="customColumn">
-          <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-            {{customColumn}}
-          </th>
-    
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">
-            <ngx-fs-icon [expanded]="row.expanded"></ngx-fs-icon>
-            {{row.data[customColumn]}}
-          </td>
-        </ng-container>
-    
-        <ng-container *ngFor="let column of defaultColumns; let index = index"
-                      [nbTreeGridColumnDef]="column"
-                      [showOn]="getShowOn(index)">
-          <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-            {{column}}
-          </th>
-          <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-        </ng-container>
-        
-      </table>
+
+<nb-card>
+    <div class="d-flex" >
+        <div *ngFor = "let button of menuButton" class="mx-1 my-3">
+            <button *ngIf = "button.position === 'bottom'" 
+            (click)="buttonAction(button.text, undefined, importExcel)" 
+            nbButton 
+            status="primary" 
+            class="mx-1" 
+            outline 
+            size="small">
+                {{button.text}}
+            </button>
+        </div>
+    </div>
+    <input type="file" style="display: none;" #importExcel (change)="importExcelFIle($event)">
+    <h6 class="mx-3">Work Area</h6>
+    <div>
+        <label 
+        class="search-label" 
+        style="margin: 1rem 1rem;" 
+        for="search" >Search:</label>
+        <input 
+        nbInput 
+        [nbFilterInput]="dataSource" 
+        id="search"
+        placeholder="Search Job"
+        fieldSize="small"
+        class="search-input"
+        style="margin: 1rem 1rem;"
+        >
+    </div>
+    <!-- <h6 class="mx-3" style="color: burlywood;">Work Area</h6> -->
+    <div style="overflow: auto; width: 100%;">
+        <div style="width: 2000px;">
+            <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
+                <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+
+                <ng-container [nbTreeGridColumnDef]="'jobNumber'">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 100px">Job No.</th>
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                    </nb-tree-grid-row-toggle>
+                    <ng-template #fileIcon>
+                      <nb-icon icon="file-text-outline"></nb-icon>
+                    </ng-template>
+                    {{row.data.jobNumber}}
+                  </td>
+                </ng-container>
+
+                <ng-container [nbTreeGridColumnDef]="'responsible'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 20px">Responsible</th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                        {{row.data.responsible?.name}}
+                    </td>
+                </ng-container>
+                
+                <ng-container [nbTreeGridColumnDef]="'rank'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                      <nb-icon icon="alert-circle-outline" 
+                      [nbPopover]="FNCOL?.rank[row?.data?.rank]" 
+                      nbPopoverTrigger="hint" 
+                      nbPopoverPlacement="top" 
+                      [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"
+                      ></nb-icon>
+                    </td>
+                </ng-container>
+
+                <ng-container [nbTreeGridColumnDef]="'action'">
+                    <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                        <div class="d-flex">
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('add sub job' ,row)"
+                            nbPopover="Add Sub Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">  
+                                <nb-icon icon="plus-outline" status="primary"></nb-icon>
+                            </button>
+                            <button nbButton 
+                            size="small" 
+                            class="text-center mx-4" 
+                            outline 
+                            (click)="buttonAction('update job', row)"
+                            nbPopover="Edit Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
+                                <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                            </button>
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('delete job', row)"
+                            nbPopover="Delete Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
+                                <nb-icon icon="trash-outline" status="danger"></nb-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+            
+                <ng-container *ngFor="let column of defaultColumns; let index = index" 
+                [nbTreeGridColumnDef]="column" 
+                [showOn]="getShowOn(index)">
+                    <div *ngIf="!addSubJob">
+                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{headColumns[index]}}</th>
+                        <td nbTreeGridCell 
+                        *nbTreeGridCellDef="let row" 
+                        class="text-capitalize" 
+                        [nbPopover]="row.data.jobName" 
+                        nbPopoverTrigger="hint" 
+                        nbPopoverPlacement="top">{{row.data[column] || '-'}}</td>
+                    </div>
+                </ng-container>
+            </table>
+        </div>
+    </div>
 </nb-card>
+
+

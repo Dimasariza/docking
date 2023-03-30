@@ -1,85 +1,132 @@
-<div class="row">
-    <div class="col-md-12">
-      <nb-card> 
-        <nb-card-body>
-          <div class="row show-grid">
-            <div class="col-6">
-              <div class='d-flex  justify-content-between p-3' >
-                <h5 class="grid-h ">Selected Yard : 
-                  <Span>Pax Ocean Batam</Span>
-                </h5>
-                <button nbButton status = 'danger' class="mx-1">
-                  Clear Selected Yard
-                </button>
-              </div>
-              <div class="p-3">
-                <span><strong>Internal Comment</strong></span> 
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Itaque odit debitis in, nisi distinctio iure facilis aut dolores maiores ipsum optio unde veritatis qui deleniti voluptate corporis velit? Aut, quidem!</p>
-                <span><strong>Yard Comment</strong></span> <br> 
-                <span><strong>Yard Terms</strong></span> <br>
-                <span><strong>Attachments</strong></span> 
-              </div>
-              <nb-card >
-                <button nbButton class="m-2" shape="rectangle" >
-                  Add file from computer
-                </button> 
-              </nb-card>
-            </div>
-            <div class="col-6 d-flex">
-              <ngx-card></ngx-card>
-              <ngx-card></ngx-card>
-              <ngx-card></ngx-card>
+<nb-card class="p-3">  
+  <div class="row">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+        <span class="d-block label">Project Name</span>  
+        <nb-select placeholder="Project Name" size="small" fullWidth class="w-100" #projectName (ngModel)="projectName" name="id_proyek" class="m-1">
+          <nb-option *ngFor="let value of projectData; let id=index;" [value]="projectData[id]" (click)="getProject(value)" #projectNameVal>{{value.shipName}}</nb-option>
+        </nb-select>
+        <span class="d-block label">Yard Name</span>
+        <nb-select [placeholder]="displayTender?.nama_galangan || 'Select Yard'" size="small" fullWidth class="w-100" [disabled]="!currentProject || selectedText == 'Unselect'" #selectYard class="m-1">
+          <nb-option *ngFor="let value of tenderData; let id=index;" [value]="tenderData[id]" (click)="getYard(id)">{{value.nama_galangan}}</nb-option>
+        </nb-select>
+        <span class="d-block label">Yard Location</span> 
+        <span class="d-block text-capitalize">{{displayTender?.lokasi_galangan || 'Data not available'}}</span>
+        <span class="d-block label">Responsible</span>
+        <span class="d-block text-capitalize">{{displayTender?.responsible?.nama_lengkap || 'Data not available'}}</span>
+        <span class="d-block label">Contract Number</span> 
+        <span class="d-block text-capitalize">{{displayTender?.no_kontrak || 'Data not available'}}</span>
+        <span class="d-block label">Yard Quote</span> 
+        <span class="d-block text-capitalize">{{displayTender?.yard_total_quote | currency : 'Rp ' || 'Data not available'}}</span>
+        <span class="d-block label">Comment</span>
+        <p class="d-block">{{displayTender?.komentar || 'Data not available'}}</p>
+    </div>
+
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12">
+      <div class="my-2">
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="addContractDial()" >Add Yard</button>
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="updateContractDial()" [disabled]="!displayTender">Update Yard</button>
+        <button nbButton size="tiny" class="m-1" status="warning"  (click)="chooseTender()" outline [disabled]="!displayTender">{{selectedText}} Yard</button>
+        <button nbButton size="tiny" class="m-1" status="danger"  (click)="deleteYard()" outline [disabled]="!displayTender">Delete Yard</button>
+        <button nbButton size="tiny" class="m-1" status="primary"  (click)="showContract()" outline [disabled]="!displayTender">Show Contract</button>
+      </div>
+
+      <nb-card class="p-3" *ngIf="displayTender">
+          <div *ngFor="let item of objectKeys(dataTable)">
+            <div class="row">
+              <div class="col-6"><strong>{{item}}</strong></div>
+              <div class="">:</div>
+              <div class="col text-capitalize text-right">{{dataTable?.[item]}}</div>
             </div>
           </div>
-        </nb-card-body>
       </nb-card>
     </div>
   </div>
-  
+</nb-card>
 
 
- <nb-card>
-  <nb-card-header class="text-center">
-    Load Details
-  </nb-card-header>
-   <ngx-datatable 
-     [class]="'bootstrap'" 
-     [rows]="dataTable" 
-     [count]="dataTable.length"
-     columnMode="force"
-     default>
-     <ngx-datatable-column [name]="''" prop="vessel"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="customer"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-     <ngx-datatable-column [name]="''" prop="start"></ngx-datatable-column>
-   </ngx-datatable>
 
 
-   <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" >
-    
-    <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
-    <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns"></tr>
 
-    <ng-container [nbTreeGridColumnDef]="customColumn">
-      <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef>
-        {{customColumn}}
-      </th>
 
-      <td nbTreeGridCell *nbTreeGridCellDef="let row">
-        <ngx-fs-icon [expanded]="row.expanded"></ngx-fs-icon>
-        {{row.data[customColumn]}}
-      </td>
-    </ng-container>
+<nb-accordion>
+  <nb-accordion-item>
+    <nb-accordion-item-header >
+      Load Details
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <div>
+        <label 
+        class="search-label" 
+        style="margin: 1rem 1rem;" 
+        for="search" >Search:</label>
+        <input 
+        nbInput 
+        [nbFilterInput]="dataSource" 
+        id="search"
+        placeholder="Search Job"
+        fieldSize="small"
+        class="search-input"
+        style="margin: 1rem 1rem;"
+        >
+    </div>
+      <div style="overflow: auto; width: 100%;">
+        <div style="width: 1524px;">
+          <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" equalColumnsWidth>
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns" [clickToToggle]="false"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+            <ng-container [nbTreeGridColumnDef]="'jobNumber'">
+              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 90px">Job No.</th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" >
+                <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                </nb-tree-grid-row-toggle>
+                <ng-template #fileIcon>
+                  <nb-icon icon="file-text-outline"></nb-icon>
+                </ng-template>
+                {{row.data.jobNumber}}
+              </td>
+            </ng-container>
+            <ng-container [nbTreeGridColumnDef]="'rank'">
+              <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 50px"></th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" >
+                <nb-icon icon="alert-circle-outline" [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"
+                [nbPopover]="FNCOL.rank[row.data.rank]" nbPopoverTrigger="hint" nbPopoverPlacement="top"
+                ></nb-icon>
+              </td>
+            </ng-container>
+            <ng-container [nbTreeGridColumnDef]="'Approve'">
+              <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">
+                <div class="text-center">
+                  <nb-select placeholder="Approval" size="tiny" fullWidth class="w-100" #approval (ngModel)="approval" [disabled]="!currentProject" name="approvalStatus" class="m-1">
+                    <nb-option *ngFor="let value of approvalStatus; let id=index;" [value]="approvalStatus[id]" (click)="approveByRank(id)">{{value}}</nb-option>
+                  </nb-select>
+                </div>
+              </th>
+              <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                <button class="text-center" nbButton ghost (click)="approvedByYard([row.data])" nbPopover="Approved by Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                  <nb-icon [ngStyle]="{'color': row.data?.tenderApproval ? 'green' : 'grey'}" [icon]="row.data?.tenderApproval ?  'checkmark-square-2-outline' : 'square-outline'" status="primary"
+                  ></nb-icon>
+                </button>
+              </td>
+            </ng-container>
 
-    <ng-container *ngFor="let column of defaultColumns; let index = index"
-                  [nbTreeGridColumnDef]="column"
-                  [showOn]="getShowOn(index)">
-      <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>
-        {{column}}
-      </th>
-      <td nbTreeGridCell *nbTreeGridCellDef="let row">{{row.data[column] || '-'}}</td>
-    </ng-container>
-    
-  </table>
- </nb-card>
+            <ng-container [nbTreeGridColumnDef]="'Edit'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 80px"></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                  <button class="btn btn-light btn-sm text-center" nbButton ghost (click)="editLoadDetails(row)" nbPopover="Edit" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                      <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                  </button>
+                </td>
+            </ng-container>
 
+            <ng-container *ngFor="let column of defaultColumns; let index = index"
+                          [nbTreeGridColumnDef]="column"
+                          [showOn]="getShowOn(index)">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 150px">{{headColumns[index]}}</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top">{{row.data[column] || '-'}}</td>
+            </ng-container>
+          </table>
+        </div>
+      </div>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

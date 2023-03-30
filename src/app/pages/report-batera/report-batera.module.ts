@@ -1,50 +1,77 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, CurrencyPipe } from '@angular/common';
 
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { NbButtonModule, NbCardModule, NbCheckboxModule, NbIconModule, NbInputModule, NbListModule, NbRadioModule, NbRouteTabsetModule, NbSelectModule, NbStepperModule, NbTableModule, NbTabsetModule, NbTreeGridModule, NbUserModule } from '@nebular/theme';
-import { ReportBateraComponent } from './report-batera.component';
+import { NbAccordionModule, 
+  NbAlertModule, 
+  NbButtonModule, 
+  NbCardModule, 
+  NbDatepickerModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbLayoutModule, 
+  NbPopoverModule, 
+  NbProgressBarModule, 
+  NbRouteTabsetModule, 
+  NbSelectModule, 
+  NbTabsetModule, 
+  NbTreeGridModule } from '@nebular/theme';
 import { ReportBateraRoutingModule } from './report-batera-routing.module';
-import { KeyPositionsComponent } from './key-positions/key-positions.component';
-import { PositionsComponent } from './positions/positions.component';
-import { MeetingsComponent } from './meetings/meetings.component';
-import { StatusReportComponent } from './status-report/status-report.component';
-import { ActivityFlowComponent } from './activity-flow/activity-flow.component';
-import { ActivityReportComponent } from './activity-report/activity-report.component';
-import { ActivityTableComponent, FsIconComponent } from './table/table.component';
 import { SubMenuReportComponent } from './sub-menu-report/sub-menu-report.component';
+import { WorkProgressComponent } from './work-progress/work-progress.component';
+import { PicComponent } from './pic/pic.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { FormsModule } from '@angular/forms';
+import { LetterDocComponent } from './letter-doc/letter-doc.component';
+import { ProjectStatusComponent } from './project-status/project-status.component';
+import { ReportBateraComponent } from './report-batera.component';
+import { MatTableModule } from '@angular/material/table';
+import { VariantWorkComponent } from './variant-work/variant-work.component';
+import { LetterMenuComponent } from './letter-menu/letter-menu.component';
+import { JobSuplierComponent } from './job-suplier/job-suplier.component';
 
+import { BarProgressComponent } from './bar-progress/bar-progress.component';
+import { FrappeGanttModule } from '../tracking-batera/frappe-gant/frappe-gantt.module';
 
 @NgModule({
   declarations: [
+    SubMenuReportComponent,
+    WorkProgressComponent,
+    PicComponent,
+    LetterDocComponent,
+    JobSuplierComponent,
     ReportBateraComponent,
-    ReportBateraComponent,
-    KeyPositionsComponent,
-    PositionsComponent,
-    MeetingsComponent,
-    StatusReportComponent,
-    ActivityFlowComponent,
-    ActivityReportComponent,
-    ActivityTableComponent,
-    FsIconComponent,
-    SubMenuReportComponent
+    ProjectStatusComponent,
+    VariantWorkComponent,
+    LetterMenuComponent,
+    BarProgressComponent,
   ],
+  entryComponents: [ LetterDocComponent],
   imports: [
     CommonModule,
     NgxDatatableModule,
     NbCardModule,
     NbSelectModule,
-    NbCheckboxModule,
-    NbRadioModule,
     NbInputModule,
     NbTabsetModule,
     NbRouteTabsetModule,
     ReportBateraRoutingModule,
     NbButtonModule,
-    NbIconModule,
     NbTreeGridModule,
-  ]
+    NbLayoutModule,
+    NbDatepickerModule,
+    MatDialogModule,
+    NbProgressBarModule,
+    FormsModule,
+    NbPopoverModule,
+    NbAccordionModule,
+    NbIconModule,
+    MatTableModule,
+    NbAlertModule,
+    FrappeGanttModule
+  ],
+  providers : [CurrencyPipe]
 })
-export class ReportBateraModule {
 
+export class ReportBateraModule {
  }

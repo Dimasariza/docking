@@ -1,103 +1,110 @@
 <nb-card>
     <nb-card-header>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="star-outline" pack="eva"></nb-icon>
-            My Fleet
-        </button>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="list-outline" pack="eva"></nb-icon>
-            Fleet List
-        </button>
-        <button nbButton shape="rectangle" class="mx-1" ghost>
-            <nb-icon icon="menu-outline" pack="eva"></nb-icon>
-            All assets
-        </button>
-        <button nbButton status="primary" class="mx-1" ghost>
-            <nb-icon icon="shuffle-2-outline" pack="eva"></nb-icon>
-            Docking Plan
-        </button>
+        <nb-button-group (valueChange)="vesselFilter($event)">
+            <button *ngFor="let button of topButton;" shape="rectangle" [pressed]="button.desc === 'Default'" nbButtonToggle [value]="button">
+                <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
+                {{button.desc}}
+            </button>
+        </nb-button-group>
     </nb-card-header>
-    <nb-card-header class="justify-content-between d-flex" >
-        <div>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="book-outline" pack="eva"></nb-icon>
-                Export to PDF
-            </button>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="chevron-down-outline" pack="eva"></nb-icon>
-                Collapse All
-            </button>
-            <button nbButton status="primary" class="mx-1" outline>
-                <nb-icon icon="info-outline" pack="eva"></nb-icon>
-                Extended Info
-            </button>
-        </div>
-        <div>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Week
-            </button>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Month
-            </button>
-            <button nbButton status="primary" class="mx-1" outline size="tiny">
-                Year
-            </button>
-        </div>
-    </nb-card-header>
+
     <nb-card-body>
-        <div class="d-flex">
-            <div style="width: 350px">
+        <ngx-datatable
+            [class]="'bootstrap'"
+            [rows]="trackingData"
+            [count]="trackingData"
+            columnMode="force"
+            default
+            style="background-color: transparent;">
+            <ngx-datatable-column name="Ship Name" prop="nama_kapal" routeLink="/">
+                <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                    <a class="text-primary text-decoration-none" 
+                    style="cursor: pointer;" 
+                    [routerLink]="['/pages/report-batera', row.id_proyek]" 
+                    [data] = 'row'>{{row['nama_kapal']}}</a>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Year">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.year}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Phases">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Periode">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                        {{row.start | date:'shortDate'}} - {{row.end | date:'shortDate'}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button class="m-1" nbButton size="tiny" status='primary' outline (click)="showGantChart(row)">
+                         Gant Chart
+                    </button>
+                    <button class="m-1" nbButton size="tiny" status='primary' outline (click)="dailyReport(row)">
+                            Report
+                   </button>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable> 
+    </nb-card-body>
+</nb-card>
+
+<nb-card>
+    <nb-card-header class="justify-content-between d-flex" >    
+        <div>
+            <button nbButton *ngFor="let button of leftButton" status="primary" size="small" shape="rectangle" class="mx-1" outline (click)="clickButton(button.desc)">
+                <nb-icon [icon]="button.icon" pack="eva"></nb-icon>
+                {{button.desc}}
+            </button>
+            <button nbButton status="primary" size="small" (click)="curve.checked=!curve.checked" class="mx-1" outline [disabled]="!tasks.length">
+                <input #curve type="checkbox" style="visibility: hidden;" class="position-absolute">
+                <nb-icon icon="activity-outline" pack="eva"></nb-icon>
+                S Curve
+            </button>
+        </div>
+        <div>
+            <input #viewMode type="text" style="visibility: hidden;" class="position-absolute">
+            <button *ngFor="let button of rightButton" (click)="viewMode.value=button" nbButton status="primary" class="mx-1" outline size="tiny" [disabled]="!tasks.length">
+                {{button}}
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body id="sCurve">
+        <div class="row" style="min-width: 800px;">
+            <div class="col-4 pr-0">
                 <ngx-datatable
-        class="bootstrap"
-        [rows]="data"
-        [count]="data.length"
-        columnMode="force"
-        default>
-        <ngx-datatable-column name="Title"></ngx-datatable-column>
-        <ngx-datatable-column name="Phases">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-                <nb-icon *ngFor="let stat of row.phases" [ngStyle]="{'color': stat ? 'green' : 'red'}" [icon]="stat ? 'checkmark-square-2-outline' : 'close-square-outline'"></nb-icon>
-            </ng-template>
-        </ngx-datatable-column>
-            <ngx-datatable-column name="Periode"></ngx-datatable-column>
-            </ngx-datatable>
+                    class="bootstrap custom"
+                    [rows]="tasks"
+                    [count]="tasks.length"
+                    [scrollbarH]="true"
+                    default
+                    style="background-color: transparent;">
+                    <ngx-datatable-column name="#" [width]="8">
+                        <ng-template let-row="row" ngx-datatable-cell-template let-rowIndex="rowIndex">
+                            {{rowIndex+1}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Uraian Pekerjaan" prop="name"></ngx-datatable-column>
+                    <ngx-datatable-column name="Jumlah Harga">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.price | currency:'IDR'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                    <ngx-datatable-column name="Bobot (%)" prop="weight">
+                        <ng-template let-row="row" ngx-datatable-cell-template>
+                            {{row.weight | number:'2.1'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+                </ngx-datatable>
             </div>
-            <div style="flex: 1; margin-left: -18px; margin-top: 1.2em;">
-                <ng-container *ngTemplateOutlet="timeline"></ng-container>
+            <div class="col-8 pl-0">
+                <f-gantt [showSCurve]="curve.checked" [viewMode]="viewMode.value" [tasks]="tasks"></f-gantt>
             </div>
         </div>
     </nb-card-body>
 </nb-card>
 
-<ng-template #table>
-    <ngx-datatable
-        class="bootstrap"
-        [rows]="data"
-        [count]="data.length"
-        columnMode="force"
-        default>
-        <ngx-datatable-column name="Title"></ngx-datatable-column>
-        <ngx-datatable-column name="Phases">
-            <ng-template let-row="row">
-                <button nbButton *ngFor="let stat of row.phases">
-                    {{stat}}+
-                    <nb-icon icon="check"></nb-icon>
-                </button>
-            </ng-template>
-        </ngx-datatable-column>
-        <ngx-datatable-column name="Periode"></ngx-datatable-column>
-    </ngx-datatable>
-</ng-template>
-
-<ng-template #timeline>
-    <apx-chart
-        [title]="chartOptions.title"
-        [series]="chartOptions.series"
-        [chart]="chartOptions.chart"
-        [xaxis]="chartOptions.xaxis"
-        [yaxis]="chartOptions.yaxis"
-        [grid]="chartOptions.grid"
-        [plotOptions]="chartOptions.plotOptions"
-        [dataLabels]="chartOptions.dataLabels"
-    ></apx-chart>
-</ng-template>

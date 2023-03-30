@@ -2,12 +2,9 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
 
 import { PagesComponent } from './pages.component';
-import { DashboardComponent } from './dashboard/dashboard.component';
-import { ECommerceComponent } from './e-commerce/e-commerce.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
-import { HomeBateraComponent } from './home-batera/home-batera.component';
-import { ProjectBateraComponent } from './project-batera/project-batera.component';
-import { TechnicalBateraComponent } from './technical-batera/technical-batera.component';
+
+
 
 const routes: Routes = [{
   path: '',
@@ -29,16 +26,12 @@ const routes: Routes = [{
       .then(m => m.TenderBateraModule),
     },
     {
-      path: 'technical-batera',
-      component: TechnicalBateraComponent,
-    },
-    {
       path: 'tracking-batera',
       loadChildren: () => import('./tracking-batera/tracking-batera.module')
       .then(m => m.TrackingBateraModule),
     },
     {
-      path: 'report-batera',
+      path: 'report-batera/:id',
       loadChildren: () => import('./report-batera/report-batera.module')
       .then(m => m.ReportBateraModule),
     },
@@ -48,76 +41,14 @@ const routes: Routes = [{
       .then(m => m.ProfilBateraModule),
     },
     {
-      path: 'home-batera',
-      loadChildren: () => import('./home-batera/home-batera.module')
-        .then(m => m.HomeBateraModule),
+      path: 'export-pdf',
+      loadChildren: () => import('./pdf-generator-batera/pdf-generator.module')
+        .then(m => m.PdfGeneratorModule),
     },
     {
-      path: 'project-batera',
-      loadChildren: () => import('./project-batera/project-batera.modules')
-      .then(m => m.ProjectBateraModule),
-    },
-    {
-      path: 'technical-batera',
-      component: TechnicalBateraComponent,
-    },
-    {
-      path: 'dashboard',
-      component: ECommerceComponent,
-    },
-    {
-      path: 'iot-dashboard',
-      component: DashboardComponent,
-    },
-    {
-      path: 'layout',
-      loadChildren: () => import('./layout/layout.module')
-        .then(m => m.LayoutModule),
-    },
-    {
-      path: 'forms',
-      loadChildren: () => import('./forms/forms.module')
-        .then(m => m.FormsModule),
-    },
-    {
-      path: 'ui-features',
-      loadChildren: () => import('./ui-features/ui-features.module')
-        .then(m => m.UiFeaturesModule),
-    },
-    {
-      path: 'e-commerce',
-      loadChildren: () => import('./e-commerce/e-commerce.module')
-        .then(m => m.ECommerceModule),
-    },
-    {
-      path: 'modal-overlays',
-      loadChildren: () => import('./modal-overlays/modal-overlays.module')
-        .then(m => m.ModalOverlaysModule),
-    },
-    {
-      path: 'extra-components',
-      loadChildren: () => import('./extra-components/extra-components.module')
-        .then(m => m.ExtraComponentsModule),
-    },
-    {
-      path: 'maps',
-      loadChildren: () => import('./maps/maps.module')
-        .then(m => m.MapsModule),
-    },
-    {
-      path: 'charts',
-      loadChildren: () => import('./charts/charts.module')
-        .then(m => m.ChartsModule),
-    },
-    {
-      path: 'editors',
-      loadChildren: () => import('./editors/editors.module')
-        .then(m => m.EditorsModule),
-    },
-    {
-      path: 'tables',
-      loadChildren: () => import('./tables/tables.module')
-        .then(m => m.TablesModule),
+      path: 'function',
+      loadChildren: () => import('./function-collection-batera/function-collection.module')
+        .then(m => m.FunctionCollecetionModule),
     },
     {
       path: 'miscellaneous',

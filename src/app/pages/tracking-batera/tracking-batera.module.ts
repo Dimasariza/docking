@@ -1,10 +1,11 @@
 import { NgModule } from '@angular/core';
-import { NbButtonModule, NbCardModule, NbIconModule } from '@nebular/theme';
+import { NbButtonGroupModule, NbButtonModule, NbCardModule, NbIconModule } from '@nebular/theme';
 
 import { ThemeModule } from '../../@theme/theme.module';
 import { routedComponents, TrackingBateraRoutingModule } from './tracking-batera.routing.module';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { FrappeGanttModule } from './frappe-gant/frappe-gantt.module';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   imports: [
@@ -13,13 +14,14 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
     NbCardModule,
     NbIconModule,
     NbButtonModule,
-    NgApexchartsModule,
     NgxDatatableModule,
-    NgApexchartsModule
+    NbButtonGroupModule,
+    FrappeGanttModule,
+    CommonModule
   ],
-  exports: [],
+  exports: [  ],
   declarations: [
-    ...routedComponents
+    ...routedComponents,
   ],
 })
 export class TrackingBateraModule { }

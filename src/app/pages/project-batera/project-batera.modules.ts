@@ -1,11 +1,27 @@
 import { NgModule } from '@angular/core';
-import { NbAlertModule, NbButtonModule, NbCardModule, NbIconModule, NbInputModule, NbListModule, NbOptionModule, NbPopoverModule, NbSearchModule, NbSelectModule, NbTreeGridColumnDefDirective, NbTreeGridModule, NbTreeGridRowToggleComponent } from '@nebular/theme';
-import { NumberCardModule } from '@swimlane/ngx-charts';
+import { FormsModule } from '@angular/forms';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatTableModule } from '@angular/material/table';
+import { NbDateFnsDateModule } from '@nebular/date-fns';
+import { NbAlertModule, 
+  NbButtonModule, 
+  NbCardModule, 
+  NbDatepickerModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbListModule, 
+  NbOptionModule, 
+  NbPopoverModule, 
+  NbSearchModule, 
+  NbSelectModule, 
+  NbTagModule, 
+  NbTreeGridModule } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-
 import { ThemeModule } from '../../@theme/theme.module';
 import { ProjectBateraRoutingModule, routedComponents } from './project-batera-routing.module';
-import { FsIconComponent, SubMenuProjectComponent } from './sub-menu-project/sub-menu-project.component';
+import { ProjectDataComponent } from './project-data/project-data.component';
+import { WorkAreaComponent } from './work-area/work-area.component';
+
 
 @NgModule({
   imports: [
@@ -19,19 +35,22 @@ import { FsIconComponent, SubMenuProjectComponent } from './sub-menu-project/sub
     NbSelectModule,
     NbButtonModule,
     NbListModule,
-    NumberCardModule,
     NbPopoverModule,
     NbSearchModule,
-    NbIconModule,
     NbAlertModule,
-    NbButtonModule,
     NbTreeGridModule,
-    NbInputModule,
+    NbDatepickerModule,
+    MatDialogModule,
+    NbTagModule,
+    FormsModule,
+    MatTableModule,
+  ],
+  entryComponents: [
+    ProjectDataComponent,
+    WorkAreaComponent,
   ],
   declarations: [
     ...routedComponents,
-    SubMenuProjectComponent,
-    FsIconComponent
   ],
 })
 export class ProjectBateraModule{ 

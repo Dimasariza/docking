@@ -1,123 +1,90 @@
-<nb-card>
-    <nb-card-header>
-        <div class="d-flex justify-content-between"> 
-            <h5>D-10 1st Inspection</h5>
-            <div>
-                <button nbButton status="primary" class="mx-1" outline size="small">
-                    <nb-icon icon="close-outline" pack="eva"></nb-icon>
-                    Close
-                </button>
-                <button nbButton status="primary" class="mx-1" outline size="small">
-                    <nb-icon icon="checkmark-square-outline" pack="eva"></nb-icon>
-                    New Task
-                </button>
-                <button nbButton status="primary" class="mx-1" outline size="small">
-                    <nb-icon icon="people-outline" pack="eva"></nb-icon>
-                    New Contact
+<nb-card fullWidth>
+    <nb-card-header class="d-flex justify-content-between">
+        <span><strong>{{data.data.jobNumber}} . {{data.data.jobName}} </strong></span> 
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline"></nb-icon>
+        </button>   
+    </nb-card-header>
+    <nb-card-body class="row">
+        <div [ngClass]="showActivity ? 'col-6' : 'col-12'">
+            <strong>Description</strong>
+            <div class="row">
+                <div class="col-3">
+                    <span class="d-block">Start</span>
+                    <span class="d-block">Done</span>
+                    <span class="d-block">Responsible</span>
+                    <span class="d-block">Project</span>
+                </div>
+                <div class="col-3">
+                    <span class="d-block text-info">{{data.data.Start}}</span>
+                    <span class="d-block text-info">{{data.data.Stop}}</span>
+                    <span class="d-block text-info">{{data.data.responsible.name}}</span>
+                    <span class="d-block text-info">KM Abusamah</span>
+                </div>
+                <div class="col-3">
+                    <span class="d-block">Progress</span>
+                    <span class="d-block">Last change data</span>
+                </div>
+                <div class="col-3">
+                    <span class="d-block text-info">
+                        <nb-progress-bar [value]="data.data.progress" status="primary" [displayValue]="true"></nb-progress-bar>
+                    </span>
+                    <span class="d-block text-info">{{data.data?.lastUpdate | date : 'medium' || 'No Update'}}</span>
+                </div>
+            </div>
+            <textarea fullWidth rows="7" readonly nbInput [placeholder]="data.data.remarks" name="description" class="my-2"></textarea>
+            <div class="w-100 text-right">
+                <button nbButton size="tiny" ghost (click)="extendPanel()">
+                    {{expandText}}
+                    <nb-icon [icon]="showActivity ? 'arrowhead-left-outline' : 'arrowhead-right-outline' "></nb-icon>
                 </button>
             </div>
         </div>
-    </nb-card-header>
 
-    <nb-card-body>
-        <table style="width: 80%; ">
-            <tr>
-                <td><label for="test-label" class="label">Start</label></td>
-                <td><span>19.11.2018</span></td>
-                <td><label for="test-label" class="label">Type</label></td>
-                <td><span>Activity 2</span></td> 
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Done</label></td>
-                <td><span>03.12.2018</span></td>
-                <td><label for="test-label" class="label">Status</label></td>
-                <nb-select selected="1" class="mx-3" size="tiny">
-                    <nb-option value="1">Status</nb-option>
-                    <nb-option value="2">On Progress</nb-option>
-                </nb-select>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Responsible</label></td>
-                <td><span>Slamet Saputro</span></td>
-                <td><label for="test-label" class="label">Progress</label></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Projects</label></td>
-                <td><span>Batera Ship 01</span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Area</label></td>
-                <td>
-                    <nb-select selected="1" class="mx-3" size="tiny">
-                        <nb-option value="1">Status</nb-option>
-                        <nb-option value="2">On Progress</nb-option>
-                    </nb-select>
-                </td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Created</label></td>
-                <td><span>04.05.2015 14.18 - <span style="color: blue;">Adminstrator</span></span></td>
-            </tr>
-            <tr>
-                <td><label for="test-label" class="label">Last Change Date</label></td>
-                <td><span>06.10.2018 03.44 - <span style="color: blue;">Slamet Spautro</span></span></td>
-            </tr>
-        </table>
-    </nb-card-body>
+        <div *ngIf="showActivity" [ngClass]="showActivity ? 'col-6' : 'col-12'">
+            <strong>Remarks</strong>
+            <textarea name="" id="" fullWidth rows="2" nbInput ngModel name="description"></textarea>
+            <form action="" #spesification="ngForm" (ngSubmit)="submitSpesification(spesification)">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroupFileAddon01">Add Attachment</span>
+                    </div>
+                    <div class="custom-file">
+                    <input type="file" class="custom-file-input" id="inputGroupFile01" aria-describedby="inputGroupFileAddon01" ngModel name="fileName">
+                    <label class="custom-file-label" for="inputGroupFile01">Choose file</label>
+                    </div>
+                </div>
+                <button nbButton status="success" size="small" fullWidth>
+                    Submit
+                </button>
+            </form>
+            <ngx-datatable 
+                [class]="'bootstrap'" 
+                [rows]="logActivity" 
+                [count]="logActivity.length"
+                [scrollbarH]="true"
+                [columnMode]="'force'"
+                class="row"
+                [rowHeight]="'auto'"
+                default>
+                    <ngx-datatable-column [name]="'Description'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{rowIndex+1}}
+                        </ng-template>
+                    </ngx-datatable-column>
 
-    <nb-card-body>
-        <h5>Description</h5>
-        <div class="font-row my-2">
-            <span><strong>Purpose</strong></span>
-            <ul class="list-group">
-                <li>Identify Scope of Work</li>
-            </ul>
-        </div>
-        <div class="font-row my-2">
-            <span><strong>Responsible</strong></span>
-            <ul class="list-group">
-                <li>SUP, HSP</li>
-            </ul>
-        </div>
-        <div class="font-row my-2">
-            <span><strong>Input</strong></span>
-            <ul class="list-group">
-                <li>Last Docking Report</li>
-                <li>Vessel Condition Report</li>
-                <li>Ship's Repair List</li>
-                <li>Specialist's Reports</li>
-                <li>Own Inspection</li>
-            </ul>
-        </div>
-        <h5>Delivery</h5>
-        <div class="font-row my-2">
-            <span><strong>Deliverable</strong></span>
-            <ul class="list-group">
-                <li>Allocated scope of work : Yard, crew, subcontractors</li>
-            </ul>
-        </div>
-        <div class="font-row my-2">
-            <span><strong>Template</strong></span>
-            <ul class="list-group">
-                <li>HSP Inspection Template</li>
-                <li>Dock Repair List</li>
-            </ul>
-        </div>
-        <div class="font-row my-2">
-            <span><strong>Recipent</strong></span>
-            <ul class="list-group">
-                <li>DPIC, SM</li>
-            </ul>
+                    <ngx-datatable-column [name]="'File'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{row.tgl || '_'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+
+                    <ngx-datatable-column [name]="'Date'" [width]="50">
+                        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                            {{row.perihal || '_'}}
+                        </ng-template>
+                    </ngx-datatable-column>
+            </ngx-datatable>
         </div>
     </nb-card-body>
-    
-    <nb-card-body>
-        <h5>Attachments</h5>
-        <nb-card>
-            <button nbButton class="m-2" shape="rectangle" >
-                Add file from computer
-            </button> 
-        </nb-card>
-    </nb-card-body>
-
 </nb-card>

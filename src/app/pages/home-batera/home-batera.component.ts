@@ -1,50 +1,159 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { ShipActionComponent } from './ship-action/ship-action.component';
+import { HomeBateraService } from './home-batera.service';
+import { environment } from "../../../environments/environment"
+import { DeleteDialogComponent } from './delete-dialog/delete-dialog.component';
+import { take } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { FunctionCollection } from '../function-collection-batera/function-collection.component';
+import { TenderBateraService } from '../tender-batera/tender-batera.service';
 
 @Component({
   selector: 'ngx-home-batera',
   templateUrl: './home-batera.component.html',
-  styleUrls: ['./home-batera.component.scss']
+  styleUrls : ['./home.component.scss', '../../pages/pages.component.scss']
 })
-
 export class HomeBateraComponent implements OnInit {
-  title = "image-gallery"
+  constructor(private homeservice:HomeBateraService,
+              private dialog : MatDialog,
+              private tenderService : TenderBateraService,
+              private FNCOL : FunctionCollection,
+  ){}
+    
+  onSuccess : EventEmitter<any> = new EventEmitter<any>()
+  shipData: any [] = []
+  flipped : any = []
+  subscription : Subscription
+  progressData : any
+  userRole : string
+  alertConds
 
-  data = [
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1606185540834-d6e7483ee1a4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-      imageAlt : '1',
-      shipName : 'Batera Ship 1'
-    },
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1585713181935-d5f622cc2415?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1171&q=80',
-      imageAlt : '2',
-      shipName : 'Batera Ship 2'
-    },
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1524522173746-f628baad3644?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1231&q=80',
-      imageAlt : '3',
-      shipName : 'Batera Ship 3'
-
-    },
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1530890448995-4d82724f702c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1172&q=80',
-      imageAlt : '4',
-      shipName : 'Batera Ship 4'
-    },
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1542986386-660ccbbedaf8?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=464&q=80',
-      imageAlt : '5',
-      shipName : 'Batera Ship 5'
-    },
-    {
-      imageSrc : 'https://images.unsplash.com/photo-1606185540834-d6e7483ee1a4?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1170&q=80',
-      imageAlt : '6',
-      shipName : 'Batera Ship 6'
-    },
-  ]
-
-  constructor() { }
-
-  ngOnInit(): void {
+  toggleView(id) {
+    this.shipData[id].flipped = !this.shipData[id].flipped
   }
+
+  isFalsy = (value) => !value
+
+  ngOnInit() {
+    this.homeservice.getUserLogin()
+    .pipe(take(1))
+    .subscribe(({data} : any) => this.userRole = data.role)
+
+    this.homeservice.getAllShip()
+    .pipe(take(1))
+    .subscribe(({data} : any) => {
+      if(!data.length) return;
+      this.shipData = data.map(item => {
+        return {
+          apiUrl : environment.apiUrl,
+          flipped : false,
+          ...item
+        }
+      })
+    })
+    
+    this.tenderService.getProjectSummary('','','','')
+    .pipe(take(1))
+    .subscribe(({data} : any) => { 
+      this.progressData = data
+      .map(project => {
+        let {variant_work, id_proyek} = project;
+        let {kapal, tahun, phase, work_area} = project.proyek;
+        const {id_kapal, nama_kapal} = kapal;
+        const head = `${nama_kapal} - DD - ${tahun}`;
+        if(this.isFalsy(variant_work)) variant_work = [];
+        if(this.isFalsy(work_area)) work_area = [];
+        const workProgress = [...variant_work, ...work_area];
+        let progress = 0;
+        workProgress.map(job => progress += parseFloat(job.progress));
+        progress = progress / workProgress.length;
+        return {id_kapal, head, phase, id_proyek, progress};
+      })
+      setTimeout(() => this.generateData(), 1500);
+    })
+  }
+
+  userLoginRole (role) {
+    switch (role) {
+      case 'admin' :
+      return true
+      case 'shipmanager' :
+      return true
+      case 'shipyard' :
+      return false
+      case 'director' :
+      return false
+    }
+  }
+
+  generateData(){
+    if(this.shipData.length === 0 || !this.progressData) return;
+    this.shipData.map((ship, id) => {
+      this.progressData.forEach(project => {
+        if(project.id_kapal === ship.id_kapal) {
+            this.shipData[id] = {...this.shipData[id], ...project, phase : this.FNCOL.convertPhase(project.phase)};
+        }
+      })
+    })
+  }
+
+  addShipDial(){
+    const dialog = this.dialog.open(ShipActionComponent ,{
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        dial : "Add"
+      }
+    });
+    this.reloadPage(dialog)
+  }
+
+  updateShipDial(id){
+    const dialog = this.dialog.open(ShipActionComponent ,{
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        id : id,
+        dial : "Update"
+      }
+    });
+    this.reloadPage(dialog)
+  };
+
+  deleteShip(id){
+    const dialog = this.dialog.open(DeleteDialogComponent ,{
+      disableClose : true,
+      autoFocus : true,
+      data : {
+        id : id,
+        dial : "ship",
+      }
+    });
+    this.reloadPage(dialog)
+  };
+
+  reloadPage(dialog){
+    return dialog.componentInstance.onSuccess.asObservable().subscribe(()=> {
+      this.ngOnInit()
+      this.alertCard('success', 'The ship has been added')
+    });
+  }
+
+  alertCard(status, msg) {
+    setTimeout(() => {
+      this.alertConds = {status, msg, conds : true}
+    }, 1000);
+    setTimeout(() => {
+      this.alertConds = {...this.alertConds, conds : false}
+    }, 5000);
+  }
+
+  // ngOnDestroy(): void {
+  //   this.subscription.unsubscribe()
+  // }
+
 }
+
+
+

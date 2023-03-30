@@ -1,7 +1,10 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "cli": {
-    "analytics": "0a332cd6-86e0-411b-955f-9ca2781a798d"
+    "analytics": "0a332cd6-86e0-411b-955f-9ca2781a798d",
+    "cache": {
+      "enabled": false
+    }
   },
   "version": 1,
   "newProjectRoot": "projects",
@@ -44,7 +47,8 @@
               "src/app/@theme/styles/styles.scss",
               "node_modules/@swimlane/ngx-datatable/index.css",
               "node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss",
-              "node_modules/@swimlane/ngx-datatable/assets/icons.css"
+              "node_modules/@swimlane/ngx-datatable/assets/icons.css",
+              "node_modules/flatpickr/dist/flatpickr.css"
             ],
             "scripts": [
               "node_modules/pace-js/pace.min.js",
