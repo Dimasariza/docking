@@ -1,120 +1,108 @@
-<nb-layout>
-    <nb-layout-column class="col-md-4 col-sm-12" style="background-color: #E1F3FF;">
-      <img class="mb-5" src="/assets/images/BKD.png" alt="Logo" width="200">
-        <div>
-          <h6>Login</h6>
-          <p style="font-size: .8rem;">Masukkan NIP dan Kata Sandi untuk mendapatkan akses</p>
-        </div>
-        <form action="">
-        <label class="label" for="input-email">NIP</label>
-        <div class="form-control-group">
-            <input class="mb-2" nbInput
-                fullWidth
-                [(ngModel)]="user.email"
-                #email="ngModel"
-                name="email"
-                id="input-email"
-                pattern=".+@.+\..+"
-                placeholder="NIP"
-                fieldSize="medium"
-                autofocus
-                [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : 'basic'"
-                [required]="getConfigValue('forms.validation.email.required')"
-                [attr.aria-invalid]="email.invalid && email.touched ? true : null">
-            <ng-container *ngIf="email.invalid && email.touched">
-            <p class="caption status-danger" *ngIf="email.errors?.required">
-                Email is required!
-            </p>
-            <p class="caption status-danger" *ngIf="email.errors?.pattern">
-                Email should be the real one!
-            </p>
-            </ng-container>
-        </div>
+<!-- <h1 id="title" class="title">Login</h1> -->
+<div class="d-flex justify-content-center ">
+    <img src="./assets/images/Logo/Logo Sikomodo.jpeg" width="150" alt="logo sikomodo">
+</div>
+<p class="sub-title">Hello! Log in with your email.</p>
 
-        <div class="form-control-group">
-            <!-- <span class="label-with-link">
-            <a class="forgot-password caption-2" routerLink="../request-password">Forgot Password?</a>
-            </span> -->
-            <label class="label" for="input-password">Password</label>
-            <nb-form-field>
-              <input class="mb-2" nbInput
-                  fullWidth
-                  [(ngModel)]="user.password"
-                  #password="ngModel"
-                  name="password"
-                  [type]="getInputType()"
-                  id="input-password"
-                  placeholder="Password"
-                  fieldSize="medium"
-                  [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : 'basic'"
-                  [required]="getConfigValue('forms.validation.password.required')"
-                  [minlength]="getConfigValue('forms.validation.password.minLength')"
-                  [maxlength]="getConfigValue('forms.validation.password.maxLength')"
-                  [attr.aria-invalid]="password.invalid && password.touched ? true : null">
-              <button nbSuffix nbButton ghost (click)="toggleShowPass()">
-                <nb-icon class="mb-2" [icon]="showPassword ? 'eye-outline' : 'eye-off-2-outline'"></nb-icon>
-              </button>
-            </nb-form-field>
-            <ng-container *ngIf="password.invalid && password.touched ">
-            <p class="caption status-danger" *ngIf="password.errors?.required">
-                Password is required!
-            </p>
-            <p class="caption status-danger" *ngIf="password.errors?.minlength || password.errors?.maxlength">
-                Password should contain
-                from {{ getConfigValue('forms.validation.password.minLength') }}
-                to {{ getConfigValue('forms.validation.password.maxLength') }}
-                characters
-            </p>
-            </ng-container>
-        </div>
+<nb-alert *ngIf="showMessages.error && errors?.length && !submitted" outline="danger" role="alert">
+  <p class="alert-title"><b>Oh snap!</b></p>
+  <ul class="alert-message-list">
+    <li *ngFor="let error of errors" class="alert-message">{{ error }}</li>
+  </ul>
+</nb-alert>
 
-        <div class="form-control-group accept-group mb-5">
-            <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
-        </div>
+<nb-alert *ngIf="showMessages.success && messages?.length && !submitted" outline="success" role="alert">
+  <p class="alert-title"><b>Hooray!</b></p>
+  <ul class="alert-message-list">
+    <li *ngFor="let message of messages" class="alert-message">{{ message }}</li>
+  </ul>
+</nb-alert>
 
-        <button nbButton
-                routerLink="/pages/home"
-                fullWidth
-                status="primary"
-                size="large"
-                [class.btn-pulse]="submitted">
-            Log In
-        </button>
-        </form>
-    </nb-layout-column>
+<form (ngSubmit)="login()" #form="ngForm" aria-labelledby="title">
 
-    <nb-layout-column class="col overflow-auto" style="background-color: white; height: 100vh;">
-      
-      <h5>JADWAL DIKLAT 2022</h5>
+  <div class="form-control-group">
+    <label class="label" for="input-email">Username:</label>
+    <input nbInput
+           fullWidth
+           [(ngModel)]="user.email"
+           #email="ngModel"
+           name="email"
+           id="input-email"
+           placeholder="Username"
+           autofocus
+           [status]="email.dirty ? (email.invalid  ? 'danger' : 'success') : ''"
+           [required]="getConfigValue('forms.validation.email.required')"
+           [attr.aria-invalid]="email.invalid && email.touched ? true : null">
+    <ng-container *ngIf="email.invalid && email.touched">
+      <p class="error-message" *ngIf="email.errors?.required">
+        Username is required!
+      </p>
+      <!-- <p class="error-message" *ngIf="email.errors?.pattern">
+        Email should be the real one!
+      </p> -->
+    </ng-container>
+  </div>
 
-      <!-- <nb-card>
-        <nb-card-body> -->
-          <ngx-datatable 
-              [class]="'bootstrap'" 
-              [rows]="dataTable" 
-              [count]="dataTable.length"
-              [scrollbarH]="true"
-              columnMode="force"
-              default>
-              <ngx-datatable-column [name]="'No'" [width]="50">
-                  <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                      {{rowIndex+1}}
-                  </ng-template>
-              </ngx-datatable-column>
-              <ngx-datatable-column [name]="'NAMA DIKLAT'" prop="name"></ngx-datatable-column>
-              <ngx-datatable-column [name]="'WAKTU PELAKSANAAN'" prop="time"></ngx-datatable-column>
-              <ngx-datatable-column [name]="'TEMPAT PELAKSANAAN'" prop="place"></ngx-datatable-column>
-              <ngx-datatable-column [name]="'REGISTRASI'">
-              <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
-                        <div class="d-flex">
-                            <button nbButton outline status="primary" size="small" class="btn btn-action" (click)="open()">DAFTAR</button>
-                        </div>
-                    </ng-template>
-              </ngx-datatable-column>
-          </ngx-datatable>
-        <!-- </nb-card-body>
-      </nb-card> -->
-  
-      <ng-content select="router-outlet"></ng-content>
-    </nb-layout-column>
-</nb-layout>
+  <div class="form-control-group">
+    <label class="label" for="input-password">Password:</label>
+    <input nbInput
+           fullWidth
+           [(ngModel)]="user.password"
+           #password="ngModel"
+           name="password"
+           type="password"
+           id="input-password"
+           placeholder="Password"
+           [status]="password.dirty ? (password.invalid  ? 'danger' : 'success') : ''"
+           [required]="getConfigValue('forms.validation.password.required')"
+           [minlength]="getConfigValue('forms.validation.password.minLength')"
+           [maxlength]="getConfigValue('forms.validation.password.maxLength')"
+           [attr.aria-invalid]="password.invalid && password.touched ? true : null">
+    <ng-container *ngIf="password.invalid && password.touched ">
+      <p class="error-message" *ngIf="password.errors?.required">
+        Password is required!
+      </p>
+      <p class="error-message" *ngIf="password.errors?.minlength || password.errors?.maxlength">
+        Password should contains
+        from {{ getConfigValue('forms.validation.password.minLength') }}
+        to {{ getConfigValue('forms.validation.password.maxLength') }}
+        characters
+      </p>
+    </ng-container>
+  </div>
+
+  <div class="form-control-group accept-group">
+    <nb-checkbox name="rememberMe" [(ngModel)]="user.rememberMe" *ngIf="rememberMe">Remember me</nb-checkbox>
+    <a class="forgot-password" routerLink="../request-password">Forgot Password?</a>
+  </div>
+
+  <button nbButton
+          fullWidth
+          status="success"
+          [disabled]="submitted || !form.valid"
+          [class.btn-pulse]="submitted">
+    Log In
+  </button>
+</form>
+
+<!-- <section *ngIf="socialLinks && socialLinks.length > 0" class="links" aria-label="Social sign in">
+  or enter with:
+  <div class="socials">
+    <ng-container *ngFor="let socialLink of socialLinks">
+      <a *ngIf="socialLink.link"
+         [routerLink]="socialLink.link"
+         [attr.target]="socialLink.target"
+         [attr.class]="socialLink.icon"
+         [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
+      <a *ngIf="socialLink.url"
+         [attr.href]="socialLink.url"
+         [attr.target]="socialLink.target"
+         [attr.class]="socialLink.icon"
+         [class.with-icon]="socialLink.icon">{{ socialLink.title }}</a>
+    </ng-container>
+  </div>
+</section> -->
+
+<!-- <section class="another-action" aria-label="Register">
+  Don't have an account? <a class="text-link" routerLink="../register">Register</a>
+</section> -->

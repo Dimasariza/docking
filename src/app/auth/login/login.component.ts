@@ -1,7 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { NbAuthService, NbLoginComponent,} from '@nebular/auth';
-import { NbDialogRef, NbDialogService} from '@nebular/theme';
+
+import { Component } from '@angular/core';
+import { NbAuthResult, NbLoginComponent,} from '@nebular/auth';
 
 
 @Component({
@@ -10,7 +9,6 @@ import { NbDialogRef, NbDialogService} from '@nebular/theme';
   styleUrls: ['./login.component.scss'],
 })
 export class NgxLoginComponent extends NbLoginComponent {
-
   showPassword = true;
 
   getInputType() {
@@ -24,134 +22,29 @@ export class NgxLoginComponent extends NbLoginComponent {
     this.showPassword = !this.showPassword
   }
   
+  login(): void {
+    this.errors = [];
+    this.messages = [];
+    this.submitted = true;
+    this.service.authenticate(this.strategy, {
+      user_email: this.user.email, 
+      password: this.user.password, 
+      remember: this.rememberMe
+    }).subscribe((result: NbAuthResult) => {
+      this.submitted = false;
 
-  dataTable = [
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "10 Juni 2022 - 22 Juni 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "10 Juni 2022 - 22 Juni 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    },
-    {
-      "name": "Diklat Prajabatan",
-      "time": "12 Mei 2022 - 20 Mei 2022",
-      "place": "Blended Learning"
-    }
-  ]
+      if (result.isSuccess()) {
+        this.messages = result.getMessages();
+      } else {
+        this.errors = result.getErrors();
+      }
 
-
-  constructor(public service: NbAuthService, public cd: ChangeDetectorRef, public router: Router, private dialogService: NbDialogService) {
-    super(service, {}, cd, router)
-  }
-
-  open() {
-    this.dialogService.open(DialogAlertComponent)
-  }
-
-  
+      const redirect = result.getRedirect();
+      
+      if (redirect) {
+          this.router.navigateByUrl(redirect);
+      }
+      this.cd.detectChanges();
+    });
+  } 
 }
-
-  @Component ({
-    selector: 'ngx-dialog-alert',
-    template: `
-      <nb-card>
-        <nb-card-header>
-          <div class="text-center">
-            <nb-icon icon="alert-triangle"></nb-icon> &nbsp;
-            <strong>PERHATIAN!</strong>
-          </div>
-        </nb-card-header>
-        <nb-card-body class="d-inline-block">
-          <div>
-            <p>Anda harus login terlebih dahulu sebelum melakukan pendaftaran</p>
-          </div>
-        </nb-card-body>
-        <nb-card-footer class="d-flex justify-content-end">
-          <button class="cancel" nbButton status="danger" (click)="cancel()">Tutup</button>
-        </nb-card-footer>
-      </nb-card>
-    `,
-  })
-  
-  export class DialogAlertComponent {
-    constructor(protected ref: NbDialogRef<DialogAlertComponent>) {}
-  
-    cancel() {
-      this.ref.close();
-    }
-  
-  }
