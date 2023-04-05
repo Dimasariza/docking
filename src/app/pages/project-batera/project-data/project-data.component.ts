@@ -40,7 +40,7 @@ export class ProjectDataComponent implements OnInit {
     shipManagement : null
   } 
 
-  typeOfDocking = ['normal', 'standard', 'emergency']
+  typeOfDocking = ['annual', 'intermediate', 'special', 'emergency']
 
   public projectData : any = {}
   disabledData : boolean = false

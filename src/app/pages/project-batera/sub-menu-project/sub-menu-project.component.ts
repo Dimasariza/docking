@@ -296,6 +296,7 @@ export class SubMenuProjectComponent implements OnInit {
       let binaryData = event.target.result;
       let workBook = XLSX.read(binaryData, {type : 'binary'});
       const data = XLSX.utils.sheet_to_json(workBook.Sheets['WORK ORDER']);
+      console.log(data)
       this.jobDataHierarchy(data)
     }
   }
@@ -305,7 +306,11 @@ export class SubMenuProjectComponent implements OnInit {
     if( !this.projectData.work_area || !this.projectData.work_area[0] ) work_area = [];
 
     const regroupDatas = (allJob, newJob, index) => {
-      const newJobNumber = newJob.jobNumber.toString().split(".");
+      const number = newJob.jobNumber;
+      // console.log(number)
+      // if(typeof(number) !== "number") return
+
+      const newJobNumber = number.toString().split(".");
       let jobIndex = "";
       newJobNumber.forEach((val, id) => {
         if(id > index) return;
@@ -338,31 +343,37 @@ export class SubMenuProjectComponent implements OnInit {
       }
 
       let {
-        ["Job Number"] : jobNumber, 
-        ["Job Name"] : jobName , 
-        ['Unit Price'] : unitPrice,
-        ['Total Price'] : totalPrice,
-        Departement : departement, 
-        Start : start,
-        Stop : end,
-        Vol : volume,
-        Unit : unit,
+        __EMPTY : jobNumber, 
+        __EMPTY_1 : jobName , 
+        __EMPTY_5 : unitPrice,
+        __EMPTY_5 : totalPrice,
+        // Departement : departement, 
+        // Start : start,
+        // Stop : end,
+        __EMPTY_3 : volume,
+        __EMPTY_4 : unit,
         Category : category,
-        Remarks : remarks,
+        __EMPTY_2 : remarks,
         Responsible : responsible
       } = work;
-      if(!jobNumber || !start) return;
+
+      if(!jobNumber) return;
+      jobNumber = jobNumber.toString()
+      const intnum = parseInt(jobNumber.split(".")[0]) 
+      if(!intnum) return;
+
       jobNumber = jobNumber.toString().split('').filter(n => {
         if( n == "." || parseInt(n) || n == 0)
         return n
       }).join('')
-      start = convertDate(start);
-      end = convertDate(end);
+
+      // start = convertDate(start);
+      // end = convertDate(end);
       work = {jobNumber, 
         jobName, 
-        departement, 
-        start, 
-        end, 
+        // departement, 
+        // start, 
+        // end, 
         volume, 
         unit, 
         category, 
@@ -370,6 +381,7 @@ export class SubMenuProjectComponent implements OnInit {
         responsible, 
         'Price Budget' : unitPrice
       }
+
       const newJobNumber = jobNumber.split('.')
       newJobNumber.forEach((d, i) => {
         work_area = regroupDatas(work_area, work, i);
