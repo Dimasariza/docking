@@ -52,7 +52,10 @@ export class DeleteDialogComponent implements OnInit {
         break;
       case 'yard' :
         this.tenderService.deleteTender(this.deleteData.id)
-        .subscribe(res => console.log(res))
+        .subscribe(res => {
+          this.onSuccess.emit()
+          this.close()
+        })
         break;
       case 'variant job' :
         const variant_work = this.deleteJob()
