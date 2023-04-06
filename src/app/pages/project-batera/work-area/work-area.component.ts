@@ -39,6 +39,7 @@ export class WorkAreaComponent implements OnInit {
   ngOnInit(){
     this.usedCurrency = this.data.work.mata_uang
     const data = this.data?.data?.data
+    console.log(data)
     const parentId = data?.id.toString().split('')
     this.disabledChild = parentId?.length > 1 ? true : false;
     switch (this.data.dial) {
@@ -200,8 +201,9 @@ export class WorkAreaComponent implements OnInit {
   }
 
   updateWorkArea(newData){
+    console.log(newData.value)
     const submitData = newData.value
-    const parentId = this.modelData?.id.toString().split('')
+    const parentId = this.modelData?.id.toString().split('.')
     const reconstructData = {
       progress : this.modelData.progress,
       ...submitData,

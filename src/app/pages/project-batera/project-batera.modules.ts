@@ -40,6 +40,7 @@ import { WorkAreaComponent } from './work-area/work-area.component';
     NbAlertModule,
     NbTreeGridModule,
     NbDatepickerModule,
+    NbDateFnsDateModule,
     MatDialogModule,
     NbTagModule,
     FormsModule,

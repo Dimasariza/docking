@@ -69,10 +69,11 @@ export class FunctionCollection {
     }
 
     updateWorkAreaData =  (data, parentIndex, newData) => {
-        parentIndex = parentIndex?.toString().split('')
+        parentIndex = parentIndex?.toString().split('.')
         return data.map((w, i) => {
         if (parentIndex.length > 1 && i == parentIndex[0]) {
-            parentIndex = parentIndex.slice(1)
+            parentIndex = parentIndex.slice(1).join(".")
+            console.log(parentIndex, "join parent id")
             return {...w, items: this.updateWorkAreaData(w.items, parentIndex, newData)}
         } else if(i == parentIndex[0]) {
             let item

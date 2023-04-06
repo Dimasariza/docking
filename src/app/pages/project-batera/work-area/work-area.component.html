@@ -41,11 +41,11 @@
                     <input type="number" nbInput fullWidth placeholder="Progress" [disabled]="modelData?.items?.length" fieldSize="small"  [ngModel]="modelData?.progress" #progress name="progress">
                 </div>
                 <span class="p-2 d-block">Start</span>
-                <input [nbDatepicker]="startdatepicker"  nbInput fullWidth fieldSize="small"  placeholder="Start Date" [ngModel]="modelData?.start" name="start" #startDate>
-                <nb-datepicker #startdatepicker  ></nb-datepicker>
+                <input autocomplete="off" [nbDatepicker]="startdatepicker"  nbInput fullWidth fieldSize="small"  placeholder="Start Date" [ngModel]="modelData?.start" name="start" #startDate>
+                <nb-datepicker #startdatepicker format='dd.MM.yyyy'></nb-datepicker>
                 <span class="p-2 d-block">End</span>
-                <input [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small"  placeholder="End Date" [ngModel]="modelData?.end" name="end" #endDate>
-                <nb-datepicker #enddatepicker ></nb-datepicker>
+                <input autocomplete="off" [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small"  placeholder="End Date" [ngModel]="modelData?.end" name="end" #endDate>
+                <nb-datepicker #enddatepicker format='dd.MM.yyyy'></nb-datepicker>
             </div>
             <div class="col-4">
                 <span class="p-2 d-block">Volume</span>

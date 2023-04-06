@@ -43,7 +43,6 @@ import { parseISO } from 'date-fns'
     }),
     CoreModule.forRoot(),
     ThemeModule.forRoot(),
-    NbDatepickerModule.forRoot(),
     NbDateFnsDateModule.forRoot({
       format : 'dd.MM.yyyy',
     })   
