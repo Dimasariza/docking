@@ -44,7 +44,7 @@ export class HomeBateraComponent implements OnInit {
     .pipe(take(1))
     .subscribe(({data} : any) => {
       if(!data.length) return;
-      this.shipData = data.map(item => {
+      this.shipData = data.map(item => {  
         return {
           apiUrl : environment.apiUrl,
           flipped : false,

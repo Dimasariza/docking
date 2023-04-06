@@ -64,6 +64,7 @@ export class TenderBateraComponent {
   workAreaContainer
   usedCurrency
   responsible : any
+  currentRole 
 
   isFalsy = (value) => !value
 
@@ -87,6 +88,8 @@ export class TenderBateraComponent {
     this.homeService.getUserLogin()
     .subscribe(({data} : any) => {
       const {role} = data
+      this.currentRole = role;
+      console.log(role)
       if(role == 'admin')
       this.profileService.getUserData(1, 10)
       .subscribe(({data} : any) => this.responsible = data)    
@@ -150,7 +153,7 @@ export class TenderBateraComponent {
     const {general_diskon_persen, additional_diskon, nama_galangan, sum_internal_adjusment} = tender
     this.tenderId = tender?.id_tender
     this.displayTender = tender
-    // if()
+    if(this.currentRole == "shipyard") return;
     this.displayTender.responsible = this.responsible.find(resp => resp.id_user == tender.id_user)
     const {offHire, offHireCost, ownerCost} = this.currentProject
     this.dataTable = {
