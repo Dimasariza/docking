@@ -1,0 +1,93 @@
+<!-- <div class="buttons my-1" >
+    <button *ngFor="let icon of useButtons; let indexOfelement=index;"
+    nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClick(icon.desc)">
+        <nb-icon [icon]="icon.icon" pack="eva">
+        </nb-icon>
+        {{icon.desc}}
+    </button>
+</div>
+<div style="overflow: auto; width: 100%;">
+    <div style="width: 2900px;">
+        <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+            <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+            <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+            
+            <ng-container [nbTreeGridColumnDef]="'Approved'" class="text-center">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef style="width: 200px;" class="text-center">Approved</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <button class="btn btn-sm mx-2 bg-transparent" [disabled]="row.data?.yardApproval" (click)="approvedByYard([row.data])" nbPopover="By Ship Yard" nbPopoverTrigger="hint" nbPopoverPlacement="left">
+                        <nb-icon [ngStyle]="{'color': row.data?.yardApproval ? 'green' : 'grey'}" [icon]=" row.data?.yardApproval ? 'checkmark-square-2-outline' : 'square-outline' "></nb-icon>
+                    </button>
+                    <button class="btn btn-sm mx-2 bg-transparent" [disabled]="row.data?.ownerApproval" (click)="approvedByOwner([row.data])" nbPopover="By Ship Owner" nbPopoverTrigger="hint" nbPopoverPlacement="right">
+                        <nb-icon [ngStyle]="{'color': row.data?.ownerApproval ? 'green' : 'grey'}" [icon]=" row.data?.ownerApproval ? 'checkmark-square-2-outline' : 'square-outline'"></nb-icon>
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'jobName'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Job</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                    </nb-tree-grid-row-toggle>
+                    <ng-template #fileIcon>
+                      <nb-icon icon="file-text-outline"></nb-icon>
+                    </ng-template>
+                      {{row.data.jobName|| '-'}}
+                </td>
+            </ng-container>
+
+            <ng-container [nbTreeGridColumnDef]="'%'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>%</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row"
+                [nbPopover]="row.data.progress" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                    <nb-progress-bar [value]="row.data.progress" [displayValue]="true" status="primary"></nb-progress-bar>
+                </td>
+            </ng-container>
+            
+            <ng-container [nbTreeGridColumnDef]="'suplier'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>Suplier</th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                    <nb-select *ngIf="parentIndex(row)" [placeholder]=" row.data?.suplier?.name || 'Suplier' " size="small" fullWidth class="w-100">
+                        <nb-option *ngFor="let value of suplierData; let id=index;" (click)="chooseSuplier(row.data?.id,value)" [value]="value">{{value?.nama_supplier}}</nb-option>
+                    </nb-select>
+                </td>
+            </ng-container>
+                        
+            <ng-container [nbTreeGridColumnDef]="'edit'">
+                <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row" class="">
+                    <div class="d-flex">
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="addSubVariantDial(row)"
+                        nbPopover="Add Sub Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">  
+                            <nb-icon icon="plus-outline" status="primary"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="text-center text-center mx-2" outline (click)="updateVariantDial(row)"
+                        nbPopover="Edit Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="btn-sm text-center mr-2" outline (click)="deleteVariant(row)"
+                        nbPopover="Delete Job" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="trash-outline" status="danger"></nb-icon>
+                        </button>
+                        <button nbButton size="small" class="btn-sm text-center" outline (click)="generatePDF(row)" *ngIf="parentIndex(row)"
+                        nbPopover="Export To PDF" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                            <nb-icon icon="file-outline" status="primary"></nb-icon>
+                        </button>
+                    </div>
+                </td>
+            </ng-container>
+
+            <ng-container *ngFor="let column of defaultColumns; let index = index"
+                            [nbTreeGridColumnDef]="column"
+                            [showOn]="getShowOn(index)">
+                <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" *nbTreeGridHeaderCellDef>
+                {{column}}
+                </th>
+                <td nbTreeGridCell *nbTreeGridCellDef="let row"
+                [nbPopover]="row.data.jobName" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                    {{row.data[column] || '-'}}</td>
+            </ng-container>
+        </table>    
+    </div>
+</div>
+ -->

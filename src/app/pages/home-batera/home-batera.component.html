@@ -1,0 +1,145 @@
+<!-- <nb-alert *ngIf="handleEvent?.show" 
+  [status]="handleEvent?.status" 
+  [nbSpinner]="handleEvent?.spinner" 
+  nbSpinnerStatus="basic"
+  closable (close)="onDone()"
+>
+  {{handleEvent.text}}
+</nb-alert> -->
+
+<div class="row">
+  <nb-flip-card 
+  *ngFor="let item of shipData; let id=index;" 
+  class="col-lg-4 col-md-6 col-sm-12" 
+  [showToggleButton]="false" 
+  [flipped]="item.flipped"
+  >
+    <nb-card-front> 
+      <nb-card size="small">
+        <div class="d-flex justify-content-between p-2"> 
+          <nb-icon 
+            class="flip-icon" 
+            icon="chevron-right-outline" 
+            pack="eva" 
+            (click)="toggleView(id)" 
+            style="cursor: pointer;"
+          ></nb-icon>
+          <nb-icon 
+            *ngIf="userAccess"
+            nbButton 
+            [icon]="item?.status === 1 ? 'heart' : 'heart-outline'"
+            (click)="addToAssets(item)"
+            nbPopover="Assets" 
+            nbPopoverTrigger="hover" 
+            nbPopoverPlacement="bottom" 
+            type="button" size="medium" 
+            [options]="{ animation: {type:'zoom'}}" 
+            style="font-size: 1.2rem" 
+            status="danger" 
+          ></nb-icon>
+        </div>
+        <div class="overflow-hidden bg-secondary text-center" 
+        style="max-height : 300px"
+        >
+          <img 
+          src="{{item.imageURL}}" 
+          crossorigin="anonymous" 
+          alt="{{item.nama_kapal}}"
+          (click)="updateShipDialog(id)"
+          >
+        </div>
+        <div class="d-flex align-items-center"> 
+          <span class="col-9 text-uppercase font-weight-bold h6">{{item.nama_kapal}}</span> 
+          <div class="col-3" *ngIf="userAccess">
+            <div class="d-flex justify-content-end" 
+            style="justify-self: end;" 
+            >
+              <nb-icon 
+                nbButton 
+                class="p-1" 
+                icon="edit-outline" 
+                (click)="updateShipDialog(id)"  
+                nbPopover="Update Ship" 
+                nbPopoverTrigger="hover" 
+                nbPopoverPlacement="bottom" 
+                type="button" 
+                size="medium" 
+                [options]="{ animation: {type: 'zoom'}}" 
+                style="font-size: 1.6rem" 
+                status="primary">
+              </nb-icon>
+              <nb-icon 
+                nbButton 
+                class="p-1" 
+                icon="trash-2-outline" 
+                (click)="deleteShipDialog(id)" 
+                nbPopover="Delete Ship" 
+                nbPopoverTrigger="hover" 
+                nbPopoverPlacement="bottom" 
+                type="button" 
+                size="medium" 
+                [options]="{ animation: {type:'zoom'}}" 
+                style="font-size: 1.6rem" 
+                status="primary" 
+              ></nb-icon>
+            </div>
+          </div>
+        </div>
+      </nb-card>
+    </nb-card-front>
+    <nb-card-back>
+      <nb-card size="small" class="bg-secondary">
+        <div class="d-flex justify-content-between p-2"> 
+          <nb-icon 
+            class="flip-icon" 
+            icon="chevron-right-outline" 
+            pack="eva" 
+            (click)="toggleView(id)" 
+            style="cursor: pointer;"
+          ></nb-icon>
+          <nb-icon 
+            *ngIf="userAccess"
+            nbButton 
+            [icon]="item?.status == 1 ? 'heart' : 'heart-outline'"
+            (click)="addToAssets(item)"
+            nbPopover="Assets" 
+            nbPopoverTrigger="hover" 
+            nbPopoverPlacement="bottom" 
+            type="button" 
+            size="medium" 
+            [options]="{ animation: {type:'zoom'}}" 
+            style="font-size: 1.2rem" 
+            status="danger" 
+          ></nb-icon>
+        </div>
+        <div class="p-5">
+          <h6 style="color: rgb(0, 208, 208);">{{item.nama_kapal}}</h6>
+          <div class="back-card--desc mt-5" *ngIf="item?.head">
+            <h2>{{item?.progress}} %</h2>
+            <span class="font-weight-bolder text-capitalize">Status : {{item?.phase || ''}}</span> <br>
+            <span class="font-weight-bolder">
+              <a class="text-decoration-none" [routerLink]="['/pages/report-batera', item.id_proyek]">{{item?.head || ''}}</a>
+            </span>
+          </div>
+        </div>
+      </nb-card>      
+    </nb-card-back>
+  </nb-flip-card>
+
+  <div class="col-xl-4 col-lg-4 col-md-6" *ngIf="userAccess">
+    <nb-card class="h-75" 
+    style="cursor: pointer;" 
+    (click)="addShipDialog()"
+    >
+      <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
+        <span *ngIf="!shipData" class="font-weight-bold text-center">Data Not Available <br> Please Add Ship </span>
+        <nb-icon icon="plus-square-outline" 
+          style="font-size: 5rem;" 
+          class="align-self-center" 
+          [options]="{ animation: { type: 'zoom' }}"
+        ></nb-icon>
+        <h5>Add Ship</h5> 
+      </div>
+    </nb-card>
+  </div>
+</div>

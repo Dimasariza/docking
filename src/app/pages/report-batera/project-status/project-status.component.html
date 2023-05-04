@@ -1,0 +1,90 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <div>
+            <strong>Project Status</strong>
+        </div>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+
+    <nb-card-body>
+        <span class="text-info">Progress Status</span>
+        <table mat-table [dataSource]="progressData" class="mat-elevation-z8 w-100">
+            <tr mat-header-row *matHeaderRowDef="statusColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: statusColumn;"></tr>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Priority </th>
+              <td mat-cell *matCellDef="let element; let i = index"> {{element?.name}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="c_1">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Not Started </th>
+                <td mat-cell *matCellDef="let element ;let i = index" class="text-center"> {{element?.notStart}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="c_2">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> In Progress </th>
+                <td mat-cell *matCellDef="let element" class="text-center">{{element.progress}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="c_3">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Done </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.done}}  </td>
+            </ng-container>
+
+            <ng-container matColumnDef="c_4">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Canceled </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.cancel}} </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="c_5">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> Delay </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.delay}} </td>
+            </ng-container>
+
+            
+            <ng-container matColumnDef="c_6">
+                <th mat-header-cell *matHeaderCellDef class="text-center"> All </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.all}} </td>
+            </ng-container>
+
+        </table>
+
+          <br>
+          <span class="text-info">Completion Work</span>
+          <table mat-table [dataSource]="completionData" class="mat-elevation-z8 w-100">
+            <tr mat-header-row *matHeaderRowDef="completionColumn"></tr>
+            <tr mat-row *matRowDef="let row; columns: completionColumn;"></tr>
+
+            <ng-container matColumnDef="name">
+              <th mat-header-cell *matHeaderCellDef> Expense </th>
+              <td mat-cell *matCellDef="let element"> {{element?.name || ''}} </td>
+            </ng-container>
+          
+            <ng-container matColumnDef="c_1">
+              <th mat-header-cell *matHeaderCellDef  class="text-center"> Percentage (%) </th>
+              <td mat-cell *matCellDef="let element" class="text-center"> {{element?.percentage || '0'}} </td>
+            </ng-container>
+                      
+            <ng-container matColumnDef="c_2">
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Current Job Completion </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.complete || '0'}} </td>
+            </ng-container>
+
+                      
+            <ng-container matColumnDef="c_3">
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Total Job </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{element.totalJob || '0'}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="c_4">
+                <th mat-header-cell *matHeaderCellDef  class="text-center"> Total Value Completion </th>
+                <td mat-cell *matCellDef="let element" class="text-center"> {{ element.value ? (element.value | currency:'Rp ' :'symbol':'3.0') : 0 }} </td>
+            </ng-container>
+
+          </table>
+    </nb-card-body>
+</nb-card>

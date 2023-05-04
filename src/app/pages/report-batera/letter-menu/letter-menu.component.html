@@ -1,0 +1,66 @@
+<nb-card>
+    <nb-card-body>
+        <div class="buttons m-2" >
+            <button *ngFor="let icon of buttons; let indexOfelement=index;"
+            nbButton outline size = "tiny"  status = "primary" class="mx-1" (click)="onClickBtn(icon.desc, addFromFile)">
+                <nb-icon [icon]="icon.icon" pack="eva">
+                </nb-icon>
+                {{icon.desc}}
+            <input  type="file" style="display: none;" #addFromFile>
+            </button>
+        </div>
+        <ngx-datatable 
+        [class]="'bootstrap'" 
+        [rows]="menuData" 
+        [count]="menuData.length"
+        [scrollbarH]="true"
+        [columnMode]="'force'"
+        class="row"
+        [rowHeight]="'auto'"
+        default>
+            <ngx-datatable-column [name]="'No'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{rowIndex+1}}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Date'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{row.tgl || '_'}}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Title'" [width]="50">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{row.perihal || '_'}}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Sender/Maker'">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.nama_pengirim || '_'}}
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Last View'">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.created_by.updated_at | date : "medium" || '_'}}
+                </ng-template>  
+            </ngx-datatable-column>
+
+            <ngx-datatable-column [name]="'Remarks'" >
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.keterangan || '_'}}
+                </ng-template>  
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'Send'">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    <button nbButton size="tiny" status="success" outline (click)="sendEmail(row)"
+                    nbPopover="Send Notification" nbPopoverTrigger="hint" nbPopoverPlacement="top">
+                        <nb-icon icon="paper-plane-outline"></nb-icon>
+                    </button>
+                </ng-template>  
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </nb-card-body>
+</nb-card>

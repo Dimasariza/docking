@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>Update Progeress</strong>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form  #progressForm="ngForm" (ngSubmit)="onSubmit(progressForm)">
+            <label for="progress">Progress</label>
+            <input style="display : block" 
+            type="text" 
+            id="progress" 
+            nbInput 
+            [ngModel]="modelData?.progress"
+            name="progress">
+            <button 
+            nbButton 
+            status="success" 
+            [disabled]="!progressForm.form.valid" 
+            class="my-2" 
+            type="submit" 
+            fullWidth>
+                Submit
+            </button>
+        </form>
+    </nb-card-body>
+</nb-card>

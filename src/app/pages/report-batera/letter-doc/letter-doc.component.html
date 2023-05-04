@@ -1,0 +1,28 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <strong>Add Document</strong>
+            <button nbButton status="danger" size="tiny" (click)="close()">
+                <nb-icon icon="close-outline"></nb-icon>
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <form #submitLetterForm="ngForm" (ngSubmit)="addLetter(submitLetterForm)">
+            <span class="d-block">Title</span>
+            <input fullWidth placeholder="Title" required class="d-block" type="text" nbInput name="perihal" ngModel #title>
+            <span class="d-block">Sender</span>
+            <input fullWidth placeholder="Sender name" required class="d-block" type="text" nbInput name="nama_pengirim" ngModel #sender>
+            <span class="d-block">Date</span>
+            <input [nbDatepicker]="datePicker" nbInput required fullWidth fieldSize="small" placeholder="Pick Date" ngModel name="tgl" #date>
+            <nb-datepicker #datePicker></nb-datepicker>
+            <span class="d-block">Remarks</span>
+            <textarea class="d-block" rows="4" required fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
+            <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="triggerSelectFile(addFromFile)">
+                Add File
+                <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen" (change)="onFileChange($event)">
+            </button>
+            <button fullWidth type="submit" nbButton status="success" size="small" [disabled]="!submitLetterForm.form.valid" class="my-2">Submit</button>
+        </form>
+    </nb-card-body>
+</nb-card>

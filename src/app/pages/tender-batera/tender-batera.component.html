@@ -1,0 +1,182 @@
+<nb-card>  
+  <nb-card-header class="d-flex justify-content-between w-100" >
+    <h5>Contract</h5>
+    <button nbButton outline size="small" status="primary" 
+    style="background-color: transparent;" 
+    (click)="handleClickButton('Add Yard')"
+    >
+      Add Yard
+    </button>
+  </nb-card-header>
+
+  <nb-card-body *ngIf="projectSummary">
+    <div class="w-100 d-flex">
+      <section class="m-3 w-100">
+        <h6>Project List</h6>
+        <nb-list style="max-height: 200px;">
+          <nb-list-item *ngIf="!projectData.length">
+            Project Not Available
+          </nb-list-item>
+          <nb-list-item *ngFor="let project of projectData; let i = index;" style="max-height: .7rem;">
+            <span class="w-100 text-truncate" 
+              (mouseover)="mouseHover('projectTitle', i, true)" (mouseout)="mouseHover('projectTitle',i, false)" 
+              [ngClass]="project?.hover ? 'text-primary' : ''" (click)="handleClickButton('Generate Table Data', project)"
+              style="cursor: pointer;">
+              {{ project.projectTitle }}
+            </span>
+            <button nbButton size="tiny" 
+            status="primary" outline class="m-1"
+            (click)="handleClickButton('Select Project', project)"
+            >
+              <nb-icon icon="log-in-outline"></nb-icon>
+            </button>
+          </nb-list-item>
+        </nb-list>
+      </section>
+
+      <section class="m-3 w-100">
+        <h6>Yard List</h6>
+        <nb-list style="max-height: 200px;">
+          <nb-list-item *ngIf="!tenderData.length">
+            Yard Not Available
+          </nb-list-item>
+          <nb-list-item *ngFor="let tender of tenderData; let i = index;" style="max-height: .7rem;">
+            <span class="w-100 text-truncate" 
+              (mouseover)="mouseHover('nama_galangan', i, true)" (mouseout)="mouseHover('nama_galangan',i, false)" 
+              [ngClass]="tender?.hover ? 'text-primary' : ''" (click)="handleClickButton('Show Yard Details', tender)"
+              style="cursor: pointer;">
+              {{ tender.nama_galangan }}
+            </span>
+            <button nbButton size="tiny" 
+            status="primary" outline class="m-1"
+            (click)="handleClickButton('Update Yard', tender)"
+            >
+              <nb-icon icon="edit-outline"></nb-icon>
+            </button>
+            <button nbButton size="tiny" 
+            status="danger" outline class="m-1"
+            (click)="handleClickButton('Delete Yard', tender)"
+            >
+              <nb-icon icon="trash-2-outline"></nb-icon>
+            </button>
+            <button nbButton size="tiny" 
+            status="primary" outline class="m-1"
+            (click)="handleClickButton('Select Yard', tender)"
+            >
+              <nb-icon icon="log-in-outline"></nb-icon>
+            </button>
+          </nb-list-item>
+        </nb-list>
+      </section>
+    </div>
+
+    <div class="">
+      <section class="m-3 w-100" *ngIf="addNewContract.project || addNewContract.yard">
+        <h6>Add Contract</h6>
+        <nb-list style="max-height: 200px;">
+          <nb-list-item style="max-height: .7rem;">
+            <span class="text-truncate col-5">
+              {{ addNewContract.project?.projectTitle || 'Please Select Project...' }}
+            </span>
+            <span class="text-truncate col-5" >
+              {{ addNewContract.yard?.nama_galangan || 'Please Select Yard...' }}
+            </span>
+            <div class="col">
+              <button nbButton size="tiny" 
+              *ngIf="addNewContract.project && addNewContract.yard"
+              status="primary" outline class="m-1"
+              (click)="handleClickButton('Select New Contract')"
+              >
+                <nb-icon icon="plus-outline"></nb-icon>
+              </button>
+              <button nbButton size="tiny" 
+              status="danger" outline class="m-1"
+              (click)="handleClickButton('Cancelled Select Yard')"
+              >
+                <nb-icon icon="close-outline"></nb-icon>
+              </button>
+              <button nbButton size="tiny" 
+                *ngIf="addNewContract.project && addNewContract.yard"
+                status="success" class="m-1"
+                (click)="handleClickButton('Add Contract Document', uploadContract)"
+              >
+                <nb-icon icon="file-add-outline"></nb-icon>
+              </button>
+            </div>
+            <input type="file" style="display: none;" #uploadContract (ngModel)="document" (change)="onFileChange($event)">
+          </nb-list-item>
+        </nb-list>
+      </section>
+
+      <section class="m-3 w-100">
+        <h6>Active Contract</h6>
+        <nb-list style="max-height: 200px;">
+          <nb-list-item *ngFor="let summary of projectSummary; let i = index;" style="max-height: .7rem;">
+            <span class="text-truncate col-5" 
+              (mouseover)="mouseHover('activeContract', i, true)" (mouseout)="mouseHover('activeContract',i, false)" 
+              [ngClass]="summary?.hover ? 'text-primary' : ''" (click)="handleClickButton('Generate Table Data', summary)"
+              style="cursor: pointer;">
+              {{ summary.projectTitle }}
+            </span>
+            <span class="text-truncate col-5" 
+              (mouseover)="mouseHover('activeContract', i, true)" (mouseout)="mouseHover('activeContract',i, false)" 
+              [ngClass]="summary?.hover ? 'text-primary' : ''"  (click)="handleClickButton('Show Yard Details', summary)"
+              style="cursor: pointer;">
+              {{ summary.nama_galangan }}
+            </span>
+
+            <div class="col">
+              <button nbButton size="tiny" 
+              status="danger" outline class="m-1"
+              (click)="handleClickButton('Unselect Yard', summary)"
+              >
+                <nb-icon icon="scissors-outline"></nb-icon>
+              </button>
+              <button nbButton size="tiny" 
+              status="success" class="m-1"
+              (click)="handleClickButton('Show Contract', summary)"
+              >
+                <nb-icon icon="file-text-outline"></nb-icon>
+              </button>
+            </div>
+          </nb-list-item>
+        </nb-list>
+      </section>
+    </div>
+  </nb-card-body>
+</nb-card>
+
+
+<nb-accordion>
+  <nb-accordion-item>
+    <nb-accordion-item-header >
+      <span>Load Details | {{ activeProject?.projectTitle || 'Project' }}</span>
+    </nb-accordion-item-header>
+    <nb-accordion-item-body>
+      <div class="d-flex justify-content-between w-100">
+        <div>
+          <label class="search-label" style="margin: 1rem 1rem;" for="search" >Search:</label>
+            <input 
+            nbInput 
+            id="search"
+            placeholder="Search Job"
+            fieldSize="small"
+            class="search-input"
+            style="margin: 1rem 1rem;"
+          >
+        </div>
+        <button class="align-self-center" [disabled]="!activeProject?.id_tender && !activeProject?.approved" status="primary" outline nbButton size="small">Confirm Contract</button>
+      </div>
+      <ngx-work-areas 
+        *ngIf="dataTable"
+        [dataTable]="dataTable"
+        [tableHead]="tableHead" 
+        [allColumns]="allColumns"
+        [tableDetails]="tableDetails"
+        [columnType]="columnType"
+        [changing]="changingValue"
+      >
+      </ngx-work-areas>
+    </nb-accordion-item-body>
+  </nb-accordion-item>
+</nb-accordion>

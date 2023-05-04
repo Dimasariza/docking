@@ -1,0 +1,26 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>{{dialogData.title}}</strong>
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body [nbSpinner]="uploadProgress != 'Drop Your Image here' && uploadProgress != 'Upload Success'" nbSpinnerStatus="success">
+        <form #addShipForm="ngForm" (ngSubmit)="onSubmit(addShipForm)">
+            <label for="name">Name</label>
+            <input nbInput fullWidth type="text" placeholder="Ship Name" class="form-control" #name name="nama_kapal" [ngModel]="dialogData.data?.nama_kapal" required>
+            <label for="file">Image</label>
+            <div class="text-center h-75 rounded-sm border border-dark position-relative" style="min-height: 20rem; min-width: 30rem;">
+                <div class="m-auto p-2" *ngIf="viewImageLink"> 
+                    <img [src]="viewImageLink" class="img-fluid" alt="ship image" crossorigin="anonymous">
+                </div>
+                <input id="file" type="file" class="position-absolute d-flex w-100 h-100" style="opacity: 0; min-height: 20rem; top: 0; z-index: 10;" (change)="onFileChange($event)" fullWidth #foto name="foto" ngModel>
+                <span class="position-absolute h-100 w-100 d-flex justify-content-center align-items-end p-3 font-weight-bold" style="font-size: 0.8rem; top: 0;">{{uploadProgress}}</span>
+            </div>
+            <div class="d-flex w-100 justify-content-center">
+                <button class="text-center my-1" nbButton status="success" type="submit"  >Submit</button>
+            </div>
+        </form>
+    </nb-card-body>
+</nb-card>
+<!-- [disabled]="!addShipForm.form.valid" -->

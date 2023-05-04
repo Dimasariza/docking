@@ -1,0 +1,15 @@
+.disabled {
+  pointer-events: none;
+}
+
+.active {
+    animation-name: activeAction;
+    animation-duration: 4s;
+  }
+
+  @keyframes activeAction {
+    0% {right: -30rem;}
+    40% {right: 1rem;}
+    70% {right: 1rem;}
+    100% {right: -30rem;}
+}

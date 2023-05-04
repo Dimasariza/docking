@@ -1,0 +1,82 @@
+<nb-card>
+    <nb-card-header 
+    class="d-flex justify-content-between">
+        <strong>{{dialogData?.title}}</strong>
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>   
+    </nb-card-header>
+    <nb-card-body>
+    <form  (keyup.enter)="$event.target.value" #addWorkAreas="ngForm" (ngSubmit)="closeDialog(addWorkAreas)">
+        <div class="row">
+            <div class="col-4">
+                <div>
+                    <span class="p-2 d-block"><strong>Job Number</strong></span>
+                    <input type="text" nbInput fullWidth placeholder="Job Number" fieldSize="small" required #jobNumber="ngModel" name="jobNumber" [ngModel]="dialogData?.data?.jobNumber" >
+                    <div *ngIf="jobNumber.invalid && (jobNumber.dirty || jobNumber.touched)" class="danger text-danger">
+                        <div *ngIf="jobNumber.errors?.['required']">
+                        Job Number is required.
+                        </div>
+                    </div>
+                    <span class="p-2 d-block"><strong>Job</strong></span>
+                    <input type="text" nbInput fullWidth placeholder="Job" fieldSize="small" required [ngModel]="dialogData?.data?.jobName" #pekerjaan="ngModel" name="jobName" >
+                    <div *ngIf="pekerjaan.invalid && (pekerjaan.dirty || pekerjaan.touched)" class="danger text-danger">
+                        <div *ngIf="pekerjaan.errors?.['required']">
+                        Job Name is required.
+                        </div>
+                    </div>
+                </div>
+                <div >
+                    <span class="p-2 d-block"><strong>Status</strong></span>    
+                    <nb-select [placeholder]="dialogData?.data?.status?.name || 'Status'"  class="w-100" size="small" #status name="status" 
+                    [ngModel]="dialogData?.data?.status" [disabled]="disabledChild" >
+                        <nb-option *ngFor="let value of tableFunction.jobStatus; let id=index;" [value]="value">{{value}}</nb-option>
+                    </nb-select>
+
+                    <span class="p-2 d-block"><strong>Progress</strong></span>
+                    <input type="number" nbInput fullWidth placeholder="Progress" [disabled]="dialogData?.data?.items?.length" fieldSize="small"  [ngModel]="dialogData?.data?.progress" #progress name="progress">
+                </div>
+                <span class="p-2 d-block">Start</span>
+                <input autocomplete="off" [nbDatepicker]="startdatepicker"  nbInput fullWidth fieldSize="small"  placeholder="Start Date" [ngModel]="dialogData?.data?.start" name="start" #startDate>
+                <nb-datepicker #startdatepicker format='dd.MM.yyyy'></nb-datepicker>
+                <span class="p-2 d-block">End</span>
+                <input autocomplete="off" [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small"  placeholder="End Date" [ngModel]="dialogData?.data?.end" name="end" #endDate>
+                <nb-datepicker #enddatepicker format='dd.MM.yyyy'></nb-datepicker>
+            </div>
+            <div class="col-4">
+                <span class="p-2 d-block">Volume</span>
+                <input type="number" nbInput fullWidth placeholder="Volume" fieldSize="small"  [ngModel]="dialogData?.data?.volume" name="volume" #volume
+                (ngModelChange)="volumeAmount($event);">
+                <span class="p-2 d-block">Unit</span>
+                <nb-select [placeholder]=" 'Unit'" class="w-100" size="small" name="unit"  #unit [ngModel]="dialogData?.data?.unit" >
+                    <nb-option *ngFor="let value of tableFunction?.jobUnit; let id=index;" [value]="id">{{value}}</nb-option>
+                </nb-select>
+                <span class="p-2 d-block">Unit {{unitPriceLabel}}</span>
+                <!-- <input type="text" nbInput fullWidth placeholder="Unit Price" fieldSize="small"  [ngModel]="unitPrice" [ngModelOptions]="{standalone: true}"  #unitPrices (ngModelChange)="unitPriceAmount($event, 'volume');"> -->
+                <span class="p-2 d-block">Total {{unitPriceLabel}}</span>
+                <input type="text" nbInput fullWidth placeholder="Total Price" readonly fieldSize="small" #allTotalPrice [ngModel]="totalPrice" [ngModelOptions]="{standalone: true}">
+            </div>
+            <div class="col-4">
+                <span class="p-2 d-block">Departement</span>
+                <input type="text" nbInput fullWidth placeholder="Departement" fieldSize="small"  [ngModel]="dialogData?.data?.departement" name="departement" #departement [disabled]="false">
+                <span class="p-2 d-block">Responsible</span>
+                <nb-select [placeholder]="dialogData?.data?.responsible?.name || 'Responsible'" class="w-100 text-capitalize"  size="small" [ngModel]="dialogData?.data?.responsible" name="responsible" #resp>
+                    <nb-option *ngFor="let value of responsible; let id=index;" [value]="responsible" [disabled]="disabledChild">{{value.name}}</nb-option>
+                </nb-select>
+                <span class="p-2 d-block">Category</span>
+                <nb-select [placeholder]="dialogData?.data?.Category || 'Category'" class="w-100 text-capitalize"  size="small" name="category" #category [ngModel]="dialogData?.data?.category" >
+                    <nb-option *ngFor="let value of tableFunction.category; let id=index;" [value]="id" [disabled]="disabledChild">{{value}}</nb-option>
+                </nb-select>
+                <span class="p-2 d-block">Rank</span>
+                <nb-select [placeholder]=" 'Rank'" class="w-100 text-capitalize" size="small" name="rank"  [ngModel]="dialogData?.data?.rank" #rank >
+                    <nb-option *ngFor="let value of tableFunction.rank; let id=index;" [value]="value" [disabled]="disabledChild">{{value}}</nb-option>
+                </nb-select>
+            </div>
+        </div> 
+        <span class="d-block my-1">Remarks</span>
+        <textarea rows="3" nbInput fullWidth name="remarks" #remarks [ngModel]="dialogData.data?.remarks"></textarea>
+        <button type="submit" nbButton status="success" class="m-2" [disabled]="!addWorkAreas.form.valid" fullWidth>Submit</button>
+    </form>
+    </nb-card-body>
+</nb-card>
+
