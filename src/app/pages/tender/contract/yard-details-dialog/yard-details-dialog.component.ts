@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { NbDialogRef } from "@nebular/theme";
-import { CommonFunction } from "../../../component/common-function/common-function";
+import { CommonFunction } from "../../../../component/common-function/common-function";
 
 @Component({
     selector: 'ngx-yard-details',

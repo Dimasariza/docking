@@ -1,0 +1,16 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between w-100" >
+      <h5>Tasks | Mine</h5>
+    </nb-card-header>
+    <ngx-work-areas 
+      *ngIf="dataTable"
+      [dataTable]="dataTable"
+      [tableDetails]="tableDetails"
+      [allColumns]="allColumns"
+      [columnType]="columnType"
+      [tableHead]="tableHead" 
+      [changing]="changingValue"
+      (sortTableByFilter)="sortTableByFilter($event)"
+    >
+    </ngx-work-areas>
+</nb-card>

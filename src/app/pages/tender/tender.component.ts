@@ -8,10 +8,10 @@ import { TenderService } from './tender.service'
 import { Subject } from 'rxjs';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ReportService } from '../report/report.service';
-import { YardDetailsDialog } from './yard-details-dialog/yard-details-dialog.component';
-import { YardDialogComponent } from './yard-dialog/yard-dialog.component';
+import { YardDetailsDialog } from './contract/yard-details-dialog/yard-details-dialog.component';
 import { ToastrComponent } from '../../component/toastr-component/toastr.component';
 import { HttpEventType } from "@angular/common/http";
+import { YardDialogComponent } from './contract/yard-dialog/yard-dialog.component';
 
 interface FSEntry{}
 

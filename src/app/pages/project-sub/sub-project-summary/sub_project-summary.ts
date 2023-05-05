@@ -21,7 +21,7 @@ export class SubProjectSummary implements OnInit {
             contract : 0,
             actual : 0
         }));
-        this.generateTableDatas(this.projectData)
+        this.generateTableDatas()
     }
 
     Object = Object;
@@ -31,12 +31,12 @@ export class SubProjectSummary implements OnInit {
     currencyTable;
     summaryTable : any;
 
-    generateTableDatas(data) {
+    generateTableDatas() {
         const {kapal : {nama_kapal}, phase, mata_uang, 
         off_hire_start, off_hire_end, off_hire_period, off_hire_deviasi, 
         off_hire_bunker_per_day, repair_start, repair_end, repair_period,
         repair_in_dock_start, repair_in_dock_end, repair_in_dock_period,
-        repair_additional_day} = data;
+        repair_additional_day} = this.projectData;
 
         this.summaryTable = 
         {  

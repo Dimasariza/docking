@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { NbDialogRef } from "@nebular/theme";
-import { CommonFunction } from "../../../component/common-function/common-function";
-import { ProfileService } from "../../profile/profile.service";
-import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
+import { ToastrComponent } from "../../../../component/toastr-component/toastr.component";
+import { ProfileService } from "../../../profile/profile.service";
+import { CommonFunction } from "../../../../component/common-function/common-function";
 
 @Component({
     selector: 'ngx-yard-dialog',

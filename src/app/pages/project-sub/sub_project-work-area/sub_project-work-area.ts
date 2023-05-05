@@ -11,8 +11,7 @@ import { CommonFunction } from "../../../component/common-function/common-functi
 export class SubProjectWorkArea implements OnInit{
     constructor(
         public commonFunction : CommonFunction
-    ) {
-    }
+    ) { }
 
     ngOnInit(): void {
         const { work_area } = this.projectData;
