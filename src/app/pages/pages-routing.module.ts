@@ -8,34 +8,34 @@ const routes: Routes = [{
   component: PagesComponent,
   children: [
     {
-      path: 'home-batera',
-      loadChildren: () => import('./home-batera/home-batera.module')
-        .then(m => m.HomeBateraModule),
+      path: 'home',
+      loadChildren: () => import('./home/home.module')
+        .then(m => m.HomeModule),
     },
     {
-      path: 'project-batera',
-      loadChildren: () => import('./project-batera/project-batera.modules')
-      .then(m => m.ProjectBateraModule),
+      path: 'project',
+      loadChildren: () => import('./project/project.modules')
+      .then(m => m.ProjectModule),
     },
     {
-      path: 'tender-batera',
-      loadChildren: () => import('./tender-batera/tender-batera.module')
-      .then(m => m.TenderBateraModule),
+      path: 'tender',
+      loadChildren: () => import('./tender/tender.module')
+      .then(m => m.TenderModule),
     },
     {
-      path: 'tracking-batera',
-      loadChildren: () => import('./tracking-batera/tracking-batera.module')
-      .then(m => m.TrackingBateraModule),
+      path: 'tracking',
+      loadChildren: () => import('./tracking/tracking.module')
+      .then(m => m.TrackingModule),
     },
     {
-      path: 'report-batera/:id',
-      loadChildren: () => import('./report-batera/report-batera.module')
-      .then(m => m.ReportBateraModule),
+      path: 'report/:id',
+      loadChildren: () => import('./report/report.module')
+      .then(m => m.ReportModule),
     },
     {
-      path: 'profile-batera',
-      loadChildren: () => import('./profile-batera/profil-batera.modules')
-      .then(m => m.ProfilBateraModule),
+      path: 'profile',
+      loadChildren: () => import('./profile/profile.modules')
+      .then(m => m.ProfileModule),
     },
     {
       path: 'function',
@@ -49,7 +49,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'home-batera',
+      redirectTo: 'home',
       pathMatch: 'full',
     },
     {

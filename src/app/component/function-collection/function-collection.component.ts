@@ -1,18 +1,18 @@
 import { CurrencyPipe, DatePipe } from "@angular/common";
 import { Component, Injectable } from "@angular/core";
-import { ProjectBateraService } from "../../pages/project-batera/project-batera.service";
+import { ProjectService } from "../../pages/project/project.service";
 
 @Injectable({
     providedIn: 'root'
 })
 @Component({
-  selector: 'ngx-function-batera',
+  selector: 'ngx-function-',
   template : `<div> Function </div>`
 })
 export class FunctionCollection {
     constructor ( public datePipe : DatePipe,
                   public currency : CurrencyPipe,
-                  public projectService : ProjectBateraService, 
+                  public projectService : ProjectService, 
       ){}
     category = ["Supplies", "Services", "Class", "Other", "Additional Job", "Owner Canceled Job", "Variant Job", "Yard Cost", "Yard Cancelled Job"]
     rank = ["Critical", "High", "Medium", "Low"]

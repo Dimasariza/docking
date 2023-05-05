@@ -1,0 +1,26 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between w-100">
+        <h6>Work Area</h6>
+        <div class="d-flex justify-content-between">
+            <button nbButton outline class="mx-2"
+            size="small" status="primary" 
+            *ngFor="let button of workAreaNavButton"
+            (click)="onHandleClick(button)"
+            >
+                {{ button }}
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <ngx-work-areas 
+            *ngIf="dataTable"
+            [changing]="changingValue"
+            [dataTable]="dataTable"
+            [tableDetails]="tableDetails"
+            [allColumns]="allColumns"
+            [columnType]="columnType"
+            [tableHead]="tableHead" 
+        >
+        </ngx-work-areas>
+    </nb-card-body>
+</nb-card>

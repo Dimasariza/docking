@@ -1,6 +1,5 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
-import { FunctionCollection } from '../../../function-collection-batera/function-collection.component';
 
 
 
@@ -14,8 +13,8 @@ export class TableDataComponent implements OnChanges, OnInit {
   @Input() tableData : any
   statusColumn: string[] = ['name', 'Budget', 'Contract', 'Actual'  ];
 
-  constructor(public FNCOL : FunctionCollection,
-              public currency : CurrencyPipe
+  constructor(
+    public currency : CurrencyPipe
   ) { }
   progressData : any 
 
@@ -56,7 +55,7 @@ export class TableDataComponent implements OnChanges, OnInit {
         this.progressData[1].actual += this.progressData[i].actual;
       }
 
-      const usedCurrency = this.FNCOL.convertCurrency(this.tableData.mata_uang);
+      // const usedCurrency = this.FNCOL.convertCurrency(this.tableData.mata_uang);
       for(let i = start ; i <= 11 ; i++) {
         this.progressData[dataLength].budget += this.progressData[i].budget;
         this.progressData[dataLength].contract += this.progressData[i].contract;
@@ -66,7 +65,7 @@ export class TableDataComponent implements OnChanges, OnInit {
       const convertCurrency = (price) => {
         for(let i = 1; i <= dataLength; i++) {
           if(this.progressData[i][price] == 0) continue;
-          this.progressData[i][price] = this.currency.transform(this.progressData[i][price], usedCurrency);
+          // this.progressData[i][price] = this.currency.transform(this.progressData[i][price], usedCurrency);
         }
       }
       convertCurrency('budget')

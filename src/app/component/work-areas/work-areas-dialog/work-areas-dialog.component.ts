@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { NbDialogRef } from "@nebular/theme";
 import { Subject } from "rxjs";
-import { TableFunctions } from "../../global-component/global-data";
+import { CommonFunction } from "../../common-function/common-function";
 
 @Component({
     selector: 'ngx-work-areas-dialog',
@@ -10,7 +10,7 @@ import { TableFunctions } from "../../global-component/global-data";
 export class WorkAreasDialogComponent implements OnInit {
     constructor(
         public dialog: NbDialogRef<any>,
-        public tableFunction : TableFunctions
+        public commonFunction : CommonFunction
     ) {
     }
 

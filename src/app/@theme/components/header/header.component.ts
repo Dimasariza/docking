@@ -3,7 +3,7 @@ import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeServ
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { HomeBateraService } from '../../../pages/home-batera/home-batera.service';
+import { HomeService } from '../../../pages/home/home.service';
 
 @Component({
   selector: 'ngx-header',
@@ -28,14 +28,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile', link: '/pages/profile-batera' }, { title: 'Log out', link: '/auth/logout' } ];
+  userMenu = [ { title: 'Profile', link: '/pages/profile' }, { title: 'Log out', link: '/auth/logout' } ];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              private homeService : HomeBateraService,) {
+              private homeService : HomeService,) {
   }
 
   ngOnInit() {

@@ -7,7 +7,7 @@
         </button>   
     </nb-card-header>
     <nb-card-body>
-    <form  (keyup.enter)="$event.target.value" #addWorkAreas="ngForm" (ngSubmit)="closeDialog(addWorkAreas)">
+    <form  (keyup.enter)="$event.target.value" #addWorkAreas="ngForm" (ngSubmit)="closeDialog(addWorkAreas.value)">
         <div class="row">
             <div class="col-4">
                 <div>
@@ -30,7 +30,7 @@
                     <span class="p-2 d-block"><strong>Status</strong></span>    
                     <nb-select [placeholder]="dialogData?.data?.status?.name || 'Status'"  class="w-100" size="small" #status name="status" 
                     [ngModel]="dialogData?.data?.status" [disabled]="disabledChild" >
-                        <nb-option *ngFor="let value of tableFunction.jobStatus; let id=index;" [value]="value">{{value}}</nb-option>
+                        <nb-option *ngFor="let value of commonFunction.jobStatus; let id=index;" [value]="value">{{value}}</nb-option>
                     </nb-select>
 
                     <span class="p-2 d-block"><strong>Progress</strong></span>
@@ -49,7 +49,7 @@
                 (ngModelChange)="volumeAmount($event);">
                 <span class="p-2 d-block">Unit</span>
                 <nb-select [placeholder]=" 'Unit'" class="w-100" size="small" name="unit"  #unit [ngModel]="dialogData?.data?.unit" >
-                    <nb-option *ngFor="let value of tableFunction?.jobUnit; let id=index;" [value]="id">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of commonFunction?.jobUnit; let id=index;" [value]="id">{{value}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Unit {{unitPriceLabel}}</span>
                 <!-- <input type="text" nbInput fullWidth placeholder="Unit Price" fieldSize="small"  [ngModel]="unitPrice" [ngModelOptions]="{standalone: true}"  #unitPrices (ngModelChange)="unitPriceAmount($event, 'volume');"> -->
@@ -65,11 +65,11 @@
                 </nb-select>
                 <span class="p-2 d-block">Category</span>
                 <nb-select [placeholder]="dialogData?.data?.Category || 'Category'" class="w-100 text-capitalize"  size="small" name="category" #category [ngModel]="dialogData?.data?.category" >
-                    <nb-option *ngFor="let value of tableFunction.category; let id=index;" [value]="id" [disabled]="disabledChild">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of commonFunction.category; let id=index;" [value]="id" [disabled]="disabledChild">{{value}}</nb-option>
                 </nb-select>
                 <span class="p-2 d-block">Rank</span>
                 <nb-select [placeholder]=" 'Rank'" class="w-100 text-capitalize" size="small" name="rank"  [ngModel]="dialogData?.data?.rank" #rank >
-                    <nb-option *ngFor="let value of tableFunction.rank; let id=index;" [value]="value" [disabled]="disabledChild">{{value}}</nb-option>
+                    <nb-option *ngFor="let value of commonFunction.rank; let id=index;" [value]="value" [disabled]="disabledChild">{{value}}</nb-option>
                 </nb-select>
             </div>
         </div> 

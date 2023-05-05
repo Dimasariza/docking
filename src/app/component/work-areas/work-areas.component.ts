@@ -26,9 +26,9 @@ export class WorkAreasComponent implements OnInit {
   @Input() tableHead : any;
   @Input() allColumns : any;
   @Input() columnType : any;
-  @Input() dataTable;
+  @Input() dataTable : any = [];
   @Input() changing: Subject<boolean>;
-  
+
   dataSource;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;

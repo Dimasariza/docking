@@ -4,25 +4,25 @@ export const MENU_ITEMS: NbMenuItem[] = [
   {
     title: 'Home',
     icon: 'home-outline',
-    link: '/pages/home-batera',
+    link: '/pages/home',
     home: true,
   },
   {
     title: 'Project',
     icon: 'briefcase-outline',
-    link: '/pages/project-batera',
+    link: '/pages/project',
     home: true,
   },
   {
     title: 'Tender',
     icon: 'cube-outline',
-    link: '/pages/tender-batera',
+    link: '/pages/tender',
     home: true,
   },
   {
     title: 'Tracking',
     icon: 'search-outline',
-    link: '/pages/tracking-batera',
+    link: '/pages/tracking',
     home: true,
   },
 ];

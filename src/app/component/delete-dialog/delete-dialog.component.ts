@@ -1,9 +1,9 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
 import { FunctionCollection } from '../function-collection/function-collection.component';
-import { ProjectBateraService } from '../../pages/project-batera/project-batera.service';
-import { ReportBateraService } from '../../pages/report-batera/report-batera.service';
-import { TenderBateraService } from '../../pages/tender-batera/tender-batera.service';
-import { HomeBateraService } from '../../pages/home-batera/home-batera.service';
+import { ProjectService } from '../../pages/project/project.service';
+import { ReportService } from '../../pages/report/report.service';
+import { TenderService } from '../../pages/tender/tender.service';
+import { HomeService } from '../../pages/home/home.service';
 import { NbDialogRef } from '@nebular/theme';
 import { Subject } from 'rxjs';
 
@@ -13,12 +13,11 @@ import { Subject } from 'rxjs';
 })
 export class DeleteDialogComponent {
   constructor(
-    private homeService : HomeBateraService,
-    private projectService : ProjectBateraService,
-    private tenderService : TenderBateraService,
-    private reportService : ReportBateraService,
+    private homeService : HomeService,
+    private projectService : ProjectService,
+    private tenderService : TenderService,
+    private reportService : ReportService,
     private dialog: NbDialogRef<any>,
-    // public FNCOL : FunctionCollection,
   ) { }
 
   @Input() dialogData: any;
