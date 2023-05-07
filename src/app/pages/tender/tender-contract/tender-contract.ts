@@ -31,6 +31,7 @@ export class TenderContract implements OnInit {
     @ViewChild('uploadContract', { static: false }) uploadContract : ElementRef;
 
     addNewContract :any = {};
+    activeYard : any = {};
     
     ngOnInit(): void {
       this.addNewContract = {};
@@ -78,6 +79,8 @@ export class TenderContract implements OnInit {
 
       if(title == 'Add Contract Document') 
       this.uploadContract.nativeElement.click()
+
+      this.activeYard = data?.yard;
     }
 
     addYardDialog(title) {
@@ -131,7 +134,7 @@ export class TenderContract implements OnInit {
     }
 
     selectNewContract(title) {
-      const {project : {id_proyek}, yard : {nama_galangan, id_tender}} = this.addNewContract;
+      const {project : {id_proyek, work_area}, yard : {nama_galangan, id_tender}} = this.addNewContract;
       this.commonFucntion.openDialog({
         dialogData : {
           title : 'Add New Contract',
@@ -142,7 +145,19 @@ export class TenderContract implements OnInit {
       })
       .onClose
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newData => this.onUploadData(title, newData));
+      .subscribe(newData => newData != null 
+        ? this.updateMatchingWorkArea({work_area, id_tender, id_proyek}) 
+        : null
+      );
+    }
+
+    updateMatchingWorkArea({work_area, id_tender, id_proyek}) {
+      this.tenderService.updateContractWorkArea({work_area}, id_tender)
+      .subscribe(
+        () => this.toastr.onSuccess('Your work area has been updated.'),
+        () => onerror(''),
+        () => this.onUploadData('Select New Contract', {id_tender, id_proyek})
+      )
     }
 
     unselectYard(title, data) {
@@ -156,7 +171,7 @@ export class TenderContract implements OnInit {
       })
       .onClose
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newData => this.onUploadData(title, newData));
+      .subscribe(newData => newData != null ? this.onUploadData(title, data) : null );
     }
 
     onUploadData(title, data) {
@@ -166,13 +181,14 @@ export class TenderContract implements OnInit {
       let errorMsg = 'Please try again.';
 
       if(title == 'Add Yard') {
-        data.id_attachment = ""
+        data.id_attachment = "";
         subscribe = this.tenderService.addNewYard(data);
         successMsg = 'Your yard has been added.';
       }
 
       if(title == 'Update Yard') {
-        data.id_attachment = ""
+        const {id_attachment} = data;
+        data.id_attachment = id_attachment ? id_attachment : "";
         subscribe = this.tenderService.updateYard(data, data.id_tender);
         successMsg = 'Your yard has been updated';
       }
@@ -183,12 +199,17 @@ export class TenderContract implements OnInit {
       }
 
       if(title == 'Select New Contract') {
-        subscribe = this.tenderService.selectTender(data.id_proyek, data.id_tender);
+        const { id_tender, id_proyek } = data;
+        this.addNewContract = {}
+        subscribe = this.tenderService.selectTender(id_proyek, id_tender);
         successMsg = 'Your contract has been added.';
       }
 
       if(title == 'Unselect Yard') {
-        subscribe = this.tenderService.unselectTender(data);
+        const {id_tender, yard} = data;
+        yard.id_attachment = "";
+        subscribe = this.tenderService.unselectTender(id_tender);
+        this.onUploadData('Update Yard', yard)
         successMsg = 'Your contract has been unselect';
       }
       
@@ -198,6 +219,7 @@ export class TenderContract implements OnInit {
         () => this.toastr.onUpload(),
         () => this.toastr.onError(errorMsg),
         () => {
+          if(this.addNewContract.yard && this.addNewContract.project) return;
           this.toastr.onSuccess(successMsg);
           this.refreshPage.emit();
           this.ngOnInit();
@@ -206,8 +228,7 @@ export class TenderContract implements OnInit {
     }
 
     showContract(data) {
-      console.log(this.projectSummary)
-      const {yard : {id_attachment}} = data;
+      const {yard : {id_attachment}} = data || {};
       if(!id_attachment) {
         this.uploadContract.nativeElement.click()
         return this.toastr.onInfo('Your document not found! Please Add your document.')
@@ -220,7 +241,7 @@ export class TenderContract implements OnInit {
       })
     }
 
-    onFileChange(res){
+    onFileChange(res) {
       const formData = new FormData();
       const file = res.target?.files[0];
       formData.append('dokumen', file);
@@ -234,15 +255,15 @@ export class TenderContract implements OnInit {
           this.toastr.onSuccess('Your file has been uploaded.')
           const result : any = res;
           const {id_attachment} = result.body.data;
-          const data = {...this.addNewContract.yard, id_attachment}
-          // this.onUploadData(data, 'Update Yard')
+          const data = {...this.activeYard, id_attachment}
+          this.onUploadData('Update Yard', data)
         }
       })
     }
+
     private destroy$: Subject<void> = new Subject<void>();
     ngOnDestroy(): void {
       this.destroy$.next();
       this.destroy$.complete();
     }
-
 }

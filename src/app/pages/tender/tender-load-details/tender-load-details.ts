@@ -28,18 +28,18 @@ export class TenderLoadDetails {
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
 
     generateTableDatas(data) {
-        let {projectTitle = '', id_tender = '', work_area = [], approved = false, proyek, 
-        proyek : {work_area : projectWorkArea = []} = ''} = data;
-        if(!approved && proyek) work_area = projectWorkArea;
+        console.log(data)
+        let {projectTitle = '', id_tender = '', work_area = [], approved = false,
+        yard : {work_area : tenderWorkArea = []} = '', yard} = data;
+        if(yard) work_area = tenderWorkArea;
         if(this.commonFunction.arrayNotEmpty(work_area)) this.workAreaData = work_area;
-        if(!this.commonFunction.arrayNotEmpty(work_area)) this.workAreaData = [];
+        else this.workAreaData = [];
+
         this.viewWorkArea.setWorkArea(this.workAreaData);
 
         this.activeProject = {...data, projectTitle};
         this.tableDetails = this.replace
         .replace(this.tableDetails, 'Confirm Contract', (!id_tender && !approved), 'disabled');
-
-        console.log(this.activeProject)
     }
 
     workAreaData : any = [];

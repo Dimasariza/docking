@@ -6,7 +6,6 @@ import { Subject} from 'rxjs';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ReportService } from '../report/report.service';
 import { ShipDialogComponent } from './ship-dialog/ship-dialog.component';
-import { NbDialogService } from '@nebular/theme';
 import { DeleteDialogComponent } from '../../component/delete-dialog/delete-dialog.component';
 import { ToastrComponent } from '../../component/toastr-component/toastr.component';
 
@@ -19,7 +18,6 @@ export class HomeComponent implements OnInit, OnDestroy{
     private homeService : HomeService,
     private commonFunction : CommonFunction,
     private reportService : ReportService,
-    private dialogService : NbDialogService,
     private toastr : ToastrComponent
   ){}
     
@@ -103,7 +101,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     data.status == 0
     ? data.status = 1
     : data.status = 0
-    this.onUploadData(data, 'Update Ship');
+    this.onUploadData('Add To Assets', data);
   }
 
   updateShipDialog(id) {
@@ -147,6 +145,11 @@ export class HomeComponent implements OnInit, OnDestroy{
     if(title == 'Update Ship') {
       subscribe = this.homeService.updateShip(data);
       successMsg = 'Your Ship has been updated.'
+    }
+
+    if(title == 'Add To Assets') {
+      subscribe = this.homeService.updateShip(data);
+      successMsg = 'Your Ship has been added to assets.'
     }
 
     if(title == 'Delete Ship') {
