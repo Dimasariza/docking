@@ -2,7 +2,7 @@
     <nb-card-header class="d-flex justify-content-between w-100" >
         <h5>{{ projectData?.projectTitle }}</h5>
         <button nbButton outline size="small" status="primary" 
-        (click)="onHandleClick('Monitoring')" [disabled]="!projectData?.report"
+        (click)="handleClickButton('Monitoring')" [disabled]="!projectData?.report"
         >
             Monitoring
         </button>
@@ -13,7 +13,7 @@
             <div class="d-flex justify-content-between">
                 <h6>Summary</h6>  
                 <button nbButton size="small" status="primary"
-                    (click)="onHandleClick('Update Project')"
+                    (click)="handleClickButton('Update Project')"
                 >
                     Update
                 </button>

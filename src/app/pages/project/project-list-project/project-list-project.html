@@ -1,69 +1,23 @@
 <nb-card>
-    <nb-card-header class="d-flex justify-content-between w-100" >
-      <h5>Project List</h5>
-      <button nbButton outline size="small" status="primary" (click)="handleButtonClick('Add Project')">
-        Add Project
-      </button>
-    </nb-card-header>
-    <nb-card-body>
-      <ngx-datatable  
-        [rows]="projectData" 
-        scrollbarH="true" 
-        [columns]="columns"
-        class="bootstrap" 
-        [rowHeight]="'auto'"
-      >
-        <ngx-datatable-column   
-          *ngFor="let column of columns; let i = index;"  
-          [name]="column.name" 
-          [width]="column.width"
-          [sortable]="!(column.type === 'button' 
-          || column.type === 'phase')"
-        >
-          <ng-template let-row="row" ngx-datatable-cell-template>
-            <!-- Project Title -->
-            <div *ngIf="column.type === 'title'">
-              <a  class="text-primary text-decoration-none" 
-                  style="cursor: pointer;" 
-                  [routerLink]="['./sub-menu-project', row.id_proyek]"
-              >
-                {{ row[column.prop] }}
-              </a>
-            </div>
-
-            <!-- Action Button -->
-            <div *ngIf="column.type === 'button'" class="d-flex justify-content-center">
-              <button *ngFor="let button of column.button" 
-                nbButton  
-                class="mx-1" 
-                size="small" 
-                ghost 
-                (click)="handleButtonClick(button.menu, row)" 
-                [nbPopover]="button.menu" 
-                nbPopoverTrigger="hover" 
-                nbPopoverPlacement="top"
-              >
-                <nb-icon [icon]="button.icon" status="danger"></nb-icon>
-              </button>
-            </div>
-
-            <!-- Project Phase -->
-            <div *ngIf="column.type === 'phase'">
-              <nb-icon 
-                [ngStyle]="{'color': row[column.prop][column.name] ? 'green' : 'red'}" 
-                [icon]="row[column.prop][column.name] ? 'checkmark-square-2-outline' : 'close-square-outline'">
-              </nb-icon>
-            </div>
-
-
-            <!-- Project Date Start and End -->
-            
-            <div *ngIf="column.type === 'date'">
-              {{ row[column.prop] | date:'medium' }}
-            </div>
-          </ng-template> 
-        </ngx-datatable-column>
-      </ngx-datatable>
-    </nb-card-body>
-  </nb-card>
+  <nb-card-header class="d-flex justify-content-between w-100" >
+    <h5>Project List</h5>
+    <button nbButton outline size="small" status="primary" (click)="handleClickButton('Add Project')">
+      Add Project
+    </button>
+  </nb-card-header>
+  <nb-card-body>
+    <ngx-list-table-component 
+      *ngIf="projectData" 
+      [columns]="columns" 
+      [rows]="projectData"
+      (sendHandleClick)="handleClickButton($event.button, $event.data)"
+    >
+    </ngx-list-table-component>
+  </nb-card-body>
+</nb-card>
   
+
+
+
+
+

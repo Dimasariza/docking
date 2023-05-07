@@ -1,0 +1,65 @@
+<ngx-datatable  
+    [rows]="rows" 
+    scrollbarH="true" 
+    class="bootstrap" 
+    rowHeight="auto"
+>
+    <ngx-datatable-column   
+        *ngFor="let column of columns; let i = index;"  
+        [name]="column.name" 
+        [width]="column.width"
+        [sortable]="!column?.unSort"
+    >
+        <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+            <div *ngIf="column.type === 'index'">
+                {{ rowIndex + 1 }}
+            </div>
+            <!-- Type text -->
+            <div *ngIf="column.type === 'text'">
+                {{ row[column.prop] || '-' }}
+            </div>
+
+            <!-- Project Title -->
+            <div *ngIf="column.type === 'navTo'">
+                <span 
+                    class="text-primary" 
+                    style="cursor: pointer;" 
+                    (click)="handleClickButton('Nav To', row)" 
+                >
+                {{ row[column.prop] }}
+                </span>
+            </div>
+
+            <!-- Action Button -->
+            <div *ngIf="column.type === 'button'" class="d-flex justify-content-center">
+                <button *ngFor="let button of column.button" 
+                    nbButton  
+                    [status]="button.status"
+                    class="mx-1" 
+                    size="tiny" 
+                    outline
+                    (click)="handleClickButton(button.menu, row)" 
+                    [nbPopover]="button.menu" 
+                    nbPopoverTrigger="hover" 
+                    nbPopoverPlacement="top"
+                >
+                <nb-icon [icon]="button.icon" [status]="button.status" ></nb-icon>
+                </button>
+            </div>
+
+            <!-- Project Phase -->
+            <div *ngIf="column.type === 'phase'">
+                <nb-icon 
+                    [ngStyle]="{'color': row[column.prop][column.name] ? 'green' : 'red'}" 
+                    [icon]="row[column.prop][column.name] ? 'checkmark-square-2-outline' : 'close-square-outline'">
+                </nb-icon>
+            </div>
+
+            <!-- Start and End -->
+            <div *ngIf="column.type === 'date'">
+                <span *ngIf="row[column.prop]" >{{ row[column.prop] | date:'medium' }}</span>
+                <span *ngIf="!row[column.prop]" >{{ '-' }}</span>
+            </div>
+        </ng-template> 
+    </ngx-datatable-column>
+</ngx-datatable>

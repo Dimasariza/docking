@@ -9,8 +9,8 @@ export class ReportService {
     constructor(private httpClient : HttpClient){}
     private apiUrl = environment.apiUrl
 
-    getProjectSummary(page = 1, per_page = '', q = '', status = '') {
-        const url = this.apiUrl + "/report/proyek"
+    getProjectSummary({page = 1, per_page = '', q = '', status = ''}) {
+        const url = this.apiUrl + "/report/proyek";
         let httpHeaders = new HttpHeaders();
         httpHeaders = httpHeaders.append('content-type', 'application/json')
         let queryParams = new HttpParams();
@@ -22,28 +22,35 @@ export class ReportService {
     }
 
     getWorkPerProject(id){
-        const url = this.apiUrl + "/report/proyek/" + id
+        const url = this.apiUrl + "/report/proyek/" + id;
         return this.httpClient.get(url)
     }
 
-    updateWorkProgress(postBody, id){
-        const url = this.apiUrl + "/report/proyek/" + id + "/work_area"
-        return this.httpClient.put(url, postBody)
+    updateProjectSummary(body) {
+        const url = this.apiUrl + "/report/proyek/" + body.id_proyek;
+        return this.httpClient.put(url, body)
     }
 
-    updateVarianWork(postBody, id){
-        const url = this.apiUrl + "/report/proyek/" + id + "/variant_work"
+    updateReportWorkArea(postBody, id_proyek){
+        const url = this.apiUrl + "/report/proyek/" + id_proyek + "/work_area";
         const httpHeaders = new HttpHeaders();
-        httpHeaders.append('content-type', 'application/json')
-        return this.httpClient.put(url, postBody, {headers : httpHeaders})
+        httpHeaders.append('content-type', 'application/json');
+        return this.httpClient.put(url, postBody, {headers : httpHeaders});
+    }
+
+    updateReportVarianWork(postBody, id){
+        const url = this.apiUrl + "/report/proyek/" + id + "/variant_work";
+        const httpHeaders = new HttpHeaders();
+        httpHeaders.append('content-type', 'application/json');
+        return this.httpClient.put(url, postBody, {headers : httpHeaders});
     }
 
     addSuplier(body){
-        const url = this.apiUrl + "/supplier"
-        return this.httpClient.post(url, body)
+        const url = this.apiUrl + "/supplier";
+        return this.httpClient.post(url, body);
     }
 
-    getSuplier(page = '', per_page = '', q = ''){
+    getAllSupliers({page = '', per_page = '', q = ''}){
         const url = this.apiUrl + "/supplier"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("page", page)
@@ -53,13 +60,13 @@ export class ReportService {
     }
 
     updateSuplier(body) {
-        const url = this.apiUrl + "/supplier" + body.id_supplier
-        return this.httpClient.get(url)
+        const url = this.apiUrl + "/supplier" + body.id_supplier;
+        return this.httpClient.get(url);
     }
 
     addDocument(body){
-        const url = this.apiUrl + "/report/detail"
-        return this.httpClient.post(url, body)
+        const url = this.apiUrl + "/report/detail";
+        return this.httpClient.post(url, body);
     }
 
     addAttachment(body){
@@ -77,8 +84,8 @@ export class ReportService {
         return this.httpClient.get(url, {headers : httpHeaders, responseType : 'arraybuffer'});
     }
 
-    getDocument(id, page, type){
-        const url = this.apiUrl + "/report/proyek/" + id + "/detail"
+    getDocumentLetter({id, page = '', type}){
+        const url = this.apiUrl + "/report/proyek/" + id + "/detail";
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
                                  .append("type", type)
@@ -86,21 +93,21 @@ export class ReportService {
     }
 
     sendWorkProgressEmail(body) {
-        const url = this.apiUrl + "/email/work_progress"
+        const url = this.apiUrl + "/email/work_progress";
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.httpClient.post(url, body)
+        return this.httpClient.post(url, body);
     }
     
     sendWorkVariantEmail(body) {
-        const url = this.apiUrl + "/email/work_variant"
+        const url = this.apiUrl + "/email/work_variant";
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.httpClient.post(url, body)
+        return this.httpClient.post(url, body);
     }
 
     sendLetterEmail(body, typeMenu) {
-        const url = this.apiUrl + "/email/" + typeMenu
+        const url = this.apiUrl + "/email/" + typeMenu;
         const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-        return this.httpClient.post(url, body, {headers : headers})
+        return this.httpClient.post(url, body, {headers : headers});
     }
 
     addWorkProgress(body){

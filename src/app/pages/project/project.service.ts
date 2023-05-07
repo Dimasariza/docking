@@ -9,22 +9,22 @@ export class ProjectService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl;
 
-  public getDataProjects(){
+  getAllProjects({per_page = '', q = ''}){
     const url = this.apiUrl + "/proyek";
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", "")
-                             .append("q", "");
+    queryParams = queryParams.append("per_page", per_page)
+                             .append("q", q);
     return this.httpClient.get(url,  {params  : queryParams});
   }
 
-  addDataProject(body){
+  addProject(body){
     const url = this.apiUrl + "/proyek";
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json');
     return this.httpClient.post(url, body, {headers : httpHeaders});
   }
 
-  getSubProjectData(id){
+  getSubProject(id){
     const url = this.apiUrl + "/proyek/" + id;
     return this.httpClient.get(url);
   }
@@ -39,7 +39,7 @@ export class ProjectService {
     return this.httpClient.delete(url);
   }
 
-  workArea(postbody, id){
+  updateProjectWorkArea(postbody, id){
     const url = this.apiUrl + "/proyek/" + id + "/work_area";
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')

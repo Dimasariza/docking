@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { ContractActionComponent } from './contract-action/contract-action.component';
 import { TenderComponent } from './tender.component';
-import { YardDetailsDialog } from './contract/yard-details-dialog/yard-details-dialog.component';
-import { YardDialogComponent } from './contract/yard-dialog/yard-dialog.component';
+import { YardDetailsDialog } from './tender-contract/yard-details-dialog/yard-details-dialog.component';
+import { YardDialogComponent } from './tender-contract/yard-dialog/yard-dialog.component';
+import { TenderContract } from './tender-contract/tender-contract';
+import { TenderLoadDetails } from './tender-load-details/tender-load-details';
 
 const routes: Routes = [{
     path: '',
@@ -18,7 +19,8 @@ export class TenderRoutingModule { }
 
 export const routedComponents = [
   TenderComponent,
-  ContractActionComponent,
   YardDetailsDialog,
-  YardDialogComponent
+  YardDialogComponent,
+  TenderContract,
+  TenderLoadDetails
 ];

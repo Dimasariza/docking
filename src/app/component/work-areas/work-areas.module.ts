@@ -5,12 +5,14 @@ import { NbButtonModule,
     NbCardModule, 
     NbIconModule, 
     NbInputModule,
+     NbPopoverModule,
      NbSelectModule, 
      NbTreeGridModule 
     } from "@nebular/theme";
 import { ThemeModule } from "../../@theme/theme.module";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { WorkAreasDialogModule } from "./work-areas-dialog/work-areas-dialog.module";
+import { NbDateFnsDateModule } from "@nebular/date-fns";
 
 @NgModule({
     imports: [
@@ -24,7 +26,9 @@ import { WorkAreasDialogModule } from "./work-areas-dialog/work-areas-dialog.mod
         NbSelectModule,
         NbIconModule,
         NbButtonModule,
-        WorkAreasDialogModule
+        WorkAreasDialogModule,
+        NbPopoverModule,
+        NbDateFnsDateModule
     ],
     declarations: [
         WorkAreasComponent

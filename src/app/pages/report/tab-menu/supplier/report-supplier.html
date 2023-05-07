@@ -1,0 +1,21 @@
+<nb-card>
+    <nb-card-header class="m-2">
+        <button 
+            *ngFor="let button of buttons; let indexOfelement=index;"
+            nbButton outline size = "tiny"  status = "primary" class="mx-1" 
+            (click)="handleClickButton(button.name)"
+        >
+            <nb-icon [icon]="button.icon" pack="eva">
+            </nb-icon>
+            {{button.name}}
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <ngx-list-table-component 
+            [columns]="columns" 
+            [rows]="suplierData"
+            (sendHandleClick)="handleClickButton($event.button, $event.data)"
+        >
+        </ngx-list-table-component>
+    </nb-card-body>
+</nb-card>

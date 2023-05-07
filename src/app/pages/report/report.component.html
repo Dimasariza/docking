@@ -1,116 +1,74 @@
 <nb-card>
-    <nb-card-header class="d-flex">
-        <div class="d-flex justify-content-between w-100">
-            <div class="d-flex">
-            <h3 class="text-uppercase">{{subProjectData?.head}}</h3>
-                <div>
-                    <button 
-                    nbButton 
-                    status="primary" 
-                    class="mx-4" 
-                    outline 
-                    size="small" 
-                    (click)="projectStatusDial()">
-                        <nb-icon 
-                        icon="info-outline" 
-                        pack="eva"></nb-icon>
-                    </button>
-                </div>
-            </div>
-            <div>
-                <button nbButton 
-                status="primary" 
-                class="mx-2" 
-                outline 
-                size="small" 
-                (click)="exportToPDF()">
-                    <nb-icon icon="file-outline" pack="eva"></nb-icon>
-                    Export To PDF
-                </button>
-            </div>
-        </div>
-
+    <nb-card-header class="d-flex justify-content-between w-100">
+        <h5 class="text-uppercase">
+            {{ summaryData?.projectTitle || 'Project Title' }}
+            <button nbButton status="primary" class="mx-4" outline size="small" (click)="projectStatusDialog('Project Status')">
+                <nb-icon icon="info-outline" pack="eva"></nb-icon>
+            </button>
+        </h5>
+        <button nbButton status="primary" class="mx-2" outline size="small">
+            <nb-icon icon="file-outline" pack="eva"></nb-icon>
+            Export To PDF
+        </button>
     </nb-card-header>
-    <div class="m-3">
-        <h6>Description</h6>    
-        <p>{{subProjectData?.tender?.komentar}}</p>
-    </div> 
+    <nb-card-body>
+        <span class="font-weight-bolder d-flex mb-2">Description</span>
+        <p>{{ summaryData?.deskripsi || 'No Description' }}</p>
+    </nb-card-body>
 </nb-card>
 
 <nb-card>
-      <nb-tabset fullWidth>
-        <nb-tab tabTitle="PIC" >
-            <ngx-pic [picData]="picData"></ngx-pic>
+      <nb-tabset fullWidth *ngIf="summaryData">
+        <nb-tab tabTitle="PIC">
+            <ngx-report-pic [responsible]="responsible">
+            </ngx-report-pic>
+        </nb-tab>
+        <nb-tab tabTitle="Supplier">
+            <ngx-report-suplier [suplierData]="suplierData">
+            </ngx-report-suplier>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
-            <ngx-work-progress 
-            (reloadPage)="ngOnInit()" 
-            [projectData]="projectData" 
-            [workProgressData]="subProjectData" 
-            (alertStatus)="allertStatus($event)" 
-            [suplierData]="dataSuplier"
-            [companyProfile]="companyProfile"
-            [picData]="picData" 
+            <ngx-report-work-progress
+                [workAreaData]="workProgress"
             >
-            </ngx-work-progress>
+            </ngx-report-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
-            <ngx-variant-work 
-            (reloadPage)="ngOnInit()" 
-            (alertStatus)="allertStatus($event)" 
-            [variantWorkData]="projectData" 
-            [workProgressData]="subProjectData" 
-            [suplierData]="dataSuplier"
-            [companyProfile]="companyProfile"
-            [picData]="picData" 
+            <ngx-report-variant-work
+                [workAreaData]="variantWork"
             >
-            </ngx-variant-work>
+            </ngx-report-variant-work>
         </nb-tab>
         <nb-tab tabTitle="BAST">
-            <ngx-bast 
-            (reloadPage)="ngOnInit()" 
-            [projectData]="projectData" 
-            [workProgressData]="subProjectData" 
-            [picData]="picData" 
-            [typeMenu]="'bast'"
-            [companyProfile]="companyProfile"
+            <ngx-letter-menu
+                typeMenu="bast"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                [companyProfile]="companyProfile"
+                (refresh)="ngOnInit()" 
             >
-            </ngx-bast>
+            </ngx-letter-menu>
         </nb-tab>
         <nb-tab tabTitle="Surat Teguran">
-            <ngx-bast 
-            (reloadPage)="ngOnInit()" 
-            [projectData]="projectData" 
-            [workProgressData]="subProjectData" 
-            [picData]="picData" 
-            [typeMenu]="'surat_teguran'"
-            [companyProfile]="companyProfile"
+            <ngx-letter-menu
+                typeMenu="surat_teguran"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                [companyProfile]="companyProfile"
+                (refresh)="ngOnInit()" 
             >
-            </ngx-bast>
+            </ngx-letter-menu>
         </nb-tab>
         <nb-tab tabTitle="Close Out Report (COR)">
-            <ngx-bast 
-            (reloadPage)="ngOnInit()" 
-            [projectData]="projectData" 
-            [workProgressData]="subProjectData" 
-            [picData]="picData" 
-            [typeMenu]="'close_out_report'"
-            [companyProfile]="companyProfile"
+            <ngx-letter-menu
+                typeMenu="close_out_report"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                [companyProfile]="companyProfile"
+                (refresh)="ngOnInit()" 
             >
-        </ngx-bast>
+            </ngx-letter-menu>
         </nb-tab>
       </nb-tabset>
 </nb-card>
 
-<nb-card style="position: absolute; width : 20%; bottom: 1.2rem; right:-30rem;" 
-[ngClass]="alertConds?.conds ? 'active' : ''" >
-    <nb-alert accent="success" 
-    class="bg-transparent"> 
-      <div class="d-flex align-items-center mt-2">
-        <nb-icon icon="checkmark-circle-2-outline" 
-        [status]="alertConds?.status" 
-        class="check_icon mx-2"></nb-icon> 
-        {{alertConds?.msg}}
-      </div>
-    </nb-alert>
-</nb-card>  

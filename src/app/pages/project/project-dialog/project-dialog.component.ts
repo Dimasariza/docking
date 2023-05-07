@@ -4,14 +4,14 @@ import { ProfileService } from '../../profile/profile.service';
 import { Subject } from 'rxjs';
 import { CommonFunction } from '../../../component/common-function/common-function';
 import { ToastrComponent } from '../../../component/toastr-component/toastr.component';
-import { take, takeUntil } from 'rxjs/operators';
-import { Component, Input, OnInit } from '@angular/core';
+import { takeUntil } from 'rxjs/operators';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'ngx-project-data',
   templateUrl: './project-dialog.component.html',
 })
-export class ProjectDialogComponent implements OnInit{
+export class ProjectDialogComponent implements OnInit, OnDestroy{
   min 
   max
 
@@ -40,15 +40,15 @@ export class ProjectDialogComponent implements OnInit{
 
   ngOnInit(): void {
     
-    this.homeService.getAllShip()
-    .pipe(takeUntil(this.destroy$), take(1))
+    this.homeService.getAllShips({})
+    .pipe(takeUntil(this.destroy$))
     .subscribe(
       ({data} : any) => this.vesselData = data,
       () => this.toastr.onError()
     );
     
-    this.profileService.getUserData(1, 10, '', "shipyard", '')
-    .pipe(takeUntil(this.destroy$), take(1))
+    this.profileService.getAllUsers({ role : "shipyard" })
+    .pipe(takeUntil(this.destroy$))
     .subscribe(
       ({data} : any) => this.responsible = data,
       () => this.toastr.onError()
@@ -74,8 +74,8 @@ export class ProjectDialogComponent implements OnInit{
 
     this.usedCurrency = mata_uang;
 
-    this.charterRate = this.commonFunction.convertToCurrency(off_hire_rate_per_day, this.usedCurrency);
-    this.bunkerRate = this.commonFunction.convertToCurrency(off_hire_bunker_per_day, this.usedCurrency);
+    this.charterRate = this.commonFunction.convertToCurrency(this.usedCurrency, off_hire_rate_per_day);
+    this.bunkerRate = this.commonFunction.convertToCurrency(this.usedCurrency, off_hire_bunker_per_day);
 
     this.dialogData.data = {...data, offHirePeriod, repairInDock, repairPeriod};
   }
@@ -84,8 +84,8 @@ export class ProjectDialogComponent implements OnInit{
     if(!arr) return this.dialog.close();
     
     let { off_hire_bunker_per_day, off_hire_rate_per_day } = arr;
-    off_hire_bunker_per_day = this.commonFunction.takeNumberOnly(off_hire_bunker_per_day)
-    off_hire_rate_per_day = this.commonFunction.takeNumberOnly(off_hire_rate_per_day)
+    off_hire_bunker_per_day = this.commonFunction.priceAmount(off_hire_bunker_per_day)
+    off_hire_rate_per_day = this.commonFunction.priceAmount(off_hire_rate_per_day)
     arr = {...this.dialogData?.data, ...arr, off_hire_bunker_per_day, off_hire_rate_per_day};
     this.dialog.close(arr);
   } 

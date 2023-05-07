@@ -1,43 +1,61 @@
-import { Component, Input } from "@angular/core";
-import { CommonFunction } from "../../../component/common-function/common-function";
-import { Subject } from "rxjs";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
+import { WorkAreasComponent } from "../../../component/work-areas/work-areas.component";
 
 @Component({
     selector: 'ngx-project-task-mine',
     templateUrl: './project-task-mine.html',
 })
-export class ProjectTaskMine{
+export class ProjectTaskMine implements OnInit {
   constructor(
-    public commonFunction : CommonFunction
+    public commonFunction : CommonFunction,
+    public replace : ReplaceData,
   ) { }
 
-  workAreaData = [];
-  @Input() projectData;
-
   ngOnInit(): void {
-    this.generateTableDatas(this.projectData)
+    this.projectData.map(data => {
+      let { projectTitle , work_area = [] } = data;
+
+      if(!this.projectTitle.includes(projectTitle)) 
+        this.projectTitle.push(projectTitle); 
+
+      if(this.commonFunction.arrayNotEmpty(work_area)) {
+        work_area = this.commonFunction.refillWorkArea(work_area, {projectTitle})
+        work_area.forEach(item => {
+          const responsible = item.responsible;
+          if(!this.responsible.includes(responsible) && responsible) 
+            this.responsible.push(responsible); 
+            this.workAreaData.push(item);
+        })
+      }
+    })
+
+
+
+    this.tableHead = this.replace.replace(this.tableHead, 'Project', this.projectTitle, 'option')
+    this.tableHead = this.replace.replace(this.tableHead, 'Responsible', this.responsible, 'option')
   }
 
-  changingValue: Subject<boolean> = new Subject();
-
-  dataTable : any;  
-  tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, searchBar : true};
-  allColumns = [ 'jobNumber', 'jobName', 'projectTitle', 'status', 'responsible', 'end' ]; 
+  @Input() projectData;
+  @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
+  
+  workAreaData = [];
+  tableDetails : any = {style :{ width : '1800px', "max-height" : '300px' }, searchBar : true};
   columnType = [ 
-    { type : 'number', width : 100 }, 
-    { type : 'text', width : 150 }, 
-    { type : 'text', width : 250 }, 
-    { type : 'text', width : 150 }, 
-    { type : 'text', width : 200 }, 
-    { type : 'date', width : 200 }
+    { type : 'numb', width : 100, prop : 'jobNumber' }, 
+    { type : 'text', width : 150, prop : 'jobName' }, 
+    { type : 'text', width : 250, prop : 'projectTitle' }, 
+    { type : 'text', width : 150, prop : 'status' }, 
+    { type : 'resp', width : 200, prop : 'responsible' }, 
+    { type : 'date', width : 200, prop : 'end' }
   ]
   
   tableHead = [ 
     { type : 'text', placeholder : 'Job Number' },
     { type : 'text', placeholder : 'Tasks' },
-    { type : 'drop-down', placeholder : 'Project', option : ['All'], target : 'sort' },
-    { type : 'drop-down', placeholder : 'Status', option : ['All', ...this.commonFunction.jobStatus], target : 'sort' },
-    { type : 'drop-down', placeholder : 'Responsible', option : ['All'], target : 'sort' },
+    { type : 'drop-down', placeholder : 'Project', option : ['All'], title : 'Filter Table' },
+    { type : 'drop-down', placeholder : 'Status', option : ['All', ...this.commonFunction.jobStatus], title : 'Filter Table' },
+    { type : 'drop-down', placeholder : 'Responsible', option : ['All'], title : 'Filter Table' },
     { type : 'text', placeholder : 'Due' }
   ]
 
@@ -49,34 +67,16 @@ export class ProjectTaskMine{
     status : 'All'
   };
 
-  sortTableByFilter({column, value} : any) {
+  handleClickButton(title, data) {
+    if(title == 'Filter Table') this.sortTableByFilter(data)
+  }
+
+  sortTableByFilter({column, value}) {
     this.filterTable[column] = value;
     let sortingData = this.workAreaData;
     const sortBy = Object.keys(this.filterTable).filter(sort => this.filterTable[sort] != 'All')
     for(let sort of sortBy) 
       sortingData = sortingData.filter(data => data[sort] == this.filterTable[sort])
-
-    this.dataTable = this.commonFunction.populateData(sortingData, false) 
-    this.changingValue.next(this.dataTable);
-  }
-
-  generateTableDatas(data) {
-    data.map(data => {
-      const { projectTitle , work_area} = data;
-      if(!this.projectTitle.includes(projectTitle)) 
-        this.projectTitle.push(projectTitle); 
-      if(this.commonFunction.arrayNotEmpty(work_area))
-        work_area.forEach(item => {
-          this.allColumns.forEach(column => item?.[column] ? null : item[column] = "");
-          const responsible = item.responsible;
-          if(!this.responsible.includes(responsible) && responsible) 
-            this.responsible.push(responsible); 
-            this.workAreaData.push({...item, projectTitle});
-        })
-    })
-
-    this.tableHead[2].option = this.projectTitle;
-    this.tableHead[4].option = this.responsible;
-    this.dataTable = this.commonFunction.populateData(this.workAreaData, false)
+    this.viewWorkArea.setWorkArea(sortingData);
   }
 }

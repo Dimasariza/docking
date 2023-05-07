@@ -34,7 +34,7 @@ export class UserActionComponent implements OnInit, OnDestroy{
     this.userData = this.users.data
     if(this.users.dial == "Update") {
       if(this.userData.avatar_url) this.avatar_url = environment.apiUrl + "/file/show/" + this.userData.avatar_url
-      const _subs = this.homeService.getAllShip()
+      const _subs = this.homeService.getAllShips({})
       .subscribe(({data} : any) => {
         this.vessels = data.map(ship => ({
           nama_kapal : ship.nama_kapal,

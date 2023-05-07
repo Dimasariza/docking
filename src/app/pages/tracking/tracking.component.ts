@@ -16,7 +16,7 @@ export class TrackingComponent implements OnInit {
 
   public trackingData : any 
   chartTask : any [] = []
-  tasks: any [] = []
+  tasks: any [];
   @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
   
   ngOnInit(): void {

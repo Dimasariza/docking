@@ -1,0 +1,23 @@
+<button 
+    nbButton 
+    *ngFor="let button of workProgressNavButton"
+    size="tiny"
+    status="primary"
+    outline
+    class="m-2"
+    (click)="handleClickButton(button.name)"
+>
+    <nb-icon [icon]="button.icon" pack="eva">
+    </nb-icon>
+    {{ button.name }}
+</button>
+
+<ngx-work-areas 
+    *ngIf="workAreaData"
+    [workAreaData]="workAreaData"
+    [tableDetails]="tableDetails"
+    [columnType]="columnType"
+    [tableHead]="tableHead" 
+    (sendToParent)="handleClickButton($event.title, $event.data)"
+>
+</ngx-work-areas>

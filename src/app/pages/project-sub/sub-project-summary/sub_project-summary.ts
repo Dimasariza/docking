@@ -2,6 +2,10 @@ import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import { CommonFunction } from "../../../component/common-function/common-function";
 import { ProjectDialogComponent } from "../../project/project-dialog/project-dialog.component";
 import { Router } from "@angular/router";
+import { Subject } from "rxjs";
+import { takeUntil } from "rxjs/operators";
+import { ProjectService } from "../../project/project.service";
+import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
 
 @Component({
     selector: 'ngx-sub-project-summary',
@@ -11,6 +15,8 @@ export class SubProjectSummary implements OnInit {
     constructor(
         private commonFunction : CommonFunction,
         private router : Router,
+        private projectService : ProjectService,
+        private toastr : ToastrComponent,
     ) { }
 
     ngOnInit(): void {
@@ -26,12 +32,14 @@ export class SubProjectSummary implements OnInit {
 
     Object = Object;
     @Input() projectData;
-    @Output("refresh") refreshProject: EventEmitter<any> = new EventEmitter();
+    @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
+    private destroy$: Subject<void> = new Subject<void>();
 
     currencyTable;
     summaryTable : any;
 
     generateTableDatas() {
+        console.log(this.projectData)
         const {kapal : {nama_kapal}, phase, mata_uang, 
         off_hire_start, off_hire_end, off_hire_period, off_hire_deviasi, 
         off_hire_bunker_per_day, repair_start, repair_end, repair_period,
@@ -60,7 +68,7 @@ export class SubProjectSummary implements OnInit {
         { title : 'Actual' , prop : 'actual', width : '100'}
     ];
 
-    onHandleClick(button, data = null) {
+    handleClickButton(button, data = null) {
         if(button == 'Monitoring')
         this.router.navigateByUrl('/pages/report/' + this.projectData.id_proyek);
 
@@ -75,5 +83,33 @@ export class SubProjectSummary implements OnInit {
           },
           component : ProjectDialogComponent 
         })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => this.onUploadData(title, newData));
+    }
+
+    onUploadData(title, data){
+        if(!data) return;
+
+        let subscribe;
+        let successMsg;
+        let errorMsg = "Please try again."
+
+        if(title == 'Update Project') {
+            subscribe = this.projectService.updateProject(data)
+            successMsg = 'Your Project has been updated.'
+        }
+
+        subscribe
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(
+            () => this.toastr.onUpload(),
+            () => this.toastr.onError(errorMsg),
+            () => {
+                this.refreshPage.emit();
+                this.toastr.onSuccess(successMsg)
+                setTimeout(() => this.ngOnInit(), 500);
+            }
+        );
     }
 }

@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
         const {nama_lengkap, avatar_url} = data
 
         avatar_url 
-        ? this.homeService.getUserProfilePict(avatar_url)
+        ? this.homeService.getFile(avatar_url)
           .subscribe(res => {
             this.user = {
               name : nama_lengkap,

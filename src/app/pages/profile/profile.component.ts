@@ -24,13 +24,13 @@ export class ProfilComponent implements OnInit {
   formCondition = true
 
   ngOnInit(){
-    this.pofileService.getUserData(1, 10)
+    this.pofileService.getAllUsers({})
       .subscribe(({data} : any) => {
         this.unSortUserData = data;
         this.userData = data;
     }); 
 
-    this.pofileService.getCompanyProfile()
+    this.pofileService.getCompanyProfile({})
     .subscribe(({data} : any) => {
       this.companyData = data 
     })

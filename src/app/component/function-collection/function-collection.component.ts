@@ -250,7 +250,7 @@ export class FunctionCollection {
       newData,
       sortBy = "id",
       id = '',
-      currentIndex = '',
+      targetIndex = '',
       lastIndex = '',
       status = 'new' // Update or delete (default value for add job)
     } : any) {
@@ -260,9 +260,9 @@ export class FunctionCollection {
         return [{...newData, items : [], id}];
       }
       
-      if(currentIndex !== '') currentIndex = currentIndex?.toString().split('.');
-      if(lastIndex === '') lastIndex = currentIndex[0];
-      else if (lastIndex !== '') lastIndex = lastIndex + '.' + currentIndex[0];
+      if(targetIndex !== '') targetIndex = targetIndex?.toString().split('.');
+      if(lastIndex === '') lastIndex = targetIndex[0];
+      else if (lastIndex !== '') lastIndex = lastIndex + '.' + targetIndex[0];
 
       const work = workData.find(work => work[sortBy] === lastIndex);
       if(!work) {
@@ -271,22 +271,22 @@ export class FunctionCollection {
       } 
 
       const parentIndex = workData.indexOf(work);
-      if(status == 'delete' && currentIndex.length == 1) {
+      if(status == 'delete' && targetIndex.length == 1) {
         workData[parentIndex] = null;
         return workData.filter(f => f != null);
       }
 
-      if(status == 'update' && currentIndex.length == 1)
+      if(status == 'update' && targetIndex.length == 1)
         workData[parentIndex] = {...work, ...newData}
 
-      if(currentIndex.length > 0 && work) {
+      if(targetIndex.length > 0 && work) {
         id = (id + parentIndex + '.').toString();
-        currentIndex = currentIndex.slice(1).join(".").toString();
+        targetIndex = targetIndex.slice(1).join(".").toString();
         workData[parentIndex].items = this.reconstructDataTable({
           workData : work?.items,
           newData, id,
           sortBy,
-          currentIndex,
+          targetIndex,
           lastIndex,
           status
         })
@@ -383,7 +383,7 @@ class testConstructor {
    this.emptyData = this.reconstructDatas({
      workData : this.emptyData,
      newData,
-     currentIndex : '0.1.0',
+     targetIndex : '0.1.0',
      sortBy : 'id',
      status : 'delete'
    })
@@ -392,7 +392,7 @@ class testConstructor {
    //   this.newExportExcel = this.reconstructDatas({
    //       workData : this.newExportExcel,
    //       newData,
-   //       currentIndex : newData.jobNumber,
+   //       targetIndex : newData.jobNumber,
    //       sortBy : 'jobNumber' 
    //     })
    // })
@@ -415,7 +415,7 @@ class testConstructor {
    newData,
    sortBy = "id",
    id = '',
-   currentIndex = '',
+   targetIndex = '',
    lastIndex = '',
    status = 'new' // Update or delete (default value for add job)
  } : any) {
@@ -425,9 +425,9 @@ class testConstructor {
      return [{...newData, items : [], id}];
    }
    
-   if(currentIndex !== '') currentIndex = currentIndex?.toString().split('.');
-   if(lastIndex === '') lastIndex = currentIndex[0];
-   else if (lastIndex !== '') lastIndex = lastIndex + '.' + currentIndex[0];
+   if(targetIndex !== '') targetIndex = targetIndex?.toString().split('.');
+   if(lastIndex === '') lastIndex = targetIndex[0];
+   else if (lastIndex !== '') lastIndex = lastIndex + '.' + targetIndex[0];
 
    const work = workData.find(work => work[sortBy] === lastIndex);
    if(!work) {
@@ -436,22 +436,22 @@ class testConstructor {
    } 
 
    const parentIndex = workData.indexOf(work);
-   if(status == 'delete' && currentIndex.length == 1) {
+   if(status == 'delete' && targetIndex.length == 1) {
      workData[parentIndex] = null;
      return workData.filter(f => f != null);
    }
 
-   if(status == 'update' && currentIndex.length == 1)
+   if(status == 'update' && targetIndex.length == 1)
      workData[parentIndex] = {...work, ...newData}
 
-   if(currentIndex.length > 0 && work) {
+   if(targetIndex.length > 0 && work) {
      id = (id + parentIndex + '.').toString();
-     currentIndex = currentIndex.slice(1).join(".").toString();
+     targetIndex = targetIndex.slice(1).join(".").toString();
      workData[parentIndex].items = this.reconstructDatas({
        workData : work?.items,
        newData, id,
        sortBy,
-       currentIndex,
+       targetIndex,
        lastIndex,
        status
      })
@@ -460,10 +460,64 @@ class testConstructor {
  }
 
 
+ 
+  
+ testData = [
+  {
+    nama : "mr black",
+    age : 20,
+    country : "argentina",
+    id : '0',
+    items : [
+      {
+        nama : "roganda dimas",
+        age : 18,
+        country : "germany",
+        id : '0.0',
+      },
+      {
+        nama : "roganda dimas ariza",
+        age : 18,
+        country : "germany",
+        id : '0.1',
+        items : [{
+          age : 18,
+          country : "spain",
+          id : "0.1.0",
+          items : [],
+          nama : "dimas ariza",
+        }]
+      }
+    ]
+  },
+  {
+    nama : "mr black 2",
+    age : 30,
+    country : "jamaika",
+    id : '1',
+    items : [{
+      nama : "mr black 2.1",
+      age : 20,
+      country : "zimbabwq",
+      id : '1.0',
+      items : []
+    }]
+  }
+]
 
-
-   // return workDatas.filter(f => f != null);
-
-
+updateData() {
+  const newData = {
+    age : 20,
+    country : "Germany oke oke",
+    nama : "dimas ariza blabla bla bla",
+  }
+  // this.testData = this.commonFunction.reconstructDatas({
+  //   workData : this.testData,
+  //   newData,
+  //   sortBy : "id",
+  //   targetIndex : "1.0",
+  //   // status : 'update'
+  // })
+}
 
 }

@@ -1,8 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { Subject } from "rxjs";
 import { WorkAreasDialogComponent } from "../../../component/work-areas/work-areas-dialog/work-areas-dialog.component";
-import { take, takeUntil } from "rxjs/operators";
-import { CommonFunction } from "../../../component/common-function/common-function";
+import { takeUntil } from "rxjs/operators";
+import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
+import { WorkAreasComponent } from "../../../component/work-areas/work-areas.component";
+import { ProjectService } from "../../project/project.service";
+import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
+import { DeleteDialogComponent } from "../../../component/delete-dialog/delete-dialog.component";
 
 @Component({
     selector: 'ngx-sub-project-work-area',
@@ -10,46 +14,47 @@ import { CommonFunction } from "../../../component/common-function/common-functi
 })
 export class SubProjectWorkArea implements OnInit{
     constructor(
-        public commonFunction : CommonFunction
+        public commonFunction : CommonFunction,
+        public replaceData : ReplaceData,
+        private projectService : ProjectService,
+        private toastr : ToastrComponent
     ) { }
 
     ngOnInit(): void {
-        const { work_area } = this.projectData;
-        if(this.commonFunction.arrayNotEmpty(work_area))
-        this.workAreaData = work_area.map(work => {
-            this.allColumns.forEach(column => work?.[column] ? null : work[column] = "");
-            return work;
-        })
-        this.dataTable = this.commonFunction.populateData(this.workAreaData, false)
+        const { work_area, mata_uang } = this.projectData;
+        this.tableDetails = this.replaceData.replace(this.tableDetails, 'currency', mata_uang + ' ', 'currency')
+        if(this.commonFunction.arrayNotEmpty(work_area)) this.workAreaData = work_area
     }
 
-    @Output("refresh") refreshProject: EventEmitter<any> = new EventEmitter();
-    @Input() projectData;
+    @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
+    @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
+    @Input() projectData : any = {};
 
     private destroy$: Subject<void> = new Subject<void>();
 
-    changingValue: Subject<boolean> = new Subject();
     workAreaData = [];
-    
-    dataTable : any;  
-    tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, searchBar : true};
-    allColumns = [ 'jobNumber', 'rank', 'jobName', 'department', 'start', 'stop', 
-    'volume', 'unit', 'budget', 'totalBudget', 'category', 'remarks', 'responsible', 'edit' ]; 
+    tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, currency : 'currency'};
     columnType = [ 
-        { type : 'number', width : 100 }, 
-        { type : 'text', width : 150 }, 
-        { type : 'text', width : 300 }, 
-        { type : 'text', width : 150 }, 
-        { type : 'text', width : 200 }, 
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
-        { type : 'text', width : 200 },
+        { type : 'numb', width : 100, prop : 'jobNumber' }, 
+        { type : 'text', width : 150, prop : 'rank' }, 
+        { type : 'text', width : 300, prop : 'jobName' }, 
+        { type : 'text', width : 150, prop : 'department' }, 
+        { type : 'date', width : 200, prop : 'startBudget' }, 
+        { type : 'date', width : 200, prop : 'endBudget' },
+        { type : 'text', width : 200, prop : 'volumeBudget' },
+        { type : 'text', width : 200, prop : 'unit' },
+        { type : 'curr', width : 200, prop : 'unitPriceBudget' },
+        { type : 'text', width : 200, prop : 'totalPriceBudget' },
+        { type : 'text', width : 200, prop : 'category' },
+        { type : 'text', width : 200, prop : 'remarks' },
+        { type : 'resp', width : 200, prop : 'responsible' },
+        { type : 'butt', width : 200, prop : 'edit' ,
+            button : [
+                { name : 'Add Sub Job', icon : 'plus-outline', status : 'success'},
+                { name : 'Update Job', icon : 'edit-outline', status : 'info'},
+                { name : 'Delete Job', icon : 'trash-outline', status : 'danger'},
+            ] 
+        },
     ]
     
     tableHead = [   
@@ -66,39 +71,113 @@ export class SubProjectWorkArea implements OnInit{
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'text', placeholder : 'Responsible' },
-        { type : 'text', placeholder : 'Edit' },
+        { type : 'text', placeholder : '' },
     ];
-
+    
     workAreaNavButton = ["Add Job" ,"Extend","Refresh","Import"]
 
-    onHandleClick(button, data = null) {
-        if(button == 'Add Job') this.addJobDialog(button)
-        if(button == 'Extend')  this.extendTable(true)
-        if(button == 'Reduce')  this.extendTable(false)
-        if(button == 'Refresh') this.refreshProject.emit();
-        if(button == 'Import')  return
+    handleClickButton(button, data = null) {
+        switch(button) {
+            case 'Add Job':
+            case 'Add Sub Job':
+            case 'Update Job':
+                this.updateWorkAreaDialog(button, data);
+            break;
+            case 'Delete Job':
+                this.deleteJobDialog(button, data);
+            break;
+            case 'Extend':
+                this.extendTable(true);
+            break;
+            case 'Reduce':
+                this.extendTable(false);
+            break;
+            case 'Refresh':
+                this.refreshPage.emit();
+            break;
+            case 'Import':
+            break;
+        }
     }
 
     extendTable(conds) {
+        this.workAreaNavButton = 
         conds 
-        ? this.workAreaNavButton[1] = "Reduce"
-        : this.workAreaNavButton[1] = "Extend"
-        this.dataTable = this.commonFunction.populateData(this.workAreaData, conds)    
-        this.changingValue.next(this.dataTable);
+        ? this.replaceData.replace(this.workAreaNavButton, "Extend", "Reduce")
+        : this.replaceData.replace(this.workAreaNavButton, "Reduce", "Extend")
+        this.viewWorkArea.extendOrReduce()
     }
 
-    addJobDialog(title) {
+    updateWorkAreaDialog(title, data) {
+        if(!data) data = this.projectData;
         this.commonFunction.openDialog({
-            dialogData : { title },
+            dialogData : { 
+                title,
+                data,
+                label : 'Budget',
+            },
             component : WorkAreasDialogComponent
         })
         .onClose
-        .pipe(takeUntil(this.destroy$), take(1))
-        .subscribe(data => this.onUploadData(data, title));
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => this.onUploadData(title, newData));
     }
 
-    onUploadData(data, title) {
-        console.log(data)
+    deleteJobDialog(title, data) {
+        this.commonFunction.openDialog({
+            dialogData : { 
+                title,
+                name : data.jobName,
+                id : data,
+            },
+            component : DeleteDialogComponent
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => this.onUploadData(title, newData));
+    }
+
+    onUploadData(title, data) {
+        console.log('title', title)
+        console.log('data', data)
+        if(!data) return;
+        if(title == 'Add Job') {
+            let {work_area} = this.projectData;
+            work_area = this.commonFunction.reconstructDatas({
+                workData : work_area, 
+                newData : data
+            })
+            this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
+            .subscribe(() => 
+            () => this.toastr.onUpload(),
+            () => this.toastr.onError(),
+            () => {
+                this.toastr.onSuccess(`Your job ${data.jobName} has been added`);
+                this.refreshPage.emit();
+                this.viewWorkArea.setWorkArea(work_area)
+                }
+            )
+        }
+
+        if(title == 'Delete Job') {
+            let {work_area} = this.projectData;
+            work_area = this.commonFunction.reconstructDatas({
+                workData : work_area, 
+                targetIndex : data.id,
+                status : 'delete'
+            })
+            console.log(work_area)
+            this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
+            .subscribe(() => 
+            () => this.toastr.onUpload(),
+            () => this.toastr.onError(),
+            () => {
+                this.toastr.onSuccess(`Your job ${data.jobName} has been deleted`);
+                this.refreshPage.emit();
+                this.viewWorkArea.setWorkArea(work_area)
+                }
+            )
+        }
     }
 
     ngOnDestroy(): void {

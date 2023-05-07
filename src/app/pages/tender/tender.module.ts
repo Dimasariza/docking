@@ -19,8 +19,6 @@ import { NbAccordionModule,
   NbTreeGridModule 
 } from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
-import { MatDialogModule } from '@angular/material/dialog';
-import { ContractActionComponent } from './contract-action/contract-action.component';
 import { FormsModule } from '@angular/forms';
 import { CurrencyPipe } from '@angular/common';
 import { TenderComponent } from './tender.component';
@@ -41,7 +39,6 @@ import { WorkAreasModule } from '../../component/work-areas/work-areas.module';
     NbTreeGridModule,
     NbInputModule,
     NbAccordionModule,
-    MatDialogModule,
     NbInputModule,
     NbOptionModule,
     NbSelectModule,
@@ -52,7 +49,6 @@ import { WorkAreasModule } from '../../component/work-areas/work-areas.module';
     NbMenuModule,
     WorkAreasModule
   ],
-  entryComponents: [ContractActionComponent],
   declarations: [
     ...routedComponents,
   ],

@@ -55,4 +55,15 @@ export class ToastrComponent {
             duplicatesBehaviour : 'all',
         });
     }
+
+    onInfo(msg = '') {
+        const iconConfig: NbIconConfig = { icon: 'alert-triangle-outline', pack: 'eva' };
+        this.toastrService.show(msg, `There is something wrong...`, 
+        {   ...this.option,
+            icon : iconConfig, 
+            status : 'info', 
+            duration : 4000,
+            duplicatesBehaviour : 'all',
+        });
+    }
 }

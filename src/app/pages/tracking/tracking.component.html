@@ -47,16 +47,13 @@
                     <button class="m-1" nbButton size="tiny" status='primary' outline (click)="showGantChart(row)">
                          Gant Chart
                     </button>
-                    <button class="m-1" nbButton size="tiny" status='primary' outline (click)="dailyReport(row)">
-                            Report
-                   </button>
                 </ng-template>
             </ngx-datatable-column>
         </ngx-datatable> 
     </nb-card-body>
 </nb-card>
 
-<nb-card>
+<nb-card *ngIf="tasks"> 
     <nb-card-header class="justify-content-between d-flex" >    
         <div>
             <button nbButton *ngFor="let button of leftButton" status="primary" size="small" shape="rectangle" class="mx-1" outline (click)="clickButton(button.desc)">

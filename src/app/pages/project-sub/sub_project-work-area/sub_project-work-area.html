@@ -5,7 +5,7 @@
             <button nbButton outline class="mx-2"
             size="small" status="primary" 
             *ngFor="let button of workAreaNavButton"
-            (click)="onHandleClick(button)"
+            (click)="handleClickButton(button)"
             >
                 {{ button }}
             </button>
@@ -13,13 +13,12 @@
     </nb-card-header>
     <nb-card-body>
         <ngx-work-areas 
-            *ngIf="dataTable"
-            [changing]="changingValue"
-            [dataTable]="dataTable"
+            *ngIf="workAreaData"
+            [workAreaData]="workAreaData"
             [tableDetails]="tableDetails"
-            [allColumns]="allColumns"
             [columnType]="columnType"
             [tableHead]="tableHead" 
+            (sendToParent)="handleClickButton($event.title, $event.data)"
         >
         </ngx-work-areas>
     </nb-card-body>

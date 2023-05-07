@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, OnInit } from '@angular/core';
-import { FunctionCollection } from '../function-collection/function-collection.component';
 import { ProjectService } from '../../pages/project/project.service';
 import { ReportService } from '../../pages/report/report.service';
 import { TenderService } from '../../pages/tender/tender.service';

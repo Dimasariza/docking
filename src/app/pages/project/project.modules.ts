@@ -1,7 +1,8 @@
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NbDateFnsDateModule } from '@nebular/date-fns';
-import { NbAlertModule, 
+import { 
+  NbAlertModule, 
   NbButtonModule, 
   NbCardModule, 
   NbDatepickerModule, 
@@ -14,7 +15,8 @@ import { NbAlertModule,
   NbSearchModule, 
   NbSelectModule, 
   NbTagModule, 
-  NbTreeGridModule } from '@nebular/theme';
+  NbTreeGridModule 
+} from '@nebular/theme';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { ThemeModule } from '../../@theme/theme.module';
 import { ProjectRoutingModule, routedComponents } from './project-routing.module';
@@ -22,14 +24,15 @@ import { WorkAreasModule } from '../../component/work-areas/work-areas.module';
 import { WorkAreasDialogModule } from '../../component/work-areas/work-areas-dialog/work-areas-dialog.module';
 import { CommonModule } from '@angular/common';
 import { ProjectSubModule } from '../project-sub/project-sub.module';
+import { ListTableModule } from '../../component/list-table/list-table.module';
 
 @NgModule({
   imports: [
     CommonModule,
+    ThemeModule,
     NbCardModule,
     NbIconModule,
     NbInputModule,
-    ThemeModule,
     NgxDatatableModule,
     ProjectRoutingModule,
     NbOptionModule,
@@ -47,7 +50,8 @@ import { ProjectSubModule } from '../project-sub/project-sub.module';
     NbDialogModule,
     WorkAreasModule,
     WorkAreasDialogModule,
-    ProjectSubModule
+    ProjectSubModule,
+    ListTableModule
   ],
   entryComponents: [],
   declarations: [

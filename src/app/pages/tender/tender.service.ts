@@ -9,7 +9,7 @@ export class TenderService {
     constructor (private httpClient : HttpClient,){}
     public apiUrl = environment.apiUrl
     
-    getDataTender(page : any = "", status : any = ""){    
+    getAllYards(page : any = "", status : any = ""){    
         const url = this.apiUrl + "/tender"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
@@ -17,7 +17,7 @@ export class TenderService {
         return this.httpClient.get(url, {params  : queryParams})
     }
 
-    getDataTenderPerId(id){
+    getYardById(id){
         const url = this.apiUrl + "/tender/" + id
         return this.httpClient.get(url)
     }
@@ -31,24 +31,24 @@ export class TenderService {
         const url = this.apiUrl + "/report/proyek"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
-                                .append("status", per_page)
-                                .append("q", q)
-                                .append("status", status)
+                                 .append("status", per_page)
+                                 .append("q", q)
+                                 .append("status", status)
         return this.httpClient.get(url, {params : queryParams})
     }
 
-    updateWorkArea(body, id){
+    updateContractWorkArea(body, id){
         const url = this.apiUrl + "/tender/" + id + "/work_area"
         return this.httpClient.put(url, body)
     }
 
-    addTenderContract(body){
+    addNewYard(body){
         const url = this.apiUrl + "/tender"
         return this.httpClient.post(url, body)
     }
 
-    updateTenderContract(body, id){
-        const url = this.apiUrl + "/tender" + id
+    updateYard(body, id){
+        const url = this.apiUrl + "/tender/" + id
         return this.httpClient.put(url, body)
     }
 
@@ -62,7 +62,7 @@ export class TenderService {
         return this.httpClient.delete(url)
     }
 
-    deleteTender(id){
+    deleteYard(id){
         const url = this.apiUrl + "/tender/" + id 
         return this.httpClient.delete(url)
     }

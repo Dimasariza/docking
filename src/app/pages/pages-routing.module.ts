@@ -38,11 +38,6 @@ const routes: Routes = [{
       .then(m => m.ProfileModule),
     },
     {
-      path: 'function',
-      loadChildren: () => import('../component/function-collection/function-collection.module')
-        .then(m => m.FunctionCollecetionModule),
-    },
-    {
       path: 'miscellaneous',
       loadChildren: () => import('./miscellaneous/miscellaneous.module')
         .then(m => m.MiscellaneousModule),

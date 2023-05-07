@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { Subject } from 'rxjs';
+import { CommonFunction } from '../common-function/common-function';
 
 interface FSEntry{}
 @Component({
@@ -10,36 +10,41 @@ interface FSEntry{}
 export class WorkAreasComponent implements OnInit {
   constructor(
     private dataSourceBuilder: NbTreeGridDataSourceBuilder<FSEntry>,
-    ){
-      this.dataSource = this.dataSourceBuilder.create(this.dataTable);
-  }
+    private commonFunction : CommonFunction
+    ){ }
 
   ngOnInit(): void {
+    this.dataTable = this.commonFunction.populateData(this.workAreaData, this.extendTable)
     this.dataSource = this.dataSourceBuilder.create(this.dataTable);
-    this.changing.subscribe(data => { 
-      this.dataTable = data;
-      this.dataSource = this.dataSourceBuilder.create(this.dataTable);
-    });
+    this.allColumns = this.columnType.map(column => column.prop);
   }
 
+  @Input() workAreaData : any;
   @Input() tableDetails : any;
-  @Input() tableHead : any;
-  @Input() allColumns : any;
   @Input() columnType : any;
-  @Input() dataTable : any = [];
-  @Input() changing: Subject<boolean>;
-
+  @Input() tableHead : any;
+  @Output("sendToParent") sendToParent: EventEmitter<any> = new EventEmitter();
+  
+  allColumns : any [];
+  dataTable : any;
   dataSource;
   sortColumn: string;
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
-  handleClickOption(target, value, column = null) {
-    if(target == 'sort') {
-      this.sortProjectMenu.emit({column, value});
-    }
+  public setWorkArea(workArea) {
+    this.workAreaData = workArea;
+    this.ngOnInit();
   }
 
-  @Output("sortTableByFilter") sortProjectMenu: EventEmitter<any> = new EventEmitter();
+  private extendTable = false;
+  public extendOrReduce() {
+    this.extendTable = !this.extendTable;
+    this.ngOnInit();
+  }
+
+  handleClickButton(title, data = null) {
+    this.sendToParent.emit({title, data});
+  }
   
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
@@ -47,9 +52,8 @@ export class WorkAreasComponent implements OnInit {
   }
 
   getSortDirection(column: string): NbSortDirection {
-    if (this.sortColumn === column) {
+    if (this.sortColumn === column) 
       return this.sortDirection;
-    }
     return NbSortDirection.NONE;
   }
 

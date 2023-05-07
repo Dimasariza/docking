@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { ProjectService } from "../project/project.service";
-import { take, takeUntil } from "rxjs/operators";
+import { takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { ToastrComponent } from "../../component/toastr-component/toastr.component";
 
@@ -19,14 +19,14 @@ import { ToastrComponent } from "../../component/toastr-component/toastr.compone
         <ngx-sub-project-summary
             *ngIf="projectData" 
             [projectData]="projectData"
-            (refresh)=refresh($event)
+            (refresh)=ngOnInit()
         >
         </ngx-sub-project-summary>
 
         <ngx-sub-project-work-area 
             *ngIf="projectData" 
             [projectData]="projectData"
-            (refresh)=refresh($event)
+            (refresh)=ngOnInit()
         >
         </ngx-sub-project-work-area>
     `,
@@ -43,12 +43,10 @@ export class ProjectSubComponent implements OnInit{
 
     handleEvent : any;
 
-    refresh = () => this.ngOnInit()
-
     ngOnInit(): void {
         const projectId = this.route.snapshot.paramMap.get('id');
-        this.projectService.getSubProjectData(projectId)
-        .pipe(takeUntil(this.destroy$), take(1))
+        this.projectService.getSubProject(projectId)
+        .pipe(takeUntil(this.destroy$))
         .subscribe(
             ({data} : any) => {
                 const {kapal : {nama_kapal}, tahun, status} = data;

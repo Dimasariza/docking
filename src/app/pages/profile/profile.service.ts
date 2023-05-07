@@ -9,53 +9,53 @@ export class ProfileService {
   constructor(private httpClient: HttpClient) { }
   private apiUrl = environment.apiUrl
 
-  getUserData(page : any = '', per_page : any = '', q : any = '', role : any = '', status : any = '') {
-    const url = this.apiUrl + "/user"
+  getAllUsers({page = 1, per_page = 10, q = '', role = '', status = ''}) {
+    const url = this.apiUrl + "/user";
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("page", page)
-                            .append("per_page", per_page)
-                            .append("q", q)
-                            .append("role", role)
-                            .append("status", status)
+    queryParams = queryParams .append("page", page)
+                              .append("per_page", per_page)
+                              .append("q", q)
+                              .append("role", role)
+                              .append("status", status)
     return this.httpClient.get(url,  {
       params  : queryParams
     })
   }
 
-  getUserPerId(id){
-    const url = this.apiUrl + "/user/" + id
+  getUserById(id){
+    const url = this.apiUrl + "/user/" + id;
     return this.httpClient.get(url)
   }
 
   updateUser(postData, id){
-    const url = this.apiUrl + "/user/" + id
+    const url = this.apiUrl + "/user/" + id;
     const httpHeaders = new HttpHeaders();
-    httpHeaders.append('content-type', 'application/json')
+    httpHeaders.append('content-type', 'application/json');
     return this.httpClient.put(url , postData, {
       headers : httpHeaders
     })
   }
 
   addUser(postBody) {
-    const url = this.apiUrl + "/user"
+    const url = this.apiUrl + "/user";
     const httpHeaders = new HttpHeaders();
-    httpHeaders.append('content-type', 'application/json')
+    httpHeaders.append('content-type', 'application/json');
     return this.httpClient.post(url, postBody, {
       headers : httpHeaders
     })
   }
 
   deleteUser(id){
-    const url = this.apiUrl + "/user/" + id
-    return this.httpClient.delete(url)
+    const url = this.apiUrl + "/user/" + id;
+    return this.httpClient.delete(url);
   }
 
-  getCompanyProfile(){
-    const url = environment.apiUrl + '/pengaturan/profile_perusahaan'
+  getCompanyProfile({per_page = 10, q = ''}){
+    const url = environment.apiUrl + '/pengaturan/profile_perusahaan';
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("per_page", 10)
-                            .append("q", "")
-    return this.httpClient.get(url, {params  : queryParams})
+    queryParams = queryParams .append("per_page", per_page)
+                              .append("q", q)
+    return this.httpClient.get(url, {params  : queryParams});
   }
 
   updateCompanyProfile(body){

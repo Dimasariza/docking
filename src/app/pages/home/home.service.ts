@@ -7,28 +7,29 @@ import { environment } from "../../../environments/environment"
 }) 
 export class HomeService {
   constructor(private httpClient: HttpClient) { }
-  private apiUrl = environment.apiUrl
+  private apiUrl = environment.apiUrl;
   
   getUserLogin(){
-    const url = this.apiUrl + "/auth/profile"
-    return this.httpClient.get(url)
+    const url = this.apiUrl + "/auth/profile";
+    return this.httpClient.get(url);
   }
 
-  getUserProfilePict(img) {
-    const url = this.apiUrl + '/file/show/' + img
+  getFile(img) {
+    const url = this.apiUrl + '/file/show/' + img;
     const httpHeaders = new HttpHeaders();
     httpHeaders.append("Access-Control-Allow-Methods","GET, POST");
     httpHeaders.append("Access-Control-Allow-Origin","*");
     return this.httpClient.get(url, {headers : httpHeaders, responseType : 'arraybuffer'})
   }
   
-  getAllShip(){
-    const url = this.apiUrl + "/home/kapal"
+  getAllShips({ page = 1, per_page = 10, q = "" }){
+    const url = this.apiUrl + "/home/kapal";
     const httpHeaders = new HttpHeaders();
+    httpHeaders.append('content-type', 'application/json')
     let queryParams = new HttpParams();
-    queryParams = queryParams.append("page", 1)
-                             .append("per_page", "10")
-                             .append("q", "")
+    queryParams = queryParams .append("page", page)
+                              .append("per_page", per_page)
+                              .append("q", q)
     return this.httpClient.get(url, {
       headers : httpHeaders, 
       params  : queryParams
@@ -36,13 +37,13 @@ export class HomeService {
   }
 
   uploadFile(postBody){
-    const url = this.apiUrl + "/file/upload"
+    const url = this.apiUrl + "/file/upload";
     return this.httpClient.post(url, postBody, {
       reportProgress : true, observe : 'events'
     })
   }
 
-  addShipData(postBody){
+  addShip(postBody){
     const url = this.apiUrl + "/home/kapal"; 
     const httpHeaders = new HttpHeaders();
     httpHeaders.append('content-type', 'application/json')

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { environment } from "../../../environments/environment"
-import { take, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { Subject} from 'rxjs';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ReportService } from '../report/report.service';
@@ -32,7 +32,7 @@ export class HomeComponent implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.homeService.getUserLogin()
-    .pipe(takeUntil(this.destroy$), take(1))
+    .pipe(takeUntil(this.destroy$))
     .subscribe(({data} : any) => {
       this.currentUser = data;
       this.userAccess = true;
@@ -43,8 +43,8 @@ export class HomeComponent implements OnInit, OnDestroy{
       }
     })
 
-    this.homeService.getAllShip()
-    .pipe(takeUntil(this.destroy$), take(1))
+    this.homeService.getAllShips({})
+    .pipe(takeUntil(this.destroy$))
     .subscribe(
       ({data} : any) => {
         if(!data?.length) return;
@@ -57,8 +57,8 @@ export class HomeComponent implements OnInit, OnDestroy{
       () => this.toastr.onError()
     );
     
-    this.reportService.getProjectSummary()
-    .pipe(takeUntil(this.destroy$), take(1))
+    this.reportService.getProjectSummary({})
+    .pipe(takeUntil(this.destroy$))
     .subscribe(
       ({data} : any) => {
         if(!data?.length) return;
@@ -89,60 +89,58 @@ export class HomeComponent implements OnInit, OnDestroy{
   }
 
   addShipDialog() {
-    this.openDialog({
-      dialogData : {
-        title : 'Add Ship',
-      },
+    const title = 'Add Ship';
+    this.commonFunction.openDialog({
+      dialogData : { title },
       component : ShipDialogComponent 
     })
+    .onClose
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(newData => this.onUploadData(title, newData));
   }
 
   addToAssets(data) {
     data.status == 0
     ? data.status = 1
     : data.status = 0
-    this.onUploadData(data, 'Update');
+    this.onUploadData(data, 'Update Ship');
   }
 
   updateShipDialog(id) {
-    this.openDialog({
+    const title = 'Update Ship';
+    this.commonFunction.openDialog({
       dialogData : {
-        title : 'Update Ship',
+        title,
         data : this.shipData[id]
       },
       component : ShipDialogComponent 
     })
+    .onClose
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(newData => this.onUploadData(title, newData));
   }
 
   deleteShipDialog(id) {
-    this.openDialog({
+    const title = 'Delete Ship';
+    this.commonFunction.openDialog({
       dialogData : {
-        title : 'Delete Ship',
+        title,
         name : this.shipData[id].nama_kapal,
         id : this.shipData[id].id_kapal
       },
       component : DeleteDialogComponent 
     })
-  }
-
-  openDialog({dialogData, component} : any){
-    if(!this.userAccess) return;
-    this.dialogService.open(component, {
-      hasBackdrop : true,
-      closeOnBackdropClick : false,
-      context: { dialogData },
-    })
     .onClose
-    .pipe(takeUntil(this.destroy$), take(1))
-    .subscribe(data => this.onUploadData(data, dialogData.title));
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(newData => this.onUploadData(title, newData));
   }
 
-  onUploadData(data, title) {
+  onUploadData(title, data) {
     if(!data) return;
     let subscribe;
     let successMsg;
     if(title == 'Add Ship') {
-      subscribe = this.homeService.addShipData(data);
+      subscribe = this.homeService.addShip(data);
       successMsg = 'Your Ship has been added.'
     }
 
@@ -157,7 +155,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     }
     
     subscribe
-    .pipe(takeUntil(this.destroy$), take(1))
+    .pipe(takeUntil(this.destroy$))
     .subscribe(
       () => this.toastr.onUpload(),
       () => this.toastr.onError(),

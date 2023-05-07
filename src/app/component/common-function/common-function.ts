@@ -36,9 +36,9 @@ export class CommonFunction {
     workData = [],
     newData,
     sortBy = "id",
-    id = '',
-    currentIndex = '',
+    targetIndex = '',
     lastIndex = '',
+    id = '',
     status = 'new' // default value for add job
   } : any) {
 
@@ -48,9 +48,9 @@ export class CommonFunction {
       return [{...newData, items : [], id}];
     }
     
-    if(currentIndex !== '') currentIndex = currentIndex?.toString().split('.');
-    if(lastIndex === '') lastIndex = currentIndex[0];
-    else if (lastIndex !== '') lastIndex = lastIndex + '.' + currentIndex[0];
+    if(targetIndex !== '') targetIndex = targetIndex?.toString().split('.');
+    if(lastIndex === '') lastIndex = targetIndex[0];
+    else if (lastIndex !== '') lastIndex = lastIndex + '.' + targetIndex[0];
 
     const work = workData.find(work => work[sortBy] === lastIndex);
     if(!work) {
@@ -59,22 +59,27 @@ export class CommonFunction {
     } 
 
     const parentIndex = workData.indexOf(work);
-    if(status == 'delete' && currentIndex.length == 1) {
+    if(status == 'delete' && targetIndex.length == 1) {
       workData[parentIndex] = null;
       return workData.filter(f => f != null);
     }
 
-    if(status == 'update' && currentIndex.length == 1)
-      workData[parentIndex] = {...work, ...newData}
+    if(targetIndex.length == 1 && lastIndex == workData[parentIndex][sortBy] ) {
+      workData[parentIndex] = {...workData[parentIndex], ...work, ...newData};
+      return workData;
+    }
+    
+    // if(status == 'update' && targetIndex.length == 1)
+    //   workData[parentIndex] = {...work, ...newData}
 
-    if(currentIndex.length > 0 && work) {
+    if(targetIndex.length > 0 && work) {
       id = (id + parentIndex + '.').toString();
-      currentIndex = currentIndex.slice(1).join(".").toString();
+      targetIndex = targetIndex.slice(1).join(".").toString();
       workData[parentIndex].items = this.reconstructDatas({
         workData : work?.items,
         newData, id,
         sortBy,
-        currentIndex,
+        targetIndex,
         lastIndex,
         status
       })
@@ -82,7 +87,7 @@ export class CommonFunction {
     return workData;
   }
 
-  populateData = (work, expanded) => { 
+  populateData = (work, expanded = false) => { 
     return work.map(item => ({
         data : {...item, kind : item.items?.length ? 'upper' : 'end'},
         children : item?.items?.length 
@@ -92,16 +97,26 @@ export class CommonFunction {
     }))
   }
 
-  convertToCurrency(currency, ammount) {
-    ammount = this.takeNumberOnly(ammount)
-    if(!ammount) ammount = 0;
-    return this.currency.transform(ammount, `${currency} `, 'symbol','1.0')
+  refillWorkArea(workArea, fillData) {
+    return workArea.map(work => {
+      if(work.items?.length) 
+        work.items = this.refillWorkArea(work.items, fillData)
+      return {...work, ...fillData}
+    })
   }
 
-  takeNumberOnly(text) {
-    text = text.toString().replace(/\D/g, '');
-    text = parseInt(text) 
-    if(text) return text;
+  convertToCurrency(currency, ammount) {
+    if(!ammount) ammount = 0;
+    ammount = this.priceAmount(ammount);
+    return this.currency.transform(ammount, `${currency} `, 'symbol','1.0');
+  }
+
+  priceAmount(text) {
+    if(text) {
+      text = text.toString().replace(/\D/g, '');
+      text = parseInt(text) 
+      return text;
+    }
     return 0;
   }
 
@@ -144,6 +159,32 @@ export class CommonFunction {
   }
 }
 
+
+@Injectable({
+  providedIn: 'root',
+})
+@Component({
+  selector: 'ngx-replace-data',
+  template : ``
+})
+export class ReplaceData {
+  replace(obj, find, replace, replaceBy = null) {
+    const keys = Object.keys(obj);
+    for (let key of keys) {
+        if(obj[key] == find && replaceBy) {
+            obj[replaceBy] = replace;
+            break;
+        } 
+        if(obj[key] == find && !replaceBy) {
+            obj[key] = replace;
+            break;
+        };
+        if(typeof obj[key] == 'object') 
+        obj[key] = this.replace(obj[key], find, replace, replaceBy)
+    }
+    return obj;
+  }
+}
 
 @Injectable({
   providedIn: 'root',

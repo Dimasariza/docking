@@ -3,7 +3,7 @@ import { Subject } from 'rxjs';
 import { ProjectService } from './project.service';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ToastrComponent } from '../../component/toastr-component/toastr.component';
-import { take, takeUntil } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'ngx-project-component',
@@ -19,14 +19,14 @@ import { take, takeUntil } from 'rxjs/operators';
   <ngx-project-task-mine 
     *ngIf="projectData"
     [projectData]="projectData"
-    (refresh)=refresh($event)
+    (refresh)=ngOnInit()
   >
   </ngx-project-task-mine>
 
   <ngx-project-list-project 
     *ngIf="projectData"
     [projectData]="projectData"
-    (refresh)=refresh($event)
+    (refresh)=ngOnInit()
   >
   </ngx-project-list-project>
 
@@ -42,16 +42,12 @@ export class ProjectComponent implements OnInit, OnDestroy {
   handleEvent;
 
   ngOnInit() {
-    this.projectService.getDataProjects()
-    .pipe(takeUntil(this.destroy$), take(1)) 
+    this.projectService.getAllProjects({})
+    .pipe(takeUntil(this.destroy$)) 
     .subscribe(
       ({data} : any) => data?.length ? this.reconstructTableData(data) : null,
       () => this.toastr.onError()
     );
-  }
-
-  refresh() {
-    this.ngOnInit();
   }
 
   public projectData : any;
