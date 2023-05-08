@@ -23,9 +23,14 @@ export class WorkAreasDialogComponent implements OnInit {
         this.usedCurrency = this.dialogData.data?.mata_uang;
         if(this.dialogData.title == 'Add Job')
             this.jobUnit.push(this.commonFunction?.jobUnit[0])
-        else if (this.dialogData.title == 'Add Sub Job'){
-            this.dialogData.data = [];
+        else if (this.dialogData.title == 'Add Sub Job') {
+            const {id, items} = this.dialogData.data;
+            this.dialogData.data = {id : id + "." + items?.length, items};
             this.jobUnit = [...this.commonFunction.jobUnit].slice(1);
+        }
+        else if(this.dialogData.title == 'Quick Add') {
+            this.jobUnit = this.commonFunction.jobUnit;
+            this.dialogData.data = [];
         }
         else {
             this.jobUnit = [...this.commonFunction.jobUnit].slice(1);
@@ -80,10 +85,8 @@ export class WorkAreasDialogComponent implements OnInit {
         arr['start' + this.dialogData.label] = this.commonFunction.transformDate(start);
         arr['end' + this.dialogData.label] = this.commonFunction.transformDate(end);
         arr['totalPrice' + this.dialogData.label] = this.totalPrice;
-
+        arr.id = this.dialogData?.data?.id
         arr = this.acceptData(arr)
-        if(this.dialogData.title == 'Add Sub Job') 
-            return this.dialog.close({data : arr, targetId : this.dialogData.data.id})
         this.dialog.close(arr)
     } 
 

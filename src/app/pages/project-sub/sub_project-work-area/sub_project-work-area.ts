@@ -35,7 +35,7 @@ export class SubProjectWorkArea implements OnInit{
     workAreaData = [];
     tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, currency : 'currency'};
     columnType = [ 
-        { type : 'numb', width : 100, prop : 'jobNumber' }, 
+        { type : 'numb', width : 200, prop : 'jobNumber' }, 
         { type : 'text', width : 150, prop : 'rank' }, 
         { type : 'text', width : 300, prop : 'jobName' }, 
         { type : 'text', width : 150, prop : 'department' }, 
@@ -74,7 +74,7 @@ export class SubProjectWorkArea implements OnInit{
         { type : 'text', placeholder : '' },
     ];
     
-    workAreaNavButton = ["Add Job" ,"Extend","Refresh","Import"]
+    workAreaNavButton = ["Add Job", "Quick Add", "Extend", "Refresh", "Import"]
 
     handleClickButton(button, data = null) {
         switch(button) {
@@ -82,6 +82,9 @@ export class SubProjectWorkArea implements OnInit{
             case 'Add Sub Job':
             case 'Update Job':
                 this.updateWorkAreaDialog(button, data);
+            break;
+            case 'Quick Add':
+                this.quickAddWorkArea(button)
             break;
             case 'Delete Job':
                 this.deleteJobDialog(button, data);
@@ -108,6 +111,23 @@ export class SubProjectWorkArea implements OnInit{
         this.viewWorkArea.extendOrReduce()
     }
 
+    quickAddWorkArea(title) {
+        this.commonFunction.openDialog({
+            dialogData : { 
+                title,
+                data : this.projectData,
+                label : 'Budget',
+            },
+            component : WorkAreasDialogComponent
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => newData
+            ? this.onUploadData(title, newData)
+            : null
+        );
+    }
+
     updateWorkAreaDialog(title, data) {
         if(!data) data = this.projectData;
         this.commonFunction.openDialog({
@@ -120,7 +140,10 @@ export class SubProjectWorkArea implements OnInit{
         })
         .onClose
         .pipe(takeUntil(this.destroy$))
-        .subscribe(newData => this.onUploadData(title, newData));
+        .subscribe(newData => newData 
+            ? this.onUploadData('Reconstruct Work Area', newData)
+            : null
+        );
     }
 
     deleteJobDialog(title, data) {
@@ -138,46 +161,48 @@ export class SubProjectWorkArea implements OnInit{
     }
 
     onUploadData(title, data) {
-        console.log('title', title)
-        console.log('data', data)
         if(!data) return;
-        if(title == 'Add Job') {
-            let {work_area} = this.projectData;
+        let successmsg;
+        let work_area
+
+        if(title == 'Reconstruct Work Area') {
             work_area = this.commonFunction.reconstructDatas({
-                workData : work_area, 
-                newData : data
+                workData : this.projectData.work_area, 
+                newData : data,
+                targetIndex : data.id,
             })
-            this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
-            .subscribe(() => 
-            () => this.toastr.onUpload(),
-            () => this.toastr.onError(),
-            () => {
-                this.toastr.onSuccess(`Your job ${data.jobName} has been added`);
-                this.refreshPage.emit();
-                this.viewWorkArea.setWorkArea(work_area)
-                }
-            )
+            successmsg = `Your work area has been updated > ${data.jobName}`
         }
 
         if(title == 'Delete Job') {
-            let {work_area} = this.projectData;
             work_area = this.commonFunction.reconstructDatas({
-                workData : work_area, 
+                workData : this.projectData.work_area, 
                 targetIndex : data.id,
                 status : 'delete'
             })
-            console.log(work_area)
-            this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
-            .subscribe(() => 
-            () => this.toastr.onUpload(),
-            () => this.toastr.onError(),
-            () => {
-                this.toastr.onSuccess(`Your job ${data.jobName} has been deleted`);
-                this.refreshPage.emit();
-                this.viewWorkArea.setWorkArea(work_area)
-                }
-            )
+            successmsg = `Your job ${data.jobName} has been deleted`
         }
+
+        if(title = 'Quick Add') {
+            work_area = this.commonFunction.reconstructDatas({
+                workData : this.projectData.work_area, 
+                newData : data,
+                targetIndex : data.jobNumber,
+                sortBy : 'jobNumber'
+            })
+            successmsg = `Your work area has been updated > ${data.jobName}`
+        }
+
+        this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
+        .subscribe(
+        () => this.toastr.onUpload(),
+        () => this.toastr.onError(),
+        () => {
+            this.toastr.onSuccess(`Your job ${data.jobName} has been deleted`);
+            this.refreshPage.emit();
+            this.viewWorkArea.setWorkArea(work_area)
+            }
+        )
     }
 
     ngOnDestroy(): void {

@@ -61,7 +61,9 @@ export class CommonFunction {
     const parentIndex = workData.indexOf(work);
     if(status == 'delete' && targetIndex.length == 1) {
       workData[parentIndex] = null;
-      return workData.filter(f => f != null);
+      workData = workData.filter(f => f != null);
+      if(!workData.length) return [null];
+      return workData;
     }
 
     if(targetIndex.length == 1 && lastIndex == workData[parentIndex][sortBy] ) {
