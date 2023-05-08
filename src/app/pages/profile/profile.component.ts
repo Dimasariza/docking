@@ -49,7 +49,6 @@ export class ProfilComponent implements OnInit {
   }
 
   sortUserActivated(user) {
-    console.log(this.unSortUserData)
     if(user == 'All') 
       this.userData = this.unSortUserData
     else if (user == 'Active') 
@@ -69,9 +68,10 @@ export class ProfilComponent implements OnInit {
     const _subs = this.homeService.uploadFile(formData)
     .subscribe((res) => {
       if (res.type === HttpEventType.UploadProgress) {
-        console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+        const progress = Math.round(res.loaded / res.total ) * 100
+        // console.log("Upload Progress: " + progress + ' %')
       } else if ( res.type === HttpEventType.Response){
-        console.log("final Response uploading image")
+        // console.log("final Response uploading image")
       }
     })
     // this.subscription.push(_subs)

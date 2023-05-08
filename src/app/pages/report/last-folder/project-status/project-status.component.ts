@@ -79,7 +79,6 @@ export class ProjectStatusComponent implements OnInit, AfterViewInit {
       actual : 0
     }));
 
-    console.log(this.currencyTable)
 
 
     // this.initData();

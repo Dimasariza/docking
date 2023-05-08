@@ -6,6 +6,7 @@ import { NbButtonModule,
     NbIconModule, 
     NbInputModule,
      NbPopoverModule,
+     NbProgressBarModule,
      NbSelectModule, 
      NbTreeGridModule 
     } from "@nebular/theme";
@@ -28,7 +29,8 @@ import { NbDateFnsDateModule } from "@nebular/date-fns";
         NbButtonModule,
         WorkAreasDialogModule,
         NbPopoverModule,
-        NbDateFnsDateModule
+        NbDateFnsDateModule,
+        NbProgressBarModule
     ],
     declarations: [
         WorkAreasComponent

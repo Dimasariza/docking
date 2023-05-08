@@ -34,12 +34,16 @@ export class WorkAreasDialogComponent implements OnInit {
         }
         else {
             this.jobUnit = [...this.commonFunction.jobUnit].slice(1);
-            this.start[this.dialogData.label] = this.commonFunction.parseDate(this.dialogData.data.startBudget);
-            this.end[this.dialogData.label] = this.commonFunction.parseDate(this.dialogData.data.endBudget);
             this.unitPrice = this.commonFunction.convertToCurrency(
                 this.usedCurrency, this.dialogData.data['unitPrice' + this.dialogData.label]
             ) 
-            this.totalPrice = this.dialogData.data['totalPrice' + this.dialogData.label]
+            this.totalPrice = this.dialogData.data['totalPrice' + this.dialogData.label];
+
+            if(this.dialogData.data["start" + this.dialogData.label])
+            this.start[this.dialogData.label] = this.commonFunction.parseDate(this.dialogData.data["start" + this.dialogData.label]);
+            
+            if(this.dialogData.data["end" + this.dialogData.label])
+            this.end[this.dialogData.label] = this.commonFunction.parseDate(this.dialogData.data["end" + this.dialogData.label]);
         }
 
         this.profileService.getAllUsers({ })
@@ -111,7 +115,11 @@ export class WorkAreasDialogComponent implements OnInit {
             'remarks',
             'mata_uang',
             'id',
-            'items'
+            'items',
+            'supplier',
+            'approvedByShipYard',
+            'approvedByOwner',
+            'approvedByYard'
         ].forEach(item => acceptData[item] = data[item] ? data[item] : "")
         return acceptData;
     }

@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { NbDateService, NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
-import { ExportToExcel } from '../../function-collection/export-excel';
+import { ExportToExcel } from '../../common-function/export-excel';
 import { FunctionCollection } from '../../function-collection/function-collection.component';
 import { ProjectService } from '../../../pages/project/project.service';
 import { BarProgressComponent } from '../../../pages/report/last-folder/bar-progress/bar-progress.component';

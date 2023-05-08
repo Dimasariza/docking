@@ -2,6 +2,9 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { takeUntil } from 'rxjs/operators';
 import { ReportService } from '../../report.service';
 import { Subject } from 'rxjs';
+import { CommonFunction } from '../../../../component/common-function/common-function';
+import { LetterDialogComponent } from './letter-dialog/letter-dialog.component';
+import { ToastrComponent } from '../../../../component/toastr-component/toastr.component';
 
 @Component({
   selector: 'ngx-letter-menu',
@@ -10,6 +13,8 @@ import { Subject } from 'rxjs';
 export class LetterMenuComponent implements OnInit, OnDestroy {
   constructor(
     private reportService : ReportService,
+    private commonFunction : CommonFunction,
+    private toastr : ToastrComponent
   ) { }
 
   buttons = [
@@ -19,7 +24,7 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
 
-  @Output() refresh : EventEmitter<any> = new EventEmitter<string>();
+  @Output('refresh') refreshPage : EventEmitter<any> = new EventEmitter<string>();
   @Input() typeMenu : any;
   @Input() summaryData : any;
   @Input() responsible : any;
@@ -40,37 +45,71 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
     { name: 'Sender / Maker', type : 'text', prop : 'nama_pengirim', width : 300 },
     { name: 'Last View', type : 'date', prop : 'updated_at', width : 300 },
     { name: 'Remarks', type : 'text', prop : 'keterangan', width : 300 },
-    { name: 'Send', type : 'button', width : 300, unSort : true,
+    { name: 'Send', type : 'button', width : 100, unSort : true,
       button :  [ 
         {icon : 'paper-plane-outline', menu : 'Send Notification', status : 'success'},
+        {icon : 'file-outline', menu : 'See Document', status : 'info'},
       ], 
     },
   ];
 
   handleClickButton(button, data){
-    if(button == 'Add Document') this.addLetterDialog()
-    if(button == 'Refresh') this.refresh.emit()
-    // if(button == 'Send Notification') this.sendNotification(data)
+    if(button == 'Add Document') this.addLetterDialog();
+    if(button == 'See Document') this.seeDocument(data);
+    if(button == 'Refresh') {
+      this.ngOnInit();
+      this.refreshPage.emit();
+      this.sendEmailProgress = false;
+    }
+    if(button == 'Send Notification') this.sendNotification(data);
   }
 
   addLetterDialog(){
-
-    // const dialog = this.dialog.open(LetterDocComponent, { 
-    //   disableClose : true,
-    //   autoFocus : true,
-    //   data : {
-    //     dial : this.typeMenu,
-    //     id :  this.summaryData.id_proyek
-    //   }
-    // })
-    // dialog.componentInstance.onSuccess.asObservable()
-    // .pipe(take(1))
-    // .subscribe(() => {
-    //   this.ngOnInit()
-    // })
+    const title = 'Add Document';
+    this.commonFunction.openDialog({
+      dialogData : { 
+        title,
+        data : this.typeMenu
+      },
+      component : LetterDialogComponent
+    })
+    .onClose
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(newData => newData 
+      ? this.onUploadData(title, newData)
+      : null );
   }
 
+  seeDocument({id_attachment}) {
+    if(id_attachment == null) return this.toastr.onInfo('There is no document.')
+    this.reportService.getAttachment(id_attachment)
+    .subscribe(data => {
+      this.toastr.onInfo('Getting your document. Please wait...')
+      const file = new Blob([data], { type: 'application/pdf' });            
+      const fileURL = URL.createObjectURL(file);
+      window.open(fileURL);
+    })
+  }
+
+  onUploadData(title, data) {
+    if(title == 'Add Document') {
+      data.id_proyek = this.summaryData.id_proyek;
+      this.reportService.addDocument(data)
+      .subscribe(
+        () => this.toastr.onUpload(),
+        () => this.toastr.onError(),
+        () => {
+          this.toastr.onSuccess(`Your ${this.typeMenu} document has been added`)
+          this.refreshPage.emit();
+          this.ngOnInit();
+        }
+      )
+    }
+  }
+
+  public sendEmailProgress;
   sendNotification(row) {
+    this.sendEmailProgress = true; 
     const { kapal : {nama_kapal}, tahun, status } = this.summaryData.proyek;
     const postBody = this.responsible.map(resp => ({
       shipyard : {
@@ -91,7 +130,14 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
 
     postBody.forEach(body => {
       this.reportService.sendLetterEmail(body, this.typeMenu)
-      .subscribe(res => console.log(res), err => console.log(err))
+      .subscribe(
+        () => this.sendEmailProgress = true,
+        () => this.toastr.onError(),
+        () => {
+          this.sendEmailProgress = false;
+          this.toastr.onSuccess('Your email has been send.');
+        } 
+      )
     })
   }
 

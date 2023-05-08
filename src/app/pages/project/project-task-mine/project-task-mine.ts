@@ -30,8 +30,6 @@ export class ProjectTaskMine implements OnInit {
       }
     })
 
-
-
     this.tableHead = this.replace.replace(this.tableHead, 'Project', this.projectTitle, 'option')
     this.tableHead = this.replace.replace(this.tableHead, 'Responsible', this.responsible, 'option')
   }
@@ -40,13 +38,13 @@ export class ProjectTaskMine implements OnInit {
   @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
   
   workAreaData = [];
-  tableDetails : any = {style :{ width : '1800px', "max-height" : '300px' }, searchBar : true};
+  tableDetails : any = {style :{ width : '1900px', "max-height" : '300px' }, searchBar : true};
   columnType = [ 
     { type : 'numb', width : 100, prop : 'jobNumber' }, 
     { type : 'text', width : 150, prop : 'jobName' }, 
     { type : 'text', width : 250, prop : 'projectTitle' }, 
     { type : 'text', width : 150, prop : 'status' }, 
-    { type : 'resp', width : 200, prop : 'responsible' }, 
+    { type : 'resp', width : 250, prop : 'responsible' }, 
     { type : 'date', width : 200, prop : 'end' }
   ]
   

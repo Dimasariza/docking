@@ -19,6 +19,7 @@ import { ToastrComponent } from "../../component/toastr-component/toastr.compone
         <ngx-sub-project-summary
             *ngIf="projectData" 
             [projectData]="projectData"
+            [allWorkArea]="allWorkArea"
             (refresh)=ngOnInit()
         >
         </ngx-sub-project-summary>
@@ -39,19 +40,28 @@ export class ProjectSubComponent implements OnInit{
     ) { }
 
     public projectData : any;
+    public allWorkArea : any;
     private destroy$: Subject<void> = new Subject<void>();
 
     handleEvent : any;
 
     ngOnInit(): void {
         const projectId = this.route.snapshot.paramMap.get('id');
+
         this.projectService.getSubProject(projectId)
         .pipe(takeUntil(this.destroy$))
         .subscribe(
             ({data} : any) => {
-                const {kapal : {nama_kapal}, tahun, status} = data;
+                const { kapal : {nama_kapal}, tahun, status, 
+                    work_area : projectWorkArea = "", report
+                } = data || {};
                 const projectTitle = `${nama_kapal} -DD- ${tahun} ${status.toUpperCase()}`;
                 this.projectData = {...data, projectTitle}
+                this.allWorkArea = {projectWorkArea};
+                if(!report) return; 
+                const { work_area : reportWorkArea = "", variant_work,
+                tender : { work_area : tenderWorkArea = "" } } = report;
+                this.allWorkArea = {reportWorkArea, variant_work, tenderWorkArea, projectWorkArea}
             },
             () => this.toastr.onError()
         );

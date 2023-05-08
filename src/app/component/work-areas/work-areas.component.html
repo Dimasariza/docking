@@ -28,9 +28,9 @@
           <span *ngIf=" tableHead[index].type === 'text' ">{{tableHead[index].placeholder}}</span>
 
           <!-- Drop Down -->
-          <div  *ngIf=" tableHead[index].type === 'drop-down' " class="d-flex w-100">
-            <span class="mr-3">{{ tableHead[index].placeholder }}</span>
-            <nb-select [style.width.px]="columnType[index].width" [selected]="tableHead[index].option[0]" [compareWith]="compareById" size="small" fullWidth>
+          <div  *ngIf=" tableHead[index].type === 'drop-down' " class="w-100">
+            <span class="mr-3 text-center w-100">{{ tableHead[index].placeholder }}</span>
+            <nb-select [style.width.px]="columnType[index].width" [selected]="tableHead[index].option[0]" [compareWith]="compareById" size="small" >
               <nb-option *ngFor="let item of tableHead[index].option" [value]="item" 
               (click)="handleClickButton(tableHead[index].title, {value : item, column})"
               >
@@ -58,9 +58,12 @@
           <div
             *ngIf="columnType[index].type == 'icon'"
           >
-            <nb-icon 
-              class="flip-icon" 
-              icon="chevron-right-outline" 
+            <nb-icon *ngFor="let icon of columnType[index].icon"
+              [icon]="icon.name" 
+              [ngStyle]="{'color' : row.data[icon.color]}"
+              [nbPopover]="row.data[icon.popOver] || 'undefined'" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
               pack="eva" 
             ></nb-icon> 
           </div>
@@ -90,10 +93,15 @@
           <!-- Text Only -->
           <span *ngIf="columnType[index].type == 'text'">{{row.data[column] || '-'}}</span>
 
+          <!-- Progress -->
+          <div *ngIf="columnType[index].type == 'progress'">
+            <nb-progress-bar [value]=" row.data[column] " status="info" [displayValue]="true"></nb-progress-bar>
+          </div>
+
           <!-- Click text -->
           <span *ngIf="columnType[index].type == 'navto'" 
-          class="text-primary" style="cursor: pointer;"
-          (click)="handleClickButton('Navigate To', row.data)"
+            class="text-primary" style="cursor: pointer;"
+            (click)="handleClickButton(columnType[index].title, row.data)"
           >
             {{row.data[column] || '-'}}
           </span>

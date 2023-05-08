@@ -44,12 +44,7 @@ export class ReportService {
         httpHeaders.append('content-type', 'application/json');
         return this.httpClient.put(url, postBody, {headers : httpHeaders});
     }
-
-    addSuplier(body){
-        const url = this.apiUrl + "/supplier";
-        return this.httpClient.post(url, body);
-    }
-
+    
     getAllSupliers({page = '', per_page = '', q = ''}){
         const url = this.apiUrl + "/supplier"
         let queryParams = new HttpParams();
@@ -59,9 +54,19 @@ export class ReportService {
         return this.httpClient.get(url, {params : queryParams})
     }
 
+    addSuplier(body){
+        const url = this.apiUrl + "/supplier";
+        return this.httpClient.post(url, body);
+    }
+
     updateSuplier(body) {
-        const url = this.apiUrl + "/supplier" + body.id_supplier;
-        return this.httpClient.get(url);
+        const url = this.apiUrl + "/supplier/" + body.id_supplier;
+        return this.httpClient.put(url, body);
+    }
+
+    deleteSupplier(id_supplier) {
+        const url = this.apiUrl + "/supplier" + id_supplier;
+        return this.httpClient.delete(url);
     }
 
     addDocument(body){

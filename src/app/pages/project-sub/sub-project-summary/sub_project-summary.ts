@@ -20,6 +20,20 @@ export class SubProjectSummary implements OnInit {
     ) { }
 
     ngOnInit(): void {
+        this.generateTableDatas()
+        this.generateCurrencyTable()
+    }
+
+    Object = Object;
+    @Input() projectData;
+    @Input() allWorkArea : any;
+    @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
+    private destroy$: Subject<void> = new Subject<void>();
+
+    currencyTable : any = {};
+    summaryTable : any;
+
+    generateCurrencyTable() {
         this.currencyTable = this.commonFunction.category
         .map(category => ({
             name : category,
@@ -27,19 +41,35 @@ export class SubProjectSummary implements OnInit {
             contract : 0,
             actual : 0
         }));
-        this.generateTableDatas()
+
+        const { projectWorkArea, tenderWorkArea, reportWorkArea } = this.allWorkArea;
+        if(this.commonFunction.arrayNotEmpty(projectWorkArea)) 
+            this.findFromWorkArea(projectWorkArea, "Budget")
+        if(this.commonFunction.arrayNotEmpty(tenderWorkArea)) 
+            this.findFromWorkArea(tenderWorkArea, "Contract")
+        if(this.commonFunction.arrayNotEmpty(reportWorkArea)) 
+            this.findFromWorkArea(reportWorkArea, "Actual")
+
+        this.currencyTable = this.currencyTable.map(({name, budget = 0, contract = 0, actual = 0} : any) => {
+            budget = this.commonFunction.convertToCurrency(this.summaryTable["Base Currency"], budget)
+            contract = this.commonFunction.convertToCurrency(this.summaryTable["Base Currency"], contract)
+            actual = this.commonFunction.convertToCurrency(this.summaryTable["Base Currency"], actual)
+            return {name, budget, contract, actual};
+        })
     }
 
-    Object = Object;
-    @Input() projectData;
-    @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
-    private destroy$: Subject<void> = new Subject<void>();
-
-    currencyTable;
-    summaryTable : any;
+    findFromWorkArea(work_area, label) {
+        work_area.forEach(work => {
+            this.commonFunction.category.forEach((category, index) => {
+                if(work.category == category) {
+                    this.currencyTable[index][`${label.toLowerCase()}`] += 
+                    this.commonFunction.priceAmount(work[`unitPrice${label}`])  || 0;
+                };
+            })
+        });
+    }
 
     generateTableDatas() {
-        console.log(this.projectData)
         const {kapal : {nama_kapal}, phase, mata_uang, 
         off_hire_start, off_hire_end, off_hire_period, off_hire_deviasi, 
         off_hire_bunker_per_day, repair_start, repair_end, repair_period,

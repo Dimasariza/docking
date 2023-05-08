@@ -74,9 +74,10 @@ export class UserActionComponent implements OnInit, OnDestroy{
     const _subs = this.homeService.uploadFile(formData)
       .subscribe((res) => {
         if (res.type === HttpEventType.UploadProgress) {
-          console.log("Upload Progress: " + Math.round(res.loaded / res.total ) * 100 + ' %')
+          const progress = Math.round(res.loaded / res.total ) * 100
+          // console.log("Upload Progress: " + progress + ' %')
         } else if ( res.type === HttpEventType.Response){
-          console.log("final Response uploading image")
+          // console.log("final Response uploading image")
           this.uploadAvatarUrl = res.body
           this.uploadAvatarUrl = this.uploadAvatarUrl.data.file
         }

@@ -10,7 +10,12 @@
             {{button.name}}
         </button>
     </nb-card-header>
-    <nb-card-body>
+    <nb-card-body 
+        [nbSpinner]="sendEmailProgress"
+        nbSpinnerStatus="info"
+        nbSpinnerSize="large"
+        nbSpinnerMessage="Send Email"
+    >
         <ngx-list-table-component 
             [columns]="columns" 
             [rows]="letterDatas"

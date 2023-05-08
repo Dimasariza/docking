@@ -14,9 +14,19 @@ export class WorkAreasComponent implements OnInit {
     ){ }
 
   ngOnInit(): void {
-    this.dataTable = this.commonFunction.populateData(this.workAreaData, this.extendTable)
-    this.dataSource = this.dataSourceBuilder.create(this.dataTable);
+    this.workAreaData = this.defineRankColor(this.workAreaData)
     this.allColumns = this.columnType.map(column => column.prop);
+    this.dataTable = this.commonFunction.populateData(this.workAreaData, this.extendTable);
+    this.dataSource = this.dataSourceBuilder.create(this.dataTable);
+  }
+
+  defineRankColor(workArea) {
+    return workArea.map(work => {
+        if(work.items?.length) 
+            work.items = this.defineRankColor(work.items);
+        const rankColor = this.commonFunction.rankColor(work.rank);
+        return {...work, rankColor};
+    })
   }
 
   @Input() workAreaData : any;

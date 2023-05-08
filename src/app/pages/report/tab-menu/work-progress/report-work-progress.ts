@@ -1,7 +1,10 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 import { Subject } from "rxjs";
-import { CommonFunction } from "../../../../component/common-function/common-function";
+import { CommonFunction, ReplaceData } from "../../../../component/common-function/common-function";
 import { takeUntil } from "rxjs/operators";
+import { WorkAreasComponent } from "../../../../component/work-areas/work-areas.component";
+import { ExportToExcel } from "../../../../component/common-function/export-excel";
+import { WorkVariantDetailDialog } from "../work-variant-detail-dialog/work-variant-detail-dialog";
 
 @Component({
     selector: 'ngx-report-work-progress',
@@ -10,30 +13,43 @@ import { takeUntil } from "rxjs/operators";
 export class ReportWorkProgress implements OnInit { 
     constructor(
         private commonFunction : CommonFunction,
+        private replaceData : ReplaceData,
+        private exportToExcel : ExportToExcel,
     ) { }
 
     ngOnInit(): void {
+        this.workAreaData = this.summaryData.work_area;
+        const currency = this.summaryData.proyek.mata_uang;
+        this.tableDetails = this.replaceData
+        .replace(this.tableDetails, 'currency', currency + " " , 'currency')
     }
     
     public workProgressNavButton = [
         { name : 'Refresh', icon: 'refresh' }, 
         { name : 'Export to Excel', icon: 'external-link' }, 
-        { name : 'Expand', icon: 'arrow-ios-downward-outline' },
+        { name : 'Extend', icon: 'chevron-down-outline' },
         { name : 'Send Notification', icon: 'paper-plane-outline' }, 
     ]
 
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
+    @Output("sendNotification") sendNotification : EventEmitter<any> = new EventEmitter();
+    @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
+    @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
-    @Input() workAreaData;
 
-    tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, 
-        button : [{ name : 'Save', disabled : false }]
+    workAreaData : any ;
+    tableDetails = {style :{ width : '3200px', "max-height" : '300px' }, 
+        button : [{ name : 'Save', disabled : false }], currency : 'currency'
     };
     columnType = [ 
-        { type : 'numb', width : 100, prop : 'jobNumber' }, 
-        { type : 'text', width : 150, prop : 'rank' }, 
-        { type : 'text', width : 150, prop : 'jobName' }, 
-        { type : 'text', width : 250, prop : 'department' }, 
+        { type : 'numb', width : 200, prop : 'jobNumber' }, 
+        { type : 'icon', width : 80, prop : 'rank' ,
+            icon : [ 
+                {name : 'info-outline', color : 'rankColor', popOver : 'rank'},
+            ]
+        }, 
+        { type : 'navto', width : 400, prop : 'jobName', title : 'Nav To' }, 
+        { type : 'progress', width : 250, prop : 'progress' }, 
         { type : 'text', width : 150, prop : 'startActual' }, 
         { type : 'text', width : 200, prop : 'endActual' }, 
         { type : 'text', width : 200, prop : 'volume' },
@@ -41,48 +57,90 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', width : 200, prop : 'unitPriceActual' },
         { type : 'text', width : 200, prop : 'totalPriceActual' },
         { type : 'text', width : 200, prop : 'category' },
-        { type : 'text', width : 200, prop : 'remarks' },
-        { type : 'text', width : 200, prop : 'approved' },
-        { type : 'text', width : 200, prop : 'edit' },
+        { type : 'text', width : 400, prop : 'remarks' },
+        { type : 'text', width : 200, prop : 'suplier' },
+        { type : 'butt', width : 100, prop : 'approved' ,
+        button : [
+                { name : 'By Ship Yard', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
+                { name : 'By Owner', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
+            ] 
+        },
+        { type : 'butt', width : 100, prop : 'edit',
+            button : [
+                { name : 'Update Job', icon : 'edit-outline', status : 'info'},
+                { name : 'Export PDF', icon : 'file-outline', status : 'primary'},
+            ] 
+        },
     ]
 
     tableHead = [ 
         { type : 'text', placeholder : 'Job Number' },
         { type : 'text', placeholder : 'Rank' },
         { type : 'text', placeholder : 'Job Name' },
-        { type : 'text', placeholder : 'Department' },
+        { type : 'text', placeholder : '%' },
         { type : 'text', placeholder : 'Start' },
         { type : 'text', placeholder : 'Stop' },
         { type : 'text', placeholder : 'Volume' },
         { type : 'text', placeholder : 'Unit' },
-        { type : 'text', placeholder : 'Unit Price Contract' },
-        { type : 'text', placeholder : 'Total Price Contract' },
+        { type : 'text', placeholder : 'Unit Price Actual' },
+        { type : 'text', placeholder : 'Total Price Actual' },
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
-        { type : 'text', placeholder : 'Approval' },
-        { type : 'text', placeholder : 'Edit' },
+        { type : 'text', placeholder : 'Supplier' },
+        { type : 'text', placeholder : 'Approved' },
+        { type : 'text', placeholder : '' },
+
     ]
 
     handleClickButton(title, data = null) {
-        if(title == 'Refresh') console.log(title)
-        if(title == 'Export to Excel') console.log(title)
-        if(title == 'Expand') console.log(title)
-        if(title == 'Reduce') console.log(title)
-        if(title == 'Send Notification') console.log(title)
+        if(title == 'Refresh') this.refreshPage.emit();
+        if(title == 'Export to Excel') this.exportDataExcel()
+        if(title == 'Extend') this.extendTable(true)
+        if(title == 'Reduce') this.extendTable(false)
+        if(title == 'Nav To') this.workProgressDetail()
+        if(title == 'Send Notification') 
+        this.sendNotification.emit({work_area : this.workAreaData, label : "Actual"})
     }
 
-    addSuplierDialog(title, data) {
+    exportDataExcel() {
+        const {kapal : {nama_kapal}, tahun, status} = this.summaryData.proyek;
+        const exelFileName = `${nama_kapal} -DD- ${tahun} - ${status} Progress`;
+        this.exportToExcel.exportToExcel(this.workAreaData, "Actual", exelFileName);
+    }
+    
+    extendTable(conds) {
+        if(conds) {
+            this.workProgressNavButton = this.replaceData
+            .replace(this.workProgressNavButton, "Extend", "Reduce", 'name')
+            this.workProgressNavButton = this.replaceData
+            .replace(this.workProgressNavButton, "chevron-down-outline", "chevron-right-outline", 'icon')
+        }
+        if(!conds) {
+            this.workProgressNavButton = 
+            this.replaceData.replace(this.workProgressNavButton, "Reduce", "Extend", 'name')
+            this.workProgressNavButton = this.replaceData
+            .replace(this.workProgressNavButton, "chevron-right-outline", "chevron-down-outline", 'icon')
+        }
+        this.viewWorkArea.extendOrReduce()
+    }
+
+    workProgressDetail(title = "Work Progress Detail") {
         this.commonFunction.openDialog({
-            dialogData : { title },
-            component : 'ProjectDialogComponent' 
+            dialogData : { 
+              title,
+              data : this.summaryData
+            },
+            component : WorkVariantDetailDialog
         })
-        .onClose
-        .pipe(takeUntil(this.destroy$))
-        .subscribe(newData => this.onUploadData(title, newData));
     }
 
     onUploadData(title, data) {
 
+    }
+
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 
 }

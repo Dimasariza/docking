@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnInit, Output } from '@angu
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSource, NbTreeGridDataSourceBuilder } from '@nebular/theme';
-import { ExportToExcel } from '../../function-collection/export-excel';
+import { ExportToExcel } from '../../common-function/export-excel';
 import { FunctionCollection } from '../../function-collection/function-collection.component';
 import { DeleteDialogComponent } from '../../delete-dialog/delete-dialog.component';
 import { JobSuplierComponent } from '../../../pages/report/last-folder/job-suplier/job-suplier.component';

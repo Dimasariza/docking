@@ -25,7 +25,7 @@ export class ProjectListProject implements OnDestroy {
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
 
     columns = [
-        { name: 'Project Name', type : 'navTo', prop : 'projectTitle', width : 420},
+        { name: 'Project Name', type : 'navTo', prop : 'projectTitle', width : 420, title : 'Nav To'},
         { name : '', type : 'button', width : 150, unSort : true,
           button :  [ 
                 {icon : 'trash-2-outline', menu : 'Delete Project', status : 'danger'},
@@ -73,7 +73,7 @@ export class ProjectListProject implements OnDestroy {
     }
 
     copyProject(title, data) {
-        console.log(data)
+        // console.log(data)
     }
 
     onUploadData(title, data) {

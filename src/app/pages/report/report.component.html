@@ -20,22 +20,31 @@
 <nb-card>
       <nb-tabset fullWidth *ngIf="summaryData">
         <nb-tab tabTitle="PIC">
-            <ngx-report-pic [responsible]="responsible">
+            <ngx-report-pic 
+                [responsible]="responsible"
+            >
             </ngx-report-pic>
         </nb-tab>
         <nb-tab tabTitle="Supplier">
-            <ngx-report-suplier [suplierData]="suplierData">
+            <ngx-report-suplier 
+                [suplierData]="suplierData"
+                (refresh)="ngOnInit()" 
+            >
             </ngx-report-suplier>
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
             <ngx-report-work-progress
-                [workAreaData]="workProgress"
+                [summaryData]="summaryData"
+                (refresh)="ngOnInit()" 
+                (sendNotification)="sendEmailNotification($event.work_area, $event.label)"
             >
             </ngx-report-work-progress>
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
             <ngx-report-variant-work
-                [workAreaData]="variantWork"
+                [summaryData]="summaryData"
+                (refresh)="ngOnInit()" 
+                (sendNotification)="sendEmailNotification($event.work_area, $event.label)"
             >
             </ngx-report-variant-work>
         </nb-tab>

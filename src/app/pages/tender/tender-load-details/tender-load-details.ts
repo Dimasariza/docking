@@ -7,6 +7,7 @@ import { Subject } from "rxjs";
 import { ReportService } from "../../report/report.service";
 import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
 import { HomeService } from "../../home/home.service";
+import { TenderService } from "../tender.service";
 
 @Component({
     selector: 'ngx-tender-load-details',
@@ -20,6 +21,7 @@ export class TenderLoadDetails {
         private reportService : ReportService,
         private toastr : ToastrComponent,
         private homeService : HomeService,
+        private tenderService : TenderService
     ) {}
 
     activeProject : any = {};
@@ -28,7 +30,6 @@ export class TenderLoadDetails {
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
 
     generateTableDatas(data) {
-        console.log(data)
         let {projectTitle = '', id_tender = '', work_area = [], approved = false,
         yard : {work_area : tenderWorkArea = []} = '', yard} = data;
         if(yard) work_area = tenderWorkArea;
@@ -43,12 +44,16 @@ export class TenderLoadDetails {
     }
 
     workAreaData : any = [];
-    tableDetails = {style :{ width : '1800px', "max-height" : '300px' }, 
+    tableDetails = {style :{ width : '3400px', "max-height" : '300px' }, 
         button : [{ name : 'Confirm Contract', disabled : true }]
     };
     columnType = [ 
         { type : 'numb', width : 100, prop : 'jobNumber' }, 
-        { type : 'text', width : 150, prop : 'rank' }, 
+        { type : 'icon', width : 50, prop : 'rank' ,
+            icon : [ 
+                {name : 'info-outline', color : 'rankColor', popOver : 'rank'},
+            ]
+        }, 
         { type : 'text', width : 150, prop : 'jobName' }, 
         { type : 'text', width : 250, prop : 'department' }, 
         { type : 'date', width : 150, prop : 'startContract' }, 
@@ -84,8 +89,10 @@ export class TenderLoadDetails {
         { type : 'text', placeholder : 'Total Price Contract' },
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
-        { type : 'text', placeholder : 'Approval' },
-        { type : 'text', placeholder : 'Edit' },
+        { type : 'drop-down', placeholder : 'Approved', 
+            option : ['All', ...this.commonFunction.rank], title : 'Filter Table' 
+        },
+        { type : 'text', placeholder : '' },
     ]
 
     handleClickButton(title, data) {
@@ -104,7 +111,10 @@ export class TenderLoadDetails {
         })
         .onClose
         .pipe(takeUntil(this.destroy$))
-        .subscribe(newData => this.onUploadData(title, newData));
+        .subscribe(newData => newData
+            ? this.onUploadData(title, newData)
+            : null
+        );
     }
 
     updateProjectSummary() {
@@ -135,7 +145,24 @@ export class TenderLoadDetails {
     }
 
     onUploadData(title, data) {
+        if(title == 'Update Job') {
+            this.workAreaData = this.commonFunction.reconstructDatas({
+                workData : this.workAreaData,
+                newData : data,
+                targetIndex : data.id
+            })
+            this.tenderService.updateContractWorkArea({work_area : this.workAreaData}, this.activeProject.id_tender)
+            .subscribe(
+                () => this.toastr.onUpload(),
+                () => this.toastr.onError(),
+                () => this.toastr.onSuccess("Your work area has been updated.")
+            )
+        }
+    }
 
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
     }
 }
 

@@ -1,7 +1,7 @@
 <nb-card>
     <nb-card-header class="m-2">
         <button 
-            *ngFor="let button of buttons; let indexOfelement=index;"
+            *ngFor="let button of supplierNavButton;"
             nbButton outline size = "tiny"  status = "primary" class="mx-1" 
             (click)="handleClickButton(button.name)"
         >

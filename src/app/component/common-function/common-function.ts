@@ -7,8 +7,8 @@ import { parse } from 'date-fns';
   providedIn: 'root',
 })
 @Component({
-  selector: 'ngx-common-function',
-  template : ``
+  selector: '',
+  template: '',
 })
 export class CommonFunction {
   constructor(
@@ -52,7 +52,7 @@ export class CommonFunction {
     if(lastIndex === '') lastIndex = targetIndex[0];
     else if (lastIndex !== '') lastIndex = lastIndex + '.' + targetIndex[0];
 
-    const work = workData.find(work => work[sortBy] === lastIndex);
+    const work = workData.find(work => `${work[sortBy]}` === lastIndex);
     if(!work) {
       id = id + workData.length.toString();
       return [...workData, {...newData, items : [], id}];
@@ -138,11 +138,11 @@ export class CommonFunction {
   }
 
   rankColor(r){
-    if(r == 'Critical') return "marron"
-    if(r == 'High') return "red"
-    if(r == 'Medium') return "yellow"
-    if(r == 'Low') return "green"
-    return "grey"
+    if(r == "Critical") return "red";
+    if(r == "High") return "orange";
+    if(r == "Medium") return "cyan";
+    if(r == "Low") return "green";
+    return "grey";
   }
 
   setPhase(p) {
@@ -161,13 +161,8 @@ export class CommonFunction {
   }
 }
 
-
 @Injectable({
   providedIn: 'root',
-})
-@Component({
-  selector: 'ngx-replace-data',
-  template : ``
 })
 export class ReplaceData {
   replace(obj, find, replace, replaceBy = null) {
@@ -185,19 +180,5 @@ export class ReplaceData {
         obj[key] = this.replace(obj[key], find, replace, replaceBy)
     }
     return obj;
-  }
-}
-
-@Injectable({
-  providedIn: 'root',
-})
-export class onHandleEvent {
-  public handleEvent : any = {};
-  set({show = true, status, text = '', spinner = false} : any) {
-    this.handleEvent.show = show;
-    this.handleEvent.status = status;
-    this.handleEvent.text = text;
-    this.handleEvent.spinner = spinner;
-    return this.handleEvent;
   }
 }

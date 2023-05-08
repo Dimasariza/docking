@@ -10,10 +10,12 @@ import { NbAccordionModule,
   NbIconModule, 
   NbInputModule, 
   NbLayoutModule, 
+  NbListModule, 
   NbPopoverModule, 
   NbProgressBarModule, 
   NbRouteTabsetModule, 
   NbSelectModule, 
+  NbSpinnerModule, 
   NbTabsetModule, 
   NbTreeGridModule,
 } from '@nebular/theme';
@@ -51,7 +53,9 @@ import { ListTableModule } from '../../component/list-table/list-table.module';
     ReportRoutingModule,
     NbDialogModule,
     WorkAreasModule,
-    ListTableModule
+    ListTableModule,
+    NbSpinnerModule,
+    NbListModule
   ],
 })
 

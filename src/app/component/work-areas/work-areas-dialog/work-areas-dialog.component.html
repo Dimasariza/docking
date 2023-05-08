@@ -41,11 +41,11 @@
                 </div> -->
                 <span class="p-2 d-block">Start</span>
                 <input autocomplete="off" [nbDatepicker]="startdatepicker"  nbInput fullWidth fieldSize="small"  placeholder="Start Date" 
-                [ngModel]="start[this.dialogData.label] " name="start" #startDate>
+                [ngModel]="start?.[this.dialogData.label] " name="start" #startDate>
                 <nb-datepicker #startdatepicker format="dd.MM.yyyy"></nb-datepicker>
                 <span class="p-2 d-block">End</span>
                 <input autocomplete="off" [nbDatepicker]="enddatepicker" nbInput fullWidth fieldSize="small"  placeholder="End Date" 
-                [ngModel]="end[this.dialogData.label]" name="end" #endDate>
+                [ngModel]="end?.[this.dialogData.label]" name="end" #endDate>
                 <nb-datepicker #enddatepicker format="dd.MM.yyyy"></nb-datepicker>
             </div>
             <div class="col-4">

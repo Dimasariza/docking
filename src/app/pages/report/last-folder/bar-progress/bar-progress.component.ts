@@ -20,7 +20,7 @@ export class BarProgressComponent implements OnInit {
   }
 
   onSubmit(data){
-    console.log(data)
+    // console.log(data)
 
   }
 
