@@ -26,6 +26,29 @@ export class ExportToPDF  {
   tableStyle : any = {'font-size' : '10px'}
   createDate : any = new Date();
 
+  createByJob(data) {
+    let allJob : any = [];
+    this.commonFunction.collectItem([data], (x) => allJob.push(x));
+    this.jobData = {...data, allJob};
+    this.toastr.onInfo({
+      infomsg : "Export Your job to PDF.",
+      title : 'Export File',
+      duration : 2000
+    });
+    setTimeout(() => this.downloadAsPDF(), 1000);
+  }
+  
+  createByProject(summaryData) {
+    this.summaryData = summaryData;
+    this.generateTableDatas();
+    this.toastr.onInfo({
+      infomsg : "Export Your project to PDF.",
+      title : 'Export File',
+      duration : 2000
+    });
+    setTimeout(() => this.downloadAsPDF(), 1000);
+  }
+
   projectSummaryColumn = [
     { name : '', prop : 'title', width : '*' },
     { name : '', prop : 'details', width : '*' },
@@ -169,40 +192,14 @@ export class ExportToPDF  {
     for(let i = 0; i < 4; i++) this.criticalJobRow.push(this.criticalJobRow[0])
 
     this.delayedJobRow = this.variantJobRow = this.doneJobRow = this.criticalJobRow
-    
-    
-
   }
 
-  createByJob(data) {
-    let allJob : any = [];
-    this.commonFunction.collectItem([data], (x) => allJob.push(x));
-    this.jobData = {...data, allJob};
-    this.toastr.onInfo({
-      infomsg : "Export Your job to PDF.",
-      title : 'Export File',
-      duration : 2000
-    });
-    setTimeout(() => this.downloadAsPDF(), 1000);
-  }
-  
-  createByProject(summaryData) {
-    this.summaryData = summaryData;
-    this.generateTableDatas();
-    this.toastr.onInfo({
-      infomsg : "Export Your project to PDF.",
-      title : 'Export File',
-      duration : 2000
-    });
-    setTimeout(() => this.downloadAsPDF(), 1000);
-  }
-  
   public async downloadAsPDF() {
     const pdfTable = this.pdfTable.nativeElement;
     let html = htmlToPdfmake(pdfTable.innerHTML);
 
-    this.tableType == 'projectPDF' ?
-    html[0].stack.splice(8, 0, {svg : this.progressSvg(this.statusProgress)})
+    this.tableType == 'projectPDF' 
+    ? html[0].stack.splice(8, 0, {svg : this.progressSvg(this.statusProgress)})
     : null;
 
     const documentDefinition = { 
