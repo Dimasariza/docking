@@ -40,7 +40,7 @@ export class TenderLoadDetails {
 
         this.activeProject = {...data, projectTitle};
         this.tableDetails = this.replace
-        .replace(this.tableDetails, 'Confirm Contract', (!id_tender && !approved), 'disabled');
+        .replace(this.tableDetails, 'Confirm Contract', !(id_tender && approved === ""), 'disabled');
     }
 
     workAreaData : any = [];
@@ -56,17 +56,19 @@ export class TenderLoadDetails {
         }, 
         { type : 'text', width : 150, prop : 'jobName' }, 
         { type : 'text', width : 250, prop : 'department' }, 
-        { type : 'date', width : 150, prop : 'startContract' }, 
-        { type : 'date', width : 200, prop : 'endContract' }, 
+        { type : 'date', width : 150, prop : 'start' }, 
+        { type : 'date', width : 200, prop : 'end' }, 
         { type : 'text', width : 200, prop : 'volume' },
         { type : 'text', width : 200, prop : 'unit' },
         { type : 'text', width : 200, prop : 'unitPriceContract' },
         { type : 'curr', width : 200, prop : 'totalPriceContract' },
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 250, prop : 'remarks' },
-        { type : 'butt', width : 100, prop : 'approved' ,
+        { type : 'butt', width : 100, prop : 'approved',
             button : [
-                { name : 'Approve Job', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
+                { name : 'Approve Job', icon : 'square-outline', 
+                    status : 'basic', disabled : false, size : 'tiny'
+                },
             ] 
         },
         { type : 'butt', width : 100, prop : 'edit',
@@ -90,14 +92,43 @@ export class TenderLoadDetails {
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'drop-down', placeholder : 'Approved', 
-            option : ['All', ...this.commonFunction.rank], title : 'Filter Table' 
+            option : ['All', ...this.commonFunction.rank], title : 'Approve By Rank' 
         },
         { type : 'text', placeholder : '' },
     ]
 
     handleClickButton(title, data) {
-        if(title == 'Update Job') this.updateWorkArea(title, data)
-        if(title == 'Confirm Contract') this.updateProjectSummary()
+        if(!this.activeProject.yard)
+        return this.toastr.onWarning({
+            warnmsg : 'Please select yard or tender for this project.',
+            duration : 10000
+        })
+
+        if(!(this.activeProject.id_tender && 
+            this.activeProject.approved === ""))
+            return this.toastr.onWarning({
+                warnmsg : `This Project has been confirmed at ${this.activeProject.approved}.`,
+                duration : 10000
+            })
+
+        if(title == 'Update Job') this.updateWorkArea(title, data);
+        if(title == 'Confirm Contract') this.updateProjectSummary();
+        if(title == 'Approve Job') this.approvedByYard(title, data);
+        if(title == 'Approve By Rank') this.approveByRank(title, data)
+    }
+
+    approveByRank(title, {value}) {
+        if(value == 'All') 
+        this.commonFunction.rank.forEach(value => {
+            this.workAreaData = this.replace.replace(this.workAreaData, value, true, 'tenderApproval');
+        })
+        this.workAreaData = this.replace.replace(this.workAreaData, value, true, 'tenderApproval');
+        this.onUploadData(title, this.workAreaData);
+    }
+
+    approvedByYard(title, data) {
+        data.tenderApproval = true;
+        this.onUploadData('Update Job', data) 
     }
 
     updateWorkArea(title, data) {
@@ -132,7 +163,9 @@ export class TenderLoadDetails {
             }
         )
 
-        const {proyek : {work_area}} = this.activeProject;
+        let {proyek : {work_area}} = this.activeProject;
+        work_area = this.replace.deleteKey(work_area, 'end')
+        work_area = this.replace.deleteKey(work_area, 'start')
         this.reportService.updateReportWorkArea({work_area}, this.activeProject.id_proyek)
         .subscribe(
             () => this.toastr.onUpload(),
@@ -145,19 +178,23 @@ export class TenderLoadDetails {
     }
 
     onUploadData(title, data) {
+        if(!data) return;
+        let successmsg = "Your work area has been updated.";
         if(title == 'Update Job') {
             this.workAreaData = this.commonFunction.reconstructDatas({
                 workData : this.workAreaData,
                 newData : data,
                 targetIndex : data.id
             })
-            this.tenderService.updateContractWorkArea({work_area : this.workAreaData}, this.activeProject.id_tender)
-            .subscribe(
-                () => this.toastr.onUpload(),
-                () => this.toastr.onError(),
-                () => this.toastr.onSuccess("Your work area has been updated.")
-            )
         }
+
+        const work_area = this.workAreaData;
+        this.tenderService.updateContractWorkArea({work_area}, this.activeProject.id_tender)
+        .subscribe(
+            () => this.toastr.onUpload(),
+            () => this.toastr.onError(),
+            () => this.toastr.onSuccess(successmsg)
+        )
     }
 
     ngOnDestroy(): void {
@@ -165,29 +202,3 @@ export class TenderLoadDetails {
         this.destroy$.complete();
     }
 }
-
-
-
-
-// approveByRank(id) {
-//   const tenderApproval = {tenderApproval : true}
-//   // this.workAreaContainer.forEach(work => {
-//   //   if(id == 0) this.approvedData([work], tenderApproval)
-//   //   if(id != 0 && id - 1 == work.rank) this.approvedData([work], tenderApproval)
-//   // })
-//   // this.updateWorkApproval(this.workAreaContainer)
-// }
-
-// approvedByYard(newData){
-//   const tenderApproval = {tenderApproval : true}
-//   this.approvedData(newData, tenderApproval)
-//   // this.updateWorkApproval(this.workAreaContainer)
-// }
-
-// approvedData(newData, approve) {
-//   newData.map(work => {
-//     const postData = { ...work, ...approve}
-//     // this.workAreaContainer = this.FNCOL.updateWorkAreaData(this.workAreaContainer, work.id, postData)
-//     if(work?.items?.length) this.approvedData(work.items, approve) 
-//   })
-// }

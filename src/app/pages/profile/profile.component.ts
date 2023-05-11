@@ -22,8 +22,21 @@ export class ProfilComponent implements OnInit {
   companyData : any;
   changeText : string  = 'CHANGE PROFILE'
   formCondition = true
+  userAccess : boolean;
 
   ngOnInit(){
+    const {role} =  JSON.parse(localStorage.getItem('user'));
+    this.userAccess = true;
+    if(role == 'shipyard') {
+      return this.userAccess = false;
+    } else
+    if(role == 'shipmanager') {
+
+    } else
+    if(role == 'director') {
+
+    }
+
     this.pofileService.getAllUsers({})
       .subscribe(({data} : any) => {
         this.unSortUserData = data;
@@ -74,6 +87,8 @@ export class ProfilComponent implements OnInit {
         // console.log("final Response uploading image")
       }
     })
+    const user =  JSON.parse(localStorage.getItem('user'));
+    console.log(user)
     // this.subscription.push(_subs)
   }
 

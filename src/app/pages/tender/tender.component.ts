@@ -41,8 +41,6 @@ export class TenderComponent implements OnInit, OnDestroy {
 
   private destroy$: Subject<void> = new Subject<void>();
 
-  userAccess : any;
-  
   tenderData : any = [];
   projectData : any = [];
   projectSummary : any;
@@ -81,7 +79,7 @@ export class TenderComponent implements OnInit, OnDestroy {
   }
 
   getYardList() {
-    this.tenderService.getAllYards(10, "all")
+    this.tenderService.getAllYards({})
     .pipe(takeUntil(this.destroy$))
     .subscribe(({data} : any) => {
         this.tenderData = data.map(yard => {

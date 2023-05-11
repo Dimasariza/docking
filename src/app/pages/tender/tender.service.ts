@@ -9,7 +9,7 @@ export class TenderService {
     constructor (private httpClient : HttpClient,){}
     public apiUrl = environment.apiUrl
     
-    getAllYards(page : any = "", status : any = ""){    
+    getAllYards({page = 10, status = "all",}){    
         const url = this.apiUrl + "/tender"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)
@@ -27,7 +27,7 @@ export class TenderService {
         return this.httpClient.get(url)
     }
 
-    getProjectSummary(page : any = '', per_page : any = '', q : any = '', status : any = ''){
+    getProjectSummary({page = '', per_page = '', q  = '', status = ''}){
         const url = this.apiUrl + "/report/proyek"
         let queryParams = new HttpParams();
         queryParams = queryParams.append("per_page", page)

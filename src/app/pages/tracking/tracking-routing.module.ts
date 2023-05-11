@@ -15,5 +15,5 @@ const routes: Routes = [{
 export class TrackingRoutingModule { }
 
 export const routedComponents = [
-    TrackingComponent
+    TrackingComponent,
 ];

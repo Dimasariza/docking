@@ -12,18 +12,23 @@ export class ReportService {
     getProjectSummary({page = 1, per_page = '', q = '', status = ''}) {
         const url = this.apiUrl + "/report/proyek";
         let httpHeaders = new HttpHeaders();
-        httpHeaders = httpHeaders.append('content-type', 'application/json')
+        httpHeaders = httpHeaders.append('content-type', 'application/json');
         let queryParams = new HttpParams();
         queryParams = queryParams.append("page", page)
                                  .append("per_page", per_page)
                                  .append("q", q)
                                  .append("status", status)
-        return this.httpClient.get(url, {headers : httpHeaders, params : queryParams})
+        return this.httpClient.get(url, {headers : httpHeaders, params : queryParams});
     }
 
     getWorkPerProject(id){
         const url = this.apiUrl + "/report/proyek/" + id;
-        return this.httpClient.get(url)
+        return this.httpClient.get(url);
+    }
+
+    getProjectPIC(id_proyek) {
+        const url = `${this.apiUrl}/report/proyek/${id_proyek}/pic`;
+        return this.httpClient.get(url);
     }
 
     updateProjectSummary(body) {

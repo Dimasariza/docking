@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { CommonFunction } from '../../component/common-function/common-function'
 import { ReportStatusDialog } from './report-status-dialog/report-status-dialog';
 import { ToastrComponent } from '../../component/toastr-component/toastr.component';
 import { ExportToExcel } from '../../component/common-function/export-excel';
+import { ExportToPDF } from './export-to-pdf/export-to-pdf';
 
 @Component({
   selector: 'ngx-report-component',
@@ -17,10 +18,9 @@ export class ReportComponent implements OnInit, OnDestroy  {
   constructor(
     private reportService : ReportService,
     private activatedRoute : ActivatedRoute,
-    private profileService : ProfileService,
     private toastr : ToastrComponent,
     public commonFunction : CommonFunction,
-    private exportToExcel : ExportToExcel
+    private exportToExcel : ExportToExcel,
   ) { }
 
   suplierData : any;
@@ -32,31 +32,38 @@ export class ReportComponent implements OnInit, OnDestroy  {
   variantWork : any;
   emailData : any;
 
+  currentUser : any;
+
   private destroy$: Subject<void> = new Subject<void>();
+  @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
+    const user =  JSON.parse(localStorage.getItem('user'));
+    this.currentUser = user;  
+
     this.reportService.getWorkPerProject(id)
     .pipe(takeUntil(this.destroy$))
     .subscribe(({data} : any) => this.generateSummaryData(data) )
 
-    this.profileService.getAllUsers({})
+    this.reportService.getProjectPIC(id)
     .pipe(takeUntil(this.destroy$))
-    .subscribe(({data} : any) => this.responsible = data)
+    .subscribe(({data} : any) => this.responsible = data.map(pic => pic.user))
     
     this.reportService.getAllSupliers({})
     .pipe(takeUntil(this.destroy$))
     .subscribe(({data} : any) => this.suplierData = data)
-
-    this.profileService.getCompanyProfile({})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(({data} : any) => this.companyProfile = data)
   }
 
   generateSummaryData (data) {
     const { kapal : { nama_kapal }, tahun, status } = data?.proyek;
     const projectTitle = `${nama_kapal} -DD- ${tahun} ${status.toUpperCase()}`
     this.summaryData = { ...data, projectTitle }
+  }
+
+  handleClickButton(title, data = null) {
+    if(title == 'Project Status') this.projectStatusDialog(title);
+    if(title == 'Export To PDF') this.exportToPDF.createByProject(this.summaryData);
   }
 
   projectStatusDialog(title) {
@@ -85,7 +92,7 @@ export class ReportComponent implements OnInit, OnDestroy  {
       let postBody : any = { 
         shipyard : {
           nama_user : respons.nama_lengkap,
-          nama_perusahaan : this.companyProfile.profile_nama_perusahaan ,
+          nama_perusahaan : this.summaryData.perusahaan.profile_nama_perusahaan ,
           email : respons.email
         },
         no_docking :`${nama_kapal} -DD- ${tahun} ${status}`,

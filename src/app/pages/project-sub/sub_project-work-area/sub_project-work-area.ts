@@ -45,9 +45,9 @@ export class SubProjectWorkArea implements OnInit{
         }, 
         { type : 'text', width : 300, prop : 'jobName' }, 
         { type : 'text', width : 150, prop : 'department' }, 
-        { type : 'date', width : 200, prop : 'startBudget' }, 
-        { type : 'date', width : 200, prop : 'endBudget' },
-        { type : 'text', width : 200, prop : 'volumeBudget' },
+        { type : 'date', width : 200, prop : 'start' }, 
+        { type : 'date', width : 200, prop : 'end' },
+        { type : 'text', width : 200, prop : 'volume' },
         { type : 'text', width : 200, prop : 'unit' },
         { type : 'curr', width : 200, prop : 'unitPriceBudget' },
         { type : 'text', width : 200, prop : 'totalPriceBudget' },
@@ -146,6 +146,8 @@ export class SubProjectWorkArea implements OnInit{
     transformExcelDate = (date) => new Date(Math.round((date - 25569) * 86400 * 1000))
 
     reconstructDataExcel(data) {
+        const user =  JSON.parse(localStorage.getItem('user'));
+        const date = this.commonFunction.transformDate(new Date());
         data = data.map(details => {
             let {
                 ['Job Number']  : jobNumber,
@@ -168,12 +170,13 @@ export class SubProjectWorkArea implements OnInit{
             endBudget = this.commonFunction.transformDate(this.transformExcelDate(endBudget));
             volumeBudget = volume;
             responsible.nama_lengkap = nama_lengkap;
+
+            const progress = [{ progress : '0', date, updateBy : user.nama_lengkap }]
             return {jobNumber, jobName, department, startBudget, endBudget, volume, volumeBudget,
-                unit, unitPriceBudget, totalPriceBudget, category, remarks, responsible, rank
+                unit, unitPriceBudget, totalPriceBudget, category, remarks, responsible, rank, progress
             }
         })
         data.forEach(job => {
-            debugger;
             this.workAreaData = this.commonFunction.reconstructDatas({
               workData : this.workAreaData,
               newData : job,

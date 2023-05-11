@@ -1,4 +1,11 @@
-<nb-card>
+<nb-alert *ngIf="!userAccess" 
+    status="warning" 
+    >
+    You not have access. Please Leave this page.
+</nb-alert>
+
+
+<nb-card *ngIf="userAccess" >
     <nb-card-header>
         <!-- <div style="min-width: 8rem;">
             <nb-card class="h-100" style="cursor: pointer;" (click)="triggerSelectFile(changeLogo)">

@@ -48,6 +48,17 @@ export class ProjectListProject implements OnDestroy {
         this.router.navigateByUrl('/pages/project/sub-menu-project/' + data.id_proyek);
     }
 
+    copyProject(title, data) {
+        let { work_area } = data;
+        if(!this.commonFunction.arrayNotEmpty(work_area))
+        work_area = [null];
+        this.projectService.addProject(data)
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(({id_proyek} : any )  => {
+            this.onUploadData('Update Work Area', {work_area, id_proyek})
+        })
+    }
+
     addProjectDialog(title) {
         this.commonFunction.openDialog({
             dialogData : { title },
@@ -69,11 +80,10 @@ export class ProjectListProject implements OnDestroy {
         })
         .onClose
         .pipe(takeUntil(this.destroy$))
-        .subscribe(newData => this.onUploadData(newData, title));
-    }
-
-    copyProject(title, data) {
-        // console.log(data)
+        .subscribe(newData => newData ?
+            this.onUploadData(title, newData)
+            : null
+        );
     }
 
     onUploadData(title, data) {
@@ -98,6 +108,12 @@ export class ProjectListProject implements OnDestroy {
 
             subscribe = this.projectService.addProject(uploadData)
             successMsg = 'Your Project has been added.'
+        }
+
+        if(title == 'Update Work Area') {
+            const { work_area, id_proyek } = data;
+            subscribe = this.projectService.updateProjectWorkArea({work_area}, id_proyek)
+
         }
 
         if(title == 'Delete Project') {

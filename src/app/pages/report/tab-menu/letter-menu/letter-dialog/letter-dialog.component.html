@@ -19,7 +19,7 @@
             <span class="d-block">Remarks</span>
             <textarea class="d-block" rows="4" required fullWidth nbInput name="keterangan" ngModel #keterangan></textarea>
             <button fullWidth type="button" nbButton status="primary" size="small" class="my-2" (click)="openFileFolder()">
-                Add File
+                {{ attachmentId ? 'Change File' : 'Add File' }}
                 <input  type="file" style="display: none;" #addFromFile ngModel name="dokumen" (change)="onFileChange($event)">
             </button>
             <button fullWidth type="submit" nbButton status="success" size="small" [disabled]="!submitLetterForm.form.valid" class="my-2">Submit</button>

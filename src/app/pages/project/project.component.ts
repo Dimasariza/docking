@@ -8,12 +8,11 @@ import { takeUntil } from 'rxjs/operators';
 @Component({
   selector: 'ngx-project-component',
   template: `
-  <nb-alert *ngIf="handleEvent?.show" 
-    [status]="handleEvent?.status" 
-    [nbSpinner]="handleEvent?.spinner" 
-    nbSpinnerStatus="basic"
+  <nb-alert 
+    *ngIf=" currentUser?.role =='shipyard' " 
+    status="warning" 
   >
-    {{handleEvent.text}}
+    You have no access. Please Leave this page.
   </nb-alert>
 
   <ngx-project-task-mine 
@@ -29,7 +28,6 @@ import { takeUntil } from 'rxjs/operators';
     (refresh)=ngOnInit()
   >
   </ngx-project-list-project>
-
   `,
 })
 export class ProjectComponent implements OnInit, OnDestroy {
@@ -39,9 +37,21 @@ export class ProjectComponent implements OnInit, OnDestroy {
     public commonFunction : CommonFunction,
     ) { }
 
-  handleEvent;
+  public currentUser : any = {};
 
   ngOnInit() {
+    let user = JSON.parse(localStorage.getItem('user'));
+    let { role } : any = user; 
+    if(role == 'shipyard') {
+      return this.currentUser = user;
+    } else
+    if(role == 'shipmanager') {
+
+    } else
+    if(role == 'director') {
+
+    }
+
     this.projectService.getAllProjects({})
     .pipe(takeUntil(this.destroy$)) 
     .subscribe(

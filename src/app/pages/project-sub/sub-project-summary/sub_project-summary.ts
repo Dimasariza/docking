@@ -60,12 +60,9 @@ export class SubProjectSummary implements OnInit {
 
     findFromWorkArea(work_area, label) {
         work_area.forEach(work => {
-            this.commonFunction.category.forEach((category, index) => {
-                if(work.category == category) {
-                    this.currencyTable[index][`${label.toLowerCase()}`] += 
-                    this.commonFunction.priceAmount(work[`unitPrice${label}`])  || 0;
-                };
-            })
+            const index = this.commonFunction.category.indexOf(work.category)
+            this.currencyTable[index][`${label.toLowerCase()}`] += 
+            this.commonFunction.priceAmount(work[`unitPrice${label}`])  || 0;
         });
     }
 

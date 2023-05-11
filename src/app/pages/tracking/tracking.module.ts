@@ -6,6 +6,7 @@ import { routedComponents, TrackingRoutingModule } from './tracking-routing.modu
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { FrappeGanttModule } from './frappe-gant/frappe-gantt.module';
 import { CommonModule } from '@angular/common';
+import { ListTableModule } from '../../component/list-table/list-table.module';
 
 @NgModule({
   imports: [
@@ -17,7 +18,8 @@ import { CommonModule } from '@angular/common';
     NgxDatatableModule,
     NbButtonGroupModule,
     FrappeGanttModule,
-    CommonModule
+    CommonModule,
+    ListTableModule
   ],
   exports: [  ],
   declarations: [

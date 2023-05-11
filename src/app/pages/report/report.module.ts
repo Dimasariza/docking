@@ -25,6 +25,7 @@ import { FrappeGanttModule } from '../tracking/frappe-gant/frappe-gantt.module';
 import { ThemeModule } from '../../@theme/theme.module';
 import { WorkAreasModule } from '../../component/work-areas/work-areas.module';
 import { ListTableModule } from '../../component/list-table/list-table.module';
+import { PDFTableModule } from './export-to-pdf/pdf-table/pdf-table.module';
 
 @NgModule({
   declarations: [
@@ -55,7 +56,8 @@ import { ListTableModule } from '../../component/list-table/list-table.module';
     WorkAreasModule,
     ListTableModule,
     NbSpinnerModule,
-    NbListModule
+    NbListModule,
+    PDFTableModule
   ],
 })
 

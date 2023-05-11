@@ -1,7 +1,8 @@
 import { Component, Injectable, OnInit, ViewChild } from '@angular/core';
 import { TenderService } from '../tender/tender.service';
 import { FrappeGanttComponent } from './frappe-gant/frappe-gantt.component';
-import html2canvas from 'html2canvas';
+import { CommonFunction } from '../../component/common-function/common-function';
+import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })
 @Component({
@@ -12,136 +13,114 @@ import html2canvas from 'html2canvas';
 export class TrackingComponent implements OnInit {
   constructor(
     private tenderService : TenderService,
+    private router : Router,
+    public commonFunction : CommonFunction,
   ) {  }
 
-  public trackingData : any 
-  chartTask : any [] = []
-  tasks: any [];
   @ViewChild(FrappeGanttComponent) gantChart : FrappeGanttComponent
+  public trackingData : any [] = [];
+  public projectData : any;
+  chartTask : any [] = [];
+  public tasks: any [] = [];
   
   ngOnInit(): void {
-    this.tenderService.getProjectSummary("", "", "", "")
+    this.tenderService.getProjectSummary({})
     .subscribe(({data} : any) => {
-      this.chartTask = data
-      this.trackingData = data.map(({proyek, id_proyek}) => ({
-        nama_kapal : proyek.kapal.nama_kapal,
-        start : proyek.repair_start,
-        end : proyek.repair_end,
-        year : proyek.tahun,
-        id_proyek
-      }))
+      this.trackingData = data;
+      this.vesselFilter();
+      this.chartTask = data;
     })
+  }
+
+  columns = [
+    { name: 'Ship Name', type : 'navTo', prop : 'nama_kapal', width : 320, title : 'Nav To'},
+    { name: 'Year', type : 'text', prop : 'tahun', width : 100},
+    { name: 'R', type : 'phase', prop : 'phaseStatus', width : 40, unSort : true},
+    { name: 'P', type : 'phase', prop : 'phaseStatus', width : 40, unSort : true},
+    { name: 'E', type : 'phase', prop : 'phaseStatus', width : 40, unSort : true},
+    { name: 'F', type : 'phase', prop : 'phaseStatus', width : 80, unSort : true},
+    { name: 'Start', type : 'date', prop : 'off_hire_start', width : 280},
+    { name: 'End', type : 'date', prop : 'off_hire_end', width : 280},
+    { name : '', type : 'button', width : 150, unSort : true,
+      button :  [ 
+            { menu : 'Gant Chart', status : 'primary', placeholder : 'Gant Chart' },
+      ], 
+    },
+  ];
+
+  handleClickButton(button, data = null) {
+    if(button == 'Gant Chart') this.showGantChart(data)
+    if(button == 'Nav To')
+    this.router.navigateByUrl('/pages/report/' + data.id_proyek);
+  }
+
+  vesselFilter(filter = null){
+    this.projectData = this.trackingData.map(({proyek, work_area : reportWorkArea, variant_work}) => {
+      const {kapal : {nama_kapal, status : shipStatus}, tahun, phase} = proyek;
+      const phaseStatus = this.commonFunction.setPhase(phase);
+      return {...proyek, phaseStatus, nama_kapal, tahun, shipStatus, reportWorkArea, variant_work};
+    })
+    if(filter == 'Asset') {
+      this.projectData = this.projectData.filter(project => project.shipStatus == 1);
+    }
   }
 
   showGantChart(data) {
-    const {id_proyek} = data
-    const chartTask = this.chartTask
-    .find(({proyek}) => proyek.id_proyek === id_proyek)
-    const workArea = chartTask.proyek.work_area.length ? chartTask.proyek.work_area : []
-    // const variantWork = chartTask.variant_work.length ? chartTask.variant_work : [] 
-    const task = [
-      ...workArea, 
-      // ...variantWork
-    ]
-    let jobContainer = new Array
-    const regroupData = (task) => {
-      task.map(work => {
-        const {jobName, start, end, 'Price Budget' : priceBudget = 0, progress, 'Price Contract' : priceContract = 0, items, id} = work
-        const parentIndex = id.toString().split('').map(number => parseInt(number))
-        parentIndex.pop()
-        const dependenciesId =
-        parentIndex.length ? parentIndex.join('') : null
-        const jobItem = {
-          id : id.toString(),
-          name: jobName,
-          price: 100,
-          start, end,
-          progress_log: [
-              {progress : 10, date: '2016-1-15'},
-              {progress : 20, date: '2016-1-21'},
-          ],
-          dependencies:  [dependenciesId]
-        }
-        jobContainer.push(jobItem)
-        if(this.tasks.length < jobContainer.length) this.tasks.push(jobItem);
-        items?.length ? regroupData(items) : null
+    let { reportWorkArea = [], variant_work = [] } = data;
+    if(!this.commonFunction.arrayNotEmpty(reportWorkArea)) reportWorkArea = [];
+    if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
+    const allWorkArea = [...reportWorkArea, ...variant_work];
+    let tasks = [];
+    let date = this.commonFunction.transformDate(new Date());
+    reconstructData(allWorkArea)
+    function reconstructData(work_area) {
+      let price : any = 0;
+      let dependencies = [];
+      work_area.forEach(({ id, jobName : name, unitPriceActual = "", 
+        unitPriceAddOn = "", start, end, items = [], progress, 
+      }) => {
+        if(unitPriceActual) price = unitPriceActual;
+        if(unitPriceAddOn) price = unitPriceAddOn;
+        if(items?.length) reconstructData(items)
+        if(typeof progress != 'object') progress = [{progress : 0, date}];
+        tasks.push({id, name, price, start, end, progress_log: progress, dependencies})
       })
-      return jobContainer
     }
-    this.tasks = regroupData(task)
-    this.gantChart.ngOnInit()
+    this.tasks = tasks;
+    this.gantChart.viewGantChart(tasks)
   }
-
-  leftButton : any = [
-    // {icon : 'book-outline', desc : 'Export to PDF'},
-    {icon : 'chevron-down-outline', desc : 'Extend'},
-  ]
-
-
-  async dailyReport( data ) {
-    const element = document.getElementById("sCurve")
-    html2canvas(element).then((canvas) => {
-      const imgData = canvas.toDataURL('image/jpeg');
-      const head = data.nama_kapal + ' -DD- ' + data.year
-      let documentDefenition = {
-        content : [
-          {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
-          {text : "Gant Chart | S Curve", fontSize : 12, color : '#047886', margin : [0 , 6]},
-          {
-            image : imgData,
-            width : 500
-          }
-        ]
-      }
-    })
-  }
-
-  
-  getBase64ImageFromURL(url) {
-    return new Promise((resolve, reject) => {
-      var img = new Image();
-      img.setAttribute("crossOrigin", "anonymous");
-      img.onload = () => {
-        var canvas = document.createElement("canvas");
-        canvas.width = img.width;
-        canvas.height = img.height;
-        var ctx = canvas.getContext("2d");
-        ctx.drawImage(img, 0, 0);
-        var dataURL = canvas.toDataURL("image/png");
-        resolve(dataURL);
-      };
-      img.onerror = error => {
-        reject(error);
-      };
-      img.src = url;
-    });
-  }
-
-  async projectHead(head){
-    const image = await this.getBase64ImageFromURL('./assets/images/Logo/Logo Sikomodo.jpeg')
-    // const headText = [
-    //   {text : head, fontSize : 16, color : '#222', margin : [0 , 10, 0, 6]},
-    // ]
-    const logo = {image, fit :[80, 80], alignment : 'right'}
-    return {...logo}
-    // return { columns : [logo] }
-  }
-
-  vesselFilter(e){
-    // const {desc} = e[0]
-    console.log(e)
-    // switch(desc) {
-    //   case 'My Assets' :
-    //     console.log('assets')
-    //   break;
-    //   case 'Docking Plan' :
-    //     console.log('docking')
-    //   break;
-    //   case 'Default' :
-    //     console.log('default')
-    //   break;
-    // }
-  }
-
-
 }
+
+
+// getBase64ImageFromURL() {
+//   const url = './assets/images/Logo/Logo Sikomodo.jpeg';
+//   return new Promise((resolve, reject) => {
+//     var img = new Image();
+//     img.setAttribute("crossOrigin", "anonymous");
+//     img.onload = () => {
+//       var canvas = document.createElement("canvas");
+//       canvas.width = img.width;
+//       canvas.height = img.height;
+//       var ctx = canvas.getContext("2d");
+//       ctx.drawImage(img, 0, 0);
+//       var dataURL = canvas.toDataURL("image/png");
+//       resolve(dataURL);
+//     };
+//     img.onerror = error => {
+//       reject(error);
+//     };
+//     img.src = url;
+//   });
+// }
+
+// const jobItem = {
+//   id : id.toString(),
+//   name: jobName,
+//   price: 100,
+//   start, end,
+//   progress_log: [
+//       {progress : 10, date: '2016-1-15'},
+//       {progress : 20, date: '2016-1-21'},
+//   ],
+//   dependencies:  [dependenciesId]
+// }

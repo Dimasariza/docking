@@ -94,8 +94,10 @@
           <span *ngIf="columnType[index].type == 'text'">{{row.data[column] || '-'}}</span>
 
           <!-- Progress -->
-          <div *ngIf="columnType[index].type == 'progress'">
-            <nb-progress-bar [value]=" row.data[column] " status="info" [displayValue]="true"></nb-progress-bar>
+          <div *ngIf="columnType[index].type == 'progress'" >
+            <nb-progress-bar [value]=" row.data[column] " 
+              status="info" [displayValue]="true"
+            ></nb-progress-bar>
           </div>
 
           <!-- Click text -->

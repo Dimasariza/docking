@@ -35,7 +35,7 @@ export class SupplierComponent implements OnDestroy {
     { name: 'Contact Number', type : 'text', prop : 'no_hp', width : 300 },
     { name : '', type : 'button', width : 150, unSort : true,
       button :  [ 
-          {icon : 'edit-outline', menu : 'Update Supplier', status : 'success'}, 
+          {icon : 'edit-outline', menu : 'Update Supplier', status : 'info'}, 
           {icon : 'trash-2-outline', menu : 'Delete Supplier', status : 'danger'},
       ], 
     },

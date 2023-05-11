@@ -5,6 +5,8 @@ import { takeUntil } from "rxjs/operators";
 import { WorkAreasComponent } from "../../../../component/work-areas/work-areas.component";
 import { ExportToExcel } from "../../../../component/common-function/export-excel";
 import { WorkVariantDetailDialog } from "../work-variant-detail-dialog/work-variant-detail-dialog";
+import { WorkAreasDialogComponent } from "../../../../component/work-areas/work-areas-dialog/work-areas-dialog.component";
+import { ExportToPDF } from "../../export-to-pdf/export-to-pdf";
 
 @Component({
     selector: 'ngx-report-work-progress',
@@ -34,6 +36,8 @@ export class ReportWorkProgress implements OnInit {
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
     @Output("sendNotification") sendNotification : EventEmitter<any> = new EventEmitter();
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
+    @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
+
     @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
 
@@ -50,8 +54,8 @@ export class ReportWorkProgress implements OnInit {
         }, 
         { type : 'navto', width : 400, prop : 'jobName', title : 'Nav To' }, 
         { type : 'progress', width : 250, prop : 'progress' }, 
-        { type : 'text', width : 150, prop : 'startActual' }, 
-        { type : 'text', width : 200, prop : 'endActual' }, 
+        { type : 'text', width : 150, prop : 'start' }, 
+        { type : 'text', width : 200, prop : 'end' }, 
         { type : 'text', width : 200, prop : 'volume' },
         { type : 'text', width : 200, prop : 'unit' },
         { type : 'text', width : 200, prop : 'unitPriceActual' },
@@ -68,7 +72,7 @@ export class ReportWorkProgress implements OnInit {
         { type : 'butt', width : 100, prop : 'edit',
             button : [
                 { name : 'Update Job', icon : 'edit-outline', status : 'info'},
-                { name : 'Export PDF', icon : 'file-outline', status : 'primary'},
+                { name : 'Export To PDF', icon : 'file-outline', status : 'primary'},
             ] 
         },
     ]
@@ -89,17 +93,20 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', placeholder : 'Supplier' },
         { type : 'text', placeholder : 'Approved' },
         { type : 'text', placeholder : '' },
-
     ]
 
     handleClickButton(title, data = null) {
         if(title == 'Refresh') this.refreshPage.emit();
-        if(title == 'Export to Excel') this.exportDataExcel()
-        if(title == 'Extend') this.extendTable(true)
-        if(title == 'Reduce') this.extendTable(false)
-        if(title == 'Nav To') this.workProgressDetail()
+        if(title == 'Export to Excel') this.exportDataExcel();
+        if(title == 'Extend') this.extendTable(true);
+        if(title == 'Reduce') this.extendTable(false);
+        if(title == 'Nav To') this.workProgressDetail();
         if(title == 'Send Notification') 
         this.sendNotification.emit({work_area : this.workAreaData, label : "Actual"})
+        if(title == 'Update Job') this.updateReportWorkArea(title, data);
+        if(title == 'By Ship Yard') this.approvedByShipYard(title, data)
+        if(title == 'By Owner') this.approvedByOwner(title, data)
+        if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
     }
 
     exportDataExcel() {
@@ -134,8 +141,46 @@ export class ReportWorkProgress implements OnInit {
         })
     }
 
-    onUploadData(title, data) {
+    updateReportWorkArea(title, data) {
+        console.log(data)
+        this.commonFunction.openDialog({
+            dialogData : { 
+              title,
+              data,
+              label : 'Actual',
+            },
+            component : WorkAreasDialogComponent
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => newData 
+            ? this.onUploadData('Reconstruct Work Area', newData)
+            : null )
+    }
 
+    approvedByShipYard(title, data) {
+        console.log(data)
+        data.shipYardApproval = true;
+        this.onUploadData('Reconstruct Work Area', data)
+    }
+
+    approvedByOwner(title, data) {
+        data.ownerApproval = true;
+        this.onUploadData('Reconstruct Work Area', data)
+    }
+
+    onUploadData(title, data) {
+        console.log(data)
+        let work_area;
+        let successmsg
+        if(title == 'Reconstruct Work Area') {
+            work_area = this.commonFunction.reconstructDatas({
+                workData : this.workAreaData, 
+                newData : data,
+                targetIndex : data.id,
+            })
+            successmsg = `Your work area has been updated > ${data.jobName}`
+        }
     }
 
     ngOnDestroy(): void {

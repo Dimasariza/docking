@@ -17,11 +17,11 @@ export class CheckFile {
         const ext = file.type.split("/")[1];
         const acceptionFIle = ['doc', 'docx', 'pdf', 'txt'];
         if(fileSize > 2500000) {
-            this.toastr.onInfo('Your file size must be less then 2 Mb.');
+            this.toastr.onInfo({infomsg :'Your file size must be less then 2 Mb.'});
             return false;
         } else
         if(!acceptionFIle.includes(ext)) {
-            this.toastr.onInfo('Your file extension must be on txt, doc, docx or pdf format.')
+            this.toastr.onInfo({infomsg : 'Your file extension must be on txt, doc, docx or pdf format.'})
             return false;
         }
         formData.append('dokumen', file);

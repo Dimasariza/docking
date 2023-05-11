@@ -21,3 +21,9 @@
     (sendToParent)="handleClickButton($event.title, $event.data)"
 >
 </ngx-work-areas>
+
+<export-to-pdf 
+    tableType="variant_work"
+    [summaryData]="summaryData"
+>
+</export-to-pdf>

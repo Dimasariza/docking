@@ -105,6 +105,8 @@ export class UserActionComponent implements OnInit, OnDestroy{
     const {nama_kapal = '', departemen_id = '', role, title = ''} = postBody
     const username = postBody.username + '_' + this.roleSymbol[postBody.role]
     const roles = this.dataRole[role]
+    if(!postBody.password)
+    delete postBody.password
     postBody = {...postBody, avatar_url : this.uploadAvatarUrl, nama_kapal, departemen_id, username, role : roles, title}
     const _subs = this.profileService.addUser(postBody)
       .subscribe(res => {

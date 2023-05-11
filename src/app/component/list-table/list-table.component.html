@@ -34,7 +34,7 @@
             <div *ngIf="column.type === 'button'" class="d-flex justify-content-center">
                 <button *ngFor="let button of column.button" 
                     nbButton  
-                    [status]="button.status"
+                    [status]="button?.status"
                     class="mx-1" 
                     size="tiny" 
                     outline
@@ -43,7 +43,8 @@
                     nbPopoverTrigger="hover" 
                     nbPopoverPlacement="top"
                 >
-                <nb-icon [icon]="button.icon" [status]="button.status" ></nb-icon>
+                <nb-icon *ngIf="button?.icon" [icon]="button?.icon" [status]="button?.status" ></nb-icon>
+                    <span *ngIf="button?.placeholder"> {{ button?.placeholder }} </span> 
                 </button>
             </div>
 

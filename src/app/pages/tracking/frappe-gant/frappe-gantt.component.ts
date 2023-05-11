@@ -18,7 +18,7 @@ export interface ProgressLog {
 
 @Component({
     selector: 'f-gantt',
-    template: '<svg id="gantt" style="min-height: 100%"></svg>',
+    template: `<svg id="gantt"  style="min-height: 100%"></svg>`,
     styleUrls: ['./frappe-gantt.component.scss'],
 })
 
@@ -27,11 +27,16 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
 
     @Input() showSCurve: boolean = false
     @Input() viewMode: string = 'Day'
-    @Input() tasks: any[]
+    public tasks: any[] = [];
 
     gantt: any;// gantt object
     ngOnInit() {
-        this.gantt = new Gantt('#gantt', this.tasks, {});     
+        this.gantt = new Gantt('#gantt', this.tasks, {});   
+    }
+
+    viewGantChart(tasks) {
+        this.tasks = tasks;
+        this.ngOnInit()
     }
 
     ngOnChanges(changes: SimpleChanges): void {
@@ -57,6 +62,4 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
             this.gantt.toggle_scurve()
         }
     }
-
-
 }

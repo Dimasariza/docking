@@ -1,7 +1,7 @@
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NbButtonGroupModule, 
+import { NbAlertComponent, NbAlertModule, NbButtonGroupModule, 
   NbButtonModule, 
   NbCardModule, 
   NbIconModule, 
@@ -30,6 +30,7 @@ import { UserActionComponent } from './user-action/user-action.component';
     MatInputModule,
     MatDialogModule,
     NbSelectModule,
+    NbAlertModule
   ],
   entryComponents: [UserActionComponent],
   declarations: [

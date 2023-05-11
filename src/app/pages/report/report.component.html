@@ -2,11 +2,14 @@
     <nb-card-header class="d-flex justify-content-between w-100">
         <h5 class="text-uppercase">
             {{ summaryData?.projectTitle || 'Project Title' }}
-            <button nbButton status="primary" class="mx-4" outline size="small" (click)="projectStatusDialog('Project Status')">
+            <button nbButton status="primary" class="mx-4" outline size="small" 
+            (click)="handleClickButton('Project Status')">
                 <nb-icon icon="info-outline" pack="eva"></nb-icon>
             </button>
         </h5>
-        <button nbButton status="primary" class="mx-2" outline size="small">
+        <button nbButton status="primary" class="mx-2" outline size="small"
+            (click)="handleClickButton('Export To PDF')"
+            >
             <nb-icon icon="file-outline" pack="eva"></nb-icon>
             Export To PDF
         </button>
@@ -48,32 +51,38 @@
             >
             </ngx-report-variant-work>
         </nb-tab>
-        <nb-tab tabTitle="BAST">
+        <nb-tab 
+            tabTitle="BAST"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
             <ngx-letter-menu
                 typeMenu="bast"
                 [summaryData]="summaryData" 
                 [responsible]="responsible" 
-                [companyProfile]="companyProfile"
                 (refresh)="ngOnInit()" 
             >
             </ngx-letter-menu>
         </nb-tab>
-        <nb-tab tabTitle="Surat Teguran">
+        <nb-tab 
+            tabTitle="Surat Teguran"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
             <ngx-letter-menu
                 typeMenu="surat_teguran"
                 [summaryData]="summaryData" 
                 [responsible]="responsible" 
-                [companyProfile]="companyProfile"
                 (refresh)="ngOnInit()" 
             >
             </ngx-letter-menu>
         </nb-tab>
-        <nb-tab tabTitle="Close Out Report (COR)">
+        <nb-tab 
+            tabTitle="Close Out Report (COR)"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
             <ngx-letter-menu
                 typeMenu="close_out_report"
                 [summaryData]="summaryData" 
                 [responsible]="responsible" 
-                [companyProfile]="companyProfile"
                 (refresh)="ngOnInit()" 
             >
             </ngx-letter-menu>
@@ -81,3 +90,8 @@
       </nb-tabset>
 </nb-card>
 
+<export-to-pdf 
+    *ngIf="summaryData"
+    tableType="projectPDF"
+>
+</export-to-pdf>

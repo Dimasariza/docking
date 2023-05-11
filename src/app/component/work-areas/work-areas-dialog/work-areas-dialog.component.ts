@@ -46,7 +46,10 @@ export class WorkAreasDialogComponent implements OnInit {
             this.end[this.dialogData.label] = this.commonFunction.parseDate(this.dialogData.data["end" + this.dialogData.label]);
         }
 
-        this.profileService.getAllUsers({ })
+        const user =  JSON.parse(localStorage.getItem('user'));
+        if(user.role == 'shipyard') return;
+
+        this.profileService.getAllUsers({ role : 'shipyard' })
         .pipe(takeUntil(this.destroy$))
         .subscribe(
           ({data} : any) => this.responsible = data,
@@ -82,14 +85,25 @@ export class WorkAreasDialogComponent implements OnInit {
 
     closeDialog (arr = null) {
         if(!arr) return this.dialog.close();    
-        let {mata_uang = this.usedCurrency, status = 'Not Started', progress = '0', volume, start, end} = arr;
-        arr = {...arr, mata_uang, status, progress};
-        arr['volume' + this.dialogData.label] = volume;
+        let {mata_uang = this.usedCurrency, creted_at = "", progress = '0', 
+            volume, start, end, status = 'Not Started', 
+        } = arr;
+
+        const user =  JSON.parse(localStorage.getItem('user'));
+        const date = this.commonFunction.transformDate(new Date()) 
+        const newProgress = this.dialogData.data?.progress || [];
+        if(newProgress.at(-1)?.progress != progress) {
+            newProgress.push({progress, date, updateBy : user.nama_lengkap });
+            creted_at = newProgress[0].date;
+        }
+
+        arr = {...arr, mata_uang, status, ...this.dialogData?.data,
+            progress : newProgress, creted_at, last_update : date, volume,
+            start : this.commonFunction.transformDate(start),
+            end : this.commonFunction.transformDate(end)
+        };
         arr['unitPrice' + this.dialogData.label] = this.commonFunction.priceAmount(this.unitPrice)
-        arr['start' + this.dialogData.label] = this.commonFunction.transformDate(start);
-        arr['end' + this.dialogData.label] = this.commonFunction.transformDate(end);
         arr['totalPrice' + this.dialogData.label] = this.totalPrice;
-        arr.id = this.dialogData?.data?.id
         arr = this.acceptData(arr)
         this.dialog.close(arr)
     } 
@@ -99,10 +113,9 @@ export class WorkAreasDialogComponent implements OnInit {
         [
             'jobNumber', 
             'jobName', 
-            'start' + this.dialogData.label, 
-            'end' + this.dialogData.label,
+            'start', 
+            'end',
             'volume',
-            'volume' + this.dialogData.label,
             'unit',
             'unitPrice' + this.dialogData.label,
             'totalPrice' + this.dialogData.label,
@@ -119,7 +132,9 @@ export class WorkAreasDialogComponent implements OnInit {
             'supplier',
             'approvedByShipYard',
             'approvedByOwner',
-            'approvedByYard'
+            'approvedByYard',
+            'creted_at',
+            'last_update'
         ].forEach(item => acceptData[item] = data[item] ? data[item] : "")
         return acceptData;
     }

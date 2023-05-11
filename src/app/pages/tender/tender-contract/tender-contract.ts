@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { CommonFunction } from "../../../component/common-function/common-function";
+import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
 import { YardDialogComponent } from "./yard-dialog/yard-dialog.component";
 import { DeleteDialogComponent } from "../../../component/delete-dialog/delete-dialog.component";
 import { YardDetailsDialog } from "./yard-details-dialog/yard-details-dialog.component";
@@ -21,6 +21,7 @@ export class TenderContract implements OnInit {
       private reportService : ReportService,
       private toastr : ToastrComponent,
       private tenderService : TenderService,
+      private replace : ReplaceData
     ) {}
     
     @Input() projectData : any;
@@ -44,6 +45,22 @@ export class TenderContract implements OnInit {
     }
     
     handleClickButton(title, data = null) {
+      this.activeYard = data?.yard;
+      console.log(data)
+
+      if(title == 'Show Contract') 
+      return this.showContract(data);
+
+      if(title == 'Generate Table Data') 
+      return this.sendDataLoadDetials.emit(data);
+
+      if(title == 'Show Yard Details') 
+      return this.showYardDetails(title, data);
+      
+      const {role} =  JSON.parse(localStorage.getItem('user'));
+      let warnmsg = "You have no access to do this request."
+      if(role == 'shipyard') return this.toastr.onWarning({warnmsg}) 
+
       if(title == 'Add Yard') 
       this.addYardDialog(title);
       
@@ -53,20 +70,11 @@ export class TenderContract implements OnInit {
       if(title == 'Delete Yard') 
       this.deleteYardDialog(title, data);
 
-      if(title == 'Show Yard Details') 
-      this.showYardDetails(title, data);
-
       if(title == 'Select New Contract') 
       this.selectNewContract(title);
       
       if(title == 'Unselect Yard') 
       this.unselectYard(title, data);
-
-      if(title == 'Show Contract') 
-      this.showContract(data);
-
-      if(title == 'Generate Table Data') 
-      this.sendDataLoadDetials.emit(data)
 
       if(title == 'Select Project') 
       this.addNewContract.project = data;
@@ -80,7 +88,6 @@ export class TenderContract implements OnInit {
       if(title == 'Add Contract Document') 
       this.uploadContract.nativeElement.click()
 
-      this.activeYard = data?.yard;
     }
 
     addYardDialog(title) {
@@ -152,6 +159,8 @@ export class TenderContract implements OnInit {
     }
 
     updateMatchingWorkArea({work_area, id_tender, id_proyek}) {
+      work_area = this.replace.deleteKey(work_area, 'end')
+      work_area = this.replace.deleteKey(work_area, 'start')
       this.tenderService.updateContractWorkArea({work_area}, id_tender)
       .subscribe(
         () => this.toastr.onSuccess('Your work area has been updated.'),
@@ -231,7 +240,7 @@ export class TenderContract implements OnInit {
       const {yard : {id_attachment}} = data || {};
       if(!id_attachment) {
         this.uploadContract.nativeElement.click()
-        return this.toastr.onInfo('Your document not found! Please Add your document.')
+        return this.toastr.onInfo({infomsg :'Your document not found! Please Add your document.'})
       }
       this.reportService.getAttachment(id_attachment)
       .subscribe(data => {

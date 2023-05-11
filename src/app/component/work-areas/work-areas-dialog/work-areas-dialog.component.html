@@ -13,7 +13,7 @@
     <form  (keyup.enter)="$event.target.value" #addWorkAreas="ngForm" (ngSubmit)="closeDialog(addWorkAreas.value)">
         <div class="row">
             <div class="col-4">
-                <div>
+                <div *ngIf="dialogData.label != 'Actual'">
                     <span class="p-2 d-block"><strong>Job Number</strong></span>
                     <input type="text" nbInput fullWidth placeholder="Job Number" fieldSize="small" required #jobNumber="ngModel" name="jobNumber" [ngModel]="dialogData?.data?.jobNumber" >
                     <div *ngIf="jobNumber.invalid && (jobNumber.dirty || jobNumber.touched)" class="danger text-danger">
@@ -29,16 +29,17 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div >
+                <div *ngIf="dialogData.label == 'Actual'">
                     <span class="p-2 d-block"><strong>Status</strong></span>    
                     <nb-select [placeholder]="dialogData?.data?.status?.name || 'Status'"  class="w-100" size="small" #status name="status" 
                     [ngModel]="dialogData?.data?.status" [disabled]="disabledChild" >
-                        <nb-option *ngFor="let value of commonFunction.jobStatus; let id=index;" [value]="value">{{value}}</nb-option>
+                        <nb-option *ngFor="let value of commonFunction.jobStatus;" [value]="value">{{value}}</nb-option>
                     </nb-select>
 
                     <span class="p-2 d-block"><strong>Progress</strong></span>
-                    <input type="number" nbInput fullWidth placeholder="Progress" [disabled]="dialogData?.data?.items?.length" fieldSize="small"  [ngModel]="dialogData?.data?.progress" #progress name="progress">
-                </div> -->
+                    <input type="number" nbInput fullWidth placeholder="Progress" [disabled]="dialogData?.data?.items?.length" 
+                    fieldSize="small"  [ngModel]="dialogData?.data?.progress" #progress name="progress">
+                </div>
                 <span class="p-2 d-block">Start</span>
                 <input autocomplete="off" [nbDatepicker]="startdatepicker"  nbInput fullWidth fieldSize="small"  placeholder="Start Date" 
                 [ngModel]="start?.[this.dialogData.label] " name="start" #startDate>

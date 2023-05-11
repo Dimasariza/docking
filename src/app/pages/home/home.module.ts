@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { NbAlertModule, 
+  NbBadgeModule, 
   NbButtonModule, 
   NbCardModule, 
   NbDialogModule, 
   NbIconModule, 
   NbInputModule, 
   NbPopoverModule, 
+  NbProgressBarModule, 
   NbSpinnerModule,
 } from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
@@ -29,6 +31,8 @@ import { FormsModule } from '@angular/forms';
     NbSpinnerModule,
     NbDialogModule,
     FormsModule,
+    NbBadgeModule,
+    NbProgressBarModule
   ],
   exports: [],
   declarations: [

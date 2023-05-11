@@ -28,7 +28,6 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
   @Input() typeMenu : any;
   @Input() summaryData : any;
   @Input() responsible : any;
-  @Input() companyProfile : any;
 
   letterDatas : any = [];
 
@@ -81,10 +80,10 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
   }
 
   seeDocument({id_attachment}) {
-    if(id_attachment == null) return this.toastr.onInfo('There is no document.')
+    if(id_attachment == null) return this.toastr.onInfo({infomsg : 'There is no document.'})
     this.reportService.getAttachment(id_attachment)
     .subscribe(data => {
-      this.toastr.onInfo('Getting your document. Please wait...')
+      this.toastr.onInfo({infomsg : 'Getting your document. Please wait...'})
       const file = new Blob([data], { type: 'application/pdf' });            
       const fileURL = URL.createObjectURL(file);
       window.open(fileURL);
@@ -114,7 +113,7 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
     const postBody = this.responsible.map(resp => ({
       shipyard : {
         nama_user : resp.nama_lengkap,
-        nama_perusahaan : this.companyProfile.profile_nama_perusahaan,
+        nama_perusahaan : this.summaryData.perusahaan.profile_nama_perusahaan ,
         email : resp.email
       },
       no_docking : `${nama_kapal} -DD- ${tahun} ${status.toUpperCase()}`,
@@ -132,7 +131,10 @@ export class LetterMenuComponent implements OnInit, OnDestroy {
       this.reportService.sendLetterEmail(body, this.typeMenu)
       .subscribe(
         () => this.sendEmailProgress = true,
-        () => this.toastr.onError(),
+        () => {
+          this.sendEmailProgress = false;
+          this.toastr.onError()
+        },
         () => {
           this.sendEmailProgress = false;
           this.toastr.onSuccess('Your email has been send.');

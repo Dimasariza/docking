@@ -56,14 +56,26 @@ export class ToastrComponent {
         });
     }
 
-    onInfo(msg = '') {
+    onInfo({infomsg = '', title = 'There is something wrong...', duration = 4000}) {
         const iconConfig: NbIconConfig = { icon: 'alert-triangle-outline', pack: 'eva' };
-        this.toastrService.show(msg, `There is something wrong...`, 
+        this.toastrService.show(infomsg, title, 
         {   ...this.option,
             icon : iconConfig, 
             status : 'info', 
-            duration : 4000,
+            duration,
             duplicatesBehaviour : 'all',
+        });
+    }
+
+    onWarning({warnmsg = '', duration = 2000}) {
+        const iconConfig: NbIconConfig = { icon: 'alert-triangle-outline', pack: 'eva' };
+        this.toastrService.show(warnmsg, `Access Denied!`, 
+        {   ...this.option,
+            icon : iconConfig, 
+            status : 'warning', 
+            duration,
+            duplicatesBehaviour : 'all',
+            preventDuplicates : false,
         });
     }
 }

@@ -10,6 +10,7 @@ import { LetterDialogComponent } from './tab-menu/letter-menu/letter-dialog/lett
 import { SupplierDialog } from './tab-menu/supplier/supplier-dialog/supplier-dialog';
 import { ReportStatusDialog } from './report-status-dialog/report-status-dialog';
 import { WorkVariantDetailDialog } from './tab-menu/work-variant-detail-dialog/work-variant-detail-dialog';
+import { ExportToPDF } from './export-to-pdf/export-to-pdf';
 
 const routes: Routes = [{
   path: '',
@@ -33,5 +34,6 @@ export const routedComponents = [
   LetterDialogComponent,
   SupplierDialog,
   ReportStatusDialog,
-  WorkVariantDetailDialog
+  WorkVariantDetailDialog,
+  ExportToPDF
 ];

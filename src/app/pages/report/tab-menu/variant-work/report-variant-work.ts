@@ -9,6 +9,7 @@ import { ToastrComponent } from "../../../../component/toastr-component/toastr.c
 import { DeleteDialogComponent } from "../../../../component/delete-dialog/delete-dialog.component";
 import { ExportToExcel } from "../../../../component/common-function/export-excel";
 import { WorkVariantDetailDialog } from "../work-variant-detail-dialog/work-variant-detail-dialog";
+import { ExportToPDF } from "../../export-to-pdf/export-to-pdf";
 
 @Component({
     selector: 'ngx-report-variant-work',
@@ -42,6 +43,7 @@ export class ReportVariantWork {
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
     @Output("sendNotification") sendNotification : EventEmitter<any> = new EventEmitter();
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
+    @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
     @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
     
@@ -58,8 +60,8 @@ export class ReportVariantWork {
         }, 
         { type : 'navto', width : 400, prop : 'jobName', title : 'Nav To' }, 
         { type : 'text', width : 200, prop : 'department' }, 
-        { type : 'text', width : 200, prop : 'startAddOn' }, 
-        { type : 'text', width : 200, prop : 'endAddOn' }, 
+        { type : 'text', width : 200, prop : 'start' }, 
+        { type : 'text', width : 200, prop : 'end' }, 
         { type : 'text', width : 100, prop : 'volume' },
         { type : 'text', width : 200, prop : 'unit' },
         { type : 'curr', width : 200, prop : 'unitPriceAddOn' },
@@ -78,7 +80,7 @@ export class ReportVariantWork {
                 { name : 'Add Sub Job', icon : 'plus-outline', status : 'success'},
                 { name : 'Update Job', icon : 'edit-outline', status : 'info'},
                 { name : 'Delete Job', icon : 'trash-outline', status : 'danger'},
-                { name : 'Export PDF', icon : 'file-outline', status : 'primary'},
+                { name : 'Export To PDF', icon : 'file-outline', status : 'primary'},
             ] 
         },
     ]
@@ -114,6 +116,7 @@ export class ReportVariantWork {
         if(title == 'Quick Add') this.quickAddWorkArea(title)
         if(title == 'Send Notification') 
         this.sendNotification.emit({work_area : this.workAreaData, label : "AddOn"})
+        if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
     }
 
     exportDataExcel() {

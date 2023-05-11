@@ -137,6 +137,13 @@ export class CommonFunction {
     }
   }
 
+  collectItem(array, sendItem) {
+    array.forEach(item => {
+      sendItem(item)
+      if(item.items?.length) this.collectItem(item.items, sendItem);
+    });
+  }
+
   rankColor(r){
     if(r == "Critical") return "red";
     if(r == "High") return "orange";
@@ -178,6 +185,16 @@ export class ReplaceData {
         };
         if(typeof obj[key] == 'object') 
         obj[key] = this.replace(obj[key], find, replace, replaceBy)
+    }
+    return obj;
+  }
+
+  deleteKey(obj, deleteKey) {
+    const keys = Object.keys(obj);
+    for (let key of keys) {
+      delete obj[deleteKey];
+      if(typeof obj[key] == 'object') 
+      obj[key] = this.deleteKey(obj[key], deleteKey)
     }
     return obj;
   }

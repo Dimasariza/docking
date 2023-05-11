@@ -31,8 +31,10 @@ export class NgxLoginComponent extends NbLoginComponent {
       
       if (result.isSuccess()) {
         this.messages = result.getMessages();
+        localStorage.setItem('user', JSON.stringify(result.getResponse().body.data))
       } else {
         this.errors = result.getErrors();
+        localStorage.setItem('user', null)
       }
 
       const redirect = result.getRedirect();

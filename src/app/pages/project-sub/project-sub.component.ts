@@ -47,7 +47,6 @@ export class ProjectSubComponent implements OnInit{
 
     ngOnInit(): void {
         const projectId = this.route.snapshot.paramMap.get('id');
-
         this.projectService.getSubProject(projectId)
         .pipe(takeUntil(this.destroy$))
         .subscribe(
@@ -62,6 +61,9 @@ export class ProjectSubComponent implements OnInit{
                 const { work_area : reportWorkArea = "", variant_work,
                 tender : { work_area : tenderWorkArea = "" } } = report;
                 this.allWorkArea = {reportWorkArea, variant_work, tenderWorkArea, projectWorkArea}
+                // this.getUserLogin.su
+                const user =  JSON.parse(localStorage.getItem('user'));
+                console.log(user)
             },
             () => this.toastr.onError()
         );
