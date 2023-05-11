@@ -134,15 +134,16 @@
             >
             </pdf-table-component>
 
-            <span style="color: #5588EE;font-size: 18px;">Cost Summary</span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Cost Summary</span>
             <pdf-table-component
                 *ngIf="costSummaryRow"
                 [columns]="costSummaryColumn"
                 [rows]="costSummaryRow"
             >
             </pdf-table-component>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;" class="pdf-pagebreak-before">Diagram Chart</span>
 
-            <span style="color: #5588EE;font-size: 18px;">Cost Details</span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Cost Details</span>
             <pdf-table-component
                 *ngIf="costDetailsRow"
                 [columns]="costDetailsColumn"
@@ -156,11 +157,27 @@
                 > 
                 <b> Progress Report </b>  
             </span>
-            <span style="color: #5588EE;font-size: 18px;">Critical Job</span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Critical Job</span>
             <pdf-table-component
                 *ngIf="criticalJobRow"
                 [columns]="progressReportColumn"
                 [rows]="criticalJobRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Delayed Job</span>
+            <pdf-table-component
+                *ngIf="delayedJobRow"
+                [columns]="progressReportColumn"
+                [rows]="delayedJobRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Done Job</span>
+            <pdf-table-component
+                *ngIf="doneJobRow"
+                [columns]="progressReportColumn"
+                [rows]="doneJobRow"
             >
             </pdf-table-component>
             
@@ -169,9 +186,14 @@
                 > 
                 <b> Variant Orders </b>  
             </span>
-            <span style="color: #5588EE;font-size: 18px;">New Jobs Added After Quatation</span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">New Jobs Added After Quatation</span>
 
-            <span style="color: #5588EE;font-size: 18px;">Diagram Chart</span>
+            <pdf-table-component
+                *ngIf="variantJobRow"
+                [columns]="progressReportColumn"
+                [rows]="variantJobRow"
+            >
+            </pdf-table-component>
         </div>
     </div>
 </div>

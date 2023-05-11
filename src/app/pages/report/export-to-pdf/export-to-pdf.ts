@@ -84,7 +84,8 @@ export class ExportToPDF  {
   ]
 
   delayedJobRow : any;
-  jobDoneRow : any;
+  doneJobRow : any;
+  variantJobRow : any;
 
   statusProgress : any = {progress : {}, total : {}};
 
@@ -161,12 +162,16 @@ export class ExportToPDF  {
     this.commonFunction.collectItem(variant_work, (job)=> allVariantWork.push(job))
 
     // this.criticalJobRow = allWorkArea.filter(job => job.rank == 'Critical');
+    // this.doneJobRow = allWorkArea.filter(job => job.status == 'Done');
+    // this.delayedJobRow = allWorkArea.filter(job => {
+    //   return this.commonFunction.parseDate(job?.end) > new Date();
+    // })
     for(let i = 0; i < 4; i++) this.criticalJobRow.push(this.criticalJobRow[0])
 
-    this.jobDoneRow = allWorkArea.filter(job => job.status == 'Done');
-    this.delayedJobRow = allWorkArea.filter(job => {
-      return this.commonFunction.parseDate(job?.end) > new Date();
-    })
+    this.delayedJobRow = this.variantJobRow = this.doneJobRow = this.criticalJobRow
+    
+    
+
   }
 
   createByJob(data) {
@@ -194,14 +199,16 @@ export class ExportToPDF  {
   
   public async downloadAsPDF() {
     const pdfTable = this.pdfTable.nativeElement;
-    const html = htmlToPdfmake(pdfTable.innerHTML);
+    let html = htmlToPdfmake(pdfTable.innerHTML);
+
+    this.tableType == 'projectPDF' ?
+    html[0].stack.splice(8, 0, {svg : this.progressSvg(this.statusProgress)})
+    : null;
+
     const documentDefinition = { 
       content: [
         await this.tableHeader(),
         html,
-        this.tableType == 'projectPDF'
-        ? { svg : this.progressSvg(this.statusProgress) }
-        : {},
       ],
       pageBreakBefore: function(currentNode) {
         return currentNode.style && currentNode.style.indexOf('pdf-pagebreak-before') > -1;
