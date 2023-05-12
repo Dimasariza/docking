@@ -27,16 +27,19 @@
                         <p> {{ job?.remarks }} </p>
                     </td>
                 </tr>
-                <tr> <td [attr.colspan]="columns?.length"> <b>Log</b> </td> </tr>
+                <tr> <td [attr.colspan]="columns?.length" style="color: rgb(59, 117, 0);"> <b>Log</b> </td> </tr>
                 <div *ngFor="let logProgress of job?.progress;let i = index;">
                     <tr>
                         <td [attr.colspan]="Math.ceil( 20/100 * columns?.length )"> 
                             &nbsp; - Log {{i + 1}} 
                         </td>
-                        <td [attr.colspan]="Math.floor( 40/100 * columns?.length )">
-                            {{ logProgress?.progress }} &nbsp; - {{ logProgress?.updatedBy }}
+                        <td [attr.colspan]="Math.floor( 20/100 * columns?.length )">
+                            {{ logProgress?.progress }} % &nbsp; - by {{ logProgress?.updateBy }}
                         </td>
-                        <td [attr.colspan]="Math.ceil( 40/100 * columns?.length )">{{ logProgress?.date | date : 'dd-MM-YYYY' }}</td>
+                        <td [attr.colspan]="Math.floor( 40/100 * columns?.length )">
+                            {{ logProgress?.remarksProgress }}
+                        </td>
+                        <td [attr.colspan]="Math.ceil( 20/100 * columns?.length )">{{ logProgress?.date  }}</td>
                     </tr>
                 </div>
             </div>

@@ -43,8 +43,10 @@ export class WorkAreasComponent implements OnInit {
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
   public setWorkArea(workArea) {
-    this.workAreaData = workArea;
-    this.ngOnInit();
+    if(this.commonFunction.arrayNotEmpty(workArea)) {
+      this.workAreaData = workArea;
+      this.ngOnInit();
+    }
   }
 
   private extendTable = false;

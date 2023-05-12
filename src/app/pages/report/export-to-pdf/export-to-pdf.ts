@@ -89,27 +89,28 @@ export class ExportToPDF  {
     { name : 'Actual', prop : 'unitPriceActual', width : 'auto' },
   ]
 
-  criticalJobRow : any = [
-    {jobNumber : 1, jobName : 'General Service in Docking T Perak', rank : 'medium', 'status' : 'Done', 'responsible' : 'WU_ZI_MU',
-     start: '2023-05-11', end : '2023-10-11', unitPriceContract : '1000000', unitPriceAddOn : '1000000', unitPriceActual :
-    '1000000', remarks : 'Test remarks job convert to pdf', rowType : 'progress' , 
-    progress : [ 
-      { progress : 0 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 10 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 20 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 30 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 40 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 50 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 60 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 70 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 80 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-      { progress : 90 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
-    ] }
-  ]
-
+  criticalJobRow : any;
   delayedJobRow : any;
   doneJobRow : any;
-  variantJobRow : any;
+  variantJobRow : any; 
+  
+  // [
+  //   {jobNumber : 1, jobName : 'General Service in Docking T Perak', rank : 'medium', 'status' : 'Done', 'responsible' : 'WU_ZI_MU',
+  //    start: '2023-05-11', end : '2023-10-11', unitPriceContract : '1000000', unitPriceAddOn : '1000000', unitPriceActual :
+  //   '1000000', remarks : 'Test remarks job convert to pdf', rowType : 'progress' , 
+  //   progress : [ 
+  //     { progress : 0 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 10 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 20 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 30 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 40 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 50 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 60 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 70 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 80 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //     { progress : 90 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+  //   ] }
+  // ]
 
   statusProgress : any = {progress : {}, total : {}};
 
@@ -182,17 +183,22 @@ export class ExportToPDF  {
 
     let allWorkArea = [];
     let allVariantWork = [];
-    this.commonFunction.collectItem(work_area, (job)=> allWorkArea.push(job))
-    this.commonFunction.collectItem(variant_work, (job)=> allVariantWork.push(job))
+    this.commonFunction.collectItem(work_area, (job)=> allWorkArea.push({
+      ...job, rowType : 'progress', responsible : job.responsible.nama_lengkap
+    }))
+    this.commonFunction.collectItem(variant_work, (job)=> allVariantWork.push({
+      ...job, rowType : 'progress', responsible : job.responsible.nama_lengkap
+    }))
 
-    // this.criticalJobRow = allWorkArea.filter(job => job.rank == 'Critical');
-    // this.doneJobRow = allWorkArea.filter(job => job.status == 'Done');
-    // this.delayedJobRow = allWorkArea.filter(job => {
-    //   return this.commonFunction.parseDate(job?.end) > new Date();
-    // })
-    for(let i = 0; i < 4; i++) this.criticalJobRow.push(this.criticalJobRow[0])
+    this.criticalJobRow = allWorkArea.filter(job => job.rank == 'Critical');
+    this.doneJobRow = allWorkArea.filter(job => job.status == 'Done');
+    this.delayedJobRow = allWorkArea.filter(job => {
+      return this.commonFunction.parseDate(job?.end) > new Date();
+    })
+    this.variantJobRow = allVariantWork;
 
-    this.delayedJobRow = this.variantJobRow = this.doneJobRow = this.criticalJobRow
+    // for(let i = 0; i < 4; i++) this.criticalJobRow.push(this.criticalJobRow[0])
+    // this.delayedJobRow = this.variantJobRow = this.doneJobRow = this.criticalJobRow
   }
 
   public async downloadAsPDF() {
