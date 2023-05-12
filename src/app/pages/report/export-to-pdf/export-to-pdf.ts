@@ -27,6 +27,7 @@ export class ExportToPDF  {
   createDate : any = new Date();
 
   createByJob(data) {
+    console.log(data)
     let allJob : any = [];
     this.commonFunction.collectItem([data], (x) => allJob.push(x));
     this.jobData = {...data, allJob};
@@ -93,16 +94,16 @@ export class ExportToPDF  {
      start: '2023-05-11', end : '2023-10-11', unitPriceContract : '1000000', unitPriceAddOn : '1000000', unitPriceActual :
     '1000000', remarks : 'Test remarks job convert to pdf', rowType : 'progress' , 
     progress : [ 
-      { progress : 0 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 10 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 20 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 30 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 40 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 50 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 60 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 70 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 80 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
-      { progress : 90 , date : '2023-05-11', updatedBy : 'Roganda Dimas' },
+      { progress : 0 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 10 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 20 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 30 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 40 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 50 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 60 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 70 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 80 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
+      { progress : 90 , date : '2023-05-11', updatedBy : 'Roganda Dimas', remarksProgress : '' },
     ] }
   ]
 

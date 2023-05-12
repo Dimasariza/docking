@@ -51,9 +51,9 @@ export class ProjectTaskMine implements OnInit {
   tableHead = [ 
     { type : 'text', placeholder : 'Job Number' },
     { type : 'text', placeholder : 'Tasks' },
-    { type : 'drop-down', placeholder : 'Project', option : ['All'], title : 'Filter Table' },
-    { type : 'drop-down', placeholder : 'Status', option : ['All', ...this.commonFunction.jobStatus], title : 'Filter Table' },
-    { type : 'drop-down', placeholder : 'Responsible', option : ['All'], title : 'Filter Table' },
+    { type : 'drop-down', placeholder : 'Project', option : ['All'], title : 'Filter Table' , unsort : true},
+    { type : 'drop-down', placeholder : 'Status', option : ['All', ...this.commonFunction.jobStatus], title : 'Filter Table', unsort : true },
+    { type : 'drop-down', placeholder : 'Responsible', option : ['All'], title : 'Filter Table', unsort : true },
     { type : 'text', placeholder : 'Due' }
   ]
 

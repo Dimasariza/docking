@@ -33,6 +33,11 @@ const routes: Routes = [{
       .then(m => m.ReportModule),
     },
     {
+      path: 'update-progress/:id/:work',
+      loadChildren: () => import('./update-progress-report/update-progress-report.module')
+      .then(m => m.UpdteProgressReportModule),
+    },
+    {
       path: 'profile',
       loadChildren: () => import('./profile/profile.modules')
       .then(m => m.ProfileModule),

@@ -220,7 +220,7 @@ export class FunctionCollection {
     calculateProgress(parentId, work) {
       parentId = parentId.toString().split('');
       parentId.pop();
-      parentId = parentId.join('').replace(',', '');;
+      parentId = parentId.join('').replace(',', '');
       let totalProgress = 0;
       const works = work.find(w => w.id.toString() === parentId.toString() );
       works?.items.forEach(work => totalProgress += work.progress);

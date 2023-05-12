@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NbSortDirection, NbSortRequest, NbTreeGridDataSourceBuilder } from '@nebular/theme';
 import { CommonFunction } from '../common-function/common-function';
 
@@ -14,8 +14,9 @@ export class WorkAreasComponent implements OnInit {
     ){ }
 
   ngOnInit(): void {
-    this.workAreaData = this.defineRankColor(this.workAreaData)
     this.allColumns = this.columnType.map(column => column.prop);
+    if(!this.commonFunction.arrayNotEmpty(this.workAreaData)) this.workAreaData = [];
+    this.workAreaData = this.defineRankColor(this.workAreaData)
     this.dataTable = this.commonFunction.populateData(this.workAreaData, this.extendTable);
     this.dataSource = this.dataSourceBuilder.create(this.dataTable);
   }
@@ -53,9 +54,16 @@ export class WorkAreasComponent implements OnInit {
   }
 
   handleClickButton(title, data = null) {
+    if(title == 'Update All Progress') 
+      data = {...data, ...this.progressForm}
     this.sendToParent.emit({title, data});
   }
-  
+
+  progressForm : any = {};
+  formValue(title, value) {
+    this.progressForm[title] = value;
+  }
+
   updateSort(sortRequest: NbSortRequest): void {
     this.sortColumn = sortRequest.column;
     this.sortDirection = sortRequest.direction;

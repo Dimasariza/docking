@@ -8,6 +8,7 @@ import { ProjectService } from "../../project/project.service";
 import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
 import { DeleteDialogComponent } from "../../../component/delete-dialog/delete-dialog.component";
 import * as XLSX from 'xlsx/xlsx.mjs';
+import { CheckFile } from "../../../component/common-function/onUploadFile";
 
 @Component({
     selector: 'ngx-sub-project-work-area',
@@ -18,7 +19,8 @@ export class SubProjectWorkArea implements OnInit{
         public commonFunction : CommonFunction,
         public replaceData : ReplaceData,
         private projectService : ProjectService,
-        private toastr : ToastrComponent
+        private toastr : ToastrComponent,
+        private checkFile : CheckFile
     ) { }
 
     ngOnInit(): void {
@@ -119,6 +121,10 @@ export class SubProjectWorkArea implements OnInit{
     }
 
     importExcelFIle(event) {
+        if(!event) return;
+        const formData = this.checkFile.extension(event, 'numeric file');
+        if(!formData) return;
+
         const fileName = event.target.files[0];
         if(!fileName) return;
         const fileReader = new FileReader();
@@ -147,14 +153,14 @@ export class SubProjectWorkArea implements OnInit{
 
     reconstructDataExcel(data) {
         const user =  JSON.parse(localStorage.getItem('user'));
-        const date = this.commonFunction.transformDate(new Date());
+        const date = this.commonFunction.transformDate(new Date(), 'yyyy-MM-dd hh-mm a');
         data = data.map(details => {
             let {
                 ['Job Number']  : jobNumber,
                 ['Job Name']    : jobName,
                 ['Departement'] : department,
-                ['Start']       : startBudget,
-                ['Stop']        : endBudget,
+                ['Start']       : start,
+                ['Stop']        : end,
                 ['Vol']         : volume,
                 ['Unit']        : unit,
                 ['Unit Price']  : unitPriceBudget,
@@ -163,17 +169,15 @@ export class SubProjectWorkArea implements OnInit{
                 ['Remarks']     : remarks,
                 ['Responsible'] : nama_lengkap,
                 ['Rank']        : rank,
-                volumeBudget = "",
-                responsible = {}
             } = details;
-            startBudget = this.commonFunction.transformDate(this.transformExcelDate(startBudget));
-            endBudget = this.commonFunction.transformDate(this.transformExcelDate(endBudget));
-            volumeBudget = volume;
-            responsible.nama_lengkap = nama_lengkap;
-
-            const progress = [{ progress : '0', date, updateBy : user.nama_lengkap }]
-            return {jobNumber, jobName, department, startBudget, endBudget, volume, volumeBudget,
-                unit, unitPriceBudget, totalPriceBudget, category, remarks, responsible, rank, progress
+            const progress = [{ progress : '0', date, updateBy : user.nama_lengkap, 
+                remarksProgress : `${user.nama_lengkap} importing Data From Excel` 
+            }]
+            return {jobNumber, jobName, department, rank, progress, responsible : { nama_lengkap },
+                start : this.commonFunction.transformDate(this.transformExcelDate(start)), 
+                end : this.commonFunction.transformDate(this.transformExcelDate(end)),
+                volume, unit, unitPriceBudget, totalPriceBudget, category, remarks, 
+                created_at : date, last_update : date, 
             }
         })
         data.forEach(job => {
@@ -233,7 +237,9 @@ export class SubProjectWorkArea implements OnInit{
         })
         .onClose
         .pipe(takeUntil(this.destroy$))
-        .subscribe(newData => this.onUploadData(title, newData));
+        .subscribe(newData => newData
+            ? this.onUploadData(title, newData)
+            : null);
     }
 
     onUploadData(title, data : any) {

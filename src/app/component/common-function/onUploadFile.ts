@@ -9,26 +9,28 @@ export class CheckFile {
         private toastr : ToastrComponent
     ) {}
 
-    writeFile(res){
+    public readExtension = ['.doc', '.docx', '.pdf', '.txt', '.dotx'];
+    public numericExtension = ['.xlsx', '.xlsm', '.xls', '.xltx', '.xltm'];
+
+    extension(res, docType){
         if(!res) return;
         const formData = new FormData();
         const file = res.target?.files[0];
-        const fileSize = file.size;
-        const ext = file.type.split("/")[1];
-        const acceptionFIle = ['doc', 'docx', 'pdf', 'txt'];
-        if(fileSize > 2500000) {
+        const { size, name } = file;
+        const ext = name.match(/[.](?!\S*[.])\S*/gm)[0];
+        let accepExtension; 
+        if(docType == 'read file') accepExtension = this.readExtension;
+        if(docType == 'numeric file') accepExtension = this.numericExtension;
+
+        if(size > 2500000) {
             this.toastr.onInfo({infomsg :'Your file size must be less then 2 Mb.'});
             return false;
         } else
-        if(!acceptionFIle.includes(ext)) {
-            this.toastr.onInfo({infomsg : 'Your file extension must be on txt, doc, docx or pdf format.'})
+        if(!accepExtension.includes(ext)) {
+            this.toastr.onInfo({infomsg : `Your file extension must be on ${ accepExtension.join(', ') } format.`})
             return false;
         }
         formData.append('dokumen', file);
         return formData;
-    }
-
-    numericFile() {
-        
     }
 }

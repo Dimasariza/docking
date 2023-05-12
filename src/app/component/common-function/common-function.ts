@@ -138,6 +138,7 @@ export class CommonFunction {
   }
 
   collectItem(array, sendItem) {
+    if(this.arrayNotEmpty(array))
     array.forEach(item => {
       sendItem(item)
       if(item.items?.length) this.collectItem(item.items, sendItem);

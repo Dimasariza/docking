@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
 import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
 import { WorkAreasComponent } from "../../../component/work-areas/work-areas.component";
 import { WorkAreasDialogComponent } from "../../../component/work-areas/work-areas-dialog/work-areas-dialog.component";
@@ -14,7 +14,7 @@ import { TenderService } from "../tender.service";
     templateUrl: './tender-load-details.html',
 })
 
-export class TenderLoadDetails { 
+export class TenderLoadDetails  { 
     constructor(
         private commonFunction : CommonFunction,
         private replace : ReplaceData,
@@ -91,7 +91,7 @@ export class TenderLoadDetails {
         { type : 'text', placeholder : 'Total Price Contract' },
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
-        { type : 'drop-down', placeholder : 'Approved', 
+        { type : 'drop-down', placeholder : 'Approved', unsort : true,
             option : ['All', ...this.commonFunction.rank], title : 'Approve By Rank' 
         },
         { type : 'text', placeholder : '' },
@@ -158,8 +158,8 @@ export class TenderLoadDetails {
             () => this.toastr.onUpload(),
             () => this.toastr.onError(),
             () => {
-                this.toastr.onSuccess('Your project summary has been approved.')
-                this.refreshPage.emit()
+                this.toastr.onSuccess('Your project summary has been approved.');
+                this.refreshPage.emit();
             }
         )
 
@@ -172,6 +172,7 @@ export class TenderLoadDetails {
             () => this.toastr.onError(),
             () => {
                 this.toastr.onSuccess('All jobs has been added to report progress.');
+                this.tableDetails = this.replace.replace(this.tableDetails, 'Confirm Contract', true, 'disabled')
                 this.refreshPage.emit();
             }
         )

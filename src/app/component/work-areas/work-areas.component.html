@@ -5,8 +5,8 @@
   </div>
   <div class="align-self-center"  *ngIf="tableDetails.button">
     <button nbButton *ngFor="let button of tableDetails.button" 
-    size="small" status="primary" outline [disabled]="button.disabled"
-    (click)="handleClickButton(button.name)"
+    size="small" status="primary" outline [disabled]="button?.disabled"
+    (click)="handleClickButton(button.name, button.data)"
     > 
     {{ button.name }} 
     </button>
@@ -23,7 +23,7 @@
                     [nbTreeGridColumnDef]="column" 
                     [showOn]="getShowOn(index)">
         <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" [style.width.px]="columnType[index].width" 
-        [disabled] = " tableHead[index].type === 'drop-down' " *nbTreeGridHeaderCellDef>
+        [disabled] = " tableHead[index].unsort " *nbTreeGridHeaderCellDef>
           <!-- Text only -->
           <span *ngIf=" tableHead[index].type === 'text' ">{{tableHead[index].placeholder}}</span>
 
@@ -94,11 +94,36 @@
           <span *ngIf="columnType[index].type == 'text'">{{row.data[column] || '-'}}</span>
 
           <!-- Progress -->
-          <div *ngIf="columnType[index].type == 'progress'" >
-            <nb-progress-bar [value]=" row.data[column] " 
-              status="info" [displayValue]="true"
-            ></nb-progress-bar>
+          <div *ngIf="columnType[index].type == 'updtProg'">
+            <input 
+              nbInput 
+              class="w-75"
+              name="progress"
+              fieldSize="small" 
+              type="number"
+              min="0"
+              max="100"
+              ngModel
+              #progress="ngModel"
+              (ngModelChange)="formValue('newProgress',progress.value)"
+            >
+
+            <div *ngIf=" progress.value < 0 " class="danger text-danger">
+                Minimum value of progress is 0.
+            </div>
+            <div *ngIf=" progress.value > 100 " class="danger text-danger">
+                Maximum value of progress is 100.
+            </div>
           </div>
+
+          <textarea 
+            name="remarksProgress" id="" cols="40" rows="2" nbInput
+            ngModel
+            #progressRemarks="ngModel"
+            (ngModelChange)="formValue('remarksProgress',progressRemarks.value)"
+            *ngIf="columnType[index].type == 'updtRem'"
+          >
+          </textarea>
 
           <!-- Click text -->
           <span *ngIf="columnType[index].type == 'navto'" 

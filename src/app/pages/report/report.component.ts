@@ -2,7 +2,6 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { ProfileService } from '../profile/profile.service';
 import { ReportService } from './report.service';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ReportStatusDialog } from './report-status-dialog/report-status-dialog';
@@ -42,7 +41,7 @@ export class ReportComponent implements OnInit, OnDestroy  {
     const user =  JSON.parse(localStorage.getItem('user'));
     this.currentUser = user;  
 
-    this.reportService.getWorkPerProject(id)
+    this.reportService.getProjectSummaryById(id)
     .pipe(takeUntil(this.destroy$))
     .subscribe(({data} : any) => this.generateSummaryData(data) )
 

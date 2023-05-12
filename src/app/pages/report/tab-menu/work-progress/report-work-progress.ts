@@ -7,6 +7,9 @@ import { ExportToExcel } from "../../../../component/common-function/export-exce
 import { WorkVariantDetailDialog } from "../work-variant-detail-dialog/work-variant-detail-dialog";
 import { WorkAreasDialogComponent } from "../../../../component/work-areas/work-areas-dialog/work-areas-dialog.component";
 import { ExportToPDF } from "../../export-to-pdf/export-to-pdf";
+import { Router } from "@angular/router";
+import { ReportService } from "../../report.service";
+import { ToastrComponent } from "../../../../component/toastr-component/toastr.component";
 
 @Component({
     selector: 'ngx-report-work-progress',
@@ -17,6 +20,9 @@ export class ReportWorkProgress implements OnInit {
         private commonFunction : CommonFunction,
         private replaceData : ReplaceData,
         private exportToExcel : ExportToExcel,
+        private router : Router,
+        private reportService : ReportService,
+        private toastr : ToastrComponent
     ) { }
 
     ngOnInit(): void {
@@ -36,14 +42,14 @@ export class ReportWorkProgress implements OnInit {
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
     @Output("sendNotification") sendNotification : EventEmitter<any> = new EventEmitter();
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
-    @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
+    @ViewChild(ExportToPDF) exportToPDF : ExportToPDF; 
 
     @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
 
     workAreaData : any ;
     tableDetails = {style :{ width : '3200px', "max-height" : '300px' }, 
-        button : [{ name : 'Save', disabled : false }], currency : 'currency'
+        button : [{ name : 'Update Progress', data : 'work_area' }], currency : 'currency'
     };
     columnType = [ 
         { type : 'numb', width : 200, prop : 'jobNumber' }, 
@@ -96,18 +102,21 @@ export class ReportWorkProgress implements OnInit {
     ]
 
     handleClickButton(title, data = null) {
+        console.log(title)
         if(title == 'Refresh') this.refreshPage.emit();
         if(title == 'Export to Excel') this.exportDataExcel();
         if(title == 'Extend') this.extendTable(true);
         if(title == 'Reduce') this.extendTable(false);
         if(title == 'Nav To') this.workProgressDetail();
         if(title == 'Send Notification') 
-        this.sendNotification.emit({work_area : this.workAreaData, label : "Actual"})
+        this.sendNotification.emit({work_area : this.workAreaData, label : "Actual"});
         if(title == 'Update Job') this.updateReportWorkArea(title, data);
-        if(title == 'By Ship Yard') this.approvedByShipYard(title, data)
-        if(title == 'By Owner') this.approvedByOwner(title, data)
+        if(title == 'By Ship Yard') this.approvedByShipYard(title, data);
+        if(title == 'By Owner') this.approvedByOwner(title, data);
         if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
-    }
+        if(title == 'Update Progress')
+        this.router.navigateByUrl(`/pages/update-progress/${this.summaryData.id_proyek}/${data}`);
+    }   
 
     exportDataExcel() {
         const {kapal : {nama_kapal}, tahun, status} = this.summaryData.proyek;
@@ -170,7 +179,7 @@ export class ReportWorkProgress implements OnInit {
     }
 
     onUploadData(title, data) {
-        console.log(data)
+        if(!data) return;
         let work_area;
         let successmsg
         if(title == 'Reconstruct Work Area') {
@@ -181,6 +190,17 @@ export class ReportWorkProgress implements OnInit {
             })
             successmsg = `Your work area has been updated > ${data.jobName}`
         }
+
+        this.reportService.updateReportWorkArea({work_area}, this.summaryData.id_proyek)
+        .subscribe(
+            () => {},
+            () => this.toastr.onError(),
+            () => {
+                this.toastr.onSuccess("Your data has been updated.");
+                this.refreshPage.emit();
+                this.viewWorkArea.setWorkArea(work_area);
+            },
+        )
     }
 
     ngOnDestroy(): void {

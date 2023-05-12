@@ -32,7 +32,7 @@ export class LetterDialogComponent implements OnDestroy {
   public loading : any 
   onFileChange(res){
     if(!res) return;
-    const formData = this.checkFile.writeFile(res);
+    const formData = this.checkFile.extension(res, 'read file');
     if(!formData) return;
     this.reportService.addAttachment(formData)
     .subscribe((res) => {

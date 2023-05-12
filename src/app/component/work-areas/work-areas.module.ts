@@ -14,15 +14,17 @@ import { ThemeModule } from "../../@theme/theme.module";
 import { NgxDatatableModule } from "@swimlane/ngx-datatable";
 import { WorkAreasDialogModule } from "./work-areas-dialog/work-areas-dialog.module";
 import { NbDateFnsDateModule } from "@nebular/date-fns";
+import { FormsModule } from "@angular/forms";
 
 @NgModule({
     imports: [
         CommonModule,
+        ThemeModule,
+        FormsModule,
         NbCardModule,
         NbTreeGridModule,
         NbIconModule,
         NbInputModule,
-        ThemeModule,
         NgxDatatableModule,
         NbSelectModule,
         NbIconModule,
@@ -30,7 +32,7 @@ import { NbDateFnsDateModule } from "@nebular/date-fns";
         WorkAreasDialogModule,
         NbPopoverModule,
         NbDateFnsDateModule,
-        NbProgressBarModule
+        NbProgressBarModule,
     ],
     declarations: [
         WorkAreasComponent

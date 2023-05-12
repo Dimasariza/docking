@@ -16,14 +16,11 @@ import { WorkAreasDialogComponent } from "./work-areas-dialog.component";
 @NgModule({
     imports: [
         CommonModule,
+        FormsModule,
+        ThemeModule,
         NbCardModule,
         NbIconModule,
-        NbInputModule,
-        ThemeModule,
-        NbSelectModule,
-        NbIconModule,
         NbButtonModule,
-        FormsModule,
         NbOptionModule,
         NbSelectModule,
         NbInputModule,

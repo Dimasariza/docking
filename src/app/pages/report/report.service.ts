@@ -21,7 +21,7 @@ export class ReportService {
         return this.httpClient.get(url, {headers : httpHeaders, params : queryParams});
     }
 
-    getWorkPerProject(id){
+    getProjectSummaryById(id){
         const url = this.apiUrl + "/report/proyek/" + id;
         return this.httpClient.get(url);
     }

@@ -90,7 +90,7 @@ export class WorkAreasDialogComponent implements OnInit {
         } = arr;
 
         const user =  JSON.parse(localStorage.getItem('user'));
-        const date = this.commonFunction.transformDate(new Date()) 
+        const date = this.commonFunction.transformDate(new Date(), 'yyyy-MM-dd hh-mm a') 
         const newProgress = this.dialogData.data?.progress || [];
         if(newProgress.at(-1)?.progress != progress) {
             newProgress.push({progress, date, updateBy : user.nama_lengkap });

@@ -9,6 +9,7 @@ import { ToastrComponent } from "../../../component/toastr-component/toastr.comp
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { TenderService } from "../tender.service";
+import { CheckFile } from "../../../component/common-function/onUploadFile";
 
 @Component({
     selector: 'ngx-tender-contract',
@@ -21,7 +22,8 @@ export class TenderContract implements OnInit {
       private reportService : ReportService,
       private toastr : ToastrComponent,
       private tenderService : TenderService,
-      private replace : ReplaceData
+      private replace : ReplaceData,
+      private checkFile : CheckFile
     ) {}
     
     @Input() projectData : any;
@@ -46,8 +48,6 @@ export class TenderContract implements OnInit {
     
     handleClickButton(title, data = null) {
       this.activeYard = data?.yard;
-      console.log(data)
-
       if(title == 'Show Contract') 
       return this.showContract(data);
 
@@ -87,7 +87,6 @@ export class TenderContract implements OnInit {
 
       if(title == 'Add Contract Document') 
       this.uploadContract.nativeElement.click()
-
     }
 
     addYardDialog(title) {
@@ -251,9 +250,9 @@ export class TenderContract implements OnInit {
     }
 
     onFileChange(res) {
-      const formData = new FormData();
-      const file = res.target?.files[0];
-      formData.append('dokumen', file);
+      if(!res) return;
+      const formData = this.checkFile.extension(res, 'read file');
+      if(!formData) return;
       this.reportService.addAttachment(formData)
       .subscribe(res => {
         let progress;
