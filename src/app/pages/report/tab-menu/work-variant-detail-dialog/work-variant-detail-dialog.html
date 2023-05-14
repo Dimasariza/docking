@@ -1,0 +1,16 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <strong>{{ dialogData?.title }}</strong>
+            <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+                <nb-icon icon="close-outline"></nb-icon>
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <div>
+            <span>Job Name :</span>
+            <span>{{ dialogData?.jobName }}</span>
+        </div>
+    </nb-card-body>
+</nb-card>

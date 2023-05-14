@@ -1,12 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { NbMediaBreakpointsService, NbMenuService, NbSidebarService, NbThemeService } from '@nebular/theme';
-
-import { UserData } from '../../../@core/data/users';
 import { LayoutService } from '../../../@core/utils';
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { HomeBateraService } from '../../../pages/home-batera/home-batera.service';
-import { HttpClient } from '@angular/common/http';
+import { HomeService } from '../../../pages/home/home.service';
 
 @Component({
   selector: 'ngx-header',
@@ -14,7 +11,6 @@ import { HttpClient } from '@angular/common/http';
   templateUrl: './header.component.html',
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-
   private destroy$: Subject<void> = new Subject<void>();
   userPictureOnly: boolean = false;
   user: any;
@@ -32,33 +28,37 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   currentTheme = 'default';
 
-  userMenu = [ { title: 'Profile', link: '/pages/profile-batera' }, { title: 'Log out', link: '/auth/logout' } ];
+  userMenu = [ { title: 'Profile', link: '/pages/profile' }, { title: 'Log out', link: '/auth/logout' } ];
 
   constructor(private sidebarService: NbSidebarService,
               private menuService: NbMenuService,
               private themeService: NbThemeService,
               private layoutService: LayoutService,
               private breakpointService: NbMediaBreakpointsService,
-              private homeService : HomeBateraService,
-              private http : HttpClient) {
+              private homeService : HomeService,) {
   }
 
   ngOnInit() {
     this.currentTheme = this.themeService.currentTheme;
-
-    // this.userService.getUsers()
-    //   .pipe(takeUntil(this.destroy$))
-    //   .subscribe((users: any) => this.user = users.nick);
-    
     this.homeService.getUserLogin()
       .pipe(takeUntil(this.destroy$))
       .subscribe(({data} : any) => {
         const {nama_lengkap, avatar_url} = data
-        this.user = {
-          name : nama_lengkap,
-          picture : this.homeService.getUserProfilePict(avatar_url)
-        }
+
+        avatar_url 
+        ? this.homeService.getFile(avatar_url)
+          .subscribe(res => {
+            this.user = {
+              name : nama_lengkap,
+              picture : `data:image/png;base64,${this._arrayBufferToBase64(res)}`
+            };
+          })
+        : this.user = {
+            name : nama_lengkap,
+            picture : null
+          };
       })
+
 
     const { xl } = this.breakpointService.getBreakpointsMap();
     this.themeService.onMediaQueryChange()
@@ -79,6 +79,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.destroy$.next();
     this.destroy$.complete();
+  }
+
+  _arrayBufferToBase64(buffer) {
+    var binary = '';
+    var bytes = new Uint8Array(buffer);
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) binary += String.fromCharCode(bytes[i]);
+    return window.btoa(binary);
   }
 
   changeTheme(themeName: string) {

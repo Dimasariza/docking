@@ -1,0 +1,14 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between w-100" >
+      <h5>Tasks | Mine</h5>
+    </nb-card-header>
+    <ngx-work-areas 
+      *ngIf="workAreaData"
+      [workAreaData]="workAreaData"
+      [tableDetails]="tableDetails"
+      [columnType]="columnType"
+      [tableHead]="tableHead" 
+      (sendToParent)="handleClickButton($event.title, $event.data)"
+    >
+    </ngx-work-areas>
+</nb-card>

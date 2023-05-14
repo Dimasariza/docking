@@ -1,0 +1,181 @@
+<!-- <nb-card >
+    <nb-card-header>
+        
+    <div class="d-flex justify-content-between">
+        <h5>{{shipName}}</h5>
+        <div>
+            <div *ngFor = "let button of menuButton">
+                <button *ngIf = "button.position === 'top'" 
+                (click)="buttonAction(button.text)" 
+                [disabled]="!button?.disabled" 
+                nbButton status="primary" 
+                class="mx-1" 
+                outline 
+                size="small"
+                >
+                    <nb-icon icon="{{button.icon}}" pack="eva"></nb-icon>
+                    {{button.text}}
+                </button>
+            </div>
+        </div>
+        
+    </div>
+
+
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="row">
+            <div class="col-lg-5 col-md-12 col-sm-12" *ngIf="reportData">
+                <div class="d-flex justify-content-between">
+                    <h6>Summary</h6>
+                    <button nbButton 
+                    status="primary" 
+                    size="small" 
+                    (click)="buttonAction('update project')"
+                    >Update</button>
+                </div>
+                
+                <div *ngFor = "let item of objectKeys(reportData) | keyvalue: orderOriginal">
+                    <div class="row my-2">
+                        <div class="col-5"><strong>{{item.value}}</strong></div>
+                        <div class="col-7" 
+                        [ngClass]="reportData[item.value] ? 'font-weight-normal' : 'font-weight-lighter text-muted'"
+                        >{{reportData[item.value] || 'Data Not Availlable'}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-7 col-md-12 col-sm-12">
+                <ngx-table-data [tableData]="projectData" (reloadPage)="ngOnInit()"></ngx-table-data>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>
+
+
+<nb-card>
+    <div class="d-flex" >
+        <div *ngFor = "let button of menuButton" class="mx-1 my-3">
+            <button *ngIf = "button.position === 'bottom'" 
+            (click)="buttonAction(button.text, undefined, importExcel)" 
+            nbButton 
+            status="primary" 
+            class="mx-1" 
+            outline 
+            size="small">
+                {{button.text}}
+            </button>
+        </div>
+    </div>
+    <input type="file" style="display: none;" #importExcel (change)="importExcelFIle($event)">
+    <h6 class="mx-3">Work Area</h6>
+    <div>
+        <label 
+        class="search-label" 
+        style="margin: 1rem 1rem;" 
+        for="search" >Search:</label>
+        <input 
+        nbInput 
+        [nbFilterInput]="dataSource" 
+        id="search"
+        placeholder="Search Job"
+        fieldSize="small"
+        class="search-input"
+        style="margin: 1rem 1rem;"
+        >
+    </div>
+    <div style="overflow: auto; width: 100%;">
+        <div style="width: 2000px;">
+            <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" style="table-layout: auto;">
+                <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+                <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+
+                <ng-container [nbTreeGridColumnDef]="'jobNumber'">
+                  <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 100px">Job No.</th>
+                  <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                    <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind === 'dir'; else fileIcon">
+                    </nb-tree-grid-row-toggle>
+                    <ng-template #fileIcon>
+                      <nb-icon icon="file-text-outline"></nb-icon>
+                    </ng-template>
+                    {{row.data.jobNumber}}
+                  </td>
+                </ng-container>
+
+                <ng-container [nbTreeGridColumnDef]="'responsible'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 20px">Responsible</th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                        {{row.data.responsible?.name}}
+                    </td>
+                </ng-container>
+                
+                <ng-container [nbTreeGridColumnDef]="'rank'">
+                    <th nbTreeGridHeaderCell  *nbTreeGridHeaderCellDef style="width: 30px"></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row">
+                      <nb-icon icon="alert-circle-outline" 
+                      [nbPopover]="FNCOL?.rank[row?.data?.rank]" 
+                      nbPopoverTrigger="hint" 
+                      nbPopoverPlacement="top" 
+                      [ngStyle]="{'color' : FNCOL.rankColor(row.data?.rank)}"
+                      ></nb-icon>
+                    </td>
+                </ng-container>
+
+                <ng-container [nbTreeGridColumnDef]="'action'">
+                    <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef></th>
+                    <td nbTreeGridCell *nbTreeGridCellDef="let row" class="text-center">
+                        <div class="d-flex">
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('add sub job' ,row)"
+                            nbPopover="Add Sub Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">  
+                                <nb-icon icon="plus-outline" status="primary"></nb-icon>
+                            </button>
+                            <button nbButton 
+                            size="small" 
+                            class="text-center mx-4" 
+                            outline 
+                            (click)="buttonAction('update job', row)"
+                            nbPopover="Edit Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
+                                <nb-icon icon="edit-outline" status="primary"></nb-icon>
+                            </button>
+                            <button nbButton 
+                            size="small" 
+                            class="btn-sm text-center" 
+                            outline 
+                            (click)="buttonAction('delete job', row)"
+                            nbPopover="Delete Job" 
+                            nbPopoverTrigger="hint" 
+                            nbPopoverPlacement="top">
+                                <nb-icon icon="trash-outline" status="danger"></nb-icon>
+                            </button>
+                        </div>
+                    </td>
+                </ng-container>
+            
+                <ng-container *ngFor="let column of defaultColumns; let index = index" 
+                [nbTreeGridColumnDef]="column" 
+                [showOn]="getShowOn(index)">
+                    <div *ngIf="!addSubJob">
+                        <th nbTreeGridHeaderCell *nbTreeGridHeaderCellDef>{{headColumns[index]}}</th>
+                        <td nbTreeGridCell 
+                        *nbTreeGridCellDef="let row" 
+                        class="text-capitalize" 
+                        [nbPopover]="row.data.jobName" 
+                        nbPopoverTrigger="hint" 
+                        nbPopoverPlacement="top">{{row.data[column] || '-'}}</td>
+                    </div>
+                </ng-container>
+            </table>
+        </div>
+    </div>
+</nb-card>
+
+ -->

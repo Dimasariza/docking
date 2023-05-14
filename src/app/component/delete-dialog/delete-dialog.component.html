@@ -1,0 +1,16 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong class="text-capitalize">{{dialogData.title}}</strong>
+
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+            <nb-icon icon="close-outline" size="medium"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <span class="d-block text-center m-3 ">Are you sure to {{dialogData.title}} <br> {{dialogData.name.toUpperCase()}}?</span>
+        <div class="w-100 text-center">
+            <button nbButton size="small" status="success" class="mx-1" (click)="closeDialog(dialogData.id)"  >Yes</button>
+            <button nbButton size="small" status="basic" class="mx-1"  (click)="closeDialog()" >No</button>
+        </div>
+    </nb-card-body>
+</nb-card>

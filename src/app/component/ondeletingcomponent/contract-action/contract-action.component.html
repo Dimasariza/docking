@@ -1,0 +1,48 @@
+<!-- <nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>{{data.dial}} Contract</strong>
+        <button nbButton status="danger" size="tiny" (click)="close()">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+      </nb-card-header>
+    <nb-card-body>
+        
+        <form #addYardForm="ngForm" (ngSubmit)="onSubmit(addYardForm)">
+            <div class="row">
+                <div class="col-6">
+                    <span class="d-block my-1">Yard Name</span>
+                    <input class="d-block w-100" type="text" placeholder="Yard Name" nbInput #yardName [ngModel]="modelData?.nama_galangan" name="nama_galangan" fieldSize="small">
+                    <span class="d-block my-1">Yard Location</span>
+                    <textarea nbInput rows="2" placeholder="Yard Location" fullWidth [ngModel]="modelData?.lokasi_galangan" #yardLocation name="lokasi_galangan"></textarea>
+                    <span class="d-block my-1">Responsible</span>
+                    <nb-select [placeholder]="modelData?.responsible || 'Responsible'" size="small" class="w-100" #responsible name="id_user" [ngModel]="modelData?.id_user" [disabled]="data.dial === 'Update'">
+                        <nb-option *ngFor="let value of addProjectBody.responsible; let id=index;" [value]="addProjectBody.responsible[id].id">{{value.name}}</nb-option>
+                    </nb-select>
+                    <span class="d-block my-1">Contract Number</span>
+                    <input class="d-block w-100" type="text" placeholder="Contract Number" nbInput [ngModel]="modelData?.no_kontrak" #contractNumber name="no_kontrak" fieldSize="small">
+                    <span class="d-block my-1">Yard Quote</span>
+                    <input class="d-block w-100" type="number" placeholder="Yard Quote" nbInput [ngModel]="modelData?.yard_total_quote" name="yard_total_quote" #yardQuote fieldSize="small">
+                </div>
+                <div class="col-6">
+                    <span class="d-block my-1">General Discount (%)</span>
+                    <input class="d-block w-100" type="number" placeholder="General Discount" nbInput [ngModel]="modelData?.general_diskon_persen" name="general_diskon_persen" #generalDiscount fieldSize="small">
+                    <span class="d-block my-1">Additional Discount</span>
+                    <input class="d-block w-100" type="number" placeholder="Additional Discount" nbInput [ngModel]="modelData?.additional_diskon" name="additional_diskon" #additionalDiscount fieldSize="small">
+                    <span class="d-block my-1">Sum Internal Adjusment</span>
+                    <input class="d-block w-100" type="number" placeholder="Sum Internal Adjusment" nbInput [ngModel]="modelData?.sum_internal_adjusment" name="sum_internal_adjusment" #sumInternal fieldSize="small">
+                    <span class="d-block my-1">Comment</span>
+                    <textarea nbInput placeholder="Internal Comment" rows="5" fullWidth [ngModel]="modelData?.komentar" name="komentar" #comment></textarea>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center m-3 mr-5">
+                <button nbButton class="mx-2" shape="rectangle" status="primary" type="button" outline size="small" (click)="triggerSelectFile(uploadContract)">
+                    Upload Contract
+                <input type="file" style="display: none;" #uploadContract #document (ngModel)="document" (change)="onFileChange($event)">
+                </button>
+                <button nbButton status="success" type="submit">Submit</button>
+            </div>
+        </form>
+
+    </nb-card-body>
+</nb-card> -->
