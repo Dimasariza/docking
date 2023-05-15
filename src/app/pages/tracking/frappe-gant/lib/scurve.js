@@ -22,7 +22,7 @@ export default class SCurve {
             return start.getTime() >= log.date.getTime()
         })
         .map(log => {
-            return parseInt(log.progress)/100*parseInt(currentTask.weight ?? 0)})
+            return parseFloat(log.progress)/100*parseFloat(currentTask.weight ?? 0)})
     }
 
     calculateData() {
@@ -79,7 +79,7 @@ export default class SCurve {
                 if (/*task._start.getTime() <= currentDate.getTime() && */
                 task._end.getTime() == currentDate.getTime()) {
                     // console.log(task.weight);
-                    return parseInt(task.weight ?? 0)
+                    return parseFloat(task.weight ?? 0)
                 } else {
                     return 0
                 }
