@@ -100,24 +100,16 @@
             *ngIf="columnType[index].type == 'approval'"
             class="w-100 d-flex justify-content-center bg-black"
           >
-            <button 
+            <nb-checkbox
               *ngFor="let button of columnType[index].button"
-              nbButton 
-              class="mx-1"
-              size="tiny" 
-              outline
-              [status]=" row.data[button.disabled] ? 'success' : 'basic' "
+              (checkedChange)="handleClickButton(button.name, row.data)"
+              [checked]="row.data?.[button.disabled]"
+              [disabled]="row.data[button.disabled]"
               [nbPopover]="button.name" 
               nbPopoverTrigger="hint" 
               nbPopoverPlacement="top"
-              [disabled]="row.data[button.disabled]"
-              (click)="handleClickButton(button.name, row.data)"
-            >
-              <nb-icon 
-                [icon]=" row.data[button.disabled] ? 'checkmark-square-2-outline' : 'square-outline' " 
-                [status]=" row.data[button.disabled] ? 'success' : 'basic' "
-              ></nb-icon>
-            </button>
+              class="mx-1"
+            ></nb-checkbox>
           </div>
 
           <!-- Text Only -->
@@ -155,8 +147,7 @@
           >
           </textarea>
           
-
-          <div *ngIf="columnType[index].type == 'updtButt'">
+          <!-- <div *ngIf="columnType[index].type == 'updtButt'">
             <button 
               *ngFor="let button of columnType[index].button"
               nbButton 
@@ -172,7 +163,7 @@
             >
               <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
             </button>
-          </div>
+          </div> -->
 
 
           <!-- Click text -->

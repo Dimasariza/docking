@@ -240,8 +240,7 @@ export class ReplaceData {
   deleteKey(obj, deleteKey) {
     const keys = Object.keys(obj);
     for (let key of keys) {
-      obj = {...obj, deleteKey}
-      delete obj[deleteKey];
+      obj[deleteKey] = '';
       if(typeof obj[key] == 'object') 
       obj[key] = this.deleteKey(obj[key], deleteKey)
     }

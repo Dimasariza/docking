@@ -57,19 +57,26 @@ export class WorkAreasComponent implements OnInit {
   }
 
   handleClickButton(title, data = null) {
-    if(title == 'Save Progress') {
-      const { newProgress, remarksProgress } = this.progressForm;
-      const progress = data.progress?.at(-1)?.progress || 0;
-      data = {...data, remarksProgress, newProgress : newProgress - progress };
-      this.progressForm = {};
-    }
+    if(title == 'Save All Progress') {
+      data = { work_area : this.workAreaData, updated_data : this.updatedData }
+    };
     this.sendToParent.emit({title, data});
   }
 
-  progressForm : any = {};
+  updatedData : any[] = [];
   formValue(title, value, data) {
-    this.progressForm[title] = value;
-    this.progressForm.id = data.id;
+    let { last_progress, rowIndex, newProgress } = data;
+    last_progress = parseFloat(last_progress).toFixed(2);
+    if(title == 'newProgress') {
+      newProgress = value - last_progress;
+      data = {...data, newProgress, last_progress : value}
+      if(!this.updatedData.includes(rowIndex)) this.updatedData.push(rowIndex)
+      this.workAreaData[rowIndex].newProgress = newProgress;
+    }
+
+    if(title == 'remarksProgress') {
+      this.workAreaData[rowIndex].remarksProgress = value;
+    }
   }
 
   updateSort(sortRequest: NbSortRequest): void {

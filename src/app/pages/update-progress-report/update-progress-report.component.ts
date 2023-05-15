@@ -29,7 +29,7 @@ export class UpdateProgressReport implements OnInit {
             const { proyek : { kapal : { nama_kapal }, tahun, status } } = data;
             const projectTitle = `${ nama_kapal } -DD- ${ tahun } ${status}`;
             this.reportSummary = { ...data, projectTitle };
-            this.generateTableData(data);
+            this.generateTableData(this.reportSummary[this.workType]);
         });
     }
 
@@ -37,7 +37,10 @@ export class UpdateProgressReport implements OnInit {
     public reportSummary : any;
 
     public workType : any;
-    tableDetails = {style :{ width : '1000px', "max-height" : '1000px' }, currency : 'currency'};
+    tableDetails = {style :{ width : '1200px', "max-height" : '1000px' }, currency : 'currency',
+    button : [
+        { name : 'Save All Progress'}
+    ]};
     tableHead = [ 
         { type : 'text', placeholder : 'Job Number' },
         { type : 'text', placeholder : 'Job Name' },
@@ -45,50 +48,52 @@ export class UpdateProgressReport implements OnInit {
         { type : 'text', placeholder : 'Last Update', unsort : true },
         { type : 'text', placeholder : 'Update Progress', unsort : true },
         { type : 'text', placeholder : 'Remarks', unsort : true },
-        { type : 'text', placeholder : '', unsort : true },
+        // { type : 'text', placeholder : '', unsort : true },
     ];
 
     columnType = [ 
-        { type : 'numb', width : 50, prop : 'jobNumber' }, 
-        { type : 'text', width : 100, prop : 'jobName' }, 
-        { type : 'text', width : 50, prop : 'last_progress' }, 
+        { type : 'numb', width : 80, prop : 'jobNumber' }, 
+        { type : 'text', width : 150, prop : 'jobName' }, 
+        { type : 'text', width : 80, prop : 'last_progress' }, 
         { type : 'text', width : 80, prop : 'last_update' }, 
-        { type : 'updtProg', width : 80, prop : 'progress' }, 
-        { type : 'updtRem', width : 230, prop : 'remarks' }, 
-        { type : 'updtButt', width : 50, prop : 'edit',
-            button : [
-                { name : 'Save Progress', icon : 'save-outline', status : 'success' },
-            ] 
-        },
+        { type : 'updtProg', width : 100, prop : 'progress' }, 
+        { type : 'updtRem', width : 250, prop : 'remarks' }, 
+        // { type : 'updtButt', width : 50, prop : 'edit',
+        //     button : [
+        //         { name : 'Save Progress', icon : 'save-outline', status : 'success' },
+        //     ] 
+        // },
     ];
 
-    generateTableData(data) {
+    generateTableData(workArea) {
         let jobItem = [];
-        if(this.commonFunction.arrayNotEmpty(data[this.workType]))
-            this.commonFunction.collectItem(data[this.workType], (job) => jobItem.push(job))
+        if(this.commonFunction.arrayNotEmpty(workArea))
+            this.commonFunction.collectItem(workArea, (job) => jobItem.push(job))
+
         this.workAreaData = jobItem.map(job => ({
             ...job, last_progress : job.progress.at(-1).progress 
-        })).filter(job => job.items.length == 0);
+        }))
+        .filter(job => job.items.length == 0)
+        .map((job, id) => ({...job, rowIndex : id}));
         // if(this.workAreaData)
         // this.viewWorkArea.setWorkArea(this.workAreaData);
     }
 
     handleClickButton(title, data = null) {
-        if(title == 'Save Progress') this.saveProgress(title, data);
+        if(title == 'Save All Progress') this.saveProgress(title, data);
         if(title == 'Back To Report') 
         this.router.navigateByUrl(`/pages/report/${this.reportSummary.id_proyek}`)
         if(title == 'Add Supplier') console.log('add supplier')
     }
 
+    loadingProgress = false;
     saveProgress(title, data) {
-        if(!data.newProgress) return this.toastr.onWarning({
-            warnmsg : 'Please input update progress field and remarks fiels!',
-            duration : 2000
-        })
-
-        this.calculateProgress(data);
+        this.loadingProgress = true;
+        const { work_area, updated_data } = data;
+        updated_data.forEach(rowIndex => {
+            this.calculateProgress(work_area[rowIndex]);
+        });
         this.updateWorkArea();
-        this.generateTableData(this.reportSummary)
     }
 
     calculateProgress({newProgress, remarksProgress, id}) {
@@ -107,10 +112,12 @@ export class UpdateProgressReport implements OnInit {
         const date = this.commonFunction.transformDate(new Date(), 'dd-MM-yyyy hh-mm a') 
         const { nama_lengkap : updatedBy } = JSON.parse(localStorage.getItem('user'));
         if(newProgress) progress.push({ 
-            progress : parseFloat(last_progress + newProgress).toFixed(2)  , 
+            progress : parseFloat(last_progress + newProgress).toFixed(2), 
             date, updatedBy, remarksProgress 
         });
-        jobData = {...jobData, progress}
+        const last_update = this.commonFunction.transformDate(new Date(), 'dd-MM-yyyy hh-mm a')
+
+        jobData = {...jobData, progress, last_update}
 
         this.reportSummary[this.workType] = this.commonFunction.reconstructDatas({
             workData : this.reportSummary[this.workType],
@@ -130,11 +137,15 @@ export class UpdateProgressReport implements OnInit {
         if(this.workType == 'work_area') 
             this.reportService.updateReportWorkArea({work_area}, id_proyek)
             .subscribe(
-                () => this.toastr.onUpload(),
+                () => {},
                 () => this.toastr.onError('Update progress failed.'),
                 () => {
                     this.toastr.onSuccess('Your progress has been updated.');
-                    this.viewWorkArea.setWorkArea(this.workAreaData);
+                    this.generateTableData(this.reportSummary[this.workType])
+                    setTimeout(() => {
+                        this.viewWorkArea.setWorkArea(this.workAreaData)    
+                        this.loadingProgress = false;
+                    } , 300);
                 }
             )
 
@@ -142,11 +153,15 @@ export class UpdateProgressReport implements OnInit {
         if(this.workType == 'variant_work') 
             this.reportService.updateReportWorkArea({variant_work}, id_proyek)
             .subscribe(
-                () => this.toastr.onUpload(),
+                () => {},
                 () => this.toastr.onError('Update progress failed.'),
                 () => {
                     this.toastr.onSuccess('Your progress has been updated.');
-                    this.viewWorkArea.setWorkArea(this.workAreaData);
+                    this.generateTableData(this.reportSummary[this.workType])
+                    setTimeout(() => {
+                        this.viewWorkArea.setWorkArea(this.workAreaData)
+                        this.loadingProgress = false;
+                    } ,300);
                 }
             )
     }

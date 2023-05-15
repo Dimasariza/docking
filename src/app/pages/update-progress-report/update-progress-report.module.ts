@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { UpdateProgressRoutingModule, routedComponents } from "./update-progress-report-routing.module";
 import { CommonModule } from "@angular/common";
-import { NbButtonModule, NbCardModule } from "@nebular/theme";
+import { NbButtonModule, NbCardModule, NbSpinnerModule } from "@nebular/theme";
 import { WorkAreasModule } from "../../component/work-areas/work-areas.module";
 import { FormsModule } from "@angular/forms";
 import { ThemeModule } from "../../@theme/theme.module";
@@ -14,7 +14,8 @@ import { ThemeModule } from "../../@theme/theme.module";
         WorkAreasModule,
         FormsModule,
         ThemeModule,
-        NbButtonModule
+        NbButtonModule,
+        NbSpinnerModule
     ],
     exports : [],
     declarations : [
