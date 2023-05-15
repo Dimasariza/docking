@@ -37,6 +37,7 @@
         </nb-tab>
         <nb-tab tabTitle="Work Progress">
             <ngx-report-work-progress
+                [suplierData]="suplierData"
                 [summaryData]="summaryData"
                 (refresh)="ngOnInit()" 
                 (sendNotification)="sendEmailNotification($event.work_area, $event.label)"
@@ -45,6 +46,7 @@
         </nb-tab>
         <nb-tab tabTitle="Variant Work">
             <ngx-report-variant-work
+                [suplierData]="suplierData"
                 [summaryData]="summaryData"
                 (refresh)="ngOnInit()" 
                 (sendNotification)="sendEmailNotification($event.work_area, $event.label)"

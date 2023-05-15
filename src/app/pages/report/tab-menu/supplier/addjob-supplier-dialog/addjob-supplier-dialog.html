@@ -1,0 +1,42 @@
+<nb-card style="min-width: 500px;">
+    <nb-card-header class="d-flex justify-content-between">
+        <strong> {{ dialogData?.title }} </strong>
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <div class="row">
+            <span class="font-weight-bolder col-5">Job Number</span>
+            <span class="col"> : </span>
+            <span class="col-5">{{ dialogData?.data.jobNumber }}</span>
+        </div>
+        <div class="row">
+            <span class="font-weight-bolder col-5">Job Name</span>
+            <span class="col"> : </span>
+            <span class="col-5">{{ dialogData?.data.jobName }}</span>
+        </div>
+        <div class="row my-3">
+            <nb-select placeholder="Supplier" size="small" class="col-12" fullWidth>
+                <nb-option 
+                    *ngFor="let supplier of dialogData?.supplier" 
+                    [value]="supplier"
+                    (click)="selectedSupplier = supplier"
+                >
+                    {{ supplier.nama_supplier }}
+                </nb-option>
+            </nb-select>
+        </div>
+        <div class="row"> 
+            <button 
+                class="col-12"
+                nbButton
+                (click)="closeDialog('Add Supplier')"
+                status="success"
+                [disabled]="!selectedSupplier"
+            >
+              Add Supplier
+            </button>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -11,6 +11,7 @@ import { ExportToExcel } from "../../../../component/common-function/export-exce
 import { WorkVariantDetailDialog } from "../work-variant-detail-dialog/work-variant-detail-dialog";
 import { ExportToPDF } from "../../export-to-pdf/export-to-pdf";
 import { ActivatedRoute, Router } from "@angular/router";
+import { AddJobSupplierDialog } from "../supplier/addjob-supplier-dialog/addjob-supplier-dialog";
 
 @Component({
     selector: 'ngx-report-variant-work',
@@ -28,17 +29,24 @@ export class ReportVariantWork {
 
     ngOnInit(): void {
         this.workAreaData = this.summaryData.variant_work;
-        this.commonFunction.collectItem(this.workAreaData, 
-            (item) => {
-                this.workAreaData = this.commonFunction.reconstructDatas({
-                    workData : this.workAreaData,
-                    newData : {...item, last_progress : `${item.progress.at(-1).progress} %`},
-                    targetIndex : item.id
-                })
-        })
+        this.generateTableData(this.workAreaData)
         const currency = this.summaryData.proyek.mata_uang;
         this.tableDetails = this.replaceData
         .replace(this.tableDetails, 'currency', currency + " " , 'currency')
+    }
+
+    generateTableData(workArea) {
+        this.commonFunction.collectItem(workArea, 
+            (item) => {
+                this.workAreaData = this.commonFunction.reconstructDatas({
+                    workData : workArea,
+                    newData : {...item, 
+                        last_progress : `${item?.progress?.at(-1)?.progress} %`|| 0,
+                        nama_supplier : item.supplier?.nama_supplier 
+                    },
+                    targetIndex : item.id
+                })
+        });
     }
 
     public variantWorkNavButton = [
@@ -55,6 +63,7 @@ export class ReportVariantWork {
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
     @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
     @Input() summaryData;
+    @Input() suplierData;
     private destroy$: Subject<void> = new Subject<void>();
     
     workAreaData : any = [];
@@ -78,7 +87,12 @@ export class ReportVariantWork {
         { type : 'text', width : 200, prop : 'totalPriceAddOn' },
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 300, prop : 'remarks' },
-        { type : 'text', width : 200, prop : 'suplier' },
+        { type : 'text', width : 200, prop : 'nama_supplier' },
+        { type : 'butt', width : 70, prop : 'addsupplier',
+            button : [
+                { name : 'Add Supplier', icon : 'person-add-outline', status : 'info'},
+            ] 
+        },
         { type : 'approval', width : 100, prop : 'approved', 
             button : [
                     { name : 'By Ship Yard', disabled : 'shipYardApproval' },
@@ -109,6 +123,7 @@ export class ReportVariantWork {
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'text', placeholder : 'Supplier' },
+        { type : 'text', placeholder : '' },
         { type : 'text', placeholder : 'Approval', unsort : true, },
         { type : 'text', placeholder : '', unsort : true, },
     ]
@@ -131,6 +146,7 @@ export class ReportVariantWork {
         if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
         if(title == 'Update Progress')
         this.router.navigateByUrl(`/pages/update-progress/${this.summaryData.id_proyek}/${data}`);
+        if(title == 'Add Supplier') this.addSupplierDialog(title, data);
     }
 
     exportDataExcel() {
@@ -241,6 +257,22 @@ export class ReportVariantWork {
         })
     }
 
+    addSupplierDialog(title, data) {
+        this.commonFunction.openDialog({
+            dialogData : { 
+              title, 
+              data,
+              supplier : this.suplierData
+            },
+            component : AddJobSupplierDialog
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => newData 
+            ? this.onUploadData('Reconstruct Work Area', newData)
+            : null )
+    }
+
     onUploadData(title, data) {
         if(!data) return;
         let variant_work;
@@ -278,10 +310,10 @@ export class ReportVariantWork {
             () => this.toastr.onUpload(),
             () => this.toastr.onError(),
             () => {
-                this.workAreaData = variant_work;
                 this.toastr.onSuccess('Your variant work area has been updated.');
+                this.generateTableData(variant_work);
+                this.viewWorkArea.setWorkArea(this.workAreaData);
                 this.refreshPage.emit();
-                this.viewWorkArea.setWorkArea(variant_work)
             }
         )
     }

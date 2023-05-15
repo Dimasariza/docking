@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ReportService } from "../report/report.service";
-import { CommonFunction } from "../../component/common-function/common-function";
+import { CommonFunction, ReplaceData } from "../../component/common-function/common-function";
 import { WorkAreasComponent } from "../../component/work-areas/work-areas.component";
 import { ToastrComponent } from "../../component/toastr-component/toastr.component";
 
@@ -15,7 +15,8 @@ export class UpdateProgressReport implements OnInit {
         private reportService : ReportService,
         private commonFunction : CommonFunction,
         private router : Router,
-        private toastr : ToastrComponent
+        private toastr : ToastrComponent,
+        private replace : ReplaceData
     ) { }
 
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
@@ -29,11 +30,14 @@ export class UpdateProgressReport implements OnInit {
             const projectTitle = `${ nama_kapal } -DD- ${ tahun } ${status}`;
             this.reportSummary = { ...data, projectTitle };
             this.generateTableData(data);
-        }) 
+        });
     }
 
+    public workAreaData : any;
+    public reportSummary : any;
+
     public workType : any;
-    tableDetails = {style :{ width : '1100px', "max-height" : '1000px' }, currency : 'currency'};
+    tableDetails = {style :{ width : '1000px', "max-height" : '1000px' }, currency : 'currency'};
     tableHead = [ 
         { type : 'text', placeholder : 'Job Number' },
         { type : 'text', placeholder : 'Job Name' },
@@ -50,7 +54,7 @@ export class UpdateProgressReport implements OnInit {
         { type : 'text', width : 50, prop : 'last_progress' }, 
         { type : 'text', width : 80, prop : 'last_update' }, 
         { type : 'updtProg', width : 80, prop : 'progress' }, 
-        { type : 'updtRem', width : 200, prop : 'remarks' }, 
+        { type : 'updtRem', width : 230, prop : 'remarks' }, 
         { type : 'updtButt', width : 50, prop : 'edit',
             button : [
                 { name : 'Save Progress', icon : 'save-outline', status : 'success' },
@@ -73,6 +77,7 @@ export class UpdateProgressReport implements OnInit {
         if(title == 'Save Progress') this.saveProgress(title, data);
         if(title == 'Back To Report') 
         this.router.navigateByUrl(`/pages/report/${this.reportSummary.id_proyek}`)
+        if(title == 'Add Supplier') console.log('add supplier')
     }
 
     saveProgress(title, data) {
@@ -145,7 +150,4 @@ export class UpdateProgressReport implements OnInit {
                 }
             )
     }
-
-    public workAreaData : any;
-    public reportSummary : any;
 }
