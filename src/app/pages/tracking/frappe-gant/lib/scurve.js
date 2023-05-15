@@ -10,6 +10,7 @@ export default class SCurve {
         this.circleSize = 8;
 
         const {actual, plan} = this.calculateData()
+        console.log(actual);
         this.draw(actual, true)
         this.draw(plan)
     }
@@ -20,7 +21,8 @@ export default class SCurve {
 
             return start.getTime() >= log.date.getTime()
         })
-        .map(log => log.progress/100*currentTask.weight)
+        .map(log => {
+            return parseInt(log.progress)/100*parseInt(currentTask.weight ?? 0)})
     }
 
     calculateData() {
@@ -77,7 +79,7 @@ export default class SCurve {
                 if (/*task._start.getTime() <= currentDate.getTime() && */
                 task._end.getTime() == currentDate.getTime()) {
                     // console.log(task.weight);
-                    return task.weight
+                    return parseInt(task.weight ?? 0)
                 } else {
                     return 0
                 }
@@ -113,6 +115,7 @@ export default class SCurve {
 
         let current = {x: 0, y: 0}
         let max = 1
+        // console.log(data);
         data.forEach(({x, y}) => {
             if (y !== current.y || y == 100) {
 
