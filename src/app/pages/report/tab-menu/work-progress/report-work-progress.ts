@@ -10,6 +10,7 @@ import { ExportToPDF } from "../../export-to-pdf/export-to-pdf";
 import { Router } from "@angular/router";
 import { ReportService } from "../../report.service";
 import { ToastrComponent } from "../../../../component/toastr-component/toastr.component";
+import { AddJobSupplierDialog } from "../supplier/addjob-supplier-dialog/addjob-supplier-dialog";
 
 @Component({
     selector: 'ngx-report-work-progress',
@@ -27,17 +28,24 @@ export class ReportWorkProgress implements OnInit {
 
     ngOnInit(): void {
         this.workAreaData = this.summaryData.work_area;
-        this.commonFunction.collectItem(this.workAreaData, 
-            (item) => { 
-                this.workAreaData = this.commonFunction.reconstructDatas({
-                    workData : this.workAreaData,
-                    newData : {...item, last_progress : `${item.progress.at(-1).progress} %`},
-                    targetIndex : item.id
-                })
-        })
+        this.generateTableData(this.workAreaData)
         const currency = this.summaryData.proyek.mata_uang;
         this.tableDetails = this.replaceData
         .replace(this.tableDetails, 'currency', currency + " " , 'currency')
+    }
+
+    generateTableData(workArea) {
+        this.commonFunction.collectItem(workArea, 
+            (item) => { 
+                this.workAreaData = this.commonFunction.reconstructDatas({
+                    workData : workArea,
+                    newData : {...item, 
+                        last_progress : `${item.progress.at(-1).progress} %`,
+                        nama_supplier : item.supplier?.nama_supplier 
+                    },
+                    targetIndex : item.id
+                })
+        })
     }
     
     public workProgressNavButton = [
@@ -53,6 +61,7 @@ export class ReportWorkProgress implements OnInit {
     @ViewChild(ExportToPDF) exportToPDF : ExportToPDF; 
 
     @Input() summaryData;
+    @Input() suplierData;
     private destroy$: Subject<void> = new Subject<void>();
 
     workAreaData : any = [];
@@ -76,7 +85,12 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', width : 200, prop : 'totalPriceActual' },
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 400, prop : 'remarks' },
-        { type : 'text', width : 200, prop : 'suplier' },
+        { type : 'text', width : 200, prop : 'nama_supplier' },
+        { type : 'butt', width : 70, prop : 'addsupplier',
+            button : [
+                { name : 'Add Supplier', icon : 'person-add-outline', status : 'info'},
+            ] 
+        },
         { type : 'approval', width : 100, prop : 'approved' ,
             button : [
                     { name : 'By Ship Yard', disabled : 'shipYardApproval' },
@@ -105,6 +119,7 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'text', placeholder : 'Supplier' },
+        { type : 'text', placeholder : '' },
         { type : 'text', placeholder : 'Approved', unsort : true, },
         { type : 'text', placeholder : '', unsort : true, },
     ]
@@ -123,6 +138,7 @@ export class ReportWorkProgress implements OnInit {
         if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
         if(title == 'Update Progress')
         this.router.navigateByUrl(`/pages/update-progress/${this.summaryData.id_proyek}/${data}`);
+        if(title == 'Add Supplier') this.addSupplierDialog(title, data);
     }   
 
     exportDataExcel() {
@@ -197,6 +213,22 @@ export class ReportWorkProgress implements OnInit {
         this.onUploadData('Reconstruct Work Area', approvalData[0])
     }
 
+    addSupplierDialog(title, data) {
+        this.commonFunction.openDialog({
+            dialogData : { 
+              title, 
+              data,
+              supplier : this.suplierData
+            },
+            component : AddJobSupplierDialog
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => newData 
+            ? this.onUploadData('Reconstruct Work Area', newData)
+            : null )
+    }
+
     onUploadData(title, data) {
         if(!data) return;
         let work_area;
@@ -216,8 +248,9 @@ export class ReportWorkProgress implements OnInit {
             () => this.toastr.onError(),
             () => {
                 this.toastr.onSuccess("Your data has been updated.");
+                this.generateTableData(work_area);
+                this.viewWorkArea.setWorkArea(this.workAreaData);
                 this.refreshPage.emit();
-                this.viewWorkArea.setWorkArea(work_area);
             },
         )
     }

@@ -60,11 +60,10 @@ export class HomeComponent implements OnInit, OnDestroy{
       if(!this.commonFunction.arrayNotEmpty(work_area)) work_area = [];
       if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
       const workProgress = [...work_area, ...variant_work];
-      let progress = 0;
-      for(let job of workProgress) progress += parseFloat(job.progress)
-      // parseFloat(job.progress.at(-1).progress)
+      let progress : any = 0.0;
+      for(let job of workProgress) progress += job.progress.at(-1).progress;
       if(progress != 0) progress = progress / workProgress?.length;
-      return {id_kapal, head, phase : phase.split('_').join(" "), progress, id_proyek};
+      return {id_kapal, head, phase : phase.split('_').join(" "), progress : parseFloat(progress).toFixed(2), id_proyek};
     })
 
     if(!this.shipData?.length || !progressData) return;

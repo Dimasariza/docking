@@ -44,7 +44,12 @@
           <!-- Drop down Type -->
           <nb-select [selected]="columnType[index].option[0]" [compareWith]="compareById" placeholder="Drop Down"
             *ngIf=" columnType[index].type === 'drown' " size="small">
-            <nb-option *ngFor="let item of [1,2,4]" [value]="item">{{item}}</nb-option>
+            <nb-option 
+            *ngFor="let item of columnType[index].option" 
+            [value]="item"
+            (click)="handleClickButton('Add Supplier', { item, data : row.data})"
+            >{{ item?.[columnType[index].prop] }}
+          </nb-option>
           </nb-select>
 
           <!-- Number Type -->
