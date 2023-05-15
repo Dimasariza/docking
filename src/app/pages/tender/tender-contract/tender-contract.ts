@@ -141,6 +141,11 @@ export class TenderContract implements OnInit {
 
     selectNewContract(title) {
       const {project : {id_proyek, work_area}, yard : {nama_galangan, id_tender}} = this.addNewContract;
+      if(!this.commonFucntion.arrayNotEmpty(work_area))
+      return this.toastr.onWarning({
+        warnmsg : 'Your work job is empty. Please fill work job area.',
+        duration : 3000
+      })
       this.commonFucntion.openDialog({
         dialogData : {
           title : 'Add New Contract',
@@ -163,7 +168,7 @@ export class TenderContract implements OnInit {
       this.tenderService.updateContractWorkArea({work_area}, id_tender)
       .subscribe(
         () => this.toastr.onSuccess('Your work area has been updated.'),
-        () => onerror(''),
+        () => onerror('Update contract work area failed.'),
         () => this.onUploadData('Select New Contract', {id_tender, id_proyek})
       )
     }

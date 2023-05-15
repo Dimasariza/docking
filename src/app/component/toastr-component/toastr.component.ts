@@ -18,7 +18,7 @@ export class ToastrComponent {
     public option = {
         position : NbGlobalPhysicalPosition.BOTTOM_RIGHT,
         preventDuplicates : true,
-        limit: 3
+        limit: 2
     }
     
     onUpload(msg = null) {

@@ -27,7 +27,6 @@ export class ExportToPDF  {
   createDate : any = new Date();
 
   createByJob(data) {
-    console.log(data)
     let allJob : any = [];
     this.commonFunction.collectItem([data], (x) => allJob.push(x));
     this.jobData = {...data, allJob};
@@ -89,6 +88,7 @@ export class ExportToPDF  {
     { name : 'Actual', prop : 'unitPriceActual', width : 'auto' },
   ]
 
+  allJobRow : any;
   criticalJobRow : any;
   delayedJobRow : any;
   doneJobRow : any;
@@ -190,6 +190,7 @@ export class ExportToPDF  {
       ...job, rowType : 'progress', responsible : job.responsible.nama_lengkap
     }))
 
+    this.allJobRow = allWorkArea;
     this.criticalJobRow = allWorkArea.filter(job => job.rank == 'Critical');
     this.doneJobRow = allWorkArea.filter(job => job.status == 'Done');
     this.delayedJobRow = allWorkArea.filter(job => {

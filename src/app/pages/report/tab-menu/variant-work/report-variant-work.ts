@@ -28,6 +28,14 @@ export class ReportVariantWork {
 
     ngOnInit(): void {
         this.workAreaData = this.summaryData.variant_work;
+        this.commonFunction.collectItem(this.workAreaData, 
+            (item) => {
+                this.workAreaData = this.commonFunction.reconstructDatas({
+                    workData : this.workAreaData,
+                    newData : {...item, last_progress : `${item.progress.at(-1).progress} %`},
+                    targetIndex : item.id
+                })
+        })
         const currency = this.summaryData.proyek.mata_uang;
         this.tableDetails = this.replaceData
         .replace(this.tableDetails, 'currency', currency + " " , 'currency')
@@ -49,7 +57,7 @@ export class ReportVariantWork {
     @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
     
-    workAreaData : any ;
+    workAreaData : any = [];
     tableDetails = {style :{ width : '3000px', "max-height" : '300px' }, 
         button : [{ name : 'Update Progress', data : 'variant_work' }], currency : 'currency'
     };
@@ -71,13 +79,13 @@ export class ReportVariantWork {
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 300, prop : 'remarks' },
         { type : 'text', width : 200, prop : 'suplier' },
-        { type : 'butt', width : 100, prop : 'approved' ,
+        { type : 'approval', width : 100, prop : 'approved', 
             button : [
-                { name : 'By Ship Yard', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
-                { name : 'By Owner', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
-            ] 
+                    { name : 'By Ship Yard', disabled : 'shipYardApproval' },
+                    { name : 'By Owner', disabled : 'ownerApproval' },
+                ] 
         },
-        { type : 'butt', width : 200, prop : 'edit',
+        { type : 'butt', width : 200, prop : 'edit', 
             button : [
                 { name : 'Add Sub Job', icon : 'plus-outline', status : 'success'},
                 { name : 'Update Job', icon : 'edit-outline', status : 'info'},
@@ -101,23 +109,25 @@ export class ReportVariantWork {
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'text', placeholder : 'Supplier' },
-        { type : 'text', placeholder : 'Approval' },
-        { type : 'text', placeholder : '' },
+        { type : 'text', placeholder : 'Approval', unsort : true, },
+        { type : 'text', placeholder : '', unsort : true, },
     ]
 
     handleClickButton(title, data = null) {
-        if(title == "Nav To") this.variantWorkDetail();
+        if(title == "Nav To") this.variantWorkDetail(data);
         if(title == 'Refresh') this.refreshPage.emit();
-        if(title == 'Export to Excel') this.exportDataExcel()
+        if(title == 'Export to Excel') this.exportDataExcel();
         if(title == 'Extend') this.extendTable(true);
         if(title == 'Reduce') this.extendTable(false);
-        if(title == 'Add Job') this.updateWorkAreaDialog(title, data)
-        if(title == 'Add Sub Job') this.updateWorkAreaDialog(title, data)
-        if(title == 'Update Job') this.updateWorkAreaDialog(title, data)
-        if(title == 'Delete Job') this.deleteJobDialog(title, data)
-        if(title == 'Quick Add') this.quickAddWorkArea(title)
+        if(title == 'Add Job') this.updateWorkAreaDialog(title, data);
+        if(title == 'Add Sub Job') this.updateWorkAreaDialog(title, data);
+        if(title == 'Update Job') this.updateWorkAreaDialog(title, data);
+        if(title == 'Delete Job') this.deleteJobDialog(title, data);
+        if(title == 'Quick Add') this.quickAddWorkArea(title);
+        if(title == 'By Ship Yard') this.approvedByShipYard(title, data);
+        if(title == 'By Owner') this.approvedByOwner(title, data);
         if(title == 'Send Notification') 
-        this.sendNotification.emit({work_area : this.workAreaData, label : "AddOn"})
+        this.sendNotification.emit({work_area : this.workAreaData, label : "AddOn"});
         if(title == 'Export To PDF') this.exportToPDF.createByJob(data);
         if(title == 'Update Progress')
         this.router.navigateByUrl(`/pages/update-progress/${this.summaryData.id_proyek}/${data}`);
@@ -163,6 +173,30 @@ export class ReportVariantWork {
         );
     }
 
+    approvedByShipYard(title, data) {
+        let approvalData = [{ ...data, shipYardApproval : true }];
+        this.commonFunction.collectItem([data], item => {
+            approvalData = this.commonFunction.reconstructDatas({
+                workData : approvalData,
+                newData : { ...item, shipYardApproval : true },
+                targetIndex : item.id
+            });
+        });
+        this.onUploadData('Reconstruct Work Area', approvalData[0])
+    }
+
+    approvedByOwner(title, data) {
+        let approvalData = [{ ...data, ownerApproval : true }];
+        this.commonFunction.collectItem([data], item => {
+            approvalData = this.commonFunction.reconstructDatas({
+                workData : approvalData,
+                newData : { ...item, ownerApproval : true },
+                targetIndex : item.id
+            });
+        });
+        this.onUploadData('Reconstruct Work Area', approvalData[0])
+    }
+
     quickAddWorkArea(title) {
         this.commonFunction.openDialog({
             dialogData : { 
@@ -197,11 +231,11 @@ export class ReportVariantWork {
         );
     }
 
-    variantWorkDetail(title = "Variant Work Detail") {
+    variantWorkDetail(data) {
+        const title = "Variant Work Detail"
         this.commonFunction.openDialog({
             dialogData : { 
-              title,
-              data : this.summaryData
+              title, data
             },
             component : WorkVariantDetailDialog
         })
@@ -247,7 +281,7 @@ export class ReportVariantWork {
                 this.workAreaData = variant_work;
                 this.toastr.onSuccess('Your variant work area has been updated.');
                 this.refreshPage.emit();
-                this.viewWorkArea.setWorkArea(this.workAreaData)
+                this.viewWorkArea.setWorkArea(variant_work)
             }
         )
     }

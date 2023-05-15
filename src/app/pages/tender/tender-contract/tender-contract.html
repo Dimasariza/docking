@@ -122,6 +122,9 @@
         <section class="m-3 w-100">
           <h6>Active Contract</h6>
           <nb-list style="max-height: 200px;">
+            <nb-list-item *ngIf="!projectSummary.length">
+              Contract Not Available. Please add your new contract.
+            </nb-list-item>
             <nb-list-item *ngFor="let summary of projectSummary; let i = index;" style="max-height: .7rem;">
               <span class="text-truncate col-5" 
                 (mouseover)="mouseHover('activeContract', i, true)" 

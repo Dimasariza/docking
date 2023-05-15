@@ -39,13 +39,17 @@ export class CommonFunction {
     targetIndex = '',
     lastIndex = '',
     id = '',
-    status = 'new' // default value for add job
+    status = 'new', // set status for add, update or delete job
+    getData = function(){}
   } : any) {
+    const date = this.transformDate(new Date(), 'dd-MM-yyyy hh-mm a');
+    const {nama_lengkap} =  JSON.parse(localStorage.getItem('user'));
+
 
     // Add new job
     if( !this.arrayNotEmpty(workData) ) {
       id = (id + 0).toString();
-      return [{...newData, items : [], id}];
+      return [{...newData, items : [], id, created_at : date, created_by : nama_lengkap}];
     }
     
     if(targetIndex !== '') targetIndex = targetIndex?.toString().split('.');
@@ -55,7 +59,12 @@ export class CommonFunction {
     const work = workData.find(work => `${work[sortBy]}` === lastIndex);
     if(!work) {
       id = id + workData.length.toString();
-      return [...workData, {...newData, items : [], id}];
+      return [...workData, {
+        ...newData, 
+        items : [], 
+        id, created_at : date, 
+        created_by : nama_lengkap
+      }];
     } 
 
     const parentIndex = workData.indexOf(work);
@@ -67,13 +76,17 @@ export class CommonFunction {
     }
 
     if(targetIndex.length == 1 && lastIndex == workData[parentIndex][sortBy] ) {
-      workData[parentIndex] = {...workData[parentIndex], ...work, ...newData};
+      getData(work);
+      workData[parentIndex] = {
+        ...workData[parentIndex], 
+        ...work, 
+        ...newData, 
+        last_update : date, 
+        updated_by : nama_lengkap
+      };
       return workData;
     }
     
-    // if(status == 'update' && targetIndex.length == 1)
-    //   workData[parentIndex] = {...work, ...newData}
-
     if(targetIndex.length > 0 && work) {
       id = (id + parentIndex + '.').toString();
       targetIndex = targetIndex.slice(1).join(".").toString();
@@ -83,11 +96,45 @@ export class CommonFunction {
         sortBy,
         targetIndex,
         lastIndex,
-        status
+        status,
+        getData
       })
     }
     return workData;
   }
+
+  acceptData(data, label) {
+    let acceptData = {};
+    [
+        'jobNumber', 
+        'jobName', 
+        'start', 
+        'end',
+        'volume',
+        'unit',
+        'unitPrice' + label,
+        'totalPrice' + label,
+        'department',
+        'responsible',
+        'category',
+        'rank',
+        'status',
+        'progress',
+        'remarks',
+        'mata_uang',
+        'id',
+        'items',
+        'supplier',
+        'approvedByShipYard',
+        'approvedByOwner',
+        'approvedByYard',
+        'created_by',
+        'created_at',
+        'last_update',
+        'updated_by',
+    ].forEach(item => acceptData[item] = data[item] ? data[item] : "")
+    return acceptData;
+  } 
 
   populateData = (work, expanded = false) => { 
     return work.map(item => ({
@@ -139,8 +186,8 @@ export class CommonFunction {
 
   collectItem(array, sendItem) {
     if(this.arrayNotEmpty(array))
-    array.forEach(item => {
-      sendItem(item)
+    array.forEach((item, index) => {
+      sendItem(item, index = null)
       if(item.items?.length) this.collectItem(item.items, sendItem);
     });
   }

@@ -20,7 +20,6 @@ export class TenderLoadDetails  {
         private replace : ReplaceData,
         private reportService : ReportService,
         private toastr : ToastrComponent,
-        private homeService : HomeService,
         private tenderService : TenderService
     ) {}
 
@@ -39,8 +38,7 @@ export class TenderLoadDetails  {
         this.viewWorkArea.setWorkArea(this.workAreaData);
 
         this.activeProject = {...data, projectTitle};
-        this.tableDetails = this.replace
-        .replace(this.tableDetails, 'Confirm Contract', !(id_tender && approved === ""), 'disabled');
+        this.tableDetails = this.replace.replace(this.tableDetails, 'Confirm Contract', !(id_tender && approved === ""), 'disabled');
     }
 
     workAreaData : any = [];
@@ -64,16 +62,14 @@ export class TenderLoadDetails  {
         { type : 'curr', width : 200, prop : 'totalPriceContract' },
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 250, prop : 'remarks' },
-        { type : 'butt', width : 100, prop : 'approved',
+        { type : 'approval', width : 100, prop : 'tenderApproval',
             button : [
-                { name : 'Approve Job', icon : 'square-outline', 
-                    status : 'basic', disabled : false, size : 'tiny'
-                },
+                { name : 'Approve Job', disabled : 'tenderApproval' },
             ] 
         },
         { type : 'butt', width : 100, prop : 'edit',
             button : [
-                { name : 'Update Job', icon : 'edit-outline', status : 'info'},
+                { name : 'Update Job', icon : 'edit-outline', status : 'info', disabled : 'tenderApproval'},
             ] 
         },
     ]
@@ -119,23 +115,30 @@ export class TenderLoadDetails  {
 
     approveByRank(title, {value}) {
         if(value == 'All') 
-        this.commonFunction.rank.forEach(value => {
-            this.workAreaData = this.replace.replace(this.workAreaData, value, true, 'tenderApproval');
-        })
+            this.commonFunction.rank.forEach(value => {
+                this.workAreaData = this.replace.replace(this.workAreaData, value, true, 'tenderApproval');
+            })
         this.workAreaData = this.replace.replace(this.workAreaData, value, true, 'tenderApproval');
         this.onUploadData(title, this.workAreaData);
     }
 
     approvedByYard(title, data) {
-        data.tenderApproval = true;
-        this.onUploadData('Update Job', data) 
+        let approvalData = [{ ...data, tenderApproval : true }];
+        this.commonFunction.collectItem([data], item => {
+            approvalData = this.commonFunction.reconstructDatas({
+                workData : approvalData,
+                newData : { ...item, tenderApproval : true },
+                targetIndex : item.id
+            });
+        });
+        this.onUploadData('Update Job', approvalData[0]) 
     }
 
     updateWorkArea(title, data) {
         this.commonFunction.openDialog({
             dialogData : { 
                 title,
-                data,
+                data : {...data, mata_uang : this.activeProject.proyek.mata_uang}, 
                 label : 'Contract',
             },
             component : WorkAreasDialogComponent
@@ -149,10 +152,12 @@ export class TenderLoadDetails  {
     }
 
     updateProjectSummary() {
-        let postBody = this.activeProject;
-        this.homeService.getUserLogin()
-        .subscribe(({data} : any) => postBody.approved_by = data.id_user)
-        postBody.approved = this.commonFunction.transformDate(new Date());
+        const user =  JSON.parse(localStorage.getItem('user'));
+        const postBody = { ...this.activeProject, 
+            approved_by : user.id_user,
+            approved : this.commonFunction.transformDate(new Date())
+        };
+
         this.reportService.updateProjectSummary(postBody)
         .subscribe(
             () => this.toastr.onUpload(),
@@ -163,9 +168,10 @@ export class TenderLoadDetails  {
             }
         )
 
-        let {proyek : {work_area}} = this.activeProject;
-        work_area = this.replace.deleteKey(work_area, 'end')
-        work_area = this.replace.deleteKey(work_area, 'start')
+        let {yard : {work_area}} = this.activeProject;
+        work_area = this.replace.deleteKey(work_area, 'end');
+        work_area = this.replace.deleteKey(work_area, 'start');
+        work_area = work_area.filter(job => job.tenderApproval == true);
         this.reportService.updateReportWorkArea({work_area}, this.activeProject.id_proyek)
         .subscribe(
             () => this.toastr.onUpload(),
@@ -194,7 +200,10 @@ export class TenderLoadDetails  {
         .subscribe(
             () => this.toastr.onUpload(),
             () => this.toastr.onError(),
-            () => this.toastr.onSuccess(successmsg)
+            () => {
+                this.toastr.onSuccess(successmsg);
+                this.viewWorkArea.setWorkArea(work_area);
+            }
         )
     }
 
