@@ -42,7 +42,7 @@
 
         <td nbTreeGridCell *nbTreeGridCellDef="let row">
           <!-- Drop down Type -->
-          <nb-select [selected]="columnType[index].option[0]" [compareWith]="compareById" placeholder="test plaec"
+          <nb-select [selected]="columnType[index].option[0]" [compareWith]="compareById" placeholder="Drop Down"
             *ngIf=" columnType[index].type === 'drown' " size="small">
             <nb-option *ngFor="let item of [1,2,4]" [value]="item">{{item}}</nb-option>
           </nb-select>
@@ -83,10 +83,35 @@
               [nbPopover]="button.name" 
               nbPopoverTrigger="hint" 
               nbPopoverPlacement="top"
-              [disabled]="button.disabled"
+              [disabled]="row.data[button.disabled]"
               (click)="handleClickButton(button.name, row.data)"
             >
               <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
+            </button>
+          </div>
+
+          <!-- button approval -->
+          <div
+            *ngIf="columnType[index].type == 'approval'"
+            class="w-100 d-flex justify-content-center bg-black"
+          >
+            <button 
+              *ngFor="let button of columnType[index].button"
+              nbButton 
+              class="mx-1"
+              size="tiny" 
+              outline
+              [status]=" row.data[button.disabled] ? 'success' : 'basic' "
+              [nbPopover]="button.name" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              [disabled]="row.data[button.disabled]"
+              (click)="handleClickButton(button.name, row.data)"
+            >
+              <nb-icon 
+                [icon]=" row.data[button.disabled] ? 'checkmark-square-2-outline' : 'square-outline' " 
+                [status]=" row.data[button.disabled] ? 'success' : 'basic' "
+              ></nb-icon>
             </button>
           </div>
 
@@ -98,14 +123,14 @@
             <input 
               nbInput 
               class="w-75"
-              name="progress"
+              name="newProgress"
               fieldSize="small" 
               type="number"
               min="0"
               max="100"
               ngModel
               #progress="ngModel"
-              (ngModelChange)="formValue('newProgress',progress.value)"
+              (ngModelChange)="formValue('newProgress', progress.value, row.data)"
             >
 
             <div *ngIf=" progress.value < 0 " class="danger text-danger">
@@ -119,11 +144,31 @@
           <textarea 
             name="remarksProgress" id="" cols="40" rows="2" nbInput
             ngModel
-            #progressRemarks="ngModel"
-            (ngModelChange)="formValue('remarksProgress',progressRemarks.value)"
+            #Remarks="ngModel"
+            (ngModelChange)="formValue('remarksProgress', Remarks.value, row.data)"
             *ngIf="columnType[index].type == 'updtRem'"
           >
           </textarea>
+          
+
+          <div *ngIf="columnType[index].type == 'updtButt'">
+            <button 
+              *ngFor="let button of columnType[index].button"
+              nbButton 
+              class="mx-1"
+              [size]="button.size || 'small'" 
+              [status]="button.status"
+              outline 
+              [nbPopover]="button.name" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              [disabled]="!(progressForm?.id == row.data.id && progressForm?.newProgress)"
+              (click)="handleClickButton(button.name, row.data)"
+            >
+              <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
+            </button>
+          </div>
+
 
           <!-- Click text -->
           <span *ngIf="columnType[index].type == 'navto'" 

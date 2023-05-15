@@ -27,6 +27,14 @@ export class ReportWorkProgress implements OnInit {
 
     ngOnInit(): void {
         this.workAreaData = this.summaryData.work_area;
+        this.commonFunction.collectItem(this.workAreaData, 
+            (item) => { 
+                this.workAreaData = this.commonFunction.reconstructDatas({
+                    workData : this.workAreaData,
+                    newData : {...item, last_progress : `${item.progress.at(-1).progress} %`},
+                    targetIndex : item.id
+                })
+        })
         const currency = this.summaryData.proyek.mata_uang;
         this.tableDetails = this.replaceData
         .replace(this.tableDetails, 'currency', currency + " " , 'currency')
@@ -47,7 +55,7 @@ export class ReportWorkProgress implements OnInit {
     @Input() summaryData;
     private destroy$: Subject<void> = new Subject<void>();
 
-    workAreaData : any ;
+    workAreaData : any = [];
     tableDetails = {style :{ width : '3200px', "max-height" : '300px' }, 
         button : [{ name : 'Update Progress', data : 'work_area' }], currency : 'currency'
     };
@@ -59,7 +67,7 @@ export class ReportWorkProgress implements OnInit {
             ]
         }, 
         { type : 'navto', width : 400, prop : 'jobName', title : 'Nav To' }, 
-        { type : 'progress', width : 250, prop : 'progress' }, 
+        { type : 'text', width : 100, prop : 'last_progress' }, 
         { type : 'text', width : 150, prop : 'start' }, 
         { type : 'text', width : 200, prop : 'end' }, 
         { type : 'text', width : 200, prop : 'volume' },
@@ -69,11 +77,11 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', width : 200, prop : 'category' },
         { type : 'text', width : 400, prop : 'remarks' },
         { type : 'text', width : 200, prop : 'suplier' },
-        { type : 'butt', width : 100, prop : 'approved' ,
-        button : [
-                { name : 'By Ship Yard', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
-                { name : 'By Owner', icon : 'square-outline', status : 'basic', disabled : false, size : 'tiny'},
-            ] 
+        { type : 'approval', width : 100, prop : 'approved' ,
+            button : [
+                    { name : 'By Ship Yard', disabled : 'shipYardApproval' },
+                    { name : 'By Owner', disabled : 'ownerApproval' },
+                ] 
         },
         { type : 'butt', width : 100, prop : 'edit',
             button : [
@@ -97,17 +105,16 @@ export class ReportWorkProgress implements OnInit {
         { type : 'text', placeholder : 'Category' },
         { type : 'text', placeholder : 'Remarks' },
         { type : 'text', placeholder : 'Supplier' },
-        { type : 'text', placeholder : 'Approved' },
-        { type : 'text', placeholder : '' },
+        { type : 'text', placeholder : 'Approved', unsort : true, },
+        { type : 'text', placeholder : '', unsort : true, },
     ]
 
     handleClickButton(title, data = null) {
-        console.log(title)
         if(title == 'Refresh') this.refreshPage.emit();
         if(title == 'Export to Excel') this.exportDataExcel();
         if(title == 'Extend') this.extendTable(true);
         if(title == 'Reduce') this.extendTable(false);
-        if(title == 'Nav To') this.workProgressDetail();
+        if(title == 'Nav To') this.workProgressDetail(data);
         if(title == 'Send Notification') 
         this.sendNotification.emit({work_area : this.workAreaData, label : "Actual"});
         if(title == 'Update Job') this.updateReportWorkArea(title, data);
@@ -140,22 +147,21 @@ export class ReportWorkProgress implements OnInit {
         this.viewWorkArea.extendOrReduce()
     }
 
-    workProgressDetail(title = "Work Progress Detail") {
+    workProgressDetail(data) {
+        const title = "Work Progress Detail"
         this.commonFunction.openDialog({
             dialogData : { 
-              title,
-              data : this.summaryData
+              title, data
             },
             component : WorkVariantDetailDialog
         })
     }
 
     updateReportWorkArea(title, data) {
-        console.log(data)
         this.commonFunction.openDialog({
             dialogData : { 
               title,
-              data,
+              data : {...data, mata_uang : this.summaryData.proyek.mata_uang},
               label : 'Actual',
             },
             component : WorkAreasDialogComponent
@@ -168,14 +174,27 @@ export class ReportWorkProgress implements OnInit {
     }
 
     approvedByShipYard(title, data) {
-        console.log(data)
-        data.shipYardApproval = true;
-        this.onUploadData('Reconstruct Work Area', data)
+        let approvalData = [{ ...data, shipYardApproval : true }];
+        this.commonFunction.collectItem([data], item => {
+            approvalData = this.commonFunction.reconstructDatas({
+                workData : approvalData,
+                newData : { ...item, shipYardApproval : true },
+                targetIndex : item.id
+            });
+        });
+        this.onUploadData('Reconstruct Work Area', approvalData[0])
     }
 
     approvedByOwner(title, data) {
-        data.ownerApproval = true;
-        this.onUploadData('Reconstruct Work Area', data)
+        let approvalData = [{ ...data, ownerApproval : true }];
+        this.commonFunction.collectItem([data], item => {
+            approvalData = this.commonFunction.reconstructDatas({
+                workData : approvalData,
+                newData : { ...item, ownerApproval : true },
+                targetIndex : item.id
+            });
+        });
+        this.onUploadData('Reconstruct Work Area', approvalData[0])
     }
 
     onUploadData(title, data) {
@@ -207,5 +226,4 @@ export class ReportWorkProgress implements OnInit {
         this.destroy$.next();
         this.destroy$.complete();
     }
-
 }

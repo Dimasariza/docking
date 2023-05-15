@@ -37,7 +37,11 @@ export class SubProjectWorkArea implements OnInit{
     private destroy$: Subject<void> = new Subject<void>();
 
     workAreaData : any[] = [];
-    tableDetails = {style :{ width : '2800px', "max-height" : '300px' }, currency : 'currency'};
+    tableDetails = {style :{ width : '2800px', "max-height" : '300px' }, currency : 'currency',
+        button : [
+            {name : 'Delete All Job'}
+        ]
+    };
     columnType = [ 
         { type : 'numb', width : 200, prop : 'jobNumber' }, 
         { type : 'icon', width : 80, prop : 'rank' ,
@@ -109,6 +113,9 @@ export class SubProjectWorkArea implements OnInit{
             case 'Import':
                 this.importExcel.nativeElement.click()
             break;
+            case 'Delete All Job':
+                this.deleteAllJobDialog(button)
+            break;
         }
     }
 
@@ -152,8 +159,8 @@ export class SubProjectWorkArea implements OnInit{
     transformExcelDate = (date) => new Date(Math.round((date - 25569) * 86400 * 1000))
 
     reconstructDataExcel(data) {
-        const user =  JSON.parse(localStorage.getItem('user'));
-        const date = this.commonFunction.transformDate(new Date(), 'yyyy-MM-dd hh-mm a');
+        const { nama_lengkap : updatedBy } =  JSON.parse(localStorage.getItem('user'));
+        const date = this.commonFunction.transformDate(new Date(), 'dd-MM-yyyy hh-mm a');
         data = data.map(details => {
             let {
                 ['Job Number']  : jobNumber,
@@ -170,14 +177,14 @@ export class SubProjectWorkArea implements OnInit{
                 ['Responsible'] : nama_lengkap,
                 ['Rank']        : rank,
             } = details;
-            const progress = [{ progress : '0', date, updateBy : user.nama_lengkap, 
-                remarksProgress : `${user.nama_lengkap} importing Data From Excel` 
+            const progress = [{ progress : '0', date, updatedBy, 
+                remarksProgress : `${updatedBy} importing Data From Excel` 
             }]
             return {jobNumber, jobName, department, rank, progress, responsible : { nama_lengkap },
                 start : this.commonFunction.transformDate(this.transformExcelDate(start)), 
                 end : this.commonFunction.transformDate(this.transformExcelDate(end)),
                 volume, unit, unitPriceBudget, totalPriceBudget, category, remarks, 
-                created_at : date, last_update : date, 
+                created_at : date, created_by : updatedBy , last_update : date, 
             }
         })
         data.forEach(job => {
@@ -242,6 +249,23 @@ export class SubProjectWorkArea implements OnInit{
             : null);
     }
 
+    deleteAllJobDialog(title) {
+        this.commonFunction.openDialog({
+            dialogData : { 
+                title,
+                name : `${this.projectData.projectTitle} Project`,
+                id : [null],
+            },
+            component : DeleteDialogComponent
+        })
+        .onClose
+        .pipe(takeUntil(this.destroy$))
+        .subscribe(newData => newData
+            ? this.onUploadData(title, newData)
+            : null
+            );
+    }
+
     onUploadData(title, data : any) {
         if(!data) return;
         let successmsg;
@@ -276,6 +300,8 @@ export class SubProjectWorkArea implements OnInit{
             })
             successmsg = `Your work area has been updated > ${data.jobName}`
         }
+
+        if(title == 'Delete All Job') work_area = data;
 
         this.projectService.updateProjectWorkArea({work_area}, this.projectData.id_proyek)
         .subscribe(

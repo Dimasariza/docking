@@ -164,6 +164,14 @@
                 > 
                 <b> Progress Report </b>  
             </span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">All Job</span>
+            <pdf-table-component
+                *ngIf="allJobRow"
+                [columns]="progressReportColumn"
+                [rows]="allJobRow"
+            >
+            </pdf-table-component>
+
             <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Critical Job</span>
             <pdf-table-component
                 *ngIf="criticalJobRow"

@@ -43,10 +43,11 @@ export class WorkAreasComponent implements OnInit {
   sortDirection: NbSortDirection = NbSortDirection.NONE;
 
   public setWorkArea(workArea) {
-    if(this.commonFunction.arrayNotEmpty(workArea)) {
+    if(this.commonFunction.arrayNotEmpty(workArea)) 
       this.workAreaData = workArea;
-      this.ngOnInit();
-    }
+    if(!this.commonFunction.arrayNotEmpty(workArea)) 
+      this.workAreaData = [];
+    this.ngOnInit();
   }
 
   private extendTable = false;
@@ -56,14 +57,19 @@ export class WorkAreasComponent implements OnInit {
   }
 
   handleClickButton(title, data = null) {
-    if(title == 'Update All Progress') 
-      data = {...data, ...this.progressForm}
+    if(title == 'Save Progress') {
+      const { newProgress, remarksProgress } = this.progressForm;
+      const progress = data.progress?.at(-1)?.progress || 0;
+      data = {...data, remarksProgress, newProgress : newProgress - progress };
+      this.progressForm = {};
+    }
     this.sendToParent.emit({title, data});
   }
 
   progressForm : any = {};
-  formValue(title, value) {
+  formValue(title, value, data) {
     this.progressForm[title] = value;
+    this.progressForm.id = data.id;
   }
 
   updateSort(sortRequest: NbSortRequest): void {
