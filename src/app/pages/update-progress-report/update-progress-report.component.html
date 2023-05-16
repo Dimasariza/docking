@@ -16,7 +16,7 @@
 
     </nb-card-header>
 
-    <nb-card-body>
+    <nb-card-body [nbSpinner]="loadingProgress" nbSpinnerStatus="primary">
         <ngx-work-areas 
             *ngIf="workAreaData"
             [workAreaData]="workAreaData"

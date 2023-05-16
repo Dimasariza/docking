@@ -94,37 +94,3 @@ export class TrackingComponent implements OnInit {
     this.gantChart.viewGantChart(tasks)
   }
 }
-
-
-// getBase64ImageFromURL() {
-//   const url = './assets/images/Logo/Logo Sikomodo.jpeg';
-//   return new Promise((resolve, reject) => {
-//     var img = new Image();
-//     img.setAttribute("crossOrigin", "anonymous");
-//     img.onload = () => {
-//       var canvas = document.createElement("canvas");
-//       canvas.width = img.width;
-//       canvas.height = img.height;
-//       var ctx = canvas.getContext("2d");
-//       ctx.drawImage(img, 0, 0);
-//       var dataURL = canvas.toDataURL("image/png");
-//       resolve(dataURL);
-//     };
-//     img.onerror = error => {
-//       reject(error);
-//     };
-//     img.src = url;
-//   });
-// }
-
-// const jobItem = {
-//   id : id.toString(),
-//   name: jobName,
-//   price: 100,
-//   start, end,
-//   progress_log: [
-//       {progress : 10, date: '2016-1-15'},
-//       {progress : 20, date: '2016-1-21'},
-//   ],
-//   dependencies:  [dependenciesId]
-// }

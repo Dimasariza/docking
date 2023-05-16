@@ -31,6 +31,9 @@
               <button nbButton size="tiny" 
               status="primary" outline class="m-1"
               (click)="handleClickButton('Select Project', project)"
+              nbPopover="Select Project" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
               >
                 <nb-icon icon="log-in-outline"></nb-icon>
               </button>
@@ -54,23 +57,20 @@
               >
                 {{ tender.nama_galangan }}
               </span>
-              <button nbButton size="tiny" 
-                status="primary" outline class="m-1"
-                (click)="handleClickButton('Update Yard', tender)"
+              <button 
+                *ngFor="let button of [
+                  { name : 'Update Yard', status : 'primary', icon : 'edit-outline' },
+                  { name : 'Delete Yard', status : 'danger', icon : 'trash-2-outline' },
+                  { name : 'Select Yard', status : 'primary', icon : 'log-in-outline' },
+                ]"
+                nbButton size="tiny" 
+                [status]="button.status" outline class="m-1"
+                (click)="handleClickButton(button.name, tender)"
+                [nbPopover]="button.name" 
+                nbPopoverTrigger="hint" 
+                nbPopoverPlacement="top"
               >
-                <nb-icon icon="edit-outline"></nb-icon>
-              </button>
-              <button nbButton size="tiny" 
-                status="danger" outline class="m-1"
-                (click)="handleClickButton('Delete Yard', tender)"
-              >
-                <nb-icon icon="trash-2-outline"></nb-icon>
-              </button>
-              <button nbButton size="tiny" 
-                status="primary" outline class="m-1"
-                (click)="handleClickButton('Select Yard', tender)"
-              >
-                <nb-icon icon="log-in-outline"></nb-icon>
+                <nb-icon [icon]="button.icon"></nb-icon>
               </button>
             </nb-list-item>
           </nb-list>
@@ -146,18 +146,21 @@
               </span>
   
               <div class="col">
-                <button nbButton size="tiny" 
-                status="danger" outline class="m-1"
-                (click)="handleClickButton('Unselect Yard', summary)"
+                <button 
+                  *ngFor="let button of [
+                    { name : 'Unselect Yard', status : 'danger', icon : 'close-outline' },
+                    { name : 'Show Contract', status : 'primary', icon : 'file-text-outline' },
+                  ]"
+                  nbButton size="tiny" 
+                  [status]="button.status" outline class="m-1"
+                  (click)="handleClickButton(button.name, summary)"
+                  [nbPopover]="button.name" 
+                  nbPopoverTrigger="hint" 
+                  nbPopoverPlacement="top"
                 >
-                  <nb-icon icon="scissors-outline"></nb-icon>
+                  <nb-icon [icon]="button.icon"></nb-icon>
                 </button>
-                <button nbButton size="tiny" 
-                status="success" class="m-1"
-                (click)="handleClickButton('Show Contract', summary)"
-                >
-                  <nb-icon icon="file-text-outline"></nb-icon>
-                </button>
+
               </div>
             </nb-list-item>
           </nb-list>

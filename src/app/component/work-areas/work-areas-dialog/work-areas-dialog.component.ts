@@ -47,7 +47,9 @@ export class WorkAreasDialogComponent implements OnInit {
         }
 
         const user =  JSON.parse(localStorage.getItem('user'));
-        if(user.role == 'shipyard') return;
+        if(user.role == 'shipyard') {
+            return this.responsible = user;
+        };
 
         this.profileService.getAllUsers({ role : 'shipyard' })
         .pipe(takeUntil(this.destroy$))

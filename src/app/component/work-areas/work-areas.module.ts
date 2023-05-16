@@ -3,6 +3,7 @@ import { WorkAreasComponent } from "./work-areas.component";
 import { CommonModule } from "@angular/common";
 import { NbButtonModule, 
     NbCardModule, 
+    NbCheckboxModule, 
     NbIconModule, 
     NbInputModule,
      NbPopoverModule,
@@ -33,6 +34,7 @@ import { FormsModule } from "@angular/forms";
         NbPopoverModule,
         NbDateFnsDateModule,
         NbProgressBarModule,
+        NbCheckboxModule
     ],
     declarations: [
         WorkAreasComponent
