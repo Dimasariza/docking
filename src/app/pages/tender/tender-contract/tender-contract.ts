@@ -163,13 +163,8 @@ export class TenderContract implements OnInit {
     }
 
     updateMatchingWorkArea({work_area, id_tender, id_proyek}) {
-      // try {
-        work_area = this.replace.deleteKey(work_area, 'end');
-        work_area = this.replace.deleteKey(work_area, 'start');
-      // } 
-      // catch (err) {
-      //   this.toastr.onError("Please fill start and end date in every job.")
-      // }
+      work_area = this.replace.deleteKey(work_area, 'start');
+      work_area = this.replace.deleteKey(work_area, 'end');
 
       this.tenderService.updateContractWorkArea({work_area}, id_tender)
       .subscribe(
