@@ -1,6 +1,5 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -10,7 +9,6 @@ import { PdfGeneratorBateraComponent } from '../pdf-generator-batera/pdf-generat
 import { ProfileBateraService } from '../profile-batera/profil-batera.service';
 import { ProjectBateraService } from '../project-batera/project-batera.service';
 import { TenderBateraService } from '../tender-batera/tender-batera.service';
-import { FrappeGanttComponent } from '../tracking-batera/frappe-gant/frappe-gantt.component';
 import { TrackingBateraComponent } from '../tracking-batera/tracking-batera.component';
 import { ProjectStatusComponent } from './project-status/project-status.component';
 import { ReportBateraService } from './report-batera.service';
@@ -18,6 +16,7 @@ import html2canvas from 'html2canvas'
 import pdfMake from "pdfmake/build/pdfmake";  
 import pdfFonts from "pdfmake/build/vfs_fonts";  
 import { DatePipe } from '@angular/common';
+import { FrappeGanttComponent } from '../tracking/frappe-gant/frappe-gantt.component';
 pdfMake.vfs = pdfFonts.pdfMake.vfs; 
 
 
@@ -120,6 +119,9 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
     })
     pushJob(work_area)
     this.tasks = jobContainer;
+    
+    // 
+    this.gantChart.showGantChart(this.tasks) 
   }
 
   yardData(id): void {
@@ -139,12 +141,12 @@ export class ReportBateraComponent implements OnInit, OnDestroy  {
   }
 
   exportToPDF(){
-    this.gantChart.ngOnInit()
-    const element = document.getElementById("exportGanttChart")
-    html2canvas(element).then((canvas) => {
-      const imgData = canvas.toDataURL('image/jpeg');
-      this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas, imgData);
-    })
+    console.log('belum bu');
+    
+    const element = this.gantChart.getElement()
+    console.log(element);
+    
+    this.pdfExporter.generatePDFBasedOnProject(this.projectData, this.subProjectData, this.yardDatas, element);
   }
 
   allertStatus (status) {

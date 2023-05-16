@@ -4,6 +4,150 @@ import Bar from './bar';
 import Arrow from './arrow';
 import Popup from './popup';
 
+const defaultCss = `.gantt .plan-line {
+    stroke: #0400ff;
+    fill:none;
+    stroke-width:3;
+}
+.gantt .actual-line {
+    stroke: #ff4e4e;
+    fill:none;
+    stroke-width:3;
+}
+.gantt .grid-background {
+    fill: none;
+  }
+  .gantt .grid-header {
+    fill: #ffffff;
+    stroke: #e0e0e0;
+    stroke-width: 1.4;
+  }
+  .gantt .grid-row {
+    fill: #ffffff;
+  }
+  .gantt .grid-row:nth-child(even) {
+    fill: #f5f5f5;
+  }
+  .gantt .row-line {
+    stroke: #ebeff2;
+  }
+  .gantt .tick {
+    stroke: #e0e0e0;
+    stroke-width: 0.2;
+  }
+  .gantt .tick.thick {
+    stroke-width: 0.4;
+  }
+  .gantt .today-highlight {
+    fill: #fcf8e3;
+    opacity: 0.5;
+  }
+  .gantt .arrow {
+    fill: none;
+    stroke: #666;
+    stroke-width: 1.4;
+  }
+  .gantt .bar {
+    fill: #b8c2cc;
+    stroke: #8D99A6;
+    stroke-width: 0;
+    transition: stroke-width 0.3s ease;
+    user-select: none;
+  }
+  .gantt .bar-progress {
+    fill: #a3a3ff;
+  }
+  .gantt .bar-invalid {
+    fill: transparent;
+    stroke: #8D99A6;
+    stroke-width: 1;
+    stroke-dasharray: 5;
+  }
+  .gantt .bar-invalid ~ .bar-label {
+    fill: #555;
+  }
+  .gantt .bar-label {
+    fill: #fff;
+    dominant-baseline: central;
+    text-anchor: middle;
+    font-size: 12px;
+    font-weight: lighter;
+  }
+  .gantt .bar-label.big {
+    fill: #555;
+    text-anchor: start;
+  }
+  .gantt .handle {
+    fill: #ddd;
+    cursor: ew-resize;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+  }
+  .gantt .bar-wrapper {
+    cursor: pointer;
+    outline: none;
+  }
+  .gantt .bar-wrapper:hover .bar {
+    fill: #a9b5c1;
+  }
+  .gantt .bar-wrapper:hover .bar-progress {
+    fill: #8a8aff;
+  }
+  .gantt .bar-wrapper:hover .handle {
+    visibility: visible;
+    opacity: 1;
+  }
+  .gantt .bar-wrapper.active .bar {
+    fill: #a9b5c1;
+  }
+  .gantt .bar-wrapper.active .bar-progress {
+    fill: #8a8aff;
+  }
+  .gantt .lower-text, .gantt .upper-text {
+    font-size: 12px;
+    text-anchor: middle;
+  }
+  .gantt .upper-text {
+    fill: #555;
+  }
+  .gantt .lower-text {
+    fill: #333;
+  }
+  .gantt .hide {
+    display: none;
+  }
+  
+  .gantt-container {
+    position: relative;
+    overflow: auto;
+    font-size: 12px;
+  }
+  .gantt-container .popup-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 0;
+    color: #959da5;
+    border-radius: 3px;
+  }
+  .gantt-container .popup-wrapper .title {
+    border-bottom: 3px solid #a3a3ff;
+    padding: 10px;
+  }
+  .gantt-container .popup-wrapper .subtitle {
+    padding: 10px;
+    color: #dfe2e5;
+  }
+  .gantt-container .popup-wrapper .pointer {
+    position: absolute;
+    height: 5px;
+    margin: 0 0 0 -5px;
+    border: 5px solid transparent;
+    border-top-color: rgba(0, 0, 0, 0.8);
+  }`
+
 // import './gantt.scss';
 // import scurve from './scurve';
 import SCurve from './scurve';
@@ -19,6 +163,7 @@ const VIEW_MODE = {
 
 export default class Gantt {
     constructor(wrapper, tasks, options) {
+        console.log(tasks);
         if(!tasks.length) return
         this.setup_wrapper(wrapper);
         this.setup_options(options);
@@ -26,6 +171,16 @@ export default class Gantt {
         // initialize with default view mode
         this.change_view_mode();
         this.bind_events();
+    }
+
+    setup_style() {
+        const styleElement = createSVG('style', {
+            type: 'text/css',
+            append_to: this.$svg,
+        });
+
+        styleElement.textContent = defaultCss
+        console.log(this.$svg);
     }
 
     setup_wrapper(element) {
@@ -91,8 +246,9 @@ export default class Gantt {
             popup_trigger: 'click',
             custom_popup_html: null,
             language: 'en',
+            ...options
         };
-        this.options = Object.assign({}, default_options, options);
+        this.options = Object.assign({}, default_options);
     }
 
     setup_tasks(tasks) {
@@ -298,6 +454,7 @@ export default class Gantt {
         this.map_arrows_on_bars();
         this.set_width();
         this.set_scroll_position();
+        this.setup_style();
         if (this.options.showSCurve) this.make_scurve();
     }
 

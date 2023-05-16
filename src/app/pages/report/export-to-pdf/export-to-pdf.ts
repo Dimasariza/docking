@@ -5,6 +5,7 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import { ToastrComponent } from '../../../component/toastr-component/toastr.component';
 import { CommonFunction } from '../../../component/common-function/common-function';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn : 'root'
@@ -26,7 +27,7 @@ export class ExportToPDF  {
   tableStyle : any = {'font-size' : '10px'}
   createDate : any = new Date();
 
-  createByJob(data) {
+  createByJob(data, ganttSVG: string = null) {
     let allJob : any = [];
     this.commonFunction.collectItem([data], (x) => allJob.push(x));
     this.jobData = {...data, allJob};
@@ -35,10 +36,10 @@ export class ExportToPDF  {
       title : 'Export File',
       duration : 2000
     });
-    setTimeout(() => this.downloadAsPDF(), 1000);
+    setTimeout(() => this.downloadAsPDF(ganttSVG), 1000);
   }
   
-  createByProject(summaryData) {
+  createByProject(summaryData, ganttSVG: string) {
     this.summaryData = summaryData;
     this.generateTableDatas();
     this.toastr.onInfo({
@@ -46,7 +47,7 @@ export class ExportToPDF  {
       title : 'Export File',
       duration : 2000
     });
-    setTimeout(() => this.downloadAsPDF(), 1000);
+    setTimeout(() => this.downloadAsPDF(ganttSVG), 1000);
   }
 
   projectSummaryColumn = [
@@ -202,18 +203,24 @@ export class ExportToPDF  {
     // this.delayedJobRow = this.variantJobRow = this.doneJobRow = this.criticalJobRow
   }
 
-  public async downloadAsPDF() {
+  public async downloadAsPDF(ganttSVG: string) {    
     const pdfTable = this.pdfTable.nativeElement;
     let html = htmlToPdfmake(pdfTable.innerHTML);
 
-    this.tableType == 'projectPDF' 
-    ? html[0].stack.splice(8, 0, {svg : this.progressSvg(this.statusProgress)})
-    : null;
+    if (this.tableType == 'projectPDF') {
+      html[0].stack.splice(8, 0, {svg : this.progressSvg(this.statusProgress)})
+    }
 
+    const ganttSPage = [
+      {pageBreak: 'before', text: 'Gantt Chart & S-Curve\n', style: {bold: true, fontSize: 16}, pageOrientation: 'landscape'},
+      {image: ganttSVG, width: 770}
+    ]
+    
     const documentDefinition = { 
       content: [
         await this.tableHeader(),
         html,
+        ...ganttSPage
       ],
       pageBreakBefore: function(currentNode) {
         return currentNode.style && currentNode.style.indexOf('pdf-pagebreak-before') > -1;

@@ -8,6 +8,8 @@ import { ReportStatusDialog } from './report-status-dialog/report-status-dialog'
 import { ToastrComponent } from '../../component/toastr-component/toastr.component';
 import { ExportToExcel } from '../../component/common-function/export-excel';
 import { ExportToPDF } from './export-to-pdf/export-to-pdf';
+import { FrappeGanttComponent } from '../tracking/frappe-gant/frappe-gantt.component';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'ngx-report-component',
@@ -34,12 +36,18 @@ export class ReportComponent implements OnInit, OnDestroy  {
   currentUser : any;
 
   private destroy$: Subject<void> = new Subject<void>();
-  @ViewChild(ExportToPDF) exportToPDF : ExportToPDF 
+  @ViewChild(ExportToPDF) exportToPDF : ExportToPDF
+  @ViewChild(FrappeGanttComponent) ganttChart : FrappeGanttComponent
+  ganttTasks: any[]
+  datePipe = new DatePipe('id')
 
   ngOnInit(): void {
-    const id = this.activatedRoute.snapshot.paramMap.get('id');
     const user =  JSON.parse(localStorage.getItem('user'));
-    this.currentUser = user;  
+    this.currentUser = user
+  }
+  
+  ngAfterViewInit() {
+    const id = this.activatedRoute.snapshot.paramMap.get('id');
 
     this.reportService.getProjectSummaryById(id)
     .pipe(takeUntil(this.destroy$))
@@ -51,18 +59,24 @@ export class ReportComponent implements OnInit, OnDestroy  {
     
     this.reportService.getAllSupliers({})
     .pipe(takeUntil(this.destroy$))
-    .subscribe(({data} : any) => this.suplierData = data)
+    .subscribe(({data} : any) => this.suplierData = data)    
   }
 
   generateSummaryData (data) {
+    console.log(data);
+    
     const { kapal : { nama_kapal }, tahun, status } = data?.proyek;
     const projectTitle = `${nama_kapal} -DD- ${tahun} ${status.toUpperCase()}`
     this.summaryData = { ...data, projectTitle }
+
+    // define a tasks for gantt chart
+    const tasks = this.ganttChart.showGantChart(data)
+    this.ganttChart.viewGantChart(tasks, {scurve: true, viewMode: 'Week'});
   }
 
   handleClickButton(title, data = null) {
     if(title == 'Project Status') this.projectStatusDialog(title);
-    if(title == 'Export To PDF') this.exportToPDF.createByProject(this.summaryData);
+    if(title == 'Export To PDF') this.exportToPDF.createByProject(this.summaryData, this.ganttChart.base64);
   }
 
   projectStatusDialog(title) {

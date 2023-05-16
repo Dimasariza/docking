@@ -321,7 +321,7 @@ export class PdfGeneratorBateraComponent implements OnInit {
       ...priceSummary,
       {text : "S-Curve" ,fontSize : 12, bold : true, color: '#047886', margin : [0, 1000, 0, 0]},
       {
-        image : ganttChart,
+        svg : ganttChart,
         width : 500
       },
       {text : "" ,fontSize : 12, bold : true, color: '#047886', pageBreak:'after'},

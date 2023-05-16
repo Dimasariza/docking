@@ -23,9 +23,259 @@ export default class Gantt {
         this.setup_wrapper(wrapper);
         this.setup_options(options);
         this.setup_tasks(tasks);
+        this.setup_style();
         // initialize with default view mode
         this.change_view_mode();
         this.bind_events();
+    }
+
+    setup_style() {
+        const styleElement = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+
+        // Set the type attribute of the <style> tag
+        styleElement.setAttribute('type', 'text/css');
+
+        // Define the CSS styles within the <style> tag
+        styleElement.textContent = `
+            .gantt.plan-line {
+                stroke: $plan-line-color;
+                fill:none;
+                stroke-width:3;
+            }
+        
+            .gantt.actual-line {
+                stroke: $actual-line-color;
+                fill:none;
+                stroke-width:3;
+            }
+          .gantt.grid - background {
+            fill: none;
+          }
+
+          .gantt.grid - header {
+            fill: #ffffff;
+            stroke: #e0e0e0;
+            stroke - width: 1.4;
+          }
+
+          .gantt.grid - row {
+            fill: #ffffff;
+          }
+
+          .gantt.grid - row: nth - child(even) {
+            fill: #f5f5f5;
+          }
+
+          .gantt.row - line {
+            stroke: #ebeff2;
+          }
+
+          .gantt.tick {
+            stroke: #e0e0e0;
+            stroke - width: 0.2;
+          }
+
+          .gantt.tick.thick {
+            stroke - width: 0.4;
+          }
+
+          .gantt.today - highlight {
+            fill: #fcf8e3;
+            opacity: 0.5;
+          }
+
+          .gantt.arrow {
+            fill: none;
+            stroke: #666;
+
+            stroke-width: 1.4;
+
+          }
+
+          
+
+          .gantt .bar {
+
+            fill: # b8c2cc;
+            stroke: #8D99A6;
+
+            stroke-width: 0;
+
+            transition: stroke-width 0.3s ease;
+
+            user-select: none;
+
+          }
+
+          
+
+          .gantt .bar-progress {
+
+            fill: # a3a3ff;
+          }
+
+          .gantt.bar - invalid {
+            fill: transparent;
+            stroke: #8D99A6;
+
+            stroke-width: 1;
+
+            stroke-dasharray: 5;
+
+          }
+
+          
+
+          .gantt .bar-invalid~.bar-label {
+
+            fill: # 555;
+          }
+
+          .gantt.bar - label {
+            fill: #fff;
+            dominant - baseline: central;
+            text - anchor: middle;
+            font - size: 12 px;
+            font - weight: lighter;
+          }
+
+          .gantt.bar - label.big {
+            fill: #555;
+
+            text-anchor: start;
+
+          }
+
+          
+
+          .gantt .handle {
+
+            fill: # ddd;
+            cursor: ew - resize;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3 s ease;
+          }
+
+          .gantt.bar - wrapper {
+            cursor: pointer;
+            outline: none;
+          }
+
+          .gantt.bar - wrapper: hover.bar {
+            fill: #a9b5c1;
+          }
+
+          .gantt.bar - wrapper: hover.bar - progress {
+            fill: #8a8aff;
+
+          }
+
+          
+
+          .gantt .bar-wrapper:hover .handle {
+
+            visibility: visible;
+
+            opacity: 1;
+
+          }
+
+          
+
+          .gantt .bar-wrapper.active .bar {
+
+            fill: # a9b5c1;
+          }
+
+          .gantt.bar - wrapper.active.bar - progress {
+            fill: #8a8aff;
+
+          }
+
+          
+
+          .gantt .lower-text,
+
+          .gantt .upper-text {
+
+            font-size: 12px;
+
+            text-anchor: middle;
+
+          }
+
+          
+
+          .gantt .upper-text {
+
+            fill: # 555;
+          }
+
+          .gantt.lower - text {
+            fill: #333;
+
+          }
+
+          
+
+          .gantt .hide {
+
+            display: none;
+
+          }
+
+          
+
+          .gantt-container {
+
+            position: relative;
+
+            overflow: auto;
+
+            font-size: 12px;
+
+          }
+
+          
+
+          .gantt-container .popup-wrapper {
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            background: rgba(0, 0, 0, 0.8);
+
+            padding: 0;
+
+            color: # 959 da5;
+            border - radius: 3 px;
+          }
+
+          .gantt - container.popup - wrapper.title {
+            border - bottom: 3 px solid# a3a3ff;
+            padding: 10 px;
+          }
+
+          .gantt - container.popup - wrapper.subtitle {
+            padding: 10 px;
+            color: #dfe2e5;
+          }
+
+          .gantt - container.popup - wrapper.pointer {
+            position: absolute;
+            height: 5 px;
+            margin: 0 0 0 - 5 px;
+            border: 5 px solid transparent;
+            border - top - color: rgba(0, 0, 0, 0.8);
+          }
+        `;
+
+        console.log(styleElement);
+        this.$svg.appendChild(styleElement)
     }
 
     setup_wrapper(element) {
@@ -353,6 +603,7 @@ export default class Gantt {
             width: grid_width,
             height: grid_height,
             class: 'grid-background',
+            style: `fill: none;`,
             append_to: this.layers.grid,
         });
 
@@ -377,6 +628,7 @@ export default class Gantt {
                 y: row_y,
                 width: row_width,
                 height: row_height,
+                style: `fill: #ffffff;`,
                 class: 'grid-row',
                 append_to: rows_layer,
             });
@@ -402,6 +654,7 @@ export default class Gantt {
             y: 0,
             width: header_width,
             height: header_height,
+            style: `fill: #ffffff;stroke: #e0e0e0;stroke-width: 1.4;`,
             class: 'grid-header',
             append_to: this.layers.grid,
         });

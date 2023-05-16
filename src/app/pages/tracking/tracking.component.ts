@@ -26,6 +26,8 @@ export class TrackingComponent implements OnInit {
   ngOnInit(): void {
     this.tenderService.getProjectSummary({})
     .subscribe(({data} : any) => {
+      console.log(data);
+      
       this.trackingData = data;
       this.vesselFilter();
       this.chartTask = data;
@@ -66,6 +68,8 @@ export class TrackingComponent implements OnInit {
   }
 
   showGantChart(data) {
+    console.log(data);
+    
     let { reportWorkArea = [], variant_work = [] } = data;
     if(!this.commonFunction.arrayNotEmpty(reportWorkArea)) reportWorkArea = [];
     if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];

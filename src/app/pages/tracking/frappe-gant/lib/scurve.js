@@ -10,7 +10,6 @@ export default class SCurve {
         this.circleSize = 8;
 
         const {actual, plan} = this.calculateData()
-        console.log(actual);
         this.draw(actual, true)
         this.draw(plan)
     }
