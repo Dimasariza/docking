@@ -163,8 +163,8 @@ export class TenderContract implements OnInit {
     }
 
     updateMatchingWorkArea({work_area, id_tender, id_proyek}) {
-      work_area = this.replace.deleteKey(work_area, 'start');
-      work_area = this.replace.deleteKey(work_area, 'end');
+      // work_area = this.replace.deleteKey(work_area, 'start');
+      // work_area = this.replace.deleteKey(work_area, 'end');
 
       this.tenderService.updateContractWorkArea({work_area}, id_tender)
       .subscribe(

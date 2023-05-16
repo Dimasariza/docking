@@ -79,17 +79,17 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
     }
 
     showGantChart(data) {
-        let { reportWorkArea = [], variant_work = [] } = data;
-        if(!this.commonFunction.arrayNotEmpty(reportWorkArea)) reportWorkArea = [];
-        if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
-        const allWorkArea = [...reportWorkArea, ...variant_work];
+        const { work_area = [], variant_work = [] } = data;
+        // if(!this.commonFunction.arrayNotEmpty(reportWorkArea)) reportWorkArea = [];
+        // if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
+        // const allWorkArea = [...reportWorkArea, ...variant_work];
         let tasks = [];
         let date = this.commonFunction.transformDate(new Date());
 
-        function reconstructData(work_area) {
+        function reconstructData(wa) {
           let price : any = 0;
           let dependencies = [];
-          work_area.forEach(({ id, jobName : name, unitPriceActual = "", 
+          wa.filter(job => job).forEach(({ id, jobName : name, unitPriceActual = "", 
             unitPriceAddOn = "", start, end, items = [], progress, 
           }) => {
             if(unitPriceActual) price = unitPriceActual;
@@ -100,7 +100,7 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
           })
         }
 
-        reconstructData(allWorkArea)
+        reconstructData([...(work_area ?? []), ...(variant_work ?? [])])
         return tasks
     }
 
@@ -130,9 +130,7 @@ export class FrappeGanttComponent implements OnInit, OnChanges {
                     canvas.width = width;
                     canvas.height = height;
                     ctx.drawImage(imgElement, 0, 0);
-                    this.base64 = canvas.toDataURL("image/png");
-                    console.log(this.base64);
-                    
+                    this.base64 = canvas.toDataURL("image/png");                    
                 }
 
 
