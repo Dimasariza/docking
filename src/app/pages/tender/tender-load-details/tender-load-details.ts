@@ -169,8 +169,7 @@ export class TenderLoadDetails  {
         )
 
         let {yard : {work_area}} = this.activeProject;
-        work_area = this.replace.deleteKey(work_area, 'start');
-        work_area = this.replace.deleteKey(work_area, 'end');
+        
         work_area = work_area.filter(job => job.tenderApproval == true);
         this.reportService.updateReportWorkArea({work_area}, this.activeProject.id_proyek)
         .subscribe(
