@@ -204,45 +204,26 @@ export class ExportToPDF  {
       [item.name+','+item.date] : await this.getBase64ImageFromURL( `${environment.apiUrl}/file/show/${item.url}`)
     })))
 
-    // console.log(allAttachment)
-
-    let images;
-    // imageUrl.forEach(item => {
-    //   console.log(item)
-    // })
-
-    // images = { ...images }
-
-    // console.log(images)
+    let images = imageUrl.reduce((p, c) => ({...p, ...c}), {});
 
     const documentDefinition = { 
       content: [
         await this.tableHeader(),
         html,
         // ...ganttSPage,
-        ...allAttachment.map(item => ({
-          image : item.name+','+item.date
-        })),
-        // {
-        //   image : '1.2'
-        // }
+        {pageBreak: 'before', text: 'Attachment\n', style: {bold: true, fontSize: 16, color : '#5588EE'}, pageOrientation: 'landscape'},
+        ...allAttachment.map(item => [
+            { image : item.name+','+item.date },
+            { text : `${item.name}, ${item.date}` }, 
+        ]),
       ],
-      images : { 
-
-      },
+      images,
       pageBreakBefore: function(currentNode) {
         return currentNode.style && currentNode.style.indexOf('pdf-pagebreak-before') > -1;
       }
     };
-    console.log(documentDefinition)
-    // pdfMake.createPdf(documentDefinition).open();
-  }
 
-  Attachment(item) {
-    return [ 
-      { text : `${item.name}, ${item.date}}` }, 
-      { image : this.getBase64ImageFromURL(`${environment.apiUrl}/file/show/${item.url}`), fit : [80, 80] },
-    ]
+    pdfMake.createPdf(documentDefinition).open();
   }
 
   getBase64ImageFromURL(url) {
