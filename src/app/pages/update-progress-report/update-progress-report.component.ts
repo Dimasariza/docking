@@ -50,7 +50,7 @@ export class UpdateProgressReport implements OnInit {
         { type : 'text', placeholder : 'Last Update', unsort : true },
         { type : 'text', placeholder : 'Update Progress', unsort : true },
         { type : 'text', placeholder : 'Remarks', unsort : true },
-        { type : 'text', placeholder : '', unsort : true },
+        { type : 'text', placeholder : 'Action', unsort : true },
     ];
 
     columnType = [ 

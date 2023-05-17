@@ -213,8 +213,8 @@ export class ExportToPDF  {
         // ...ganttSPage,
         {pageBreak: 'before', text: 'Attachment\n', style: {bold: true, fontSize: 16, color : '#5588EE'}, pageOrientation: 'landscape'},
         ...allAttachment.map(item => [
-            { image : item.name+','+item.date },
-            { text : `${item.name}, ${item.date}` }, 
+            { image : item.name+','+item.date , width : 200},
+            { text : `${item.name}, ${item.date}`}, 
         ]),
       ],
       images,
