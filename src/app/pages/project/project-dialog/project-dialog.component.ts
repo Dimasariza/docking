@@ -6,6 +6,7 @@ import { CommonFunction } from '../../../component/common-function/common-functi
 import { ToastrComponent } from '../../../component/toastr-component/toastr.component';
 import { takeUntil } from 'rxjs/operators';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import * as moment from 'moment'
 
 @Component({
   selector: 'ngx-project-data',
@@ -37,6 +38,9 @@ export class ProjectDialogComponent implements OnInit, OnDestroy{
   charterRate;
   bunkerRate;
   usedCurrency;
+
+  currentYear = moment().year()
+  defaultOffHirePeriod = moment().add(1, 'month').toDate()//.format('dd.MM.yyyy')
 
   ngOnInit(): void {
     

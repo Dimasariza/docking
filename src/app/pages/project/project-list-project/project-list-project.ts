@@ -21,7 +21,7 @@ export class ProjectListProject implements OnDestroy {
     ) {}
 
     private destroy$: Subject<void> = new Subject<void>();
-    @Input() projectData;
+    @Input() projectData = [];
     @Output("refresh") refreshPage: EventEmitter<any> = new EventEmitter();
 
     columns = [

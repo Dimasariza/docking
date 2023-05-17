@@ -7,33 +7,33 @@
   </nb-card-header>
 
   <nb-card-body>
-    <form class="row" #projectDataForm="ngForm" (ngSubmit)="closeDialog(projectDataForm.value)" >
+    <form class="row" #projectDataForm="ngForm" (ngSubmit)="closeDialog(projectDataForm.value)" ngNativateValidate>
       <div class="col-4">
         <label for="Vessel Name" class="d-block text-muted">Vessel</label>
         <nb-select class="w-100 text-capitalize" [placeholder]=" dialogData?.data?.kapal?.nama_kapal || 'Vessel Name' " size="small" required 
-        [ngModel]="dialogData?.data?.kapal?.id_kapal" name="id_kapal" [disabled]="disabled">
+        [ngModel]="dialogData?.data?.kapal?.id_kapal ?? (vesselData?.length && vesselData[0].nama_kapal)" name="id_kapal" [disabled]="disabled">
           <nb-option [value]="vessel.id_kapal"  *ngFor="let vessel of vesselData; let id=index;">{{vessel.nama_kapal}}</nb-option>
         </nb-select>
         <label for="yearProject" class="d-block text-muted">Year Project</label>
         <input type="number" autocomplete="off" nbInput class="w-100" placeholder="Year Of Project" fieldSize="small" name="tahun" required id="yearProject" 
-        [ngModel]="dialogData?.data?.tahun" [disabled]="disabled">
+        [ngModel]="dialogData?.data?.tahun ?? currentYear" [disabled]="disabled">
         <label for="Docking types" class="d-block text-muted">Type Of Docking</label>
         <nb-select class="w-100 text-capitalize" [placeholder]=" dialogData?.data?.status || 'Type Of Docking'" size="small" required 
-        [ngModel]="dialogData?.data?.status" name="status" >
+        [ngModel]="dialogData?.data?.status ?? (commonFunction.typeOfDocking?.length && commonFunction.typeOfDocking[0])" name="status" >
           <nb-option [value]="type" class="text-capitalize" *ngFor="let type of commonFunction.typeOfDocking; let id=index;">{{type}}</nb-option>
         </nb-select>
         <label for="responsible" class="d-block text-muted">Responsible</label> 
-        <nb-select class="w-100" placeholder="Responsible" size="small" [ngModel]="dialogData?.data?.id_user" name="id_user" required>
+        <nb-select class="w-100" placeholder="Responsible" size="small" [ngModel]="dialogData?.data?.id_user ?? (responsible?.length && responsible[0].nama_lengkap)" name="id_user" required>
           <nb-option [value]="resp.id_user" *ngFor="let resp of responsible; let id=index;">{{resp.nama_lengkap}}</nb-option>
         </nb-select>
         <label for="Phase" class="d-block text-muted">Phase</label>
-        <nb-select class="w-100 text-capitalize" placeholder="Phase" size="small" [ngModel]="dialogData?.data?.phase" name="phase" required>
+        <nb-select class="w-100 text-capitalize" placeholder="Phase" size="small" [ngModel]="dialogData?.data?.phase ?? (commonFunction.phase.length && commonFunction.phase[0])" name="phase" required>
           <nb-option [value]="phase" *ngFor="let phase of commonFunction.phase; let id=index;" class="text-capitalize">
             {{ phase.split("_").join(" ") }}
           </nb-option>
         </nb-select>
         <label for="Base Currency" class="text-muted d-block" fieldSize="small">Base Currency</label>
-        <nb-select class="w-100" placeholder="Base Currency" size="small" [ngModel]="dialogData?.data?.mata_uang" name="mata_uang" required>
+        <nb-select class="w-100" placeholder="Base Currency" size="small" [ngModel]="dialogData?.data?.mata_uang ?? (commonFunction.baseCurrency.length && commonFunction.baseCurrency[0])" name="mata_uang" required>
           <nb-option [value]="currency" *ngFor="let currency of commonFunction.baseCurrency; let id=index;" (click)="usedCurrency = currency" >{{currency}}</nb-option>
         </nb-select>
       </div>
@@ -42,7 +42,7 @@
         <label for="Off Hire Period" class="d-block text-muted">Off Hire Period</label>
         <nb-rangepicker #offHirePeriodDate format="dd.MM.yyyy"></nb-rangepicker>  
         <input fieldSize="small" autocomplete="off" class="w-100" type="text" required nbInput shape="rectangle" placeholder="Pick Date" 
-        [nbDatepicker]="offHirePeriodDate" name="offHirePeriod" [disabled]="disabled" [ngModel]="dialogData.data?.offHirePeriod">
+        [nbDatepicker]="offHirePeriodDate" name="offHirePeriod" [disabled]="disabled" [ngModel]="dialogData.data?.offHirePeriod ?? defaultOffHirePeriod">
         <label for="Deviation" class="d-block text-muted"> &nbsp;- Deviation</label>
         <input type="number" autocomplete="off" class="w-100" nbInput required fieldSize="small" placeholder="Add Deviation Days" name="off_hire_deviasi"
         [ngModel]=" dialogData?.data?.off_hire_deviasi">
@@ -68,7 +68,7 @@
         <input type="number" autocomplete="off" class="w-100" nbInput required fieldSize="small" placeholder="Add Additional Day" name="repair_additional_day" [disabled]="disabled" [ngModel]="dialogData?.data?.repair_additional_day" >
       </div> 
 
-      <button nbButton class="m-3 w-100" status="success" type="submit" [disabled]="!projectDataForm.form.valid" >{{dialogData.title}}</button>
+      <button nbButton class="m-3 w-100" status="success" type="submit">{{dialogData.title}}</button>
     </form>
 
   </nb-card-body>

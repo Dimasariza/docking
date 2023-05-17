@@ -15,16 +15,14 @@ import { takeUntil } from 'rxjs/operators';
     You have no access. Please Leave this page.
   </nb-alert>
 
-  <ngx-project-task-mine 
-    *ngIf="projectData"
-    [projectData]="projectData"
+  <ngx-project-task-mine
+    [projectData]="projectData ?? []"
     (refresh)=ngOnInit()
   >
   </ngx-project-task-mine>
 
-  <ngx-project-list-project 
-    *ngIf="projectData"
-    [projectData]="projectData"
+  <ngx-project-list-project
+    [projectData]="projectData ?? []"
     (refresh)=ngOnInit()
   >
   </ngx-project-list-project>

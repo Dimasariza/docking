@@ -34,7 +34,7 @@ export class ProjectTaskMine implements OnInit {
     this.tableHead = this.replace.replace(this.tableHead, 'Responsible', this.responsible, 'option')
   }
 
-  @Input() projectData;
+  @Input() projectData = [];
   @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
   
   workAreaData = [];
