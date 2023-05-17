@@ -5,6 +5,7 @@ import { CommonFunction } from "../../common-function/common-function";
 import { ProfileService } from "../../../pages/profile/profile.service";
 import { takeUntil } from "rxjs/operators";
 import { ToastrComponent } from "../../toastr-component/toastr.component";
+import moment from "moment";
 
 @Component({
     selector: 'ngx-work-areas-dialog',
@@ -92,6 +93,7 @@ export class WorkAreasDialogComponent implements OnInit {
             start : this.commonFunction.transformDate(start),
             end : this.commonFunction.transformDate(end)
         };
+        arr['progress'] = [{progress: 0, remarksProgress: '', date: moment(start ?? Date.now()).format('DD-MM-YYYY hh:mm a')}]
         arr['unitPrice' + this.dialogData.label] = this.commonFunction.priceAmount(this.unitPrice)
         arr['totalPrice' + this.dialogData.label] = this.totalPrice;
         arr = this.commonFunction.acceptData(arr, this.dialogData.label)

@@ -1,4 +1,4 @@
-<nb-card>  
+<nb-card *ngIf="['admin', 'superintendent', 'director'] | role">
     <nb-card-header 
       class="d-flex justify-content-between w-100" 
     >

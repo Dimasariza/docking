@@ -156,7 +156,7 @@ export class SubProjectWorkArea implements OnInit{
         }
     }
 
-    transformExcelDate = (date) => new Date(Math.round((date - 25569) * 86400 * 1000))
+    transformExcelDate = (date) => date == undefined ? '' :new Date(Math.round((date - 25569) * 86400 * 1000))
 
     reconstructDataExcel(data) {
         const { nama_lengkap : updatedBy } =  JSON.parse(localStorage.getItem('user'));

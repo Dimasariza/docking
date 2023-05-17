@@ -7,26 +7,28 @@
   {{handleEvent.text}}
 </nb-alert> -->
 
-<div class="row" *ngIf="shipData">
+<div class="row position-relative" style="min-height: 100vh;">
+  <ng-container *ngIf="(result$ | async) as shipData; else loading">
   <nb-flip-card 
   *ngFor="let item of shipData; let id=index;" 
   class="col-lg-4 col-md-6 col-sm-12" 
-  [showToggleButton]="false" 
-  [flipped]="item.flipped"
+  [showToggleButton]="false"
+  [flipped]="flip.value == 1"
   >
+    <input #flip type="hidden" value="0">
     <nb-card-front> 
       <nb-card size="small">
-        <nb-badge *ngIf="item.progress != null" status="info" position="top start" dotMode>
-        </nb-badge>
+        <nb-badge *ngIf="item.progress != null" status="info" position="top start" dotMode></nb-badge>
         <div class="d-flex justify-content-between p-2"> 
           <nb-icon 
             class="flip-icon" 
             icon="chevron-right-outline" 
             pack="eva" 
-            (click)="toggleView(id)" 
+            (click)="flip.value = 1"
             style="cursor: pointer;"
           ></nb-icon>
           <nb-icon 
+            *ngIf="['admin', 'superintendent'] | role"
             nbButton 
             [icon]="item?.status === 1 ? 'heart' : 'heart-outline'"
             (click)="handleClickButton('Add To Assets', item)"
@@ -51,7 +53,7 @@
         </div>
         <div class="d-flex align-items-center"> 
           <span class="col-9 text-uppercase font-weight-bold h6">{{item.nama_kapal}}</span> 
-          <div class="col-3">
+          <div class="col-3" *ngIf="['admin', 'superintendent'] | role">
             <div class="d-flex justify-content-end" 
             style="justify-self: end;" 
             >
@@ -95,21 +97,8 @@
             class="flip-icon" 
             icon="chevron-right-outline" 
             pack="eva" 
-            (click)="toggleView(id)" 
+            (click)="flip.value = 0"
             style="cursor: pointer;"
-          ></nb-icon>
-          <nb-icon 
-            nbButton 
-            [icon]="item?.status == 1 ? 'heart' : 'heart-outline'"
-            (click)="handleClickButton('Add To Assets', item)"
-            nbPopover="Assets" 
-            nbPopoverTrigger="hover" 
-            nbPopoverPlacement="bottom" 
-            type="button" 
-            size="medium" 
-            [options]="{ animation: {type:'zoom'}}" 
-            style="font-size: 1.2rem" 
-            status="danger" 
           ></nb-icon>
         </div>
         <div class="p-5">
@@ -131,12 +120,12 @@
   </nb-flip-card>
 
   <div class="col-xl-4 col-lg-4 col-md-6">
-    <nb-card class="h-75" 
+    <nb-card class="h-75" *ngIf="['admin', 'superintendent'] | role"
     style="cursor: pointer;" 
     (click)="handleClickButton('Add Ship')"
     >
       <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
-        <span *ngIf="!shipData" class="font-weight-bold text-center">Data Not Available <br> Please Add Ship </span>
+        <span *ngIf="shipData.lenght <= 0" class="font-weight-bold text-center">Data Not Available <br> Please Add Ship </span>
         <nb-icon icon="plus-square-outline" 
           style="font-size: 5rem;" 
           class="align-self-center" 
@@ -146,4 +135,14 @@
       </div>
     </nb-card>
   </div>
+</ng-container>
 </div>
+
+<ng-template #loading>
+  <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center" 
+  style="line-height: 4; z-index: -1;"
+  [nbSpinner]="true">
+    <span><br></span>
+    <span>Loading...</span>  
+  </div>
+</ng-template>

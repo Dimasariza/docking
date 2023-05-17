@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HomeService } from './home.service';
 import { environment } from "../../../environments/environment"
-import { takeUntil } from 'rxjs/operators';
-import { Subject} from 'rxjs';
+import { map, takeUntil } from 'rxjs/operators';
+import { Observable, Subject, forkJoin} from 'rxjs';
 import { CommonFunction } from '../../component/common-function/common-function';
 import { ReportService } from '../report/report.service';
 import { ShipDialogComponent } from './ship-dialog/ship-dialog.component';
@@ -22,56 +22,42 @@ export class HomeComponent implements OnInit, OnDestroy{
   ){}
     
   private destroy$: Subject<void> = new Subject<void>();
-  shipData: any  = null ;
-
-  toggleView = (id) => this.shipData[id].flipped = !this.shipData[id].flipped;
+  result$: Observable<any>
 
   ngOnInit() {
-    this.homeService.getAllShips({})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(
-      ({data} : any) => {
-        if(this.commonFunction.arrayNotEmpty(data))
-        this.shipData = data.map(item => ({  
-            ...item,
-            imageURL : `${environment.apiUrl}/file/show/${item.foto}`,
-            flipped : false,
-        }))
-      },  
-      () => this.toastr.onError()
-    );
+    const shipdata$ = this.homeService.getAllShips({}).pipe(
+      map((result: any) =>  result.data.map(item => ({  
+          ...item,
+          imageURL : `${environment.apiUrl}/file/show/${item.foto}`,
+          flipped : false,
+      })))
+    )
+
+    const progressData$ = this.reportService.getProjectSummary({})
+    .pipe(
+      map(({data}: any) => data.map(summary => {
+        let {proyek : {id_kapal, tahun, phase, kapal : {nama_kapal}}, 
+        work_area = [], variant_work = [], id_proyek} = summary;
+        const head = `${nama_kapal} - DD - ${tahun}`;
+        if(!this.commonFunction.arrayNotEmpty(work_area)) work_area = [];
+        if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
+        const workProgress = [...work_area, ...variant_work];
+        let progress : any = 0.0;
+        for(let job of workProgress) progress += job.progress.at(-1).progress;
+        if(progress != 0) progress = progress / workProgress?.length;
+        return {id_kapal, head, phase : phase.split('_').join(" "), progress : parseFloat(progress).toFixed(2), id_proyek};
+      }))
+    )
     
-    this.reportService.getProjectSummary({})
-    .pipe(takeUntil(this.destroy$))
-    .subscribe(
-      ({data} : any) => {
-        if(this.commonFunction.arrayNotEmpty(data))
-        this.generateMilestone(data)
-      },
-      () => this.toastr.onError()
-    );
-  }
-
-  generateMilestone(data) {
-    const progressData = data.map(summary => {
-      let {proyek : {id_kapal, tahun, phase, kapal : {nama_kapal}}, 
-      work_area = [], variant_work = [], id_proyek} = summary;
-      const head = `${nama_kapal} - DD - ${tahun}`;
-      if(!this.commonFunction.arrayNotEmpty(work_area)) work_area = [];
-      if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
-      const workProgress = [...work_area, ...variant_work];
-      let progress : any = 0.0;
-      for(let job of workProgress) progress += job.progress.at(-1).progress;
-      if(progress != 0) progress = progress / workProgress?.length;
-      return {id_kapal, head, phase : phase.split('_').join(" "), progress : parseFloat(progress).toFixed(2), id_proyek};
-    })
-
-    if(!this.shipData?.length || !progressData) return;
-    this.shipData = this.shipData.map(ship => { 
-      const check = progressData.find(({id_kapal}) => id_kapal === ship.id_kapal)
-      if(check) return {...ship, ...check}
-      return {...ship};
-    })
+    this.result$ = forkJoin([shipdata$, progressData$])
+      .pipe(
+        map(([shipData, progressData]) => shipData.map(ship => { 
+            const check = progressData.find(({id_kapal}) => id_kapal === ship.id_kapal)
+            if(check) return {...ship, ...check}
+            return {...ship};
+          })
+        )
+      )
   }
 
   handleClickButton(title, data = null) {
@@ -108,7 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.commonFunction.openDialog({
       dialogData : {
         title,
-        data : this.shipData[data]
+        // data : this.shipData[data]
       },
       component : ShipDialogComponent 
     })
@@ -123,8 +109,8 @@ export class HomeComponent implements OnInit, OnDestroy{
     this.commonFunction.openDialog({
       dialogData : {
         title,
-        name : this.shipData[id].nama_kapal,
-        id : this.shipData[id].id_kapal
+        // name : this.shipData[id].nama_kapal,
+        // id : this.shipData[id].id_kapal
       },
       component : DeleteDialogComponent 
     })

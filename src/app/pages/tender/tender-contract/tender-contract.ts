@@ -1,30 +1,31 @@
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
+import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from "@angular/core";
+import { ReplaceData } from "../../../component/common-function/common-function";
 import { YardDialogComponent } from "./yard-dialog/yard-dialog.component";
 import { DeleteDialogComponent } from "../../../component/delete-dialog/delete-dialog.component";
 import { YardDetailsDialog } from "./yard-details-dialog/yard-details-dialog.component";
 import { ReportService } from "../../report/report.service";
 import { HttpEventType } from "@angular/common/http";
-import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
 import { Subject } from "rxjs";
 import { takeUntil } from "rxjs/operators";
 import { TenderService } from "../tender.service";
 import { CheckFile } from "../../../component/common-function/onUploadFile";
+import { PageBaseComponent } from "../../../@base/page-base.component";
 
 @Component({
     selector: 'ngx-tender-contract',
     templateUrl: './tender-contract.html',
 })
 
-export class TenderContract implements OnInit { 
+export class TenderContract extends PageBaseComponent { 
     constructor(
-      private commonFucntion : CommonFunction,
+      injector: Injector,
       private reportService : ReportService,
-      private toastr : ToastrComponent,
       private tenderService : TenderService,
       private replace : ReplaceData,
       private checkFile : CheckFile
-    ) {}
+    ) {
+      super(injector);
+    }
     
     @Input() projectData : any;
     @Input() tenderData : any;
