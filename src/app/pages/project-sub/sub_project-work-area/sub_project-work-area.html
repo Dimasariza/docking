@@ -10,7 +10,7 @@
                 {{ button }}
             </button>
         </div>
-        <input type="file" style="display: none;" #importExcel (change)="importExcelFIle($event)">
+        <input type="file" style="display: none;" #importExcel accept="application/vnd.ms-excel" (change)="importExcelFIle($event)">
     </nb-card-header>
     <nb-card-body>
         <ngx-work-areas 

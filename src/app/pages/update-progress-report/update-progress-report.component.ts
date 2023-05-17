@@ -1,9 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild, ViewChildren } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ReportService } from "../report/report.service";
 import { CommonFunction, ReplaceData } from "../../component/common-function/common-function";
 import { WorkAreasComponent } from "../../component/work-areas/work-areas.component";
 import { ToastrComponent } from "../../component/toastr-component/toastr.component";
+import { CheckFile } from "../../component/common-function/onUploadFile";
+import { HttpEventType } from "@angular/common/http";
 
 @Component({
     selector: 'update-progress-report',
@@ -16,7 +18,7 @@ export class UpdateProgressReport implements OnInit {
         private commonFunction : CommonFunction,
         private router : Router,
         private toastr : ToastrComponent,
-        private replace : ReplaceData
+        private checkFile : CheckFile 
     ) { }
 
     @ViewChild(WorkAreasComponent) viewWorkArea : WorkAreasComponent;
@@ -48,7 +50,7 @@ export class UpdateProgressReport implements OnInit {
         { type : 'text', placeholder : 'Last Update', unsort : true },
         { type : 'text', placeholder : 'Update Progress', unsort : true },
         { type : 'text', placeholder : 'Remarks', unsort : true },
-        // { type : 'text', placeholder : '', unsort : true },
+        { type : 'text', placeholder : '', unsort : true },
     ];
 
     columnType = [ 
@@ -58,11 +60,11 @@ export class UpdateProgressReport implements OnInit {
         { type : 'text', width : 80, prop : 'last_update' }, 
         { type : 'updtProg', width : 100, prop : 'progress' }, 
         { type : 'updtRem', width : 250, prop : 'remarks' }, 
-        // { type : 'updtButt', width : 50, prop : 'edit',
-        //     button : [
-        //         { name : 'Save Progress', icon : 'save-outline', status : 'success' },
-        //     ] 
-        // },
+        { type : 'addFile', width : 50, prop : 'edit',
+            button : [
+                { name : 'Add Attachment', icon : 'file-outline', status : 'success' },
+            ] 
+        },
     ];
 
     generateTableData(workArea) {
@@ -75,8 +77,6 @@ export class UpdateProgressReport implements OnInit {
         }))
         .filter(job => job.items.length == 0)
         .map((job, id) => ({...job, rowIndex : id}));
-        // if(this.workAreaData)
-        // this.viewWorkArea.setWorkArea(this.workAreaData);
     }
 
     handleClickButton(title, data = null) {
@@ -85,14 +85,21 @@ export class UpdateProgressReport implements OnInit {
         this.router.navigateByUrl(`/pages/report/${this.reportSummary.id_proyek}`)
         if(title == 'Add Supplier') console.log('add supplier')
     }
-
+    
     loadingProgress = false;
     saveProgress(title, data) {
         this.loadingProgress = true;
         const { work_area, updated_data } = data;
         updated_data.forEach(rowIndex => {
-            this.calculateProgress(work_area[rowIndex]);
+            const job = work_area[rowIndex]
+            this.reportSummary[this.workType] = this.commonFunction.reconstructDatas({
+                workData : this.reportSummary[this.workType],
+                newData : job,
+                targetIndex : job.id
+            });
+            this.calculateProgress(job);
         });
+        console.log(this.reportSummary[this.workType])
         this.updateWorkArea();
     }
 

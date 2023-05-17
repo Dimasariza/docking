@@ -5,7 +5,9 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
 import htmlToPdfmake from 'html-to-pdfmake';
 import { ToastrComponent } from '../../../component/toastr-component/toastr.component';
 import { CommonFunction } from '../../../component/common-function/common-function';
-import { Observable } from 'rxjs';
+import { environment } from "../../../../environments/environment"
+import { HomeService } from '../../home/home.service';
+
 
 @Injectable({
     providedIn : 'root'
@@ -18,6 +20,7 @@ export class ExportToPDF  {
   constructor(
     private toastr : ToastrComponent,
     private commonFunction : CommonFunction,
+    private homeService : HomeService
   ) { }
 
   @ViewChild('pdfTable') pdfTable: ElementRef;
@@ -193,20 +196,55 @@ export class ExportToPDF  {
       {pageBreak: 'before', text: 'Gantt Chart & S-Curve\n', style: {bold: true, fontSize: 16}, pageOrientation: 'landscape'},
       {image: ganttSVG, width: 770}
     ]
-    
+
+    let allAttachment = [];
+    this.allJobRow.filter(job => job.attachment)
+    .forEach(item => allAttachment.push(...item.attachment));
+    let imageUrl = await Promise.all(allAttachment.map(async item => ({
+      [item.name+','+item.date] : await this.getBase64ImageFromURL( `${environment.apiUrl}/file/show/${item.url}`)
+    })))
+
+    // console.log(allAttachment)
+
+    let images;
+    // imageUrl.forEach(item => {
+    //   console.log(item)
+    // })
+
+    // images = { ...images }
+
+    // console.log(images)
+
     const documentDefinition = { 
       content: [
         await this.tableHeader(),
         html,
-        ...ganttSPage
+        // ...ganttSPage,
+        ...allAttachment.map(item => ({
+          image : item.name+','+item.date
+        })),
+        // {
+        //   image : '1.2'
+        // }
       ],
+      images : { 
+
+      },
       pageBreakBefore: function(currentNode) {
         return currentNode.style && currentNode.style.indexOf('pdf-pagebreak-before') > -1;
       }
     };
-    pdfMake.createPdf(documentDefinition).open();
+    console.log(documentDefinition)
+    // pdfMake.createPdf(documentDefinition).open();
   }
-  
+
+  Attachment(item) {
+    return [ 
+      { text : `${item.name}, ${item.date}}` }, 
+      { image : this.getBase64ImageFromURL(`${environment.apiUrl}/file/show/${item.url}`), fit : [80, 80] },
+    ]
+  }
+
   getBase64ImageFromURL(url) {
     return new Promise((resolve, reject) => {
       var img = new Image();

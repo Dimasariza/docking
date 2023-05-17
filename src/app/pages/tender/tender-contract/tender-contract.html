@@ -5,7 +5,7 @@
       <h5>Contract</h5>
       <button nbButton outline size="small" status="primary" 
         style="background-color: transparent;" 
-        (click)="handleClickButton('Add Yard')"
+        (click)="addYardDialog()"
       >
         Add Yard
       </button>
@@ -21,19 +21,19 @@
             </nb-list-item>
             <nb-list-item *ngFor="let project of projectData; let i = index;" style="max-height: .7rem;">
               <span class="w-100 text-truncate" 
-                (mouseover)="mouseHover('projectTitle', i, true)" 
-                (mouseout)="mouseHover('projectTitle',i, false)" 
+                (mouseover)="project.hover = true" 
+                (mouseout)="project.hover = false" 
                 [ngClass]="project?.hover ? 'text-primary' : ''" 
-                (click)="handleClickButton('Generate Table Data', project)"
+                (click)="this.sendDataLoadDetials.emit(project)"
                 style="cursor: pointer;">
                 {{ project.projectTitle }}
               </span>
               <button nbButton size="tiny" 
-              status="primary" outline class="m-1"
-              (click)="handleClickButton('Select Project', project)"
-              nbPopover="Select Project" 
-              nbPopoverTrigger="hint" 
-              nbPopoverPlacement="top"
+                status="primary" outline class="m-1"
+                (click)="this.addNewContract.project = project"
+                nbPopover="Select Project" 
+                nbPopoverTrigger="hint" 
+                nbPopoverPlacement="top"
               >
                 <nb-icon icon="log-in-outline"></nb-icon>
               </button>
@@ -49,10 +49,10 @@
             </nb-list-item>
             <nb-list-item *ngFor="let tender of tenderData; let i = index;" style="max-height: .7rem;">
               <span class="w-100 text-truncate" 
-                (mouseover)="mouseHover('nama_galangan', i, true)" 
-                (mouseout)="mouseHover('nama_galangan',i, false)" 
+                (mouseover)="tender.hover = true" 
+                (mouseout)="tender.hover = false" 
                 [ngClass]="tender?.hover ? 'text-primary' : ''" 
-                (click)="handleClickButton('Show Yard Details', tender)"
+                (click)="this.showYardDetails('Show Yard Details', tender)"
                 style="cursor: pointer;"
               >
                 {{ tender.nama_galangan }}
@@ -65,7 +65,13 @@
                 ]"
                 nbButton size="tiny" 
                 [status]="button.status" outline class="m-1"
-                (click)="handleClickButton(button.name, tender)"
+                (click)="
+                  button.name == 'Update Yard'
+                  ? updateYardDialog(tender)
+                  : button.name == 'Delete Yard'
+                  ? deleteYardDialog(tender)
+                  : addNewContract.yard = tender
+                "
                 [nbPopover]="button.name" 
                 nbPopoverTrigger="hint" 
                 nbPopoverPlacement="top"
@@ -92,20 +98,20 @@
                 <button nbButton size="tiny" 
                   *ngIf="addNewContract.project && addNewContract.yard"
                   status="primary" outline class="m-1"
-                  (click)="handleClickButton('Select New Contract')"
+                  (click)="selectNewContract()"
                 >
                   <nb-icon icon="plus-outline"></nb-icon>
                 </button>
                 <button nbButton size="tiny" 
                   status="danger" outline class="m-1"
-                  (click)="handleClickButton('Cancelled Select Yard')"
+                  (click)="this.addNewContract = {}"
                 >
                   <nb-icon icon="close-outline"></nb-icon>
                 </button>
                 <button nbButton size="tiny" 
                   *ngIf="addNewContract.project && addNewContract.yard"
                   status="success" class="m-1"
-                  (click)="handleClickButton('Add Contract Document' ,addNewContract)"
+                  (click)="uploadContract.click()"
                 >
                   <nb-icon icon="file-add-outline"></nb-icon>
                 </button>
@@ -127,19 +133,19 @@
             </nb-list-item>
             <nb-list-item *ngFor="let summary of projectSummary; let i = index;" style="max-height: .7rem;">
               <span class="text-truncate col-5" 
-                (mouseover)="mouseHover('activeContract', i, true)" 
-                (mouseout)="mouseHover('activeContract',i, false)" 
+                (mouseover)="summary.hover = true" 
+                (mouseout)="summary.hover = false" 
                 [ngClass]="summary?.hover ? 'text-primary' : ''" 
-                (click)="handleClickButton('Generate Table Data', summary)"
+                (click)="this.sendDataLoadDetials.emit(summary)"
                 style="cursor: pointer;"
               >
                 {{ summary.projectTitle }}
               </span>
               <span class="text-truncate col-5" 
-                (mouseover)="mouseHover('activeContract', i, true)" 
-                (mouseout)="mouseHover('activeContract',i, false)" 
+                (mouseover)="summary.hover = true" 
+                (mouseout)="summary.hover = false" 
                 [ngClass]="summary?.hover ? 'text-primary' : ''"  
-                (click)="handleClickButton('Show Yard Details', summary)"
+                (click)="showYardDetails(summary)"
                 style="cursor: pointer;"
               >
                 {{ summary.nama_galangan }}
@@ -153,7 +159,11 @@
                   ]"
                   nbButton size="tiny" 
                   [status]="button.status" outline class="m-1"
-                  (click)="handleClickButton(button.name, summary)"
+                  (click)="
+                    button.name == 'Show Contract'
+                    ? showContract(summary)
+                    : unselectYard(summary)
+                  "
                   [nbPopover]="button.name" 
                   nbPopoverTrigger="hint" 
                   nbPopoverPlacement="top"

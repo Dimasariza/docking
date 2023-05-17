@@ -1,5 +1,4 @@
 import { Component, ElementRef, EventEmitter, Injector, Input, Output, ViewChild } from "@angular/core";
-import { ReplaceData } from "../../../component/common-function/common-function";
 import { YardDialogComponent } from "./yard-dialog/yard-dialog.component";
 import { DeleteDialogComponent } from "../../../component/delete-dialog/delete-dialog.component";
 import { YardDetailsDialog } from "./yard-details-dialog/yard-details-dialog.component";
@@ -21,7 +20,6 @@ export class TenderContract extends PageBaseComponent {
       injector: Injector,
       private reportService : ReportService,
       private tenderService : TenderService,
-      private replace : ReplaceData,
       private checkFile : CheckFile
     ) {
       super(injector);
@@ -35,62 +33,14 @@ export class TenderContract extends PageBaseComponent {
     @ViewChild('uploadContract', { static: false }) uploadContract : ElementRef;
 
     addNewContract :any = {};
-    activeYard : any = {};
     
     ngOnInit(): void {
       this.addNewContract = {};
+      if(this.user.role == 'shipyard') this.sendDataLoadDetials.emit(this.projectSummary[0])
     }
 
-    mouseHover(title, index = 0, conds) {
-      if(title == 'projectTitle') this.projectData[index].hover = conds;
-      if(title == 'nama_galangan') this.tenderData[index].hover = conds;
-      if(title == 'activeContract') this.projectSummary[index].hover = conds;
-    }
-    
-    handleClickButton(title, data = null) {
-      this.activeYard = data?.yard;
-      if(title == 'Show Contract') 
-      return this.showContract(data);
-
-      if(title == 'Generate Table Data') 
-      return this.sendDataLoadDetials.emit(data);
-
-      if(title == 'Show Yard Details') 
-      return this.showYardDetails(title, data);
-      
-      const {role} =  JSON.parse(localStorage.getItem('user'));
-      let warnmsg = "You have no access to do this request."
-      if(role == 'shipyard') return this.toastr.onWarning({warnmsg}) 
-
-      if(title == 'Add Yard') 
-      this.addYardDialog(title);
-      
-      if(title == 'Update Yard') 
-      this.upudateYardDialog(title, data);
-      
-      if(title == 'Delete Yard') 
-      this.deleteYardDialog(title, data);
-
-      if(title == 'Select New Contract') 
-      this.selectNewContract(title);
-      
-      if(title == 'Unselect Yard') 
-      this.unselectYard(title, data);
-
-      if(title == 'Select Project') 
-      this.addNewContract.project = data;
-
-      if(title == 'Select Yard') 
-      this.addNewContract.yard = data;
-      
-      if(title == 'Cancelled Select Yard') 
-      this.addNewContract = {};
-
-      if(title == 'Add Contract Document') 
-      this.uploadContract.nativeElement.click()
-    }
-
-    addYardDialog(title) {
+    addYardDialog() {
+      const title = 'Add Yard';
       this.commonFucntion.openDialog({
         dialogData : { title },
         component : YardDialogComponent 
@@ -100,11 +50,11 @@ export class TenderContract extends PageBaseComponent {
       .subscribe(newData => this.onUploadData(title, newData));
     }
 
-    upudateYardDialog(title, data) {
+    updateYardDialog(data) {
+      const title = 'Update Yard';
       this.commonFucntion.openDialog({
         dialogData : {
-          title,
-          data,
+          title, data,
         },
         component : YardDialogComponent 
       })
@@ -113,7 +63,8 @@ export class TenderContract extends PageBaseComponent {
       .subscribe(newData => this.onUploadData(title, newData));
     }
 
-    deleteYardDialog(title, data) {
+    deleteYardDialog(data) {
+      const title = 'Delete Yard'
       this.commonFucntion.openDialog({
         dialogData : {
           title,
@@ -127,7 +78,7 @@ export class TenderContract extends PageBaseComponent {
       .subscribe(newData => this.onUploadData(title, newData));
     }
 
-    showYardDetails(title, data) {
+    showYardDetails(data) {
       this.commonFucntion.openDialog({
         dialogData : {
           title : data.nama_galangan,
@@ -140,7 +91,7 @@ export class TenderContract extends PageBaseComponent {
       .subscribe(() => null);
     }
 
-    selectNewContract(title) {
+    selectNewContract() {
       const {project : {id_proyek, work_area}, yard : {nama_galangan, id_tender}} = this.addNewContract;
       if(!this.commonFucntion.arrayNotEmpty(work_area))
       return this.toastr.onWarning({
@@ -164,7 +115,6 @@ export class TenderContract extends PageBaseComponent {
     }
 
     updateMatchingWorkArea({work_area, id_tender, id_proyek}) {
-
       this.tenderService.updateContractWorkArea({work_area}, id_tender)
       .subscribe(
         () => this.toastr.onSuccess('Your work area has been updated.'),
@@ -173,7 +123,8 @@ export class TenderContract extends PageBaseComponent {
       )
     }
 
-    unselectYard(title, data) {
+    unselectYard(data) {
+      const title = 'Unselect Yard'
       this.commonFucntion.openDialog({
         dialogData : {
           title : 'Unselect Yard',
@@ -184,7 +135,23 @@ export class TenderContract extends PageBaseComponent {
       })  
       .onClose
       .pipe(takeUntil(this.destroy$))
-      .subscribe(newData => newData != null ? this.onUploadData(title, data) : null );
+      .subscribe(newData => newData != null 
+        ? this.onUploadData(title, data) 
+        : null );
+    }
+
+    showContract(data) {
+      const {yard : {id_attachment}} = data || {};
+      if(!id_attachment) {
+        this.uploadContract.nativeElement.click()
+        return this.toastr.onInfo({infomsg :'Your document not found! Please Add your document.'})
+      }
+      this.reportService.getAttachment(id_attachment)
+      .subscribe(data => {
+        const file = new Blob([data], { type: 'application/pdf' });            
+        const fileURL = URL.createObjectURL(file);
+        window.open(fileURL);
+      })
     }
 
     onUploadData(title, data) {
@@ -240,20 +207,6 @@ export class TenderContract extends PageBaseComponent {
       );
     }
 
-    showContract(data) {
-      const {yard : {id_attachment}} = data || {};
-      if(!id_attachment) {
-        this.uploadContract.nativeElement.click()
-        return this.toastr.onInfo({infomsg :'Your document not found! Please Add your document.'})
-      }
-      this.reportService.getAttachment(id_attachment)
-      .subscribe(data => {
-        const file = new Blob([data], { type: 'application/pdf' });            
-        const fileURL = URL.createObjectURL(file);
-        window.open(fileURL);
-      })
-    }
-
     onFileChange(res) {
       if(!res) return;
       const formData = this.checkFile.extension(res, 'read file');
@@ -268,7 +221,7 @@ export class TenderContract extends PageBaseComponent {
           this.toastr.onSuccess('Your file has been uploaded.')
           const result : any = res;
           const {id_attachment} = result.body.data;
-          const data = {...this.activeYard, id_attachment}
+          const data = {...this.addNewContract.yard, id_attachment}
           this.onUploadData('Update Yard', data)
         }
       })

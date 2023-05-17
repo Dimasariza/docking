@@ -63,8 +63,6 @@ export class ReportComponent implements OnInit, OnDestroy  {
   }
 
   generateSummaryData (data) {
-    console.log(data);
-    
     const { kapal : { nama_kapal }, tahun, status } = data?.proyek;
     const projectTitle = `${nama_kapal} -DD- ${tahun} ${status.toUpperCase()}`
     this.summaryData = { ...data, projectTitle }

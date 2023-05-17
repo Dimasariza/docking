@@ -132,6 +132,7 @@ export class CommonFunction {
         'created_at',
         'last_update',
         'updated_by',
+        'attachment'
     ].forEach(item => acceptData[item] = data[item] ? data[item] : "")
     return acceptData;
   } 

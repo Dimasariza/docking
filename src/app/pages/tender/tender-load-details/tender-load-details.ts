@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Output, ViewChild } from "@angular/core";
 import { CommonFunction, ReplaceData } from "../../../component/common-function/common-function";
 import { WorkAreasComponent } from "../../../component/work-areas/work-areas.component";
 import { WorkAreasDialogComponent } from "../../../component/work-areas/work-areas-dialog/work-areas-dialog.component";
@@ -6,7 +6,6 @@ import { takeUntil } from "rxjs/operators";
 import { Subject } from "rxjs";
 import { ReportService } from "../../report/report.service";
 import { ToastrComponent } from "../../../component/toastr-component/toastr.component";
-import { HomeService } from "../../home/home.service";
 import { TenderService } from "../tender.service";
 
 @Component({

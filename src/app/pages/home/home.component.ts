@@ -21,7 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy{
     private toastr : ToastrComponent,
   ){}
     
-  private destroy$: Subject<void> = new Subject<void>();
+  destroy$: Subject<void> = new Subject<void>();
   result$: Observable<any>
 
   ngOnInit() {
@@ -36,42 +36,35 @@ export class HomeComponent implements OnInit, OnDestroy{
     const progressData$ = this.reportService.getProjectSummary({})
     .pipe(
       map(({data}: any) => data.map(summary => {
-        let {proyek : {id_kapal, tahun, phase, kapal : {nama_kapal}}, 
-        work_area = [], variant_work = [], id_proyek} = summary;
-        const head = `${nama_kapal} - DD - ${tahun}`;
-        if(!this.commonFunction.arrayNotEmpty(work_area)) work_area = [];
-        if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];
-        const workProgress = [...work_area, ...variant_work];
-        let progress : any = 0.0;
+        const {proyek : { id_kapal, tahun, phase, kapal : { nama_kapal } }, 
+        work_area, variant_work, id_proyek} = summary;
+        const workProgress = [...work_area.filter(w => w =! null) ?? [], ...variant_work.filter(w => w =! null) ?? []];
+        let progress : any = 0;
         for(let job of workProgress) progress += job.progress.at(-1).progress;
         if(progress != 0) progress = progress / workProgress?.length;
-        return {id_kapal, head, phase : phase.split('_').join(" "), progress : parseFloat(progress).toFixed(2), id_proyek};
+        return {
+          id_kapal, 
+          id_proyek,
+          projectTitle : `${nama_kapal} - DD - ${tahun}`, 
+          phase : phase.split('_').join(" "), 
+          progress : parseFloat(progress).toFixed(2), 
+        };
       }))
     )
     
     this.result$ = forkJoin([shipdata$, progressData$])
       .pipe(
         map(([shipData, progressData]) => shipData.map(ship => { 
-            const check = progressData.find(({id_kapal}) => id_kapal === ship.id_kapal)
-            if(check) return {...ship, ...check}
+            const summary = progressData.find(({id_kapal}) => id_kapal === ship.id_kapal)
+            if(summary) return {...ship, ...summary}
             return {...ship};
           })
         )
       )
   }
 
-  handleClickButton(title, data = null) {
-    const {role} =  JSON.parse(localStorage.getItem('user'));
-    let warnmsg = "You have no access to do this request."
-    if(role == 'shipyard') return this.toastr.onWarning({warnmsg}) 
-    
-    if(title == 'Add Ship') this.addShipDialog(title)
-    if(title == 'Update Ship') this.updateShipDialog(title, data)
-    if(title == 'Delete Ship') this.deleteShipDialog(title, data)
-    if(title == 'Add To Assets') this.addToAssets(data)
-  }
-
-  addShipDialog(title) {
+  addShipDialog() {
+    const title = 'Add Ship'
     this.commonFunction.openDialog({
       dialogData : { title },
       component : ShipDialogComponent 
@@ -83,18 +76,12 @@ export class HomeComponent implements OnInit, OnDestroy{
       : null);
   }
 
-  addToAssets(data) {
-    data.status == 0
-    ? data.status = 1
-    : data.status = 0
-    this.onUploadData('Add To Assets', data);
-  }
-
-  updateShipDialog(title, data) {
+  updateShipDialog(ship) {
+    const title = 'Update Ship'
     this.commonFunction.openDialog({
       dialogData : {
         title,
-        // data : this.shipData[data]
+        data : ship
       },
       component : ShipDialogComponent 
     })
@@ -105,12 +92,13 @@ export class HomeComponent implements OnInit, OnDestroy{
       : null);
   }
 
-  deleteShipDialog(title, id) {
+  deleteShipDialog(ship) {
+    const title = 'Delete Ship'
     this.commonFunction.openDialog({
       dialogData : {
         title,
-        // name : this.shipData[id].nama_kapal,
-        // id : this.shipData[id].id_kapal
+        name : ship.nama_kapal,
+        id : ship.id_kapal
       },
       component : DeleteDialogComponent 
     })
@@ -122,7 +110,6 @@ export class HomeComponent implements OnInit, OnDestroy{
   }
 
   onUploadData(title, data) {
-    if(!data) return;
     let subscribe;
     let successMsg;
     if(title == 'Add Ship') {
@@ -133,11 +120,6 @@ export class HomeComponent implements OnInit, OnDestroy{
     if(title == 'Update Ship') {
       subscribe = this.homeService.updateShip(data);
       successMsg = 'Your Ship has been updated.'
-    }
-
-    if(title == 'Add To Assets') {
-      subscribe = this.homeService.updateShip(data);
-      successMsg = 'Your Ship has been added to assets.'
     }
 
     if(title == 'Delete Ship') {

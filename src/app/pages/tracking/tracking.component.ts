@@ -68,8 +68,6 @@ export class TrackingComponent implements OnInit {
   }
 
   showGantChart(data) {
-    console.log(data);
-    
     let { reportWorkArea = [], variant_work = [] } = data;
     if(!this.commonFunction.arrayNotEmpty(reportWorkArea)) reportWorkArea = [];
     if(!this.commonFunction.arrayNotEmpty(variant_work)) variant_work = [];

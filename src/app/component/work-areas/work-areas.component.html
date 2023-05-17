@@ -146,8 +146,14 @@
             *ngIf="columnType[index].type == 'updtRem'"
           >
           </textarea>
+
+          <input type="file" style="display: none;" 
+              #addAttachment 
+              (change)="onFileChange($event, row.data)"
+              accept="image/*"
+          >
           
-          <!-- <div *ngIf="columnType[index].type == 'updtButt'">
+          <div *ngIf="columnType[index].type == 'addFile'">
             <button 
               *ngFor="let button of columnType[index].button"
               nbButton 
@@ -158,12 +164,11 @@
               [nbPopover]="button.name" 
               nbPopoverTrigger="hint" 
               nbPopoverPlacement="top"
-              [disabled]="!(progressForm?.id == row.data.id && progressForm?.newProgress)"
-              (click)="handleClickButton(button.name, row.data)"
+              (click)="addAttachment.click(row.data)"
             >
               <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
             </button>
-          </div> -->
+          </div>
 
 
           <!-- Click text -->

@@ -11,6 +11,7 @@ export class CheckFile {
 
     public readExtension = ['.doc', '.docx', '.pdf', '.txt', '.dotx'];
     public numericExtension = ['.xlsx', '.xlsm', '.xls', '.xltx', '.xltm'];
+    public imageExtension = ['.png', '.jpg', '.jpeg'];
 
     extension(res, docType){
         if(!res) return;
@@ -21,6 +22,7 @@ export class CheckFile {
         let accepExtension; 
         if(docType == 'read file') accepExtension = this.readExtension;
         if(docType == 'numeric file') accepExtension = this.numericExtension;
+        if(docType == 'image file') accepExtension = this.imageExtension;
 
         if(size > 2500000) {
             this.toastr.onInfo({infomsg :'Your file size must be less then 2 Mb.'});

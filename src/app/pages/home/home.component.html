@@ -1,12 +1,3 @@
-<!-- <nb-alert *ngIf="handleEvent?.show" 
-  [status]="handleEvent?.status" 
-  [nbSpinner]="handleEvent?.spinner" 
-  nbSpinnerStatus="basic"
-  closable (close)="onDone()"
->
-  {{handleEvent.text}}
-</nb-alert> -->
-
 <div class="row position-relative" style="min-height: 100vh;">
   <ng-container *ngIf="(result$ | async) as shipData; else loading">
   <nb-flip-card 
@@ -31,7 +22,7 @@
             *ngIf="['admin', 'superintendent'] | role"
             nbButton 
             [icon]="item?.status === 1 ? 'heart' : 'heart-outline'"
-            (click)="handleClickButton('Add To Assets', item)"
+            (click)="item.status = item.status == 0 ? 1 : 0; onUploadData('Update Ship', item );"
             nbPopover="Assets" 
             nbPopoverTrigger="hover" 
             nbPopoverPlacement="bottom" 
@@ -48,7 +39,6 @@
             src="{{item.imageURL}}" 
             crossorigin="anonymous" 
             alt="{{item.nama_kapal}}"
-            (click)="handleClickButton('Update Ship', id)"
           >
         </div>
         <div class="d-flex align-items-center"> 
@@ -61,7 +51,7 @@
                 nbButton 
                 class="p-1" 
                 icon="edit-outline" 
-                (click)="handleClickButton('Update Ship', id)"  
+                (click)="updateShipDialog(item)"
                 nbPopover="Update Ship" 
                 nbPopoverTrigger="hover" 
                 nbPopoverPlacement="bottom" 
@@ -75,7 +65,7 @@
                 nbButton 
                 class="p-1" 
                 icon="trash-2-outline" 
-                (click)="handleClickButton('Delete Ship', id)" 
+                (click)="deleteShipDialog(item)" 
                 nbPopover="Delete Ship" 
                 nbPopoverTrigger="hover" 
                 nbPopoverPlacement="bottom" 
@@ -103,15 +93,16 @@
         </div>
         <div class="p-5">
           <h6>{{ item.nama_kapal }}</h6>
-          <div class="back-card--desc mt-5" *ngIf="item?.head">
+          <div class="back-card--desc mt-5" *ngIf="item?.projectTitle">
             <h2>{{ item?.progress }} %</h2>
             <nb-progress-bar [value]=" item?.progress " status="info" [displayValue]="true"></nb-progress-bar>
             <span class="font-weight-bolder text-capitalize d-flex my-1">Status : {{ item?.phase || '' }}</span> <br>
             <span class="font-weight-bolder d-flex my-2">
               <a class="text-decoration-none " 
-              [routerLink]="['/pages/report', item.id_proyek]">
-              {{ item?.head || '' }}
-            </a>
+              [routerLink]="['/pages/report', item.id_proyek]"
+              >
+                {{ item?.projectTitle || '' }}
+              </a>
             </span>
           </div>
         </div>
@@ -122,7 +113,7 @@
   <div class="col-xl-4 col-lg-4 col-md-6">
     <nb-card class="h-75" *ngIf="['admin', 'superintendent'] | role"
     style="cursor: pointer;" 
-    (click)="handleClickButton('Add Ship')"
+    (click)="addShipDialog()"
     >
       <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
         <span *ngIf="shipData.lenght <= 0" class="font-weight-bold text-center">Data Not Available <br> Please Add Ship </span>
