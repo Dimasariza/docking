@@ -203,8 +203,7 @@ export class ExportToPDF  {
     let imageUrl = await Promise.all(allAttachment.map(async item => ({
       [item.name+','+item.date] : await this.getBase64ImageFromURL( `${environment.apiUrl}/file/show/${item.url}`)
     })))
-
-    let images = imageUrl.reduce((p, c) => ({...p, ...c}), {});
+    const images = imageUrl.reduce((p, c) => ({...p, ...c}), {});
 
     const documentDefinition = { 
       content: [
@@ -213,7 +212,7 @@ export class ExportToPDF  {
         // ...ganttSPage,
         {pageBreak: 'before', text: 'Attachment\n', style: {bold: true, fontSize: 16, color : '#5588EE'}, pageOrientation: 'landscape'},
         ...allAttachment.map(item => [
-            { image : item.name+','+item.date , width : 200},
+            { image : item.name+','+item.date , width : 300},
             { text : `${item.name}, ${item.date}`}, 
         ]),
       ],
