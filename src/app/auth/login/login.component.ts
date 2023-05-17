@@ -1,16 +1,12 @@
-
 import { Component } from '@angular/core';
 import { NbAuthResult, NbLoginComponent,} from '@nebular/auth';
-
 
 @Component({
   selector: 'ngx-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
 })
 export class NgxLoginComponent extends NbLoginComponent {
   showPassword = true;
-
   getInputType() {
     if (this.showPassword) {
       return 'text';
@@ -32,15 +28,16 @@ export class NgxLoginComponent extends NbLoginComponent {
       remember: this.rememberMe
     }).subscribe((result: NbAuthResult) => {
       this.submitted = false;
-
+      
       if (result.isSuccess()) {
         this.messages = result.getMessages();
+        localStorage.setItem('user', JSON.stringify(result.getResponse().body.data))
       } else {
         this.errors = result.getErrors();
+        localStorage.setItem('user', null)
       }
 
       const redirect = result.getRedirect();
-      
       if (redirect) {
           this.router.navigateByUrl(redirect);
       }

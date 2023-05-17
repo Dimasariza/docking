@@ -1,0 +1,11 @@
+<nb-card>
+    <nb-card-body *ngIf="responsible">
+        <ngx-list-table-component 
+            [columns]="columns" 
+            [rows]="responsible"
+        >
+        </ngx-list-table-component>
+    </nb-card-body>
+</nb-card>
+
+

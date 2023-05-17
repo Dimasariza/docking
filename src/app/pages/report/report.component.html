@@ -1,0 +1,100 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between w-100">
+        <h5 class="text-uppercase">
+            {{ summaryData?.projectTitle || 'Project Title' }}
+            <button nbButton status="primary" class="mx-4" outline size="small" 
+            (click)="handleClickButton('Project Status')">
+                <nb-icon icon="info-outline" pack="eva"></nb-icon>
+            </button>
+        </h5>
+        <button nbButton status="primary" class="mx-2" outline size="small"
+            (click)="handleClickButton('Export To PDF')"
+            >
+            <nb-icon icon="file-outline" pack="eva"></nb-icon>
+            Export To PDF
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <span class="font-weight-bolder d-flex mb-2">Description</span>
+        <p>{{ summaryData?.deskripsi || 'No Description' }}</p>
+    </nb-card-body>
+</nb-card>
+
+<nb-card>
+      <nb-tabset fullWidth *ngIf="summaryData">
+        <nb-tab tabTitle="PIC">
+            <ngx-report-pic 
+                [responsible]="responsible"
+            >
+            </ngx-report-pic>
+        </nb-tab>
+        <nb-tab tabTitle="Supplier">
+            <ngx-report-suplier 
+                [suplierData]="suplierData"
+                (refresh)="ngOnInit()" 
+            >
+            </ngx-report-suplier>
+        </nb-tab>
+        <nb-tab tabTitle="Work Progress">
+            <ngx-report-work-progress
+                [suplierData]="suplierData"
+                [summaryData]="summaryData"
+                (refresh)="ngOnInit()" 
+                (sendNotification)="sendEmailNotification($event.work_area, $event.label)"
+            >
+            </ngx-report-work-progress>
+        </nb-tab>
+        <nb-tab tabTitle="Variant Work">
+            <ngx-report-variant-work
+                [suplierData]="suplierData"
+                [summaryData]="summaryData"
+                (refresh)="ngOnInit()" 
+                (sendNotification)="sendEmailNotification($event.work_area, $event.label)"
+            >
+            </ngx-report-variant-work>
+        </nb-tab>
+        <nb-tab 
+            tabTitle="BAST"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
+            <ngx-letter-menu
+                typeMenu="bast"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                (refresh)="ngOnInit()" 
+            >
+            </ngx-letter-menu>
+        </nb-tab>
+        <nb-tab 
+            tabTitle="Surat Teguran"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
+            <ngx-letter-menu
+                typeMenu="surat_teguran"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                (refresh)="ngOnInit()" 
+            >
+            </ngx-letter-menu>
+        </nb-tab>
+        <nb-tab 
+            tabTitle="Close Out Report (COR)"
+            *ngIf="currentUser.role != 'shipyard'"
+        >
+            <ngx-letter-menu
+                typeMenu="close_out_report"
+                [summaryData]="summaryData" 
+                [responsible]="responsible" 
+                (refresh)="ngOnInit()" 
+            >
+            </ngx-letter-menu>
+        </nb-tab>
+      </nb-tabset>
+</nb-card>
+
+<export-to-pdf 
+    *ngIf="summaryData"
+    tableType="projectPDF"
+>
+</export-to-pdf>
+<f-gantt #gantt viewMode="Week" style="position: absolute; z-index: -100;" [tasks]="ganttTasks" id="exportGanttChart" ></f-gantt>

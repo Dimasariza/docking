@@ -1,0 +1,198 @@
+<div class="mx-5 d-flex justify-content-between">
+  <div>
+    <label class="search-label" for="search">Search : </label>
+    <input nbInput autocomplete="off" fieldSize="small" [nbFilterInput]="dataSource" id="search" class="search-input m-4">
+  </div>
+  <div class="align-self-center"  *ngIf="tableDetails.button">
+    <button nbButton *ngFor="let button of tableDetails.button" 
+    size="small" status="primary" outline [disabled]="button?.disabled"
+    (click)="handleClickButton(button.name, button.data)"
+    > 
+    {{ button.name }} 
+    </button>
+  </div>
+</div>
+
+<div style="overflow: auto; width: 100%;">
+  <div [style]="tableDetails.style" class="m-2">
+    <table [nbTreeGrid]="dataSource" [nbSort]="dataSource" (sort)="updateSort($event)">
+      <tr nbTreeGridHeaderRow *nbTreeGridHeaderRowDef="allColumns"></tr>
+      <tr nbTreeGridRow *nbTreeGridRowDef="let row; columns: allColumns" [clickToToggle]="false"></tr>
+
+      <ng-container *ngFor="let column of allColumns; let index = index;" 
+                    [nbTreeGridColumnDef]="column" 
+                    [showOn]="getShowOn(index)">
+        <th nbTreeGridHeaderCell [nbSortHeader]="getSortDirection(column)" [style.width.px]="columnType[index].width" 
+        [disabled] = " tableHead[index].unsort " *nbTreeGridHeaderCellDef>
+          <!-- Text only -->
+          <span *ngIf=" tableHead[index].type === 'text' ">{{tableHead[index].placeholder}}</span>
+
+          <!-- Drop Down -->
+          <div  *ngIf=" tableHead[index].type === 'drop-down' " class="w-100">
+            <span class="mr-3 text-center w-100">{{ tableHead[index].placeholder }}</span>
+            <nb-select [style.width.px]="columnType[index].width" [selected]="tableHead[index].option[0]" [compareWith]="compareById" size="small" >
+              <nb-option *ngFor="let item of tableHead[index].option" [value]="item" 
+              (click)="handleClickButton(tableHead[index].title, {value : item, column})"
+              >
+                {{item}}
+              </nb-option>
+            </nb-select>
+          </div>
+        </th>
+
+        <td nbTreeGridCell *nbTreeGridCellDef="let row">
+          <!-- Drop down Type -->
+          <nb-select [selected]="columnType[index].option[0]" [compareWith]="compareById" placeholder="Drop Down"
+            *ngIf=" columnType[index].type === 'drown' " size="small">
+            <nb-option 
+            *ngFor="let item of columnType[index].option" 
+            [value]="item"
+            (click)="handleClickButton('Add Supplier', { item, data : row.data})"
+            >{{ item?.[columnType[index].prop] }}
+          </nb-option>
+          </nb-select>
+
+          <!-- Number Type -->
+          <div *ngIf=" columnType[index].type == 'numb' ">
+            <nb-tree-grid-row-toggle [expanded]="row.expanded" *ngIf="row.data.kind == 'upper'"></nb-tree-grid-row-toggle>
+            <nb-icon icon="minus-circle" pack="eva" style="font-size: '0.5rem';" *ngIf="row.data.kind == 'end'"></nb-icon>  
+            {{row.data[column]}}
+          </div>
+          
+          <!-- Icon type -->
+          <div
+            *ngIf="columnType[index].type == 'icon'"
+          >
+            <nb-icon *ngFor="let icon of columnType[index].icon"
+              [icon]="icon.name" 
+              [ngStyle]="{'color' : row.data[icon.color]}"
+              [nbPopover]="row.data[icon.popOver] || 'undefined'" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              pack="eva" 
+            ></nb-icon> 
+          </div>
+
+          <!-- Button type -->
+          <div
+            *ngIf="columnType[index].type == 'butt'"
+            class="w-100 d-flex justify-content-center bg-black"
+          >
+            <button 
+              *ngFor="let button of columnType[index].button"
+              nbButton 
+              class="mx-1"
+              [size]="button.size || 'small'" 
+              [status]="button.status"
+              outline 
+              [nbPopover]="button.name" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              [disabled]="row.data[button.disabled]"
+              (click)="handleClickButton(button.name, row.data)"
+            >
+              <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
+            </button>
+          </div>
+
+          <!-- button approval -->
+          <div
+            *ngIf="columnType[index].type == 'approval'"
+            class="w-100 d-flex justify-content-center bg-black"
+          >
+            <nb-checkbox
+              *ngFor="let button of columnType[index].button"
+              (checkedChange)="handleClickButton(button.name, row.data)"
+              [checked]="row.data?.[button.disabled]"
+              [disabled]="row.data[button.disabled]"
+              [nbPopover]="button.name" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              class="mx-1"
+            ></nb-checkbox>
+          </div>
+
+          <!-- Text Only -->
+          <span *ngIf="columnType[index].type == 'text'">{{row.data[column] || '-'}}</span>
+
+          <!-- Progress -->
+          <div *ngIf="columnType[index].type == 'updtProg'">
+            <input 
+              nbInput 
+              class="w-75"
+              name="newProgress"
+              fieldSize="small" 
+              type="number"
+              min="0"
+              max="100"
+              ngModel
+              #progress="ngModel"
+              (ngModelChange)="formValue('newProgress', progress.value, row.data)"
+            >
+
+            <div *ngIf=" progress.value < 0 " class="danger text-danger">
+                Minimum value of progress is 0.
+            </div>
+            <div *ngIf=" progress.value > 100 " class="danger text-danger">
+                Maximum value of progress is 100.
+            </div>
+          </div>
+
+          <textarea 
+            name="remarksProgress" id="" cols="40" rows="2" nbInput
+            ngModel
+            #Remarks="ngModel"
+            (ngModelChange)="formValue('remarksProgress', Remarks.value, row.data)"
+            *ngIf="columnType[index].type == 'updtRem'"
+          >
+          </textarea>
+          
+          <!-- <div *ngIf="columnType[index].type == 'updtButt'">
+            <button 
+              *ngFor="let button of columnType[index].button"
+              nbButton 
+              class="mx-1"
+              [size]="button.size || 'small'" 
+              [status]="button.status"
+              outline 
+              [nbPopover]="button.name" 
+              nbPopoverTrigger="hint" 
+              nbPopoverPlacement="top"
+              [disabled]="!(progressForm?.id == row.data.id && progressForm?.newProgress)"
+              (click)="handleClickButton(button.name, row.data)"
+            >
+              <nb-icon [icon]="button.icon" [status]="button.status"></nb-icon>
+            </button>
+          </div> -->
+
+
+          <!-- Click text -->
+          <span *ngIf="columnType[index].type == 'navto'" 
+            class="text-primary" style="cursor: pointer;"
+            (click)="handleClickButton(columnType[index].title, row.data)"
+          >
+            {{row.data[column] || '-'}}
+          </span>
+
+          <!-- Responsible -->
+          <span *ngIf="columnType[index].type == 'resp'">{{row.data[column]?.nama_lengkap || '-'}}</span>
+
+          <!-- Date -->
+          <span *ngIf="columnType[index].type == 'date'">
+            <span *ngIf="row.data[column]">{{row.data[column] | date: 'dd-MM-YYYY'}}</span>
+            <span *ngIf="!row.data[column]"> - </span>
+          </span>
+
+          <!-- Currency -->
+          <span *ngIf="columnType[index].type == 'curr'">
+            {{ tableDetails?.mata_uang }}
+            <span *ngIf="row.data[column]" >{{ row.data[column] | currency : tableDetails?.currency  }}</span>
+            <span *ngIf="!row.data[column]"> - </span>
+          </span>
+        </td>
+      </ng-container>
+    </table>
+  </div>
+</div>
+
+  

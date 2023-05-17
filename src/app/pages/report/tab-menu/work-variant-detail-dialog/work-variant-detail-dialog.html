@@ -1,0 +1,17 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <strong>{{ dialogData?.title }}</strong>
+            <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+                <nb-icon icon="close-outline"></nb-icon>
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body style="min-width: 500px;">
+        <div *ngFor="let detail of details" class="row">
+            <span class="col-5 text-capitalize">{{ detail.name }}</span>
+            <span class="col"> : </span>
+            <span class="col-5 text-capitalize">{{ dialogData?.data?.[detail.prop] || '-' }}</span>
+        </div>
+    </nb-card-body>
+</nb-card>

@@ -1,113 +1,47 @@
 import { RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-
 import { PagesComponent } from './pages.component';
 import { NotFoundComponent } from './miscellaneous/not-found/not-found.component';
-
-
 
 const routes: Routes = [{
   path: '',
   component: PagesComponent,
   children: [
     {
-      path: 'home-batera',
-      loadChildren: () => import('./home-batera/home-batera.module')
-        .then(m => m.HomeBateraModule),
+      path: 'home',
+      loadChildren: () => import('./home/home.module')
+        .then(m => m.HomeModule),
     },
     {
-      path: 'project-batera',
-      loadChildren: () => import('./project-batera/project-batera.modules')
-      .then(m => m.ProjectBateraModule),
+      path: 'project',
+      loadChildren: () => import('./project/project.modules')
+      .then(m => m.ProjectModule),
     },
     {
-      path: 'tender-batera',
-      loadChildren: () => import('./tender-batera/tender-batera.module')
-      .then(m => m.TenderBateraModule),
+      path: 'tender',
+      loadChildren: () => import('./tender/tender.module')
+      .then(m => m.TenderModule),
     },
     {
-      path: 'tracking-batera',
-      loadChildren: () => import('./tracking-batera/tracking-batera.module')
-      .then(m => m.TrackingBateraModule),
+      path: 'tracking',
+      loadChildren: () => import('./tracking/tracking.module')
+      .then(m => m.TrackingModule),
     },
     {
-      path: 'report-batera/:id',
-      loadChildren: () => import('./report-batera/report-batera.module')
-      .then(m => m.ReportBateraModule),
+      path: 'report/:id',
+      loadChildren: () => import('./report/report.module')
+      .then(m => m.ReportModule),
     },
     {
-      path: 'profile-batera',
-      loadChildren: () => import('./profile-batera/profil-batera.modules')
-      .then(m => m.ProfilBateraModule),
+      path: 'update-progress/:id/:work',
+      loadChildren: () => import('./update-progress-report/update-progress-report.module')
+      .then(m => m.UpdteProgressReportModule),
     },
     {
-      path: 'export-pdf',
-      loadChildren: () => import('./pdf-generator-batera/pdf-generator.module')
-        .then(m => m.PdfGeneratorModule),
+      path: 'profile',
+      loadChildren: () => import('./profile/profile.modules')
+      .then(m => m.ProfileModule),
     },
-    {
-      path: 'function',
-      loadChildren: () => import('./function-collection-batera/function-collection.module')
-        .then(m => m.FunctionCollecetionModule),
-    },
-    // {
-    //   path: 'dashboard',
-    //   component: ECommerceComponent,
-    // },
-    // {
-    //   path: 'iot-dashboard',
-    //   component: DashboardComponent,
-    // },
-    // {
-    //   path: 'layout',
-    //   loadChildren: () => import('./layout/layout.module')
-    //     .then(m => m.LayoutModule),
-    // },
-    // {
-    //   path: 'forms',
-    //   loadChildren: () => import('./forms/forms.module')
-    //     .then(m => m.FormsModule),
-    // },
-    // {
-    //   path: 'ui-features',
-    //   loadChildren: () => import('./ui-features/ui-features.module')
-    //     .then(m => m.UiFeaturesModule),
-    // },
-    // {
-    //   path: 'e-commerce',
-    //   loadChildren: () => import('./e-commerce/e-commerce.module')
-    //     .then(m => m.ECommerceModule),
-    // },
-    // {
-    //   path: 'modal-overlays',
-    //   loadChildren: () => import('./modal-overlays/modal-overlays.module')
-    //     .then(m => m.ModalOverlaysModule),
-    // },
-    // {
-    //   path: 'extra-components',
-    //   loadChildren: () => import('./extra-components/extra-components.module')
-    //     .then(m => m.ExtraComponentsModule),
-    // },
-    // {
-    //   path: 'maps',
-    //   loadChildren: () => import('./maps/maps.module')
-    //     .then(m => m.MapsModule),
-    // },
-    // {
-    //   path: 'charts',
-    //   loadChildren: () => import('./charts/charts.module')
-    //     .then(m => m.ChartsModule),
-    // },
-    // {
-    //   path: 'editors',
-    //   loadChildren: () => import('./editors/editors.module')
-    //     .then(m => m.EditorsModule),
-    // },
-    // {
-    //   path: 'tables',
-    //   loadChildren: () => import('./tables/tables.module')
-    //     .then(m => m.TablesModule),
-    // },
     {
       path: 'miscellaneous',
       loadChildren: () => import('./miscellaneous/miscellaneous.module')
@@ -115,7 +49,7 @@ const routes: Routes = [{
     },
     {
       path: '',
-      redirectTo: 'home-batera',
+      redirectTo: 'home',
       pathMatch: 'full',
     },
     {

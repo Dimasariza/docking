@@ -1,0 +1,23 @@
+<nb-card>
+  <nb-card-header class="d-flex justify-content-between w-100" >
+    <h5>Project List</h5>
+    <button nbButton outline size="small" status="primary" (click)="handleClickButton('Add Project')">
+      Add Project
+    </button>
+  </nb-card-header>
+  <nb-card-body>
+    <ngx-list-table-component 
+      *ngIf="projectData" 
+      [columns]="columns" 
+      [rows]="projectData"
+      (sendHandleClick)="handleClickButton($event.button, $event.data)"
+    >
+    </ngx-list-table-component>
+  </nb-card-body>
+</nb-card>
+  
+
+
+
+
+

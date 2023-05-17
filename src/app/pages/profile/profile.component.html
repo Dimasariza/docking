@@ -1,0 +1,121 @@
+<nb-alert *ngIf="!userAccess" 
+    status="warning" 
+    >
+    You not have access. Please Leave this page.
+</nb-alert>
+
+
+<nb-card *ngIf="userAccess" >
+    <nb-card-header>
+        <!-- <div style="min-width: 8rem;">
+            <nb-card class="h-100" style="cursor: pointer;" (click)="triggerSelectFile(changeLogo)">
+                <nb-card-body class="text-secondary d-flex justify-content-center">
+                    <nb-icon *ngIf="companyData" icon="plus-square-outline" pack="eva" style="font-size: 2rem;" class="align-self-center"></nb-icon>
+                    <img *ngIf="!companyData" src="" alt="">
+                </nb-card-body>
+                <input type="file" style="display: none;" #changeLogo (change)="onFileChange($event)">
+            </nb-card>
+        </div> -->
+        <h3>WELCOME</h3>
+        <div class="my-2 w-100 align-middle">
+            <h5>{{companyData?.profile_nama_perusahaan}}</h5>
+        </div>
+    </nb-card-header>
+
+    <nb-card-body>
+        <div class="d-flex justify-content-between">
+            <h6>Company Profile</h6> 
+            <button outline nbButton [status]="formCondition ? 'primary' : 'danger'"  class="float-right" size="small" (click)="changeProfile()" >{{changeText}}</button>
+        </div>
+        <form #companyForm="ngForm" (ngSubmit)="updateCompanyProfile(companyForm)" (keyup.enter)="$event.target.value">
+        <div class="row">
+            <div class="col-6">
+                <span class="p-2 d-block">Company Name</span>
+                <input type="text" nbInput fullWidth placeholder="Company Name" class="form-control" (change)="companyData.profile_nama_perusahaan = $event.target.value"  [ngModel]="companyData?.profile_nama_perusahaan" name="profile_nama_perusahaan" [disabled]="formCondition">
+                <span class="p-2 d-block">Company Adress</span>
+                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="First Company Address"
+                required [ngModel]="companyData?.profile_alamat_perusahaan_1" name="profile_alamat_perusahaan_1" shape="rectangle" #address_01="ngModel" [disabled]="formCondition"></textarea>
+                <span class="p-2 d-block">Mobile Number</span>
+                <input type="text" nbInput fullWidth placeholder="Mobile Number" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_telepon" name="profile_telepon" #telp_number="ngModel">
+                <span class="p-2 d-block">NPWP</span>
+                <input type="text" nbInput fullWidth placeholder="Company NPWP" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_npwp" name="profile_npwp" #npwp="ngModel">
+            </div>
+            <div class="col-6">
+                <span class="p-2 d-block">Company Brand</span>
+                <input type="text" nbInput fullWidth placeholder="Company Brand" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_merk_perusahaan" name="profile_merk_perusahaan" #brand="ngModel">
+                <span class="p-2 d-block">Company Address</span>
+                <textarea rows="5" nbInput fullWidth shape="round"  placeholder="Second Company Address" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_alamat_perusahaan_2" name="profile_alamat_perusahaan_2" #address_02="ngModel" shape="rectangle"></textarea>
+                <span class="p-2 d-block">Faximile</span>
+                <input type="text" nbInput fullWidth placeholder="Faximile Address"  [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_fax" name="profile_fax" #faximile="ngModel">
+                <span class="p-2 d-block">E-mail</span>
+                <input type="text" nbInput fullWidth placeholder="E-mail Address" [disabled]="formCondition"
+                required [ngModel]="companyData?.profile_email" name="profile_email" #email="ngModel">
+            </div>
+        </div>
+
+        <button type="submit" nbButton status="success" [disabled]="!companyForm.form.valid" *ngIf="formCondition == false" fullWidth>Submit</button>
+    </form>
+    </nb-card-body>
+
+    <nb-card-body>
+        <div class="d-flex justify-content-between">
+            <h6>User Account</h6>
+            <div class="d-flex align-items-center">
+                <nb-select size="small" placeholder="User Activation" class="w-100">
+                    <nb-option *ngFor="let activated of ['All', 'Active' , 'Suspend'] ;let id = index;" 
+                    [value]="activated" 
+                    (click)="sortUserActivated(activated)"
+                    >
+                    {{activated}}
+                    </nb-option>
+                  </nb-select>
+                <button outline nbButton status="primary" size="small" (click)="addNewUserDial()">Add User</button>
+            </div>
+        </div>
+
+        <ngx-datatable 
+        [class]="'bootstrap'" 
+        [scrollbarH]="true"
+        [rows]="userData" 
+        columnMode="force"
+        default>
+            <ngx-datatable-column [name]="'No'" [width]="40" >
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    {{rowIndex+1}}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'User Name'" prop="nama_lengkap" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Vessel Name'" prop="nama_kapal" resizeable="true">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.nama_kapal || 'Update Vessel' }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'Title'" prop="jabatan" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Company Name'" prop="departemen" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Email'" prop="email" resizeable="true" minWidth="200"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Mobile No'" prop="no_hp" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'User Id'" prop="title" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Role'" prop="role" resizeable="true"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'Start Date'" prop="updated_at" resizeable="true" minWidth="200" >
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.updated_at | date:'medium' }}
+                  </ng-template> 
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Status" prop="status"  width="60"></ngx-datatable-column> 
+            <ngx-datatable-column width="60">
+                <ng-template let-row="row" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                    <button nbButton size="small" ghost status="primary" (click)="updateUserDial(row)"> 
+                        <nb-icon icon="edit-outline"></nb-icon>
+                    </button>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </nb-card-body>
+</nb-card>
+
+

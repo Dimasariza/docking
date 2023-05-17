@@ -1,0 +1,30 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex w-100 justify-content-between">
+            <div>
+                <h5>Update Progress</h5>
+                <span class="text-capitalize">{{ reportSummary?.projectTitle }}</span>
+            </div>
+            <div class="d-flex align-items-center">
+                <button nbButton size="small" status="primary"
+                    (click)="handleClickButton('Back To Report')"
+                >
+                    Back To Report
+                </button>
+            </div>
+        </div>
+
+    </nb-card-header>
+
+    <nb-card-body [nbSpinner]="loadingProgress" nbSpinnerStatus="primary">
+        <ngx-work-areas 
+            *ngIf="workAreaData"
+            [workAreaData]="workAreaData"
+            [tableDetails]="tableDetails"
+            [columnType]="columnType"
+            [tableHead]="tableHead" 
+            (sendToParent)="handleClickButton($event.title, $event.data)"
+        >
+        </ngx-work-areas>
+    </nb-card-body>
+</nb-card>

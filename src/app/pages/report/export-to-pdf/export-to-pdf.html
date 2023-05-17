@@ -1,0 +1,215 @@
+<div class="container" style="display: 'none';">
+    <div id="pdfTable" #pdfTable>
+        <div *ngIf="tableType == 'work_area' || tableType == 'variant_work' ">
+            <span style="color: #5588EE; font-size: 18px; margin: 5px 0;">
+                {{ jobData?.jobNumber }} .&nbsp;
+                {{ jobData?.jobName }} 
+            </span>
+            <table 
+            data-pdfmake="{'widths':['*','*','*','*'], 'layout' : 'exampleLayout'}" 
+            [style]="tableStyle">
+                <tr>
+                    <td> <b>Vessel</b> </td>
+                    <td>{{ summaryData?.proyek?.kapal?.nama_kapal }}</td>
+                    <td> <b>Component</b> </td>
+                    <td>{{ jobData?.jobName }}</td>
+                </tr>
+                <tr>
+                    <td> <b>Start Date</b> </td>
+                    <td>{{ jobData?.start || '-' }}</td>
+                    <td> <b>End Date</b> </td>
+                    <td>{{ jobData?.end || '-' }}</td>
+                </tr>
+                <tr>
+                    <td> <b>Status</b> </td>
+                    <td>{{ jobData?.status || '-' }}</td>
+                    <td> <b>Maker</b> </td>
+                    <td>{{ jobData?.maker || '-' }}</td>
+                </tr>
+                <tr>
+                    <td> <b>Responsible</b> </td>
+                    <td>{{ jobData?.responsible?.nama_lengkap || '-' }}</td>
+                    <td> <b>Priority</b> </td>
+                    <td>{{ jobData?.rank || '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <b>Description</b>
+                        <p>{{ jobData?.remarks || '-' }}</p>
+                    </td>
+                </tr>
+            </table>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Job Items</span>
+            <table 
+            data-pdfmake="{'widths':['12%','35%','*','*', '*', '5%'], 'layout' : 'exampleLayout'}" 
+            [style]="tableStyle">
+                <tr>
+                    <th>SFI</th>
+                    <th>Item Name</th>
+                    <th>Priority</th>
+                    <th>Unit</th>
+                    <th>Type</th>
+                    <th>%</th>
+                </tr>
+                <div *ngFor="let job of jobData?.allJob">
+                    <tr>
+                        <td>{{ job?.jobNumber || '-' }}</td>
+                        <td>{{ job?.jobName || '-' }}</td>
+                        <td>{{ job?.rank || '-' }}</td>
+                        <td>{{ job?.unit || '-' }}</td>
+                        <td>{{ job?.category || '-' }}</td>
+                        <td>{{ job?.progress?.at(-1).progress || '-' }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <b>Description</b>
+                            <p>{{ job?.remarks || '-' }}</p>
+                        </td>
+                    </tr>
+                </div>
+            </table>
+        </div>
+
+
+
+
+        <!-- Generate PDF based on Project -->
+
+
+
+
+        <div *ngIf="tableType == 'projectPDF'">
+            <span style="color: #5588EE; font-size: 18px; margin: 5px 0;">
+                <b>Periodic Docking Report {{ createDate | date: 'dd-MM-YYYY' }} </b>
+            </span>
+
+            <table data-pdfmake="{'widths':['15%','*','25%','*'], 'layout' :'noBorders'}" >
+                <tr> 
+                  <td style="font-size: 16px;">{{ summaryData?.proyek?.mata_uang }}</td>
+                  <td>Estimate At Completion</td>
+                  <td>ETD</td>
+                  <td>Planned</td>
+                </tr>
+                <tr> 
+                    <td style="font-size: 16px;">Owner :</td>
+                    <td>{{ summaryData?.proyek?.off_hire_bunker_per_day | currency : summaryData?.proyek?.mata_uang + ' ' || '' }}</td>
+                    <td>Planned : </td>
+                    <td>{{ summaryData?.proyek?.repair_end }}</td>
+                </tr>
+                <tr> 
+                    <td style="font-size: 16px;">Yard :</td>
+                    <td>{{ summaryData?.tender?.yard_total_quote | currency : summaryData?.proyek?.mata_uang + ' ' || '' }}</td>
+                    <td>Delayed Critical Job : </td>
+                    <td> 0 </td>
+                </tr>
+            </table>
+
+            <span style="color: #5588EE;font-size: 18px;">Summary</span>
+            <table 
+            data-pdfmake="{'widths':['*','*','*','*'], 'layout' : 'exampleLayout'}" 
+            [style]="tableStyle">
+                <tr>
+                  <td> <b>Responsible</b> </td>
+                  <td>{{ summaryData?.proyek?.id_user || '-' }}</td>
+                  <td> <b>Issued</b> </td>
+                  <td>{{ summaryData?.deskripsi || '-' }}</td>
+                </tr>
+                <tr>
+                    <td> <b>Approved By</b> </td>
+                    <td>{{ summaryData?.approved_by || '-' }}</td>
+                    <td> <b>Aapproved</b> </td>
+                    <td>{{ summaryData?.approved || '-' }}</td>
+                </tr>
+                <tr>
+                    <td> <b>Yard</b> </td>
+                    <td>{{ summaryData?.tender?.nama_galangan || '-' }}</td>
+                    <td> <b>State</b> </td>
+                    <td>{{ summaryData?.state || '-' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <b>Summary</b>
+                        <p>{{ summaryData?.summary_detail || '-' }}</p>
+                    </td>
+                </tr>
+            </table>
+
+            <pdf-table-component
+                *ngIf="projectSummaryRow"
+                [columns]="projectSummaryColumn"
+                [rows]="projectSummaryRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Cost Summary</span>
+            <pdf-table-component
+                *ngIf="costSummaryRow"
+                [columns]="costSummaryColumn"
+                [rows]="costSummaryRow"
+            >
+            </pdf-table-component>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;" class="pdf-pagebreak-before">Diagram Chart</span>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Cost Details</span>
+            <pdf-table-component
+                *ngIf="costDetailsRow"
+                [columns]="costDetailsColumn"
+                [rows]="costDetailsRow"
+                [tableFooter]="costDetailsFooter"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE; font-size: 18px; margin: 5px 0;" 
+            class="pdf-pagebreak-before"
+                > 
+                <b> Progress Report </b>  
+            </span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">All Job</span>
+            <pdf-table-component
+                *ngIf="allJobRow"
+                [columns]="progressReportColumn"
+                [rows]="allJobRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Critical Job</span>
+            <pdf-table-component
+                *ngIf="criticalJobRow"
+                [columns]="progressReportColumn"
+                [rows]="criticalJobRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Delayed Job</span>
+            <pdf-table-component
+                *ngIf="delayedJobRow"
+                [columns]="progressReportColumn"
+                [rows]="delayedJobRow"
+            >
+            </pdf-table-component>
+
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">Done Job</span>
+            <pdf-table-component
+                *ngIf="doneJobRow"
+                [columns]="progressReportColumn"
+                [rows]="doneJobRow"
+            >
+            </pdf-table-component>
+            
+            <span style="color: hsl(220, 82%, 63%); font-size: 18px; margin: 5px 0;" 
+            class="pdf-pagebreak-before"
+                > 
+                <b> Variant Orders </b>  
+            </span>
+            <span style="color: #5588EE;font-size: 18px; margin: 5px 0;">New Jobs Added After Quatation</span>
+
+            <pdf-table-component
+                *ngIf="variantJobRow"
+                [columns]="progressReportColumn"
+                [rows]="variantJobRow"
+            >
+            </pdf-table-component>
+        </div>
+    </div>
+</div>
+

@@ -1,0 +1,18 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong>{{dialogData?.title}}</strong>
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+
+    <nb-card-body style="min-width: 700px;" *ngIf="tableData">
+        <div *ngFor="let item of keyTable" >
+            <div class="row w-100" *ngIf="tableData[item.prop]">
+                <div class="col-5">{{ item.key }}</div>
+                <div class="col">:</div>
+                <div class="col-5 font-weight-bolder">{{ tableData[item.prop] }}</div>
+            </div>
+        </div>
+    </nb-card-body>
+</nb-card>

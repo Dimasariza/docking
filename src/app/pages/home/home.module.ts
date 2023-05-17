@@ -1,28 +1,42 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { NbButtonModule, NbCardModule, NbIconModule } from '@nebular/theme';
+import { NbAlertModule, 
+  NbBadgeModule, 
+  NbButtonModule, 
+  NbCardModule, 
+  NbDialogModule, 
+  NbIconModule, 
+  NbInputModule, 
+  NbPopoverModule, 
+  NbProgressBarModule, 
+  NbSpinnerModule,
+} from '@nebular/theme';
 import { ThemeModule } from '../../@theme/theme.module';
-import { HomeComponent } from './home.component';
-import { FullCalendarModule } from '@fullcalendar/angular';
-import dayGridPlugin from '@fullcalendar/daygrid'; // a plugin!
-import interactionPlugin from '@fullcalendar/interaction'; // a plugin!
-
-FullCalendarModule.registerPlugins([ // register FullCalendar plugins
-  dayGridPlugin,
-  interactionPlugin
-]);
+import { HomeRoutingModule, routedComponents } from './home-routing.module';
+import { HttpClientModule } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
-  declarations: [
-    HomeComponent
-  ],
   imports: [
-    NbCardModule,
-    NbButtonModule,
-    NbIconModule,
     ThemeModule,
+    HomeRoutingModule,
+    NbCardModule,
+    NbIconModule,
+    NbButtonModule,
+    NbInputModule,
+    HttpClientModule,
     CommonModule,
-    FullCalendarModule
-  ]
+    NbPopoverModule,
+    NbAlertModule,
+    NbSpinnerModule,
+    NbDialogModule,
+    FormsModule,
+    NbBadgeModule,
+    NbProgressBarModule
+  ],
+  exports: [],
+  declarations: [
+    ...routedComponents,
+  ],
 })
 export class HomeModule { }

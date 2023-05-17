@@ -1,32 +1,148 @@
-<nb-card class="mt-5">
-  <nb-card-body class="d-flex position-relative" style="overflow: unset;">
-    <!-- <div class="photo col-3">
-      <img src="../../../assets/images/nick.png" alt="Nick" width="200">
-    </div> -->
-    <div class="schedule-image position-absolute d-flex flex-column align-items-center" style="bottom: 0; right: 10px;">
-      <img class="rounded" src="./assets/images/schedule-animate.svg" alt="schedule-gif" width="300">
-      <a href="https://storyset.com/event" style="text-decoration: none; font-size: 8px; margin-top: -15px;">Event illustrations by Storyset</a>
-    </div>
-    
-    <div class="row">
-        <div class="title col-md-6 col-sm-12">
-          <div class="d-flex flex-column">
-            <div class="welcome mb-4">
-              <span class="lead d-block mb-4"><span style="font-weight: 600;">Selamat Datang</span>, <strong style="font-weight: bold;">Achmad</strong></span>
-              <p class="text-gray">Kamu memiliki 2 jadwal diklat yang sudah disetujui, dan 1 izin belajar yang ditolak, dan 1 sedang dalam proses pengecekan</p>
-            </div>
-            <div class="date">
-              <button nbButton status="primary">
-                <nb-icon icon="calendar-outline"></nb-icon>
-                Lihat Status Diklat</button>
+<!-- <nb-alert *ngIf="handleEvent?.show" 
+  [status]="handleEvent?.status" 
+  [nbSpinner]="handleEvent?.spinner" 
+  nbSpinnerStatus="basic"
+  closable (close)="onDone()"
+>
+  {{handleEvent.text}}
+</nb-alert> -->
+
+<div class="row position-relative" style="min-height: 100vh;">
+  <ng-container *ngIf="(result$ | async) as shipData; else loading">
+  <nb-flip-card 
+  *ngFor="let item of shipData; let id=index;" 
+  class="col-lg-4 col-md-6 col-sm-12" 
+  [showToggleButton]="false"
+  [flipped]="flip.value == 1"
+  >
+    <input #flip type="hidden" value="0">
+    <nb-card-front> 
+      <nb-card size="small">
+        <nb-badge *ngIf="item.progress != null" status="info" position="top start" dotMode></nb-badge>
+        <div class="d-flex justify-content-between p-2"> 
+          <nb-icon 
+            class="flip-icon" 
+            icon="chevron-right-outline" 
+            pack="eva" 
+            (click)="flip.value = 1"
+            style="cursor: pointer;"
+          ></nb-icon>
+          <nb-icon 
+            *ngIf="['admin', 'superintendent'] | role"
+            nbButton 
+            [icon]="item?.status === 1 ? 'heart' : 'heart-outline'"
+            (click)="handleClickButton('Add To Assets', item)"
+            nbPopover="Assets" 
+            nbPopoverTrigger="hover" 
+            nbPopoverPlacement="bottom" 
+            type="button" size="medium" 
+            [options]="{ animation: {type:'zoom'}}" 
+            style="font-size: 1.2rem" 
+            status="danger" 
+          ></nb-icon>
+        </div>
+        <div class="overflow-hidden bg-secondary text-center" 
+        style="max-height : 300px"
+        >
+          <img 
+            src="{{item.imageURL}}" 
+            crossorigin="anonymous" 
+            alt="{{item.nama_kapal}}"
+            (click)="handleClickButton('Update Ship', id)"
+          >
+        </div>
+        <div class="d-flex align-items-center"> 
+          <span class="col-9 text-uppercase font-weight-bold h6">{{item.nama_kapal}}</span> 
+          <div class="col-3" *ngIf="['admin', 'superintendent'] | role">
+            <div class="d-flex justify-content-end" 
+            style="justify-self: end;" 
+            >
+              <nb-icon 
+                nbButton 
+                class="p-1" 
+                icon="edit-outline" 
+                (click)="handleClickButton('Update Ship', id)"  
+                nbPopover="Update Ship" 
+                nbPopoverTrigger="hover" 
+                nbPopoverPlacement="bottom" 
+                type="button" 
+                size="medium" 
+                [options]="{ animation: {type: 'zoom'}}" 
+                style="font-size: 1.6rem" 
+                status="primary">
+              </nb-icon>
+              <nb-icon 
+                nbButton 
+                class="p-1" 
+                icon="trash-2-outline" 
+                (click)="handleClickButton('Delete Ship', id)" 
+                nbPopover="Delete Ship" 
+                nbPopoverTrigger="hover" 
+                nbPopoverPlacement="bottom" 
+                type="button" 
+                size="medium" 
+                [options]="{ animation: {type:'zoom'}}" 
+                style="font-size: 1.6rem" 
+                status="primary" 
+              ></nb-icon>
             </div>
           </div>
         </div>
-    </div>
-  </nb-card-body>
-</nb-card>
-<nb-card>
-  <nb-card-body>
-    <full-calendar [options]="calendarOptions"></full-calendar>
-  </nb-card-body>
-</nb-card>
+      </nb-card>
+    </nb-card-front>
+    <nb-card-back>
+      <nb-card size="small">
+        <div class="d-flex justify-content-between p-2"> 
+          <nb-icon 
+            class="flip-icon" 
+            icon="chevron-right-outline" 
+            pack="eva" 
+            (click)="flip.value = 0"
+            style="cursor: pointer;"
+          ></nb-icon>
+        </div>
+        <div class="p-5">
+          <h6>{{ item.nama_kapal }}</h6>
+          <div class="back-card--desc mt-5" *ngIf="item?.head">
+            <h2>{{ item?.progress }} %</h2>
+            <nb-progress-bar [value]=" item?.progress " status="info" [displayValue]="true"></nb-progress-bar>
+            <span class="font-weight-bolder text-capitalize d-flex my-1">Status : {{ item?.phase || '' }}</span> <br>
+            <span class="font-weight-bolder d-flex my-2">
+              <a class="text-decoration-none " 
+              [routerLink]="['/pages/report', item.id_proyek]">
+              {{ item?.head || '' }}
+            </a>
+            </span>
+          </div>
+        </div>
+      </nb-card>      
+    </nb-card-back>
+  </nb-flip-card>
+
+  <div class="col-xl-4 col-lg-4 col-md-6">
+    <nb-card class="h-75" *ngIf="['admin', 'superintendent'] | role"
+    style="cursor: pointer;" 
+    (click)="handleClickButton('Add Ship')"
+    >
+      <div class="d-flex flex-column justify-content-center align-items-center h-100 p-5 m-3 text-secondary">
+        <span *ngIf="shipData.lenght <= 0" class="font-weight-bold text-center">Data Not Available <br> Please Add Ship </span>
+        <nb-icon icon="plus-square-outline" 
+          style="font-size: 5rem;" 
+          class="align-self-center" 
+          [options]="{ animation: { type: 'zoom' }}"
+        ></nb-icon>
+        <h5>Add Ship</h5> 
+      </div>
+    </nb-card>
+  </div>
+</ng-container>
+</div>
+
+<ng-template #loading>
+  <div class="position-absolute w-100 h-100 d-flex flex-column justify-content-center align-items-center" 
+  style="line-height: 4; z-index: -1;"
+  [nbSpinner]="true">
+    <span><br></span>
+    <span>Loading...</span>  
+  </div>
+</ng-template>

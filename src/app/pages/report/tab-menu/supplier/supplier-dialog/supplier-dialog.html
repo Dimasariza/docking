@@ -1,0 +1,23 @@
+<nb-card>
+    <nb-card-header class="d-flex justify-content-between">
+        <strong> {{ dialogData?.title }} </strong>
+        <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+          <nb-icon icon="close-outline"></nb-icon>
+        </button>
+    </nb-card-header>
+    <nb-card-body>
+        <form #suplierForm="ngForm" (ngSubmit)="closeDialog(suplierForm.value)">
+            <span class="d-block my-1">Suplier Name</span>
+            <input type="text" required nbInput ngModel placeholder="Name" name="nama_supplier" #name fullWidth [ngModel]="dialogData?.data?.nama_supplier">
+            <span class="d-block my-1 my-1">Suplier Address</span>
+            <textarea name="alamat" required rows="5" fullWidth ngModel nbInput #address placeholder="Supplier Address" fullWidth [ngModel]="dialogData?.data?.alamat"></textarea>
+            <span class="d-block my-1">Suplier Email</span>
+            <input type="text" required nbInput ngModel placeholder="Email" name="email" #email fullWidth [ngModel]="dialogData?.data?.email">
+            <span class="d-block my-1">Suplier Mobile Number</span>
+            <input type="text" required nbInput ngModel placeholder="Mobile Number" name="no_hp" fullWidth #mobile_no [ngModel]="dialogData?.data?.no_hp">
+            <button nbButton status="success" [disabled]="!suplierForm.form.valid" class="my-2" type="submit" fullWidth>
+                Submit
+            </button>
+        </form>
+    </nb-card-body>
+</nb-card>

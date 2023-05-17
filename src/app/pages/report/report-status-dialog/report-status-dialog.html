@@ -1,0 +1,21 @@
+<nb-card>
+    <nb-card-header>
+        <div class="d-flex justify-content-between">
+            <strong>Report Summary</strong>
+            <button nbButton status="danger" size="tiny" (click)="closeDialog()">
+                <nb-icon icon="close-outline"></nb-icon>
+            </button>
+        </div>
+    </nb-card-header>
+    <nb-card-body>
+        <nb-list>
+            <nb-list-item *ngFor="let user of users">
+                <div class="row w-100">
+                    <span class="col-6">{{ user.name }}</span>
+                    <span class="col-6">{{ user.name }}</span>
+                </div>
+            </nb-list-item>
+        </nb-list>
+    </nb-card-body>
+</nb-card>
+
